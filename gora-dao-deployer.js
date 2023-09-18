@@ -47,12 +47,8 @@ const GoraDaoDeployer = class {
     }
     importAccount() {
         const acc = this.algosdk.mnemonicToSecretKey(this.mnemonic);
-        // let acc_mnemonic_check = this.algosdk.secretKeyToMnemonic(acc.sk);
         let addr = acc.addr
-        //const accRekey = this.algosdk.mnemonicToSecretKey(this.mnemonicRekey);
         const accRekey = null;
-
-
         this.logger.info("Account Address = %s", addr);
         let acc_decoded = this.algosdk.decodeAddress(addr);
         this.logger.info("Account Address Decoded Public Key = %s", acc_decoded.publicKey.toString());
@@ -68,26 +64,7 @@ const GoraDaoDeployer = class {
             throw Error("Method undefined: " + name)
         return m
     }
-    async waitForConfirmation(txId) {
-        this.logger.info("waiting for transaction: %s", txId)
-        let response = await this.algodClient.status().do();
-        let lastround = response["last-round"];
-        while (true) {
-            const pendingInfo = await this.algodClient
-                .pendingTransactionInformation(txId)
-                .do();
-            if (
-                pendingInfo["confirmed-round"] !== null &&
-                pendingInfo["confirmed-round"] > 0
-            ) {
-                this.logger.info(
-                    "Transaction %s  confirmed in round %s", txId, pendingInfo["confirmed-round"]);
-                break;
-            }
-            lastround++;
-            await this.algodClient.statusAfterBlock(lastround).do();
-        }
-    }
+
     async fetchAlgoWalletInfo() {
         if (this.algosdk.isValidAddress(this.accountObject.addr)) {
             const url = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/accounts/${this.accountObject.addr}`;
