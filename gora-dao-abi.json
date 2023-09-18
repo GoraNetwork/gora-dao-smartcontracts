@@ -1,0 +1,15 @@
+{
+    "name": "gora-dao",
+    "desc": "GoraDAO main smart contract",
+    "networks": {
+        "MainNet": {
+            "appID": 0
+        },
+        "TestNet": {
+            "appID": 0
+        }
+    },
+    "methods": [
+   
+    ]
+}

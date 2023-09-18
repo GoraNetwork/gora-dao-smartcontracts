@@ -1,0 +1,39 @@
+{
+    "name": "gora-dao-smartcontracts",
+    "version": "1.0.0",
+    "description": "GoraDAO is Gora Network's DAO system! This repository contains Algorand AVM smart contracts of GoraDAO!",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "node index.js"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/GoracleNetwork/gora-dao-smartcontracts.git"
+    },
+    "keywords": [],
+    "author": "MG (emg110@gmail.com)",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/GoracleNetwork/gora-dao-smartcontracts/issues"
+    },
+    "homepage": "https://github.com/GoracleNetwork/gora-dao-smartcontracts#readme",
+    "dependencies": {
+      "algosdk": "^2.5.0",
+      "node-fetch": "2",
+      "esrever":"latest",
+      "winston":"latest",
+      "chalk":"4.1.0",
+  
+      "js-sha512":"^0.8.0",
+      "bs58": "^5.0.0",
+      "form-data": "^4.0.0",
+      "js-sha256": "^0.10.1",
+      "tweetnacl": "^1.0.3",
+      "winston-transport": "^4.5.0",
+      "winston-transport-browserconsole":"^1.0.5",
+      "triple-beam": "^1.4.1",
+      "@pinata/sdk":"^2.1.0"
+    }
+  }
+  
