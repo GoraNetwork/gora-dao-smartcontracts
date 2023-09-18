@@ -199,7 +199,6 @@ const GoraDaoDeployer = class {
     }
     //TODO OPS
     async deployerReport() {
-
         try {
             await this.fetchAlgoWalletInfo();
             await this.printCreatedAsset();
@@ -208,7 +207,6 @@ const GoraDaoDeployer = class {
         catch (err) {
             this.logger.error(err);
         }
-
     }
     async deleteApps(appsToDelete) {
         let wallet = this.config.gora_dao.algo_wallet_address
@@ -219,11 +217,9 @@ const GoraDaoDeployer = class {
             params.fee = 1000;
             params.flatFee = true;
             let sender = wallet;
-
-
             let note = this.algosdk.encodeObj(
                 JSON.stringify({
-                    system: "Deleting GoraDAO main app",
+                    system: "Deleting GoraDAO app",
                     date: `${new Date()}`,
                 })
             );
@@ -241,7 +237,6 @@ const GoraDaoDeployer = class {
             const signedTxn = txn.signTxn(this.accountObject.sk);
             const { txId } = await this.algodClient.sendRawTransaction(signedTxn).do();
             await this.algosdk.waitForConfirmation(this.algodClient, txId, 5)
-
             let ptx = await this.algodClient.pendingTransactionInformation(txId).do();
             const noteArrayFromTxn = ptx.txn.txn.note;
             const receivedNote = Buffer.from(noteArrayFromTxn).toString('utf8');
@@ -250,22 +245,19 @@ const GoraDaoDeployer = class {
 
     }
     async deployerAccount() {
-
         try {
             const accounts = await this.importAccount();
             this.accountObject = accounts.acc
-
         }
         catch (err) {
             this.logger.error(err);
         }
-
     }
     async runDeployer() {
         await this.deployerAccount()
         if (this.config.deployer['deployer_report']) await this.deployerReport();
         if (this.config.deployer['delete_apps']) await this.deleteApps(this.config.deployer.apps_to_delete);
-       //TODO OPS
+        //TODO OPS
         process.exit();
     }
 }
