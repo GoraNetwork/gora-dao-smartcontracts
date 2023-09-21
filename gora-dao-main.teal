@@ -87,6 +87,41 @@ bnz method_remove_whitelisted_app
 err
 
 
+// Stabdard app calls router : Handles optin, update and delete calls
+branch_standard_calls:
+txn ApplicationID
+intc_0
+!=
+assert
+// Optin call
+txn OnCompletion
+intc_1 // OptIn
+==
+bnz branch_optin
+// Update call
+txn OnCompletion
+intc_3 // UpdateApplication
+==
+bnz branch_update
+// Delete call
+txn OnCompletion
+pushint 5 // DeleteApplication
+==
+bnz branch_delete
+
+err
+// End of stanbdard calls router
+
+branch_delete:
+intc_0 // 0
+return
+branch_update:
+intc_0 // 0
+return
+branch_optin:
+intc_0 // 0
+return
+
 method_remove_whitelisted_app:
 txna ApplicationArgs 1
 intc_0 // 0
@@ -300,40 +335,7 @@ callsub subroutine_create
 intc_1 // 1
 return
 
-// Stabdard app calls router : Handles optin, update and delete calls
-branch_standard_calls:
-txn ApplicationID
-intc_0
-!=
-assert
-// Optin call
-txn OnCompletion
-intc_1 // OptIn
-==
-bnz branch_optin
-// Update call
-txn OnCompletion
-intc_3 // UpdateApplication
-==
-bnz branch_update
-// Delete call
-txn OnCompletion
-pushint 5 // DeleteApplication
-==
-bnz branch_delete
 
-err
-// End of stanbdard calls router
-
-branch_delete:
-intc_0 // 0
-return
-branch_update:
-intc_0 // 0
-return
-branch_optin:
-intc_0 // 0
-return
 
 
 // Subroutine: Authrozie manager account
@@ -444,7 +446,7 @@ subroutine_update_manager_address:
 proto 1 0
 txn Sender
 callsub subroutine_auth_manager_account
-// unauthorized
+// Reject unauthorized assert
 assert
 frame_dig -1
 global ZeroAddress
@@ -791,7 +793,6 @@ frame_dig 5
 frame_dig 3
 -
 frame_bury 8
-
 
 // Subroutine: Claim Vesting L2
 subroutine_claim_vesting_l2:
