@@ -7,7 +7,7 @@
 // Github: https://github.com/GoracleNetwork/gora-dao-smartcontracts
 
 #pragma version 8
-intcblock 0 1 32 4 576 111 222
+intcblock 0 1 32 4 576
 bytecblock 0x 0x6d61 0x00 0x6d7873 0x6d6e7466 0x6d787466 0x01 0x8a715d1d6570ec525f55276169c16d12fecb32159cd8f2c3e2a2e600bfbf24c7 0x02
 //handling standards calls (0 args)
 txn NumAppArgs
@@ -84,8 +84,6 @@ pushbytes 0x5d3fa23b // "remove_whitelisted_app(application)void"
 ==
 bnz method_remove_whitelisted_app
 
-// End method router with error 111 (no method found)
-intc 5 // 111
 err
 
 
@@ -324,8 +322,6 @@ pushint 5 // DeleteApplication
 ==
 bnz branch_delete
 
-// End stabdard call router with error 222 (no method found)
-intc 6 // 222
 err
 // End of stanbdard calls router
 
