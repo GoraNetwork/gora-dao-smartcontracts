@@ -44,10 +44,10 @@
       "test_proposal_participate": false,
       "test_proposal_vote": false,
       "apps_to_delete": [],
-      "num_local_int": 4,
+      "num_local_int": 0,
       "num_local_byte": 0,
-      "num_global_int": 30,
-      "num_global_byte": 10,
+      "num_global_int": 3,
+      "num_global_byte": 1,
       "proposal": {
         "proposalName": "proposal_name",
         "proposalBanner": "proposal_banner",
