@@ -357,7 +357,7 @@ return
 
 // Subroutines
 
-// Subroutine: Authrozie manager account
+// Subroutine: Authrozie manager account (needs ma Auth)
 subroutine_auth_manager_account:
 proto 0 0
 txn Sender
@@ -443,7 +443,7 @@ frame_dig -1
 app_global_put
 retsub
 
-// Subroutine: Update Time Constraints
+// Subroutine: Update Time Constraints (needs ma Auth)
 subroutine_update_time_constraints:
 proto 3 0
 callsub subroutine_auth_manager_account
@@ -458,7 +458,7 @@ frame_dig -1
 app_global_put
 retsub
 
-// Subroutine: Update Manager Address
+// Subroutine: Update Manager Address (needs ma Auth)
 subroutine_update_manager_address:
 proto 1 0
 callsub subroutine_auth_manager_account
@@ -532,9 +532,10 @@ global CurrentApplicationAddress
 assert
 retsub
 
-// method_vest_tokens
+// method_vest_tokens (needs ma Auth)
 subroutine_vest_tokens:
 proto 5 0
+callsub subroutine_auth_manager_account
 intc_0 // 0
 dupn 2
 bytec_0 // ""
@@ -546,7 +547,7 @@ bytec_0 // ""
 dup
 intc_0 // 0
 dup
-callsub subroutine_auth_manager_account
+//// Formerly here was misplaced subroutine_auth_manager_account , since it is a proto 0 0
 frame_dig -4
 gtxns XferAsset
 frame_bury 0
@@ -1178,7 +1179,7 @@ frame_dig 8
 box_put
 retsub
 
-// Subroutine: Add Whitelisted App
+// Subroutine: Add Whitelisted App (needs ma Auth)
 subroutine_add_whitelisted_app:
 proto 2 0
 intc_0 // 0
@@ -1211,7 +1212,7 @@ frame_dig 2
 assert
 retsub
 
-// Subroutine: Remove whitelisted app
+// Subroutine: Remove whitelisted app (needs ma Auth)
 subroutine_remove_whitelisted_app:
 proto 1 0
 intc_0 // 0
