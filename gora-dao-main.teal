@@ -355,7 +355,6 @@ return
 
 // Subroutine: Authrozie manager account (needs ma Auth)
 subroutine_auth_manager_account:
-proto 0 0
 txn Sender
 bytec_1 // "ma"
 app_global_get
