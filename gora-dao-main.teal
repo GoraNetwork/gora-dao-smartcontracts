@@ -17,10 +17,6 @@ bnz branch_standard_calls
 txn OnCompletion
 intc_0 // NoOp
 ==
-txn ApplicationID
-intc_0 // 0
-!=
-&&
 assert
 // Method router
 
@@ -30,6 +26,10 @@ pushbytes 0xa8d36585 // "create(address,uint64,uint64,uint64)void"
 ==
 bnz method_create
 
+txn ApplicationID
+intc_0 // 0
+!=
+assert
 // Detect method_update_time_constraints
 txna ApplicationArgs 0
 pushbytes 0xa8febdb1 // "update_time_constraints(uint64,uint64,uint64)void"
