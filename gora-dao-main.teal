@@ -328,23 +328,19 @@ return
 
 // Method: Create
 method_create:
-txn OnCompletion
-intc_0 // NoOp
-==
 txn ApplicationID
 intc_0 // 0
 ==
-&&
 assert
-txna ApplicationArgs 1
+txna ApplicationArgs 1 //manager_address
 store 0
-txna ApplicationArgs 2
+txna ApplicationArgs 2 //max_start
 btoi
 store 1
-txna ApplicationArgs 3
+txna ApplicationArgs 3 //min_timeframe
 btoi
 store 2
-txna ApplicationArgs 4
+txna ApplicationArgs 4 //max_timeframe
 btoi
 store 3
 load 0
