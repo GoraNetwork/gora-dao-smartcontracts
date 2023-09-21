@@ -156,7 +156,7 @@ load 19
 load 20
 load 21
 load 22
-callsub staketodelegator_16
+callsub subroutine_stake_to_delegator
 intc_1 // 1
 return
 method_claim_vesting:
@@ -178,7 +178,7 @@ getbyte
 store 17
 load 16
 load 17
-callsub claimvesting_15
+callsub subroutine_claim_vesting
 intc_1 // 1
 return
 method_vest_tokens:
@@ -399,7 +399,7 @@ retsub
 
 
 // send_asset
-sendasset_8:
+subroutine_send_asset:
 proto 4 0
 itxn_begin
 intc_3 // axfer
@@ -415,8 +415,8 @@ itxn_field Fee
 itxn_submit
 retsub
 
-// send_algo
-sendalgo_9:
+
+subroutine_send_algo:
 proto 3 0
 itxn_begin
 intc_1 // pay
@@ -549,7 +549,7 @@ frame_dig 0
 frame_dig 1
 intc_0 // 0
 intc_0 // 0
-callsub sendasset_8
+callsub subroutine_send_asset
 frame_dig 1
 min_balance
 frame_dig 2
@@ -747,8 +747,8 @@ global ZeroAddress
 assert
 retsub
 
-// claim_vesting
-claimvesting_15:
+
+subroutine_claim_vesting:
 proto 2 0
 bytec_0 // ""
 intc_0 // 0
@@ -837,24 +837,24 @@ frame_bury 8
 frame_dig 2
 global LatestTimestamp
 >
-bnz claimvesting_15_l5
+bnz subroutine_claim_vesting_l5
 frame_dig 5
 frame_dig 3
 -
 frame_bury 8
-claimvesting_15_l2:
+subroutine_claim_vesting_l2:
 frame_dig 4
 frame_dig -2
 txnas Accounts
 frame_dig 8
 intc_0 // 0
-callsub sendasset_8
+callsub subroutine_send_asset
 frame_dig 3
 frame_dig 8
 +
 frame_dig 5
 ==
-bnz claimvesting_15_l4
+bnz subroutine_claim_vesting_l4
 frame_dig 3
 frame_dig 8
 +
@@ -889,8 +889,8 @@ frame_dig -2
 txnas Accounts
 frame_dig 13
 box_put
-b claimvesting_15_l6
-claimvesting_15_l4:
+b subroutine_claim_vesting_l6
+subroutine_claim_vesting_l4:
 global CurrentApplicationAddress
 min_balance
 frame_bury 11
@@ -908,9 +908,9 @@ frame_dig 12
 global MinTxnFee
 -
 intc_0 // 0
-callsub sendalgo_9
-b claimvesting_15_l6
-claimvesting_15_l5:
+callsub subroutine_send_algo
+b subroutine_claim_vesting_l6
+subroutine_claim_vesting_l5:
 frame_dig 2
 frame_dig 1
 -
@@ -933,12 +933,12 @@ assert
 frame_dig 3
 -
 frame_bury 8
-b claimvesting_15_l2
-claimvesting_15_l6:
+b subroutine_claim_vesting_l2
+subroutine_claim_vesting_l6:
 retsub
 
 // stake_to_delegator
-staketodelegator_16:
+subroutine_stake_to_delegator:
 proto 5 0
 intc_0 // 0
 bytec_0 // ""
@@ -1088,7 +1088,7 @@ frame_dig 9
 box_put
 retsub
 
-// method_withdraw_from_delegator
+
 subroutine_withdraw_from_delegator:
 proto 5 0
 bytec_0 // ""
@@ -1281,5 +1281,5 @@ bytec_1 // "ma"
 app_global_get
 frame_dig 2
 intc_0 // 0
-callsub sendalgo_9
+callsub subroutine_send_algo
 retsub
