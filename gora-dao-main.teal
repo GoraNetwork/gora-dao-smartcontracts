@@ -255,6 +255,7 @@ callsub subroutine_update_manager_address
 intc_1 // 1
 return
 
+//Method: Update Time Constraints
 method_update_time_constraints:
 txna ApplicationArgs 1
 btoi
@@ -271,6 +272,8 @@ load 6
 callsub subroutine_update_time_constraints
 intc_1 // 1
 return
+
+// Method: Create
 method_create:
 txn OnCompletion
 intc_0 // NoOp
@@ -324,8 +327,8 @@ bnz branch_delete
 // End stabdard call router with error 222 (no method found)
 intc 6 // 222
 err
-
 // End of stanbdard calls router
+
 branch_delete:
 intc_0 // 0
 return
@@ -337,9 +340,7 @@ intc_0 // 0
 return
 
 
-
-
-// subroutine_auth_manager_account
+// Subroutine: Authrozie manager account
 subroutine_auth_manager_account:
 proto 1 1
 frame_dig -1
@@ -349,10 +350,7 @@ app_global_get
 retsub
 
 
-
-
-
-// send_asset
+// Subroutine: Send assets
 subroutine_send_asset:
 proto 4 0
 itxn_begin
@@ -369,7 +367,7 @@ itxn_field Fee
 itxn_submit
 retsub
 
-
+// Subroutine: Sending Algos
 subroutine_send_algo:
 proto 3 0
 itxn_begin
@@ -384,7 +382,8 @@ itxn_field Fee
 itxn_submit
 retsub
 
-// create
+
+// Subroutine: create
 subroutine_create:
 proto 4 0
 bytec_3 // "mxs"
@@ -426,7 +425,7 @@ frame_dig -1
 app_global_put
 retsub
 
-// update_time_constraints
+// Subroutine: Update Time Constraints
 subroutine_update_time_constraints:
 proto 3 0
 txn Sender
@@ -444,7 +443,7 @@ frame_dig -1
 app_global_put
 retsub
 
-// method_update_manager_address
+// Subroutine: Update Manager Address
 subroutine_update_manager_address:
 proto 1 0
 txn Sender
@@ -465,7 +464,7 @@ frame_dig -1
 app_global_put
 retsub
 
-
+// Subroutine: Optin Asset
 subroutine_optin_asset:
 proto 4 0
 intc_0 // 0
@@ -701,7 +700,7 @@ global ZeroAddress
 assert
 retsub
 
-
+// Subroutine: Claim Vesting
 subroutine_claim_vesting:
 proto 2 0
 bytec_0 // ""
@@ -796,6 +795,9 @@ frame_dig 5
 frame_dig 3
 -
 frame_bury 8
+
+
+// Subroutine: Claim Vesting L2
 subroutine_claim_vesting_l2:
 frame_dig 4
 frame_dig -2
@@ -843,7 +845,9 @@ frame_dig -2
 txnas Accounts
 frame_dig 13
 box_put
-b subroutine_claim_vesting_l6
+retsub
+
+// Subroutine: Claim Vesting L4
 subroutine_claim_vesting_l4:
 global CurrentApplicationAddress
 min_balance
@@ -863,7 +867,9 @@ global MinTxnFee
 -
 intc_0 // 0
 callsub subroutine_send_algo
-b subroutine_claim_vesting_l6
+retsub
+
+// Subroutine: Claim Vesting L5
 subroutine_claim_vesting_l5:
 frame_dig 2
 frame_dig 1
@@ -888,10 +894,10 @@ frame_dig 3
 -
 frame_bury 8
 b subroutine_claim_vesting_l2
-subroutine_claim_vesting_l6:
-retsub
 
-// stake_to_delegator
+
+
+// Subroutine: Stake to delegator
 subroutine_stake_to_delegator:
 proto 5 0
 intc_0 // 0
@@ -1042,7 +1048,7 @@ frame_dig 9
 box_put
 retsub
 
-
+// Subroutine: Withdraw from delegator
 subroutine_withdraw_from_delegator:
 proto 5 0
 bytec_0 // ""
@@ -1164,7 +1170,7 @@ frame_dig 8
 box_put
 retsub
 
-// add_whitelisted_app
+// Subroutine: Add Whitelisted App
 subroutine_add_whitelisted_app:
 proto 2 0
 intc_0 // 0
@@ -1200,6 +1206,7 @@ frame_dig 2
 assert
 retsub
 
+// Subroutine: Remove whitelisted app
 subroutine_remove_whitelisted_app:
 proto 1 0
 intc_0 // 0
