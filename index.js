@@ -12,6 +12,9 @@ props.logger = logger
 props.approvalProgData = fs.readFileSync(path.join(__dirname, 'gora-dao-main.teal'))
 props.clearProgData = fs.readFileSync(path.join(__dirname, 'gora-dao-clear.teal'))
 
+props.approvalPyTealProgData = fs.readFileSync(path.join(__dirname, 'gora-vesting-contracts/approval.teal'))
+
+
 props.proposalApprovalProgData = fs.readFileSync(path.join(__dirname, 'gora-dao-proposal.teal'));
 props.proposalClearProgData = fs.readFileSync(path.join(__dirname, 'gora-dao-clear.teal'));
 

@@ -27,12 +27,8 @@ const GoraDaoDeployer = class {
         this.contract = props.contract
         this.approvalProgData = props.approvalProgData
         this.clearProgData = props.clearProgData
-        this.contractTesting = props.contractTesting
-        this.itemContract = props.itemContract
-        this.itemApprovalProgData = props.itemApprovalProgData
-        this.itemClearProgData = props.itemClearProgData
-        this.approvalTestingProgData = props.approvalTestingProgData
-        this.clearTestingProgData = props.clearTestingProgData
+        this.approvalPyTealProgData = props.approvalPyTealProgData
+       
         this.proposalItem = props.proposalItem
         this.accountObject = null
         this.accountBalance = null
@@ -253,9 +249,92 @@ const GoraDaoDeployer = class {
             this.logger.error(err);
         }
     }
+    async deployMainContract() {
+        let addr = this.accountObject.addr;
+        let localInts = this.config.deployer['num_local_int'];
+        let localBytes = this.config.deployer['num_local_byte'];
+        let globalInts = this.config.deployer['num_global_int'];
+        let globalBytes = this.config.deployer['num_global_byte'];
+        let params = await this.algodClient.getTransactionParams().do();
+        let onComplete = this.algosdk.OnApplicationComplete.NoOpOC;
+
+        const compiledResult = await this.algodClient.compile(this.approvalProgData).do();
+        const compiledClearResult = await this.algodClient.compile(this.clearProgData).do();
+        const compiledResultUint8 = new Uint8Array(Buffer.from(compiledResult.result, "base64"));
+        const compiledClearResultUint8 = new Uint8Array(Buffer.from(compiledClearResult.result, "base64"));
+        this.logger.info('------------------------------')
+        this.logger.info("GoraNetwork Main Contract Hash = %s", compiledResult.hash);
+        //this.logger.info("GoraNetwork Main Contract Result = %s", compiledResult.result)
+        this.logger.info("GoraNetwork Clear Hash = %s", compiledClearResult.hash);
+        //this.logger.info("GoraNetwork Clear Result = %s", compiledClearResult.result);
+
+        let appTxn = this.algosdk.makeApplicationCreateTxnFromObject({
+            from: addr, suggestedParams: params, onComplete,
+            approvalProgram: compiledResultUint8, clearProgram: compiledClearResultUint8,
+            numLocalInts: localInts, numLocalByteSlices: localBytes, numGlobalInts: globalInts, numGlobalByteSlices: globalBytes, extraPages: 0
+        });
+        let appTxnId = appTxn.txID().toString();
+        this.logger.info('------------------------------')
+        this.logger.info("GoraNetwork Main Application Creation TXId =  %s", appTxnId);
+        let signedAppTxn = appTxn.signTxn(this.accountObject.sk);
+        await this.algodClient.sendRawTransaction(signedAppTxn).do();
+        await this.algosdk.waitForConfirmation(this.algodClient, appTxnId, 5)
+
+        let transactionResponse = await this.algodClient.pendingTransactionInformation(appTxnId).do();
+        let appId = transactionResponse['application-index'];
+        this.logger.info('------------------------------')
+        this.logger.info("GoraNetwork Main Application ID: %s", appId);
+        this.logger.info('------------------------------')
+        this.applicationId = appId
+        this.applicationAddr = this.algosdk.getApplicationAddress(appId);
+        this.logger.info('------------------------------')
+        this.logger.info("GoraNetwork Main Application Address: %s", this.applicationAddr);
+        this.logger.info('------------------------------')
+    }
+    async updateMainContract() {
+        let addr = this.accountObject.addr;
+        let params = await this.algodClient.getTransactionParams().do();
+        let onComplete = this.algosdk.OnApplicationComplete.UpdateApplicationOC;
+        const compiledResult = await this.algodClient.compile(this.approvalProgData).do();
+        const compiledPyTealResult = await this.algodClient.compile(this.approvalPyTealProgData).do();
+        const compiledClearResult = await this.algodClient.compile(this.clearProgData).do();
+        this.logger.info("GoraNetwork Main Contract Hash = %s", compiledResult.hash);
+        this.logger.info("GoraNetwork Main Contract Result = %s", compiledResult.result)
+        this.logger.info("GoraNetwork Clear Hash = %s", compiledClearResult.hash);
+        const compiledResultUint8 = new Uint8Array(Buffer.from(compiledResult.result, "base64"));
+        const compiledResultPyTealUint8 = new Uint8Array(Buffer.from(compiledPyTealResult.result, "base64"));
+        this.logger.info('Compiled Result Uint8Array: ', compiledResultUint8)
+        this.logger.info('Compiled Result PyTeal Uint8Array: ', compiledResultPyTealUint8)
+        const compiledClearResultUint8 = new Uint8Array(Buffer.from(compiledClearResult.result, "base64"));
+        
+        this.logger.info('------------------------------')
+
+
+        // let appTxn = this.algosdk.makeApplicationUpdateTxn(addr, params, Number(this.applicationId),
+        //     compiledResultUint8, compiledClearResultUint8, /* [this.algosdk.encodeUint64(1), this.algosdk.encodeUint64(1)] */);
+        // let appTxnId = appTxn.txID().toString();
+        // this.logger.info('------------------------------')
+        // this.logger.info("GoraNetwork Main Application Update TXId =  %s", appTxnId);
+        // let signedAppTxn = appTxn.signTxn(this.accountObject.sk);
+        // await this.algodClient.sendRawTransaction(signedAppTxn).do();
+        // await this.algosdk.waitForConfirmation(this.algodClient, appTxnId, 5)
+
+        // let transactionResponse = await this.algodClient.pendingTransactionInformation(appTxnId).do();
+
+        this.logger.info('------------------------------')
+        this.logger.info("GoraNetwork Updated Main Application ID: %s", this.applicationId);
+        this.logger.info('------------------------------')
+
+        this.applicationAddr = this.algosdk.getApplicationAddress(Number(this.applicationId));
+        this.logger.info('------------------------------')
+        this.logger.info("GoraNetwork Updated Main Application Address: %s", this.applicationAddr);
+        this.logger.info('------------------------------')
+    }
     async runDeployer() {
         await this.deployerAccount()
         if (this.config.deployer['deployer_report']) await this.deployerReport();
+        if (this.config.deployer['create_dao_contracts']) await this.deployMainContract();
+        if (this.config.deployer['update_dao_contracts']) await this.updateMainContract();
         if (this.config.deployer['delete_apps']) await this.deleteApps(this.config.deployer.apps_to_delete);
         //TODO OPS
         process.exit();
