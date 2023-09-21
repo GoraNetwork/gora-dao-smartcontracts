@@ -24,9 +24,9 @@
     "deployer": {
       "version": "v1.0.0",
       "mode": "remote",
-      "deployer_report": true,
+      "deployer_report": false,
       "delete_apps": false,
-      "create_dao_contracts": false,
+      "create_dao_contracts": true,
       "update_dao_contracts": false,
       "setup_dao_contract": false,
       "test_dao_closeout": false,

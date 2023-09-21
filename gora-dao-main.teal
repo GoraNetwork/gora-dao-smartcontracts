@@ -9,3 +9,90 @@
 
 
 #pragma version 8
+intcblock 0 1 32 4 576 111 222
+bytecblock 0x 0x6d61 0x00 0x6d7873 0x6d6e7466 0x6d787466 0x01 0x8a715d1d6570ec525f55276169c16d12fecb32159cd8f2c3e2a2e600bfbf24c7 0x02
+//handling standards calls (0 args)
+txn NumAppArgs
+intc_0 // 0
+==
+bnz branch_standard_calls
+
+// End method router with error 111 (no method found)
+intc 5 // 111
+err
+
+
+
+
+// Stabdard app calls router : Handles optin, update and delete calls
+branch_standard_calls:
+// Optin call
+txn OnCompletion
+intc_1 // OptIn
+==
+bnz branch_optin
+// Update call
+txn OnCompletion
+intc_3 // UpdateApplication
+==
+bnz branch_update
+// Delete call
+txn OnCompletion
+pushint 5 // DeleteApplication
+==
+bnz branch_delete
+
+// End stabdard call router with error 222 (no method found)
+intc 6 // 222
+err
+
+// End of stanbdard calls router
+branch_delete:
+txn ApplicationID
+intc_0 // 0
+!=
+assert
+callsub subroutine_delete
+intc_1 // 1
+return
+branch_update:
+txn ApplicationID
+intc_0 // 0
+!=
+assert
+callsub subroutine_update
+intc_1 // 1
+return
+branch_optin:
+txn ApplicationID
+intc_0 // 0
+!=
+assert
+callsub subroutine_optin
+intc_1 // 1
+return
+
+// opt_in
+subroutine_optin:
+proto 0 0
+intc_0 // 0
+return
+
+// update
+subroutine_update:
+proto 0 0
+intc_0 // 0
+return
+
+// delete
+subroutine_delete:
+proto 0 0
+intc_0 // 0
+return
+
+
+
+
+
+
+
