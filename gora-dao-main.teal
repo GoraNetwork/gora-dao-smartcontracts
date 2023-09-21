@@ -13,11 +13,12 @@ bytecblock 0x 0x6d61 0x00 0x6d7873 0x6d6e7466 0x6d787466 0x01 0x8a715d1d6570ec52
 txn NumAppArgs
 intc_0 // 0
 ==
-bnz branch_standard_calls
+bnz branch_op_calls
 txn OnCompletion
 intc_0 // NoOp
 ==
 assert
+
 // Method router
 
 // Detect method_create
@@ -86,9 +87,10 @@ bnz method_remove_whitelisted_app
 
 err
 
+// Branches
 
-// Stabdard app calls router : Handles optin, update and delete calls
-branch_standard_calls:
+// App Op calls router : Handles optin, update and delete calls
+branch_op_calls:
 txn ApplicationID
 intc_0
 !=
@@ -112,16 +114,24 @@ bnz branch_delete
 err
 // End of stanbdard calls router
 
+// Branch: Delete
 branch_delete:
 intc_0 // 0
 return
+
+// Branch: Update
 branch_update:
 intc_0 // 0
 return
+
+// Branch: Optin
 branch_optin:
 intc_0 // 0
 return
 
+// Methods
+
+// Method: Remove Whitelisted App
 method_remove_whitelisted_app:
 txna ApplicationArgs 1
 intc_0 // 0
@@ -129,6 +139,8 @@ getbyte
 callsub subroutine_remove_whitelisted_app
 intc_1 // 1
 return
+
+// Method: Add Whitelisted App
 method_add_whitelisted_app:
 txna ApplicationArgs 1
 intc_0 // 0
@@ -149,6 +161,7 @@ callsub subroutine_add_whitelisted_app
 intc_1 // 1
 return
 
+// Method: Withdraw from delegator
 method_withdraw_from_delegator:
 txna ApplicationArgs 1
 intc_0 // 0
@@ -177,6 +190,7 @@ callsub subroutine_withdraw_from_delegator
 intc_1 // 1
 return
 
+// Method: Stake to delegator
 method_stake_to_delegator:
 txna ApplicationArgs 1
 intc_0 // 0
@@ -205,6 +219,7 @@ callsub subroutine_stake_to_delegator
 intc_1 // 1
 return
 
+// Method: Claim Vesting
 method_claim_vesting:
 txna ApplicationArgs 1
 intc_0 // 0
@@ -219,6 +234,8 @@ load 17
 callsub subroutine_claim_vesting
 intc_1 // 1
 return
+
+// Method: Vest Tokens
 method_vest_tokens:
 txna ApplicationArgs 1
 store 13
@@ -254,6 +271,8 @@ load 15
 callsub subroutine_vest_tokens
 intc_1 // 1
 return
+
+// Method: Optin Asset
 method_optin_asset:
 txna ApplicationArgs 1
 intc_0 // 0
@@ -282,6 +301,7 @@ callsub subroutine_optin_asset
 intc_1 // 1
 return
 
+// Method: Update Manager Address
 method_update_manager_address:
 txna ApplicationArgs 1
 callsub subroutine_update_manager_address
@@ -335,16 +355,15 @@ callsub subroutine_create
 intc_1 // 1
 return
 
-
-
+// Subroutines
 
 // Subroutine: Authrozie manager account
 subroutine_auth_manager_account:
-proto 1 1
-frame_dig -1
+txn Sender
 bytec_1 // "ma"
 app_global_get
 ==
+assert
 retsub
 
 
@@ -426,10 +445,7 @@ retsub
 // Subroutine: Update Time Constraints
 subroutine_update_time_constraints:
 proto 3 0
-txn Sender
 callsub subroutine_auth_manager_account
-// unauthorized
-assert
 bytec_3 // "mxs"
 frame_dig -3
 app_global_put
@@ -444,10 +460,7 @@ retsub
 // Subroutine: Update Manager Address
 subroutine_update_manager_address:
 proto 1 0
-txn Sender
 callsub subroutine_auth_manager_account
-// Reject unauthorized assert
-assert
 frame_dig -1
 global ZeroAddress
 !=
@@ -532,10 +545,7 @@ bytec_0 // ""
 dup
 intc_0 // 0
 dup
-txn Sender
 callsub subroutine_auth_manager_account
-// unauthorized
-assert
 frame_dig -4
 gtxns XferAsset
 frame_bury 0
@@ -1172,10 +1182,7 @@ subroutine_add_whitelisted_app:
 proto 2 0
 intc_0 // 0
 dupn 2
-txn Sender
 callsub subroutine_auth_manager_account
-// unauthorized
-assert
 global CurrentApplicationAddress
 min_balance
 frame_bury 0
@@ -1208,10 +1215,7 @@ subroutine_remove_whitelisted_app:
 proto 1 0
 intc_0 // 0
 dupn 2
-txn Sender
 callsub subroutine_auth_manager_account
-// unauthorized
-assert
 global CurrentApplicationAddress
 min_balance
 frame_bury 0
