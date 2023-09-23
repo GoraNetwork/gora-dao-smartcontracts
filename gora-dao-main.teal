@@ -521,7 +521,7 @@ global CurrentApplicationAddress
 assert
 retsub
 
-// method_vest_tokens (needs ma Auth)
+// Subroutine vest tokens (needs ma Auth)
 subroutine_vest_tokens:
 proto 5 0
 callsub subroutine_auth_manager_account
@@ -536,7 +536,7 @@ bytec_0 // ""
 dup
 intc_0 // 0
 dup
-//// Formerly here was misplaced subroutine_auth_manager_account , since it is a proto 0 0
+//// Formerly here was misplaced subroutine_auth_manager_account , since it is a proto 0 0 moving to start of subroutine has no issues!
 frame_dig -4
 gtxns XferAsset
 frame_bury 0
