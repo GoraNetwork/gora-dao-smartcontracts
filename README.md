@@ -160,6 +160,10 @@ GoraDAO contracts follow these principal designs:
 - There are one Proposal and one Vesting contract per Proposal to make the GoraDAO as decentralized and permission-less as possible!
 - ABIs complying to ARC4
 
+As illustrated in following diagram GoraDAO on-chain architecture is focused on integration and interoperability with existing working Gora smart contracts!
+
+**Gora & GoraDAO on-chain architecture:**
+
 ```mermaid
 
 graph TB
@@ -190,5 +194,27 @@ graph TB
 
 ```
 ### Gora DAO Main Contract: V1
+```mermaid
+
+graph TB
+ 
+      subgraph Gora DAO Main ABI
+            GoraDAO_Main[GoraDAO_Main]
+            GoraDAO_Create[create_dao]
+            GoraDAO_Init[init_dao]
+     
+      
+        end
+      
+
+
+      GoraDAO_Main[GoraDAO_Main] --> GoraDAO_Create
+      GoraDAO_Main[GoraDAO_Main] --> GoraDAO_Init
+
+
+  
+
+
+```
 ### Gora DAO Proposal Contract: V1
 ### Gora DAO Vesting Contract: V1
