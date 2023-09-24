@@ -2,7 +2,7 @@
 
 #### GoraDAO is Gora Network's DAO system!
 
-This repository contains Algorand AVM smart contracts of GoraDAO!
+(WIP!) This repository contains Algorand AVM smart contracts of GoraDAO!
 
 GoraDAO re-uses the existing Gora contracts as much as possible for sake of interoperability and better integration but for that purpose the TEAL source code (compiled from higher level languages) must be optimized and undergo some slight changes to be completely deployable within GoraDAO process, operations and logic!
 
@@ -202,6 +202,7 @@ graph TB
             GoraDAO_Main[GoraDAO_Main_ABI]
             GoraDAO_Create[create_dao]
             GoraDAO_Init[init_dao]
+            GoraDAO_Create_Proposal[create_proposal]
      
       
         end
@@ -210,6 +211,8 @@ graph TB
 
       GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Create
       GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Init
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Create_Proposal
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Create_Proposal
 
 
   
