@@ -152,4 +152,43 @@ sequenceDiagram
 
 
 ```
+## Gora DAO Contracts: V1
 
+GoraDAO contracts follow these principal designs:
+- No static or hard coded value
+- All scenarios are created based on C2C calls to GoraDAO main contract
+- There are one Proposal and one Vesting contract per Proposal to make the GoraDAO as decentralized and permission-less as possible!
+- ABIs complying to ARC4
+
+```mermaid
+
+graph TB
+ 
+     subgraph Gora
+        Gora_Main_Contract[Gora_Main_Contract]
+        Gora_Vesting[Gora_Vesting]
+        Gora_Stake_Delegator[Gora_Stake_Delegator]
+
+        subgraph GoraDAO
+            GoraDAO_Main((GoraDAO_Main))
+            GoraDAO_Proposal((GoraDAO_Proposal))
+            GoraDAO_Vesting((GoraDAO_Vesting))
+        end
+    end
+      
+      Gora_Main_Contract((Gora_Main_Contract)) --> Gora_Vesting
+      Gora_Main_Contract((Gora_Main_Contract)) --> Gora_Stake_Delegator
+      Gora_Vesting((Gora_Vesting)) --> Gora_Stake_Delegator
+
+      GoraDAO_Main((GoraDAO_Main)) --> GoraDAO_Proposal
+      GoraDAO_Main((GoraDAO_Main)) --> GoraDAO_Vesting
+      GoraDAO_Proposal((GoraDAO_Proposal)) --> GoraDAO_Vesting
+      GoraDAO_Vesting((GoraDAO_Vesting)) --> Gora_Stake_Delegator
+
+  
+
+
+```
+### Gora DAO Main Contract: V1
+### Gora DAO Proposal Contract: V1
+### Gora DAO Vesting Contract: V1
