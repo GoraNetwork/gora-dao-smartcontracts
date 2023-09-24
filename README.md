@@ -202,6 +202,7 @@ graph TB
             GoraDAO_Main[GoraDAO_Main_ABI]
             GoraDAO_Create[create_dao]
             GoraDAO_Init[init_dao]
+            GoraDAO_Check_Proposal[check_proposal]
             GoraDAO_Create_Proposal[create_proposal]
      
       
@@ -211,7 +212,7 @@ graph TB
 
       GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Create
       GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Init
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Create_Proposal
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Check_Proposal
       GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Create_Proposal
 
 
