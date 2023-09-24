@@ -203,7 +203,6 @@ graph TB
  
       subgraph GoraDAO Main
             GoraDAO_Main[GoraDAO_Main_ABI]
-
             GoraDAO_Check_Proposal[check_proposal]
             GoraDAO_Create_Proposal[create_proposal]
         end
