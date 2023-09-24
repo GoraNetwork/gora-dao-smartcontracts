@@ -198,8 +198,8 @@ graph TB
 
 graph TB
  
-      subgraph Gora DAO Main ABI
-            GoraDAO_Main[GoraDAO_Main]
+      subgraph GoraDAO Main
+            GoraDAO_Main[GoraDAO_Main_ABI]
             GoraDAO_Create[create_dao]
             GoraDAO_Init[init_dao]
      
@@ -208,8 +208,8 @@ graph TB
       
 
 
-      GoraDAO_Main[GoraDAO_Main] --> GoraDAO_Create
-      GoraDAO_Main[GoraDAO_Main] --> GoraDAO_Init
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Create
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Init
 
 
   
