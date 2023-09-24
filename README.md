@@ -189,11 +189,14 @@ graph TB
       GoraDAO_Proposal((GoraDAO_Proposal)) --> GoraDAO_Vesting
       GoraDAO_Vesting((GoraDAO_Vesting)) --> Gora_Stake_Delegator
 
-  
-
 
 ```
 ### Gora DAO Main Contract: V1
+
+GoraDAO main contract, once deployed to a network, will be responsible for generating Proposal units, consisted of a Proposal and a Vesting Contract dedicated to that proposal case! This design is to take permission-less and decentralization to the max for GoraDAO!
+GoraNetwork deploys the GoraDAO main contract and owns managerial rights to it and optionally can assign a manager address to delegate the authority to another Algorand account address!
+Proposal contract CRUD ABI calls would create Proposal units (if all critiria is met by the call ARGs) and after that the Proposal creator account would be the manager of that Proposal unit and inherently can assign and delegate this to another account!
+
 ```mermaid
 
 graph TB
@@ -204,20 +207,12 @@ graph TB
             GoraDAO_Init[init_dao]
             GoraDAO_Check_Proposal[check_proposal]
             GoraDAO_Create_Proposal[create_proposal]
-     
-      
         end
       
-
-
       GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Create
       GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Init
       GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Check_Proposal
       GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Create_Proposal
-
-
-  
-
 
 ```
 ### Gora DAO Proposal Contract: V1
