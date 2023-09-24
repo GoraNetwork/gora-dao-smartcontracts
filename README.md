@@ -19,9 +19,6 @@ These passages provide a high-level overview of the roles of the StakeDelegator 
 ```mermaid
 
 graph TB
-
- 
-
     subgraph Vesting
         create[create]
         update_time_constraints[update_time_constraints]
