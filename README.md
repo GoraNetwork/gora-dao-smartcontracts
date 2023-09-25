@@ -160,7 +160,7 @@ GoraDAO contracts follow these principal designs:
 - There are one Proposal and one Vesting contract per Proposal to make the GoraDAO as decentralized and permission-less as possible!
 - ABIs complying to ARC4
 - No Update or Delete for Proposals
-- No app optin or local state usage anywhere
+- No app opt-in or local state usage anywhere
 
 As illustrated in following diagram GoraDAO on-chain architecture is focused on integration and interoperability with existing working Gora smart contracts!
 
@@ -248,4 +248,45 @@ graph TB
 
 ```
 ### Gora DAO Proposal Contract: V1
+GoraDAO Proposal contracts are created from an ABI call to main contract and constitute an inner transaction C2C call for the aspect of Proposal contract that GoraDAO main contract manages (Many steps of Proposal lifecycles goes by direct ABI calls from clients)!
+
+Some methods have constraint of being in same transaction group as a call to identical method name with different signature! These methods are:
+
+- Configure_Proposal
+- Activate_Voting
+- Proposal_Participate
+- Proposal_Withdraw_Participation
+- Force_Close_Proposal
+
+
+```mermaid
+
+graph TB
+ 
+      subgraph GoraDAO Proposal
+            GoraDAO_Proposal[GoraDAO_Proposal_ABI]
+            Proposal_Create[proposal_create]
+            Update_Manager_address[update_manager_address]
+            Configure_Proposal[config_proposal]
+            Activate_Voting[activate_proposal]
+            Proposal_Participate[proposal_participate]
+            Proposal_Withdraw_Participation[proposal_withdraw_participation]
+            Proposal_Vote[proposal_vote]
+            Force_Close_Proposal[activate_proposal]
+       
+        end
+      
+
+      GoraDAO_Proposal[GoraDAO_Main_ABI] ---> Proposal_Create
+      GoraDAO_Proposal[GoraDAO_Main_ABI] ---> Update_Manager_address
+
+      GoraDAO_Proposal[GoraDAO_Main_ABI] ---> Configure_Proposal
+      GoraDAO_Proposal[GoraDAO_Main_ABI] ---> Activate_Voting
+      GoraDAO_Proposal[GoraDAO_Main_ABI] ---> Proposal_Participate
+      GoraDAO_Proposal[GoraDAO_Main_ABI] ---> Proposal_Withdraw_Participation
+      GoraDAO_Proposal[GoraDAO_Main_ABI] ---> Proposal_Vote
+      GoraDAO_Proposal[GoraDAO_Main_ABI] ---> Force_Close_Proposal
+ 
+
+```
 ### Gora DAO Vesting Contract: V1
