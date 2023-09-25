@@ -200,6 +200,13 @@ GoraNetwork deploys the GoraDAO main contract and owns managerial rights to it a
 Proposal contract create and configure ABI calls would create Proposal units (if all criteria is met by the call ARGs) and after that the Proposal creator account would be the manager of that Proposal unit and inherently can assign and delegate this to another account!
 The scope of authority Proposal manager account has is not broad and is only to maintain 100% non-custodial, decentralized and permission-less DAO protocol, nothing more! For example, Proposal manager cannot delete proposal and just can deactivate it and withdraw from it! Delete and update are disabled on Proposals as well as their peer vesting contracts!
 
+Some methods are support methods and actual operation happens on the method with same name but different signature on Proposal smart contract! Those methods are:
+
+- Configure_Proposal
+- Activate_Voting
+- Proposal_Participate
+- Proposal_Withdraw_Participation
+- Force_Close_Proposal
 
 
 ```mermaid
@@ -212,7 +219,7 @@ graph TB
             Update_Manager_address[update_manager_address]
             DAO_Subscribe[dao_subscribe]
             DAO_Unsubscribe[dao_unsubscribe]
-            Check_Proposal[check_proposal]
+            Check_Before_Proposal[check_proposal]
             Create_Proposal[create_proposal]
             Configure_Proposal[config_proposal]
             Activate_Voting[activate_proposal]
@@ -228,7 +235,7 @@ graph TB
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Update_Manager_address
       GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Subscribe
       GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Unsubscribe
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> Check_Proposal
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Check_Before_Proposal
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Create_Proposal
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Configure_Proposal
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Activate_Voting
