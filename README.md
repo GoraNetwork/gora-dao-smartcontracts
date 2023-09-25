@@ -159,6 +159,7 @@ GoraDAO contracts follow these principal designs:
 - All scenarios are created based on C2C calls to GoraDAO main contract
 - There are one Proposal and one Vesting contract per Proposal to make the GoraDAO as decentralized and permission-less as possible!
 - ABIs complying to ARC4
+- No app optin or local state usage anywhere
 
 As illustrated in following diagram GoraDAO on-chain architecture is focused on integration and interoperability with existing working Gora smart contracts!
 
@@ -210,12 +211,26 @@ graph TB
             GoraDAO_Init[dao_init]
             GoraDAO_Check_Proposal[check_proposal]
             GoraDAO_Create_Proposal[create_proposal]
+            GoraDAO_Configure_Proposal[config_proposal]
+            GoraDAO_Activate_Voting[activate_proposal]
+            GoraDAO_Proposal_Participate[proposal_participate]
+            GoraDAO_Proposal_Withdraw_Participation[proposal_withdraw_participation]
+            GoraDAO_Proposal_Vote[proposal_vote]
+            GoraDAO_Close_Proposal[activate_proposal]
+       
         end
       
 
       GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Init
       GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Check_Proposal
       GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Create_Proposal
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Configure_Proposal
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Activate_Voting
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Proposal_Participate
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Proposal_Withdraw_Participation
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Proposal_Vote
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Close_Proposal
+ 
 
 ```
 ### Gora DAO Proposal Contract: V1
