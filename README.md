@@ -298,9 +298,9 @@ GoraDAO Vesting contracts are bound to Proposals and will be activated by the fi
 Two types of vesting is supported in GoraDAO:
 - All funds at once!
 - Periodic payment (TODO: HTLC or claim based or Off-chain initiated)!
+
+IDEA: A time beacon oracle for apps to subscribe to and receive push chain time scheduled or GoraDAO events based announcements (this can be extended into VRF random beacon and app ABI call beacon oracles as to be added to GoraNetworks oracle catalogues)
   
-
-
 
 ```mermaid
 
@@ -316,7 +316,6 @@ graph TB
         
         end
       
-
       GoraDAO_Vesting[GoraDAO_Vesting_ABI] ---> Vesting_Create
       GoraDAO_Vesting[GoraDAO_Vesting_ABI] ---> Configure_Vesting
       GoraDAO_Vesting[GoraDAO_Vesting_ABI] ---> Vesting_Deposit_Algo
