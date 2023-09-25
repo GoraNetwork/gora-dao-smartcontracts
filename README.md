@@ -303,14 +303,16 @@ graph TB
             GoraDAO_Vesting[GoraDAO_Vesting_ABI]
             Vesting_Create[vesting_create]
             Configure_Vesting[config_vesting]
+            Vesting_Deposit_Algo[vesting_deposit_algo]
+            Vesting_Deposit_Gora[vesting_deposit_gora]
             Vesting_Transfer_Funds[vesting_transfer_funds]
- 
-       
         end
       
 
       GoraDAO_Vesting[GoraDAO_Vesting_ABI] ---> Vesting_Create
       GoraDAO_Vesting[GoraDAO_Vesting_ABI] ---> Configure_Vesting
+      GoraDAO_Vesting[GoraDAO_Vesting_ABI] ---> Vesting_Deposit_Algo
+      GoraDAO_Vesting[GoraDAO_Vesting_ABI] ---> Vesting_Deposit_Gora
       GoraDAO_Vesting[GoraDAO_Vesting_ABI] ---> Vesting_Transfer_Funds
 
  
