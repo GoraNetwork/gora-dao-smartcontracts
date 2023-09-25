@@ -227,7 +227,8 @@ graph TB
             Proposal_Participate[proposal_participate]
             Proposal_Withdraw_Participation[proposal_withdraw_participation]
             Proposal_Vote[proposal_vote]
-            Force_Close_Proposal[activate_proposal]
+            Proposal_Vesting_Stats[proposal_vesting_stats]
+            Force_Close_Proposal[close_proposal]
        
         end
       
@@ -243,6 +244,7 @@ graph TB
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Participate
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Withdraw_Participation
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Vote
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Vesting_Stats
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Force_Close_Proposal
  
 
