@@ -228,6 +228,7 @@ graph TB
             Proposal_Withdraw_Participation[proposal_withdraw_participation]
             Proposal_Vote[proposal_vote]
             Proposal_Vesting_Stats[proposal_vesting_stats]
+            Configure_Vesting[configure_vesting]
             Force_Close_Proposal[close_proposal]
        
         end
@@ -245,6 +246,7 @@ graph TB
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Withdraw_Participation
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Vote
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Vesting_Stats
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Configure_Vesting
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Force_Close_Proposal
  
 
@@ -252,9 +254,10 @@ graph TB
 ### Gora DAO Proposal Contract: V1
 GoraDAO Proposal contracts are created from an ABI call to main contract and constitute an inner transaction C2C call for the aspect of Proposal contract that GoraDAO main contract manages (Many steps of Proposal lifecycles goes by direct ABI calls from clients)!
 
-Some methods have constraint of being in same transaction group as a call to identical method name with different signature! These methods are:
+Some methods have constraint of being in same transaction group as a call to identical method name with different signature to either GoraDAO main or vesting contracts! These methods are:
 
 - Configure_Proposal
+- Configure_Vesting
 - Activate_Voting
 - Proposal_Participate
 - Proposal_Withdraw_Participation
@@ -271,6 +274,7 @@ graph TB
             Proposal_Create[proposal_create]
             Update_Manager_address[update_manager_address]
             Configure_Proposal[config_proposal]
+            Configure_Vesting[config_vesting]
             Activate_Voting[activate_proposal]
             Proposal_Participate[proposal_participate]
             Proposal_Withdraw_Participation[proposal_withdraw_participation]
@@ -284,6 +288,7 @@ graph TB
       GoraDAO_Proposal[GoraDAO_Proposal_ABI] ---> Update_Manager_address
 
       GoraDAO_Proposal[GoraDAO_Proposal_ABI] ---> Configure_Proposal
+      GoraDAO_Proposal[GoraDAO_Proposal_ABI] ---> Configure_Vesting
       GoraDAO_Proposal[GoraDAO_Proposal_ABI] ---> Activate_Voting
       GoraDAO_Proposal[GoraDAO_Proposal_ABI] ---> Proposal_Participate
       GoraDAO_Proposal[GoraDAO_Proposal_ABI] ---> Proposal_Withdraw_Participation
