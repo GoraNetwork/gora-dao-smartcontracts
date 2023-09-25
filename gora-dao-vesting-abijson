@@ -1,0 +1,13 @@
+{
+    "name": "gora-dao-vesting",
+    "desc": "GoraDAO vesting smart contract",
+    "networks": {
+        "MainNet": {
+            "appID": 0
+        },
+        "TestNet": {
+            "appID": 0
+        }
+    },
+    "methods": []
+}
