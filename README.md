@@ -300,9 +300,9 @@ graph TB
 ### Gora DAO Vesting Contract: V1
 
 GoraDAO Vesting contracts are bound to Proposals and will be activated by the first successful vote approval which passes the active proposal threshold! 
-Two types of vesting is supported in GoraDAO:
-- All funds at once!
-- Periodic payment (TODO: HTLC or claim based or Off-chain initiated)!
+
+
+ 
 
 IDEA: A time beacon oracle for apps to subscribe to and receive push chain time scheduled or GoraDAO events based announcements (this can be extended into VRF random beacon and app ABI call beacon oracles as to be added to GoraNetworks oracle catalogues)!
 
