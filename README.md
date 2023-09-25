@@ -197,7 +197,7 @@ graph TB
 GoraDAO main contract, once deployed to a network, will be responsible for generating Proposal units, consisted of a Proposal and a Vesting Contract dedicated to that proposal case! This design is to take permission-less and decentralization to the max for GoraDAO!
 GoraNetwork deploys the GoraDAO main contract and owns managerial rights to it and optionally can assign a manager address to delegate the authority to another Algorand account address!
 
-Proposal contract CRUD ABI calls would create Proposal units (if all criteria is met by the call ARGs) and after that the Proposal creator account would be the manager of that Proposal unit and inherently can assign and delegate this to another account!
+Proposal contract create and configure ABI calls would create Proposal units (if all criteria is met by the call ARGs) and after that the Proposal creator account would be the manager of that Proposal unit and inherently can assign and delegate this to another account!
 The scope of authority Proposal manager account has is not broad and is only to maintain 100% non-custodial, decentralized and permission-less DAO protocol, nothing more! For example, Proposal manager cannot delete proposal and just can deactivate it and withdraw from it! Delete and update are disabled on Proposals as well as their peer vesting contracts!
 
 
@@ -208,28 +208,34 @@ graph TB
  
       subgraph GoraDAO Main
             GoraDAO_Main[GoraDAO_Main_ABI]
-            GoraDAO_Init[dao_init]
-            GoraDAO_Check_Proposal[check_proposal]
-            GoraDAO_Create_Proposal[create_proposal]
-            GoraDAO_Configure_Proposal[config_proposal]
-            GoraDAO_Activate_Voting[activate_proposal]
-            GoraDAO_Proposal_Participate[proposal_participate]
-            GoraDAO_Proposal_Withdraw_Participation[proposal_withdraw_participation]
-            GoraDAO_Proposal_Vote[proposal_vote]
-            GoraDAO_Close_Proposal[activate_proposal]
+            DAO_Init[dao_init]
+            Update_Manager_address[update_manager_address]
+            DAO_Subscribe[dao_subscribe]
+            DAO_Unsubscribe[dao_unsubscribe]
+            Check_Proposal[check_proposal]
+            Create_Proposal[create_proposal]
+            Configure_Proposal[config_proposal]
+            Activate_Voting[activate_proposal]
+            Proposal_Participate[proposal_participate]
+            Proposal_Withdraw_Participation[proposal_withdraw_participation]
+            Proposal_Vote[proposal_vote]
+            Force_Close_Proposal[activate_proposal]
        
         end
       
 
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Init
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Check_Proposal
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Create_Proposal
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Configure_Proposal
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Activate_Voting
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Proposal_Participate
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Proposal_Withdraw_Participation
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Proposal_Vote
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> GoraDAO_Close_Proposal
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Init
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Update_Manager_address
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Subscribe
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Unsubscribe
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Check_Proposal
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Create_Proposal
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Configure_Proposal
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Activate_Voting
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Participate
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Withdraw_Participation
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Vote
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Force_Close_Proposal
  
 
 ```
