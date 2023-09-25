@@ -261,6 +261,7 @@ Some methods have constraint of being in same transaction group as a call to ide
 - Force_Close_Proposal
 
 
+
 ```mermaid
 
 graph TB
@@ -293,7 +294,11 @@ graph TB
 ```
 ### Gora DAO Vesting Contract: V1
 
-
+GoraDAO Vesting contracts are bound to Proposals and will be activated by the first successful vote approval which passes the active proposal threshold! 
+Two types of vesting is supported in GoraDAO:
+- All funds at once!
+- Periodic payment (TODO: HTLC or claim based or Off-chain initiated)!
+  
 
 
 
@@ -306,16 +311,18 @@ graph TB
             Vesting_Create[vesting_create]
             Configure_Vesting[config_vesting]
             Vesting_Deposit_Algo[vesting_deposit_algo]
-            Vesting_Deposit_Gora[vesting_deposit_gora]
+            Vesting_Deposit_Platform_Token[vesting_deposit_platform_token]
             Vesting_Transfer_Funds[vesting_transfer_funds]
+        
         end
       
 
       GoraDAO_Vesting[GoraDAO_Vesting_ABI] ---> Vesting_Create
       GoraDAO_Vesting[GoraDAO_Vesting_ABI] ---> Configure_Vesting
       GoraDAO_Vesting[GoraDAO_Vesting_ABI] ---> Vesting_Deposit_Algo
-      GoraDAO_Vesting[GoraDAO_Vesting_ABI] ---> Vesting_Deposit_Gora
+      GoraDAO_Vesting[GoraDAO_Vesting_ABI] ---> Vesting_Deposit_Platform_Token
       GoraDAO_Vesting[GoraDAO_Vesting_ABI] ---> Vesting_Transfer_Funds
+
 
  
 
