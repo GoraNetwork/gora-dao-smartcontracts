@@ -277,8 +277,43 @@ graph TB
         end
       
 
-      GoraDAO_Proposal[GoraDAO_Main_ABI] ---> Proposal_Create
-      GoraDAO_Proposal[GoraDAO_Main_ABI] ---> Update_Manager_address
+      GoraDAO_Proposal[GoraDAO_Proposal_ABI] ---> Proposal_Create
+      GoraDAO_Proposal[GoraDAO_Proposal_ABI] ---> Update_Manager_address
+
+      GoraDAO_Proposal[GoraDAO_Proposal_ABI] ---> Configure_Proposal
+      GoraDAO_Proposal[GoraDAO_Proposal_ABI] ---> Activate_Voting
+      GoraDAO_Proposal[GoraDAO_Proposal_ABI] ---> Proposal_Participate
+      GoraDAO_Proposal[GoraDAO_Proposal_ABI] ---> Proposal_Withdraw_Participation
+      GoraDAO_Proposal[GoraDAO_Proposal_ABI] ---> Proposal_Vote
+      GoraDAO_Proposal[GoraDAO_Proposal_ABI] ---> Force_Close_Proposal
+ 
+
+```
+### Gora DAO Vesting Contract: V1
+
+
+
+
+
+```mermaid
+
+graph TB
+ 
+      subgraph GoraDAO Vesting
+            GoraDAO_Vesting[GoraDAO_Vesting_ABI]
+            Vesting_Create[vesting_create]
+            Configure_Proposal[config_proposal]
+            Activate_Voting[activate_proposal]
+            Proposal_Participate[proposal_participate]
+            Proposal_Withdraw_Participation[proposal_withdraw_participation]
+            Proposal_Vote[proposal_vote]
+            Force_Close_Proposal[activate_proposal]
+       
+        end
+      
+
+      GoraDAO_Vesting[GoraDAO_Main_ABI] ---> Proposal_Create
+
 
       GoraDAO_Proposal[GoraDAO_Main_ABI] ---> Configure_Proposal
       GoraDAO_Proposal[GoraDAO_Main_ABI] ---> Activate_Voting
@@ -289,4 +324,3 @@ graph TB
  
 
 ```
-### Gora DAO Vesting Contract: V1
