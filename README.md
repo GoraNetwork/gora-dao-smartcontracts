@@ -301,6 +301,11 @@ graph TB
 
 GoraDAO Vesting contracts are bound to Proposals and will be activated by the first successful vote approval which passes the active proposal threshold! 
 
+The vesting algorithm is provided by Configure_Vesting method, during which the vesting configuration is sent via args plus necessary related data such as proper Lease values as needed! There are two major vesting algorithm parameters:
+
+- Initial vesting delay (no matter what this much round or time further vesting starts)
+- Based on vesting config including how many payments and time window between vestings!
+- After voting starts on Proposal contract there is no configurations allowed
 
  
 
