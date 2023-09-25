@@ -220,7 +220,7 @@ graph TB
             Update_Manager_address[update_manager_address]
             DAO_Subscribe[dao_subscribe]
             DAO_Unsubscribe[dao_unsubscribe]
-            Check_Before_Proposal[check_proposal]
+       
             Create_Proposal[create_proposal]
             Configure_Proposal[config_proposal]
             Activate_Voting[activate_proposal]
@@ -236,7 +236,7 @@ graph TB
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Update_Manager_address
       GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Subscribe
       GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Unsubscribe
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> Check_Before_Proposal
+
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Create_Proposal
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Configure_Proposal
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Activate_Voting
