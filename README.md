@@ -159,6 +159,7 @@ GoraDAO contracts follow these principal designs:
 - All scenarios are created based on C2C calls to GoraDAO main contract
 - There are one Proposal and one Vesting contract per Proposal to make the GoraDAO as decentralized and permission-less as possible!
 - ABIs complying to ARC4
+- No Update or Delete for Proposals
 - No app optin or local state usage anywhere
 
 As illustrated in following diagram GoraDAO on-chain architecture is focused on integration and interoperability with existing working Gora smart contracts!
