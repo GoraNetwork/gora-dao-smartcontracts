@@ -307,11 +307,12 @@ The vesting algorithm is provided by Configure_Vesting method, during which the 
 - Based on vesting config including how many payments and time window between vestings!
 - After voting starts on Proposal contract there is no configurations allowed
 
+TODO: Vesting algorithm ...
  
 
 IDEA: A time beacon oracle for apps to subscribe to and receive push chain time scheduled or GoraDAO events based announcements (this can be extended into VRF random beacon and app ABI call beacon oracles as to be added to GoraNetworks oracle catalogues)!
 
-IDEA: the above idea can be generalized with an ARC for a general oracle beacon service from GoraNetwork!
+IDEA: the above idea can be generalized with an ARC for a general oracle beacon service from GoraNetwork! This does not need any consensus or voting and just using a predictable lease with all beacon sources!
   
 
 ```mermaid
