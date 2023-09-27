@@ -270,6 +270,20 @@
                     "description": "GoraDAO Proposal vesting amounts program! (#amount, [amount])"
                 }
             ],
+            "boxes": [ 
+                {
+                    "name": "member_address",
+                    "description": "Dynamic box ref per member account address"
+                },
+                {
+                    "name": "proposal_reference",
+                    "description": "Dynamic box ref per proposal account address"
+                },
+                {
+                    "name": "proposals",
+                    "description": "Proposals box reference for proposal contract IDs"
+                }
+            ],
             "returns": {
                 "type": "uint64"
             }
@@ -294,7 +308,11 @@
             "boxes": [ 
                 {
                     "name": "member_address",
-                    "description": "Dynamic box ref per member address public key"
+                    "description": "Dynamic box ref per member account address"
+                },
+                {
+                    "name": "proposal_reference",
+                    "description": "Dynamic box ref per proposal account address"
                 },
                 {
                     "name": "proposals",
