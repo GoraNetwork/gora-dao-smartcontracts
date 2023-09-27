@@ -321,6 +321,42 @@
             "returns": {
                 "type": "uint64"
             }
+        },
+        {
+            "name": "proposal_vote",
+            "description": "Votes for a Proposal! Returns the voting member's account address concatenated with vote!",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "account",
+                    "name": "member_reference",
+                    "description": "GoraDAO member account reference"
+                },
+                {
+                    "type": "uint64",
+                    "name": "vote",
+                    "description": "GoraDAO vote"
+                },
+                
+                {
+                    "type": "uint64",
+                    "name": "vote",
+                    "description": "GoraDAO vote"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
         }
     ]
 }
