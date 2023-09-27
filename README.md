@@ -156,7 +156,7 @@ sequenceDiagram
 
 GoraDAO contracts follow these principal designs:
 - No static or hard coded value
-- All scenarios are created based on C2C calls to GoraDAO main contract
+- All scenarios are created based on ABI calls to GoraDAO contracts
 - There are one Proposal and one Vesting contract per Proposal to make the GoraDAO as decentralized and permission-less as possible!
 - ABIs complying to ARC4
 - No Update or Delete for Proposals
@@ -217,6 +217,8 @@ The activate_proposal is a manual override in case of min_participation is not m
 
 Note : Because the vesting and staking contracts architecture is still an open topic in GoraNetwork, Configure_Vesting method is not detailed in ABI or TEAL code yet!
 
+IDEA: Add configuration to GoraDAO in a way that it should only come from a child proposal to be approved sothat there can be Proposals in the future to tune GoraDAO further more or change the settings on that! E.g. the required Gora amount to create a Proposal!
+
 ```mermaid
 
 graph TB
@@ -258,7 +260,7 @@ graph TB
 
 ```
 ### Gora DAO Proposal Contract: V1
-GoraDAO Proposal contracts are created from an ABI call to main contract and constitute an inner transaction C2C call for the aspect of Proposal contract that GoraDAO main contract manages (Some steps of Proposal lifecycle goes by direct ABI calls from clients)!
+GoraDAO Proposal contracts are created from an ABI call to main contract and constitute an inner transaction C2C call to create Proposal contract!
 
 Some methods have constraint of being in same transaction group as a call to identical method name with different signature to either GoraDAO main or vesting contracts! These methods are:
 

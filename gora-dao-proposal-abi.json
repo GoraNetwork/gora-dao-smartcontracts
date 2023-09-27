@@ -50,8 +50,8 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "proposal_min_participation",
-                    "description": "GoraDAO Proposal minimum participation in microGora"
+                    "name": "proposal_quorum",
+                    "description": "GoraDAO Proposal minimum participation in Gora"
                 },
                 {
                     "type": "(uint64,uint64[])",
@@ -77,6 +77,21 @@
                     "type": "(uint64,uint64[])",
                     "name": "proposal_vesting_program",
                     "description": "GoraDAO Proposal vesting amounts program! (#amount, [amount])"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_voting_duration",
+                    "description": "GoraDAO Proposal voting duration in working days"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_voting_start",
+                    "description": "GoraDAO Proposal voting start in working days"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_voting_threshold",
+                    "description": "GoraDAO Proposal voting threshold in Gora"
                 }
             ],
             "boxes": [
@@ -391,7 +406,6 @@
                     "name": "vote",
                     "description": "GoraDAO vote"
                 },
-                
                 {
                     "type": "string",
                     "name": "vote_note",

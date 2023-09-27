@@ -15,6 +15,16 @@
             "description": "Initializes DAO! Should be sent by owner (Creator) of DAO! Returns the manager address!",
             "args": [
                 {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from manager to GoraDAO for fees and initiation MBRs!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "asset_transfer_transaction",
+                    "description": "Asset transfer transaction to deposit Gora!"
+                },
+                {
                     "type": "application",
                     "name": "main_app_id",
                     "description": "GoraNetwork Main application ID"
@@ -54,6 +64,11 @@
             "description": "Updates DAO manager address! Should be sent by either owner (creator) or current manager! Returns new manager address",
             "args": [
                 {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from manager to GoraDAO for fees!"
+                },
+                {
                     "type": "application",
                     "name": "main_app_id",
                     "description": "GoraNetwork Main application ID"
@@ -77,6 +92,16 @@
             "name": "dao_subscribe",
             "description": "Subscribes an Algorand account into GoraDAO! Returns total number of members!",
             "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from subscriber to GoraDAO for fees and initiation MBRs!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "asset_transfer_transaction",
+                    "description": "Asset transfer transaction to deposit Gora!"
+                },
                 {
                     "type": "asset",
                     "name": "asset_reference",
@@ -138,6 +163,16 @@
             "description": "Creates a new Proposal contract! Returns the Proposal contract ID!",
             "args": [
                 {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Proposer to GoraDAO for Proposal fees and initiation MBRs!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "asset_transfer_transaction",
+                    "description": "Asset transfer transaction to deposit Gora!"
+                },
+                {
                     "type": "application",
                     "name": "gora_dao_main_app_id",
                     "description": "GoraDAO Main application ID"
@@ -151,6 +186,61 @@
                     "type": "account",
                     "name": "member_reference",
                     "description": "GoraDAO member account reference"
+                },
+                {
+                    "type": "string",
+                    "name": "proposal_title",
+                    "description": "GoraDAO Proposal title"
+                },
+                {
+                    "type": "string",
+                    "name": "proposal_description",
+                    "description": "GoraDAO Proposal description"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_quorum",
+                    "description": "GoraDAO Proposal minimum participation in Gora"
+                },
+                {
+                    "type": "(uint64,uint64[])",
+                    "name": "proposal_threshold",
+                    "description": "GoraDAO Proposal threshold program! (#threshold, [%participation, %amount])"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_duration",
+                    "description": "GoraDAO Proposal total duration in working days"
+                },
+                {
+                    "type": "(uint64,uint64[])",
+                    "name": "proposal_duration_program",
+                    "description": "GoraDAO Proposal vesting durations program! (#duration, [duration])"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_amount",
+                    "description": "GoraDAO Proposal total amount in microGora"
+                },
+                {
+                    "type": "(uint64,uint64[])",
+                    "name": "proposal_vesting_program",
+                    "description": "GoraDAO Proposal vesting amounts program! (#amount, [amount])"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_voting_duration",
+                    "description": "GoraDAO Proposal voting duration in working days"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_voting_start",
+                    "description": "GoraDAO Proposal voting start in working days"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_voting_threshold",
+                    "description": "GoraDAO Proposal voting threshold in Gora"
                 }
             ],
             "boxes": [
@@ -175,6 +265,16 @@
             "name": "config_proposal",
             "description": "Configures a Proposal contract! Returns the Proposal contract ID!",
             "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Proposer to GoraDAO for fees and Proposal MBRs!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "asset_transfer_transaction",
+                    "description": "Asset transfer transaction to deposit Gora!"
+                },
                 {
                     "type": "application",
                     "name": "gora_dao_main_app_id",
@@ -218,6 +318,16 @@
             "name": "proposal_participate",
             "description": "Participates a member to a Proposal! Returns the Proposal contract ID!",
             "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from participants to GoraDAO for fees and participation MBRs!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "asset_transfer_transaction",
+                    "description": "Asset transfer transaction to deposit Gora!"
+                },
                 {
                     "type": "asset",
                     "name": "asset_reference",
@@ -285,6 +395,11 @@
             "description": "Activates a Proposal! Proposals activate automatically by time or all_voted being satisfied! Otherwise this method from Proposer will override and if the participation fits one of available threshold programs then voting starts! Returns the Proposal contract ID!",
             "args": [
                 {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from manager to GoraDAO for fees!"
+                },
+                {
                     "type": "asset",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
@@ -317,6 +432,11 @@
             "name": "proposal_vesting_stats",
             "description": "Updates the vesting stats and counters for a Proposal by calling vesting contract ABI with C2C call! inner_transaction! Returns Vesting contract's ID!",
             "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from manager to GoraDAO for fees!"
+                },
                 {
                     "type": "asset",
                     "name": "asset_reference",
@@ -360,6 +480,11 @@
             "name": "close_proposal",
             "description": "Force closes a Proposal contract as last resort after Proposal Creator, manager_address and GoraDAO manager_address send this ABI call and last one clears and closes Proposal and re-funds everyone! Returns the Proposal contract ID!",
             "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from manager to GoraDAO for fees!"
+                },
                 {
                     "type": "asset",
                     "name": "asset_reference",
