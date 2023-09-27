@@ -24,7 +24,6 @@
                     "name": "member_reference",
                     "description": "GoraDAO member account reference"
                 },
-
                 {
                     "name": "manager_reference",
                     "description": "Dynamic box ref per manager account address"
@@ -232,6 +231,41 @@
                 {
                     "name": "manager_reference",
                     "description": "Dynamic box ref per manager account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "close_proposal",
+            "description": "Force closes a Proposal contract as last resort after Proposal Creator, manager_address and GoraDAO manager_address send this ABI call and last one clears and closes Proposal and re-funds everyone! Returns the Proposal contract ID!",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "application",
+                    "name": "gora_dao_main_app_id",
+                    "description": "GoraDAO main contract ID"
+                },
+                {
+                    "type": "account",
+                    "name": "owner_reference",
+                    "description": "GoraDAO member account reference"
+                },
+                {
+                    "type": "account",
+                    "name": "manager_reference",
+                    "description": "GoraDAO manager account reference"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "proposal_reference",
+                    "description": "Dynamic box ref per proposal account address"
                 }
             ],
             "returns": {
