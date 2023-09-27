@@ -16,7 +16,7 @@
             "args": [
                 {
                     "type": "application",
-                    "name": "gora_dao_main",
+                    "name": "gora_dao_main_app_id",
                     "description": "GoraDAO Main application ID"
                 },
                 {
@@ -42,6 +42,30 @@
             ],
             "returns": {
                 "type": "Uint64"
+            }
+        },
+        {
+            "name": "update_manager_address",
+            "description": "Updates Proposal manager address! Should be sent by either owner (creator) or current manager! Returns new manager address",
+            "args": [
+                {
+                    "type": "application",
+                    "name": "gora_dao_main_app_id",
+                    "description": "GoraDAO Main application ID"
+                },
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "account",
+                    "name": "manager_reference",
+                    "description": "GoraDAO Proposal new manager account reference"
+                }
+            ],
+            "returns": {
+                "type": "string"
             }
         }
     ]
