@@ -343,9 +343,9 @@
                 },
                 
                 {
-                    "type": "uint64",
-                    "name": "vote",
-                    "description": "GoraDAO vote"
+                    "type": "string",
+                    "name": "vote_note",
+                    "description": "GoraDAO optional note for the vote"
                 }
             ],
             "boxes": [
