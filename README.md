@@ -275,7 +275,7 @@ graph TB
  
       subgraph GoraDAO Proposal
             GoraDAO_Proposal[GoraDAO_Proposal_ABI]
-            Proposal_Create[proposal_create]
+            Proposal_Create[create_proposal]
             Update_Manager_address[update_manager_address]
             Configure_Proposal[config_proposal]
             Configure_Vesting[config_vesting]
