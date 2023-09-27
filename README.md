@@ -215,7 +215,7 @@ The activate_proposal is a manual override in case of min_participation is not m
 - Time based activation in case that min-participation is met!
 - Min participation is met before start time---> activate_proposal can activate (This does not change the voting ending conditions including end_time and all_voted).
 
-Note : Because the vesting and staking contracts architecture is still an open topic in GoraNetwork, Configure_Vesting method is not detailed in ABI or TEAL conde yet!
+Note : Because the vesting and staking contracts architecture is still an open topic in GoraNetwork, Configure_Vesting method is not detailed in ABI or TEAL code yet!
 
 ```mermaid
 
