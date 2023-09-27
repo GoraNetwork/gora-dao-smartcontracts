@@ -271,6 +271,56 @@
             "returns": {
                 "type": "uint64"
             }
+        },
+        {
+            "name": "proposal_participate",
+            "description": "Participates with a member account into a Proposal! Returns the participating member's account address!",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "account",
+                    "name": "member_reference",
+                    "description": "GoraDAO member account reference"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "proposal_withdraw_participation",
+            "description": "Withdraws participation of a member account from a Proposal! Returns the withdrawing member's account address!",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "account",
+                    "name": "member_reference",
+                    "description": "GoraDAO member account reference"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
         }
     ]
 }
