@@ -24,6 +24,11 @@
                     "name": "member_reference",
                     "description": "GoraDAO member account reference"
                 },
+
+                {
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref per manager account address"
+                },
                 {
                     "type": "string",
                     "name": "proposal_title",
@@ -69,6 +74,10 @@
                 {
                     "name": "member_reference",
                     "description": "Dynamic box ref per member account address"
+                },
+                {
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref per manager account address"
                 },
                 {
                     "name": "proposal_reference",
@@ -204,6 +213,44 @@
                 {
                     "name": "proposal_reference",
                     "description": "Dynamic box ref per proposal account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "proposal_vesting_stats",
+            "description": "Updates the vesting stats and counters for a Proposal by calling vesting contract ABI with C2C call! inner_transaction! Returns Vesting contract's ID!",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "application",
+                    "name": "vesting_reference",
+                    "description": "GoraNetwork Vesting OR GoraDAO vesting contract ID"
+                },
+                {
+                    "type": "account",
+                    "name": "member_reference",
+                    "description": "GoraDAO member account reference"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address"
+                },
+                {
+                    "name": "proposal_reference",
+                    "description": "Dynamic box ref per proposal account address"
+                },
+                {
+                    "name": "proposals",
+                    "description": "Proposals box reference for proposal contract IDs"
                 }
             ],
             "returns": {
