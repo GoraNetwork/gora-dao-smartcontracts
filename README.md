@@ -223,9 +223,9 @@ graph TB
             DAO_Unsubscribe[dao_unsubscribe]
             Create_Proposal[create_proposal]
             Configure_Proposal[config_proposal]
-            Activate_Voting[activate_proposal]
             Proposal_Participate[proposal_participate]
             Proposal_Withdraw_Participation[proposal_withdraw_participation]
+            Activate_Voting[activate_proposal]
             Proposal_Vote[proposal_vote]
             Proposal_Vesting_Stats[proposal_vesting_stats]
             Configure_Vesting[configure_vesting]
@@ -242,8 +242,8 @@ graph TB
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Create_Proposal
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Configure_Proposal
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Participate
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> Activate_Voting
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Withdraw_Participation
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Activate_Voting
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Vote
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Vesting_Stats
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Configure_Vesting
@@ -262,8 +262,6 @@ Some methods have constraint of being in same transaction group as a call to ide
 - Activate_Voting
 - Proposal_Withdraw_Participation
 - Force_Close_Proposal
-
-
 
 ```mermaid
 
