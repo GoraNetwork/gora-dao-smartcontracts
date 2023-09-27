@@ -291,6 +291,10 @@
                 {
                     "name": "member_address",
                     "description": "Dynamic box ref per member address public key"
+                },
+                {
+                    "name": "proposals",
+                    "description": "Proposals box reference to add new proposals"
                 }
             ],
             "returns": {
