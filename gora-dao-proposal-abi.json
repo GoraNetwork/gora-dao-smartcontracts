@@ -9,5 +9,40 @@
             "appID": 0
         }
     },
-    "methods": []
+    "methods": [
+        {
+            "name": "proposal_create",
+            "description": "Creates a new Proposal! Returns proposal contract ID!",
+            "args": [
+                {
+                    "type": "application",
+                    "name": "gora_dao_main",
+                    "description": "GoraDAO Main application ID"
+                },
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "account",
+                    "name": "manager_reference",
+                    "description": "GoraDAO manager account reference"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref per manager account address"
+                },
+                {
+                    "name": "participants",
+                    "description": "Proposals box reference for participants user references"
+                }
+            ],
+            "returns": {
+                "type": "Uint64"
+            }
+        }
+    ]
 }
