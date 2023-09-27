@@ -209,6 +209,7 @@ Some methods are support methods and actual operation happens on the method with
 - Proposal_Withdraw_Participation
 - Force_Close_Proposal
 
+Force_Close_Proposal is a multi step process , only designed for extreme emergency cases where something is agreed by almost everyone to go wrong and therefore grants from owner, manager_address and also Gora main contract manager are needed to be effective and close the Proposal and archive it! There are no limitations on creating a new Proposal with identical specifications though!
 
 ```mermaid
 
@@ -220,7 +221,6 @@ graph TB
             Update_Manager_address[update_manager_address]
             DAO_Subscribe[dao_subscribe]
             DAO_Unsubscribe[dao_unsubscribe]
-       
             Create_Proposal[create_proposal]
             Configure_Proposal[config_proposal]
             Activate_Voting[activate_proposal]
@@ -241,8 +241,8 @@ graph TB
 
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Create_Proposal
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Configure_Proposal
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> Activate_Voting
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Participate
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Activate_Voting
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Withdraw_Participation
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Vote
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Vesting_Stats
@@ -252,14 +252,14 @@ graph TB
 
 ```
 ### Gora DAO Proposal Contract: V1
-GoraDAO Proposal contracts are created from an ABI call to main contract and constitute an inner transaction C2C call for the aspect of Proposal contract that GoraDAO main contract manages (Many steps of Proposal lifecycles goes by direct ABI calls from clients)!
+GoraDAO Proposal contracts are created from an ABI call to main contract and constitute an inner transaction C2C call for the aspect of Proposal contract that GoraDAO main contract manages (Some steps of Proposal lifecycle goes by direct ABI calls from clients)!
 
 Some methods have constraint of being in same transaction group as a call to identical method name with different signature to either GoraDAO main or vesting contracts! These methods are:
 
 - Configure_Proposal
 - Configure_Vesting
-- Activate_Voting
 - Proposal_Participate
+- Activate_Voting
 - Proposal_Withdraw_Participation
 - Force_Close_Proposal
 
