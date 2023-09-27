@@ -325,6 +325,41 @@
         },
         {
 
+            "name": "proposal_withdraw_participation",
+            "description": "Withdraws a member participation from a  Proposal! Returns the Proposal contract ID!",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "account",
+                    "name": "member_reference",
+                    "description": "GoraDAO member account reference"
+                }
+            ]
+            ,
+            "boxes": [ 
+                {
+                    "name": "member_address",
+                    "description": "Dynamic box ref per member account address"
+                },
+                {
+                    "name": "proposal_reference",
+                    "description": "Dynamic box ref per proposal account address"
+                },
+                {
+                    "name": "proposals",
+                    "description": "Proposals box reference for proposal contract IDs"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+
             "name": "activate_proposal",
             "description": "Activates a Proposal! Returns the Proposal contract ID!",
             "args": [
