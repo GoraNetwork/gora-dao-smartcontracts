@@ -146,46 +146,6 @@
                     "type": "account",
                     "name": "member_reference",
                     "description": "GoraDAO member account reference"
-                },
-                {
-                    "type": "string",
-                    "name": "proposal_title",
-                    "description": "GoraDAO Proposal title"
-                },
-                {
-                    "type": "string",
-                    "name": "proposal_description",
-                    "description": "GoraDAO Proposal description"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_min_participation",
-                    "description": "GoraDAO Proposal minimum participation in microGora"
-                },
-                {
-                    "type": "(uint64,uint64[])",
-                    "name": "proposal_threshold",
-                    "description": "GoraDAO Proposal threshold program! (#threshold, [%participation, %amount])"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_duration",
-                    "description": "GoraDAO Proposal total duration in working days"
-                },
-                {
-                    "type": "(uint64,uint64[])",
-                    "name": "proposal_duration_program",
-                    "description": "GoraDAO Proposal vesting durations program! (#duration, [duration])"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_amount",
-                    "description": "GoraDAO Proposal total amount in microGora"
-                },
-                {
-                    "type": "(uint64,uint64[])",
-                    "name": "proposal_vesting_program",
-                    "description": "GoraDAO Proposal vesting amounts program! (#amount, [amount])"
                 }
             ],
             "boxes": [
@@ -211,60 +171,25 @@
             "description": "Configures a Proposal contract! Returns the Proposal contract ID!",
             "args": [
                 {
+                    "type": "application",
+                    "name": "proposal_reference",
+                    "description": "GoraDAO Proposal application ID"
+                },
+                {
                     "type": "asset",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
                 {
                     "type": "account",
-                    "name": "member_reference",
-                    "description": "GoraDAO member account reference"
-                },
-                {
-                    "type": "string",
-                    "name": "proposal_title",
-                    "description": "GoraDAO Proposal title"
-                },
-                {
-                    "type": "string",
-                    "name": "proposal_description",
-                    "description": "GoraDAO Proposal description"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_min_participation",
-                    "description": "GoraDAO Proposal minimum participation in microGora"
-                },
-                {
-                    "type": "(uint64,uint64[])",
-                    "name": "proposal_threshold",
-                    "description": "GoraDAO Proposal threshold program! (#threshold, [%participation, %amount])"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_duration",
-                    "description": "GoraDAO Proposal total duration in working days"
-                },
-                {
-                    "type": "(uint64,uint64[])",
-                    "name": "proposal_duration_program",
-                    "description": "GoraDAO Proposal vesting durations program! (#duration, [duration])"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_amount",
-                    "description": "GoraDAO Proposal total amount in microGora"
-                },
-                {
-                    "type": "(uint64,uint64[])",
-                    "name": "proposal_vesting_program",
-                    "description": "GoraDAO Proposal vesting amounts program! (#amount, [amount])"
+                    "name": "manager_reference",
+                    "description": "GoraDAO manager account reference"
                 }
             ],
             "boxes": [
                 {
-                    "name": "member_reference",
-                    "description": "Dynamic box ref per member account address"
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref per manager account address"
                 },
                 {
                     "name": "proposal_reference",
