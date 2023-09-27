@@ -138,6 +138,11 @@
             "description": "Creates a new Proposal contract! Returns the Proposal contract ID!",
             "args": [
                 {
+                    "type": "application",
+                    "name": "gora_dao_main_app_id",
+                    "description": "GoraDAO Main application ID"
+                },
+                {
                     "type": "asset",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
@@ -170,6 +175,11 @@
             "name": "config_proposal",
             "description": "Configures a Proposal contract! Returns the Proposal contract ID!",
             "args": [
+                {
+                    "type": "application",
+                    "name": "gora_dao_main_app_id",
+                    "description": "GoraDAO Main application ID"
+                },
                 {
                     "type": "application",
                     "name": "proposal_reference",

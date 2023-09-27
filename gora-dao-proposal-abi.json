@@ -11,64 +11,6 @@
     },
     "methods": [
         {
-            "name": "proposal_create",
-            "description": "Creates a new Proposal! Returns proposal contract ID!",
-            "args": [
-                {
-                    "type": "application",
-                    "name": "gora_dao_main_app_id",
-                    "description": "GoraDAO Main application ID"
-                },
-                {
-                    "type": "asset",
-                    "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
-                },
-                {
-                    "type": "account",
-                    "name": "manager_reference",
-                    "description": "GoraDAO manager account reference"
-                }
-            ],
-            "boxes": [
-                {
-                    "name": "manager_reference",
-                    "description": "Dynamic box ref per manager account address"
-                },
-                {
-                    "name": "participants",
-                    "description": "Proposals box reference for participants user references"
-                }
-            ],
-            "returns": {
-                "type": "Uint64"
-            }
-        },
-        {
-            "name": "update_manager_address",
-            "description": "Updates Proposal manager address! Should be sent by either owner (creator) or current manager! Returns new manager address",
-            "args": [
-                {
-                    "type": "application",
-                    "name": "gora_dao_main_app_id",
-                    "description": "GoraDAO Main application ID"
-                },
-                {
-                    "type": "asset",
-                    "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
-                },
-                {
-                    "type": "account",
-                    "name": "manager_reference",
-                    "description": "GoraDAO Proposal new manager account reference"
-                }
-            ],
-            "returns": {
-                "type": "string"
-            }
-        },
-        {
             "name": "create_proposal",
             "description": "Creates a new Proposal contract! Returns the Proposal contract ID!",
             "args": [
@@ -133,8 +75,8 @@
                     "description": "Dynamic box ref per proposal account address"
                 },
                 {
-                    "name": "proposals",
-                    "description": "Proposals box reference for proposal contract IDs"
+                    "name": "participants",
+                    "description": "Proposals box reference for proposal participants addresses"
                 }
             ],
             "returns": {
@@ -199,6 +141,44 @@
                     "type": "(uint64,uint64[])",
                     "name": "proposal_vesting_program",
                     "description": "GoraDAO Proposal vesting amounts program! (#amount, [amount])"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref per manager account address"
+                },
+                {
+                    "name": "proposal_reference",
+                    "description": "Dynamic box ref per proposal account address"
+                },
+                {
+                    "name": "participants",
+                    "description": "Proposals box reference for proposal participants user addresses"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "update_manager_address",
+            "description": "Updates Proposal manager address! Should be sent by either owner (creator) or current manager! Returns new manager address",
+            "args": [
+                {
+                    "type": "application",
+                    "name": "gora_dao_main_app_id",
+                    "description": "GoraDAO Main application ID"
+                },
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "account",
+                    "name": "manager_reference",
+                    "description": "GoraDAO Proposal new manager account reference"
                 }
             ],
             "returns": {
