@@ -326,7 +326,7 @@
         {
 
             "name": "proposal_withdraw_participation",
-            "description": "Withdraws a member participation from a  Proposal! Returns the Proposal contract ID!",
+            "description": "Withdraws a member participation from a  Proposal! Returns the Proposal contract ID! Withdraw is possible only before voting starts",
             "args": [
                 {
                     "type": "asset",
@@ -361,7 +361,7 @@
         {
 
             "name": "activate_proposal",
-            "description": "Activates a Proposal! Returns the Proposal contract ID!",
+            "description": "Activates a Proposal! Proposals activate automatically by time or min_participation being available! Otherwise this method from Proposer will override and if the participation fits one of available threshhold programs then voting starts! Returns the Proposal contract ID!",
             "args": [
                 {
                     "type": "asset",

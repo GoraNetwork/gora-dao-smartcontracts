@@ -211,6 +211,10 @@ Some methods are support methods and actual operation happens on the method with
 
 Force_Close_Proposal is a multi step process , only designed for extreme emergency cases where something is agreed by almost everyone to go wrong and therefore grants from owner, manager_address and also Gora main contract manager are needed to be effective and close the Proposal and archive it! There are no limitations on creating a new Proposal with identical specifications though!
 
+The activate_proposal is a manual override in case of min_participation is not met! The voting activation handled in GoraDAO:
+- Time based activation in case that min-participation is met!
+- Min participation is met before start time---> activate_proposal can activate (This does not change the voting ending conditions including end_time and all_voted)
+
 ```mermaid
 
 graph TB
