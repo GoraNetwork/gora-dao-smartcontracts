@@ -78,10 +78,6 @@
                 {
                     "name": "manager_reference",
                     "description": "Dynamic box ref per manager account address"
-                },
-                {
-                    "name": "proposal_reference",
-                    "description": "Dynamic box ref per proposal account address"
                 }
             ],
             "returns": {
@@ -152,10 +148,6 @@
                 {
                     "name": "manager_reference",
                     "description": "Dynamic box ref per manager account address"
-                },
-                {
-                    "name": "proposal_reference",
-                    "description": "Dynamic box ref per proposal account address"
                 }
             ],
             "returns": {
@@ -205,10 +197,6 @@
                 {
                     "name": "manager_reference",
                     "description": "Dynamic box ref per manager account address"
-                },
-                {
-                    "name": "proposal_reference",
-                    "description": "Dynamic box ref per proposal account address"
                 }
             ],
             "returns": {
@@ -226,27 +214,24 @@
                 },
                 {
                     "type": "application",
+                    "name": "gora_dao_main_app_id",
+                    "description": "GoraDAO main contract ID"
+                },
+                {
+                    "type": "application",
                     "name": "vesting_reference",
                     "description": "GoraNetwork Vesting OR GoraDAO vesting contract ID"
                 },
                 {
                     "type": "account",
-                    "name": "member_reference",
-                    "description": "GoraDAO member account reference"
+                    "name": "manager_reference",
+                    "description": "GoraDAO manager account reference"
                 }
             ],
             "boxes": [
                 {
-                    "name": "member_reference",
-                    "description": "Dynamic box ref per member account address"
-                },
-                {
-                    "name": "proposal_reference",
-                    "description": "Dynamic box ref per proposal account address"
-                },
-                {
-                    "name": "proposals",
-                    "description": "Proposals box reference for proposal contract IDs"
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref per manager account address"
                 }
             ],
             "returns": {
