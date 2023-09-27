@@ -25,6 +25,10 @@
                     "description": "GoraDAO member account reference"
                 },
                 {
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref per manager account address"
+                },
+                {
                     "type": "string",
                     "name": "proposal_title",
                     "description": "GoraDAO Proposal title"
@@ -71,12 +75,8 @@
                     "description": "Dynamic box ref per member account address"
                 },
                 {
-                    "name": "proposal_reference",
-                    "description": "Dynamic box ref per proposal account address"
-                },
-                {
-                    "name": "participants",
-                    "description": "Proposals box reference for proposal participants addresses"
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref per manager account address"
                 }
             ],
             "returns": {
@@ -147,14 +147,6 @@
                 {
                     "name": "manager_reference",
                     "description": "Dynamic box ref per manager account address"
-                },
-                {
-                    "name": "proposal_reference",
-                    "description": "Dynamic box ref per proposal account address"
-                },
-                {
-                    "name": "participants",
-                    "description": "Proposals box reference for proposal participants user addresses"
                 }
             ],
             "returns": {
@@ -183,6 +175,187 @@
             ],
             "returns": {
                 "type": "string"
+            }
+        },
+        {
+            "name": "activate_proposal",
+            "description": "Activates a Proposal! Proposals activate automatically by time or all_voted being satisfied! Otherwise this method from Proposer will override and if the participation fits one of available threshold programs then voting starts! Returns the Proposal contract ID!",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "account",
+                    "name": "manager_reference",
+                    "description": "GoraDAO manager account reference"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref per manager account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "proposal_vesting_stats",
+            "description": "Updates the vesting stats and counters for a Proposal by calling vesting contract ABI with C2C call! inner_transaction! Returns Vesting contract's ID!",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "application",
+                    "name": "gora_dao_main_app_id",
+                    "description": "GoraDAO main contract ID"
+                },
+                {
+                    "type": "application",
+                    "name": "vesting_reference",
+                    "description": "GoraNetwork Vesting OR GoraDAO vesting contract ID"
+                },
+                {
+                    "type": "account",
+                    "name": "manager_reference",
+                    "description": "GoraDAO manager account reference"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref per manager account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "close_proposal",
+            "description": "Force closes a Proposal contract as last resort after Proposal Creator, manager_address and GoraDAO manager_address send this ABI call and last one clears and closes Proposal and re-funds everyone! Returns the Proposal contract ID!",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "application",
+                    "name": "gora_dao_main_app_id",
+                    "description": "GoraDAO main contract ID"
+                },
+                {
+                    "type": "account",
+                    "name": "owner_reference",
+                    "description": "GoraDAO member account reference"
+                },
+                {
+                    "type": "account",
+                    "name": "manager_reference",
+                    "description": "GoraDAO manager account reference"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "proposal_reference",
+                    "description": "Dynamic box ref per proposal account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "proposal_participate",
+            "description": "Participates with a member account into a Proposal! Returns the participating member's account address!",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "account",
+                    "name": "member_reference",
+                    "description": "GoraDAO member account reference"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "proposal_withdraw_participation",
+            "description": "Withdraws participation of a member account from a Proposal! Returns the withdrawing member's account address!",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "account",
+                    "name": "member_reference",
+                    "description": "GoraDAO member account reference"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "proposal_vote",
+            "description": "Votes for a Proposal! Returns the voting member's account address concatenated with vote!",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "account",
+                    "name": "member_reference",
+                    "description": "GoraDAO member account reference"
+                },
+                {
+                    "type": "uint64",
+                    "name": "vote",
+                    "description": "GoraDAO vote"
+                },
+                
+                {
+                    "type": "string",
+                    "name": "vote_note",
+                    "description": "GoraDAO optional note for the vote"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
             }
         }
     ]
