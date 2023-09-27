@@ -283,7 +283,7 @@ graph TB
             Proposal_Participate[proposal_participate]
             Proposal_Withdraw_Participation[proposal_withdraw_participation]
             Proposal_Vote[proposal_vote]
-            Force_Close_Proposal[activate_proposal]
+            Force_Close_Proposal[close_proposal]
        
         end
       
