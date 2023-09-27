@@ -42,7 +42,7 @@
                 },
                 {
                     "name": "proposals",
-                    "description": "Proposals box reference to add new proposals"
+                    "description": "Proposals box reference for proposal contract IDs"
                 }
             ],
             
@@ -198,8 +198,12 @@
                     "description": "Dynamic box ref per member account address"
                 },
                 {
+                    "name": "proposal_reference",
+                    "description": "Dynamic box ref per proposal account address"
+                },
+                {
                     "name": "proposals",
-                    "description": "Proposals box reference to add new proposals"
+                    "description": "Proposals box reference for proposal contract IDs"
                 }
             ],
             "returns": {
@@ -294,7 +298,7 @@
                 },
                 {
                     "name": "proposals",
-                    "description": "Proposals box reference to add new proposals"
+                    "description": "Proposals box reference for proposal contract IDs"
                 }
             ],
             "returns": {
