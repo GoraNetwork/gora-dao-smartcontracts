@@ -15,6 +15,16 @@
             "description": "Creates a new Proposal contract! Returns the Proposal contract ID!",
             "args": [
                 {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Proposal creator to GoraDAO for fees and Proposal creation MBRs!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "asset_transfer_transaction",
+                    "description": "Asset transfer transaction to deposit Gora!"
+                },
+                {
                     "type": "asset",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
@@ -88,6 +98,11 @@
             "description": "Configures a Proposal contract! Returns the Proposal contract ID!",
             "args": [
                 {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Proposal manager to GoraDAO for fees and Proposal configuration MBRs!"
+                },
+                {
                     "type": "application",
                     "name": "gora_dao_main_app_id",
                     "description": "GoraDAO Main application ID"
@@ -158,6 +173,11 @@
             "description": "Updates Proposal manager address! Should be sent by either owner (creator) or current manager! Returns new manager address",
             "args": [
                 {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Proposal manager to GoraDAO for fees!"
+                },
+                {
                     "type": "application",
                     "name": "gora_dao_main_app_id",
                     "description": "GoraDAO Main application ID"
@@ -179,8 +199,13 @@
         },
         {
             "name": "activate_proposal",
-            "description": "Activates a Proposal! Proposals activate automatically by time or all_voted being satisfied! Otherwise this method from Proposer will override and if the participation fits one of available threshold programs then voting starts! Returns the Proposal contract ID!",
+            "description": "Activates a Proposal voting! Proposals activate automatically by time or all_voted being satisfied! Otherwise this method from Proposer will override and if the participation fits one of available threshold programs then voting starts! Returns the Proposal contract ID!",
             "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Proposal manager to GoraDAO for fees and Proposal activation MBRs!"
+                },
                 {
                     "type": "asset",
                     "name": "asset_reference",
@@ -277,6 +302,16 @@
             "description": "Participates with a member account into a Proposal! Returns the participating member's account address!",
             "args": [
                 {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Proposal participant to GoraDAO for fees and Proposal participation MBRs!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "asset_transfer_transaction",
+                    "description": "Asset transfer transaction to deposit Gora!"
+                },
+                {
                     "type": "asset",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
@@ -302,6 +337,11 @@
             "description": "Withdraws participation of a member account from a Proposal! Returns the withdrawing member's account address!",
             "args": [
                 {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Proposal participant to GoraDAO for fees!"
+                },
+                {
                     "type": "asset",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
@@ -326,6 +366,16 @@
             "name": "proposal_vote",
             "description": "Votes for a Proposal! Returns the voting member's account address concatenated with vote!",
             "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Proposal participant to GoraDAO for fees!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "asset_transfer_transaction",
+                    "description": "Asset transfer transaction to deposit Gora!"
+                },
                 {
                     "type": "asset",
                     "name": "asset_reference",
