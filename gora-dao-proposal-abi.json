@@ -153,7 +153,7 @@
                     "description": "Dynamic box ref per proposal account address"
                 },
                 {
-                    "name": "participants",
+                    "name": "participant_reference",
                     "description": "Proposals box reference for proposal participants user addresses"
                 }
             ],
@@ -183,6 +183,39 @@
             ],
             "returns": {
                 "type": "string"
+            }
+        },
+        {
+            "name": "activate_proposal",
+            "description": "Activates a Proposal! Proposals activate automatically by time or all_voted being satisfied! Otherwise this method from Proposer will override and if the participation fits one of available threshold programs then voting starts! Returns the Proposal contract ID!",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "account",
+                    "name": "manager_reference",
+                    "description": "GoraDAO manager account reference"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref per manager account address"
+                },
+                {
+                    "name": "proposal_reference",
+                    "description": "Dynamic box ref per proposal account address"
+                },
+                {
+                    "name": "participant_reference",
+                    "description": "Proposals box reference for participants addresses"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
             }
         }
     ]
