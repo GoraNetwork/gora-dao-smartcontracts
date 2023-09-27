@@ -151,10 +151,6 @@
                 {
                     "name": "proposal_reference",
                     "description": "Dynamic box ref per proposal account address"
-                },
-                {
-                    "name": "participant_reference",
-                    "description": "Proposals box reference for proposal participants user addresses"
                 }
             ],
             "returns": {
@@ -208,10 +204,6 @@
                 {
                     "name": "proposal_reference",
                     "description": "Dynamic box ref per proposal account address"
-                },
-                {
-                    "name": "participant_reference",
-                    "description": "Proposals box reference for participants addresses"
                 }
             ],
             "returns": {
