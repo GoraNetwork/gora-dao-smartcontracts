@@ -361,7 +361,7 @@
         {
 
             "name": "activate_proposal",
-            "description": "Activates a Proposal! Proposals activate automatically by time or min_participation being available! Otherwise this method from Proposer will override and if the participation fits one of available threshhold programs then voting starts! Returns the Proposal contract ID!",
+            "description": "Activates a Proposal! Proposals activate automatically by time or all_voted being satisfied! Otherwise this method from Proposer will override and if the participation fits one of available threshold programs then voting starts! Returns the Proposal contract ID!",
             "args": [
                 {
                     "type": "asset",
