@@ -17,7 +17,7 @@ const GoraDaoDeployer = class {
         this.indexerServer = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.indexer_testnet_remote_server : props.config.gora_dao.indexer_remote_server
         this.indexerToken = props.config.gora_dao.indexer_remote_token
         this.indexerPort = props.config.gora_dao.indexer_remote_port
-        this.geoIndex = props.config.deployer.geo_index
+
         this.applicationId = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_main_id : props.config.gora_dao.asc_main_id
         this.applicationAddr = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_main_address : props.config.gora_dao.asc_main_address
         this.applicationItemId = props.config.gora_dao.asc_item_id
@@ -28,7 +28,7 @@ const GoraDaoDeployer = class {
         this.approvalProgData = props.approvalProgData
         this.clearProgData = props.clearProgData
         this.approvalPyTealProgData = props.approvalPyTealProgData
-       
+
         this.proposalItem = props.proposalItem
         this.accountObject = null
         this.accountBalance = null
@@ -119,6 +119,41 @@ const GoraDaoDeployer = class {
                     )
                     this.logger.info('trxPayment: %s', this.trxPayment.length)
                     this.logger.info('trxTransfer: %s', this.trxTransfer.length)
+
+                }
+            }
+
+
+        }
+    }
+    async printTransactionLogs(txID) {
+        if (this.algosdk.isValidAddress(this.accountObject.addr)) {
+            const urlTrx = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['indexer_testnet_remote_server'] : this.config.gora_dao['indexer_remote_server']}/v2/transactions/${txID}`;
+
+            let resTrx = await fetch(urlTrx, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            let dataTrx = await resTrx.json()
+            if (dataTrx) {
+                if (dataTrx.transaction.logs) {
+                    dataTrx.transaction.logs.map((item) => {
+                        try {
+                            const buffer = Buffer.from(item, 'hex');
+                            const bigint = buffer.readUIntBE(0, 4);
+                            this.logger.info('GoraDAO TXN uint64 log: %s', bigint)
+                        } catch (error) {
+                            let log = atob(item)
+
+
+                            this.logger.info('GoraDAO TXN bytes log: %s', log)
+                        }
+
+
+                    })
+
 
                 }
             }
@@ -267,13 +302,15 @@ const GoraDaoDeployer = class {
         //this.logger.info("GoraNetwork Main Contract Result = %s", compiledResult.result)
         this.logger.info("GoraNetwork Clear Hash = %s", compiledClearResult.hash);
         //this.logger.info("GoraNetwork Clear Result = %s", compiledClearResult.result);
-
+        params.fee = 1000
+        params.flatFee = true
         let appTxn = this.algosdk.makeApplicationCreateTxnFromObject({
             from: addr, suggestedParams: params, onComplete,
             approvalProgram: compiledResultUint8, clearProgram: compiledClearResultUint8,
             numLocalInts: localInts, numLocalByteSlices: localBytes, numGlobalInts: globalInts, numGlobalByteSlices: globalBytes, extraPages: 0
         });
         let appTxnId = appTxn.txID().toString();
+
         this.logger.info('------------------------------')
         this.logger.info("GoraNetwork Main Application Creation TXId =  %s", appTxnId);
         let signedAppTxn = appTxn.signTxn(this.accountObject.sk);
@@ -282,13 +319,14 @@ const GoraDaoDeployer = class {
 
         let transactionResponse = await this.algodClient.pendingTransactionInformation(appTxnId).do();
         let appId = transactionResponse['application-index'];
+        await this.printTransactionLogs(appTxnId)
         this.logger.info('------------------------------')
         this.logger.info("GoraNetwork Main Application ID: %s", appId);
         this.logger.info('------------------------------')
         this.applicationId = appId
         this.applicationAddr = this.algosdk.getApplicationAddress(appId);
         this.logger.info('------------------------------')
-        this.logger.info("GoraNetwork Main Application Address: %s", this.applicationAddr);
+        this.logger.info("GoraNetwork Main Application Address: %s", this.algosdk.getApplicationAddress(Number(appId)));
         this.logger.info('------------------------------')
     }
     async updateMainContract() {
@@ -306,21 +344,22 @@ const GoraDaoDeployer = class {
         this.logger.info('Compiled Result Uint8Array: ', compiledResultUint8)
         this.logger.info('Compiled Result PyTeal Uint8Array: ', compiledResultPyTealUint8)
         const compiledClearResultUint8 = new Uint8Array(Buffer.from(compiledClearResult.result, "base64"));
-        
+
         this.logger.info('------------------------------')
 
 
-        // let appTxn = this.algosdk.makeApplicationUpdateTxn(addr, params, Number(this.applicationId),
-        //     compiledResultUint8, compiledClearResultUint8, /* [this.algosdk.encodeUint64(1), this.algosdk.encodeUint64(1)] */);
-        // let appTxnId = appTxn.txID().toString();
-        // this.logger.info('------------------------------')
-        // this.logger.info("GoraNetwork Main Application Update TXId =  %s", appTxnId);
-        // let signedAppTxn = appTxn.signTxn(this.accountObject.sk);
-        // await this.algodClient.sendRawTransaction(signedAppTxn).do();
-        // await this.algosdk.waitForConfirmation(this.algodClient, appTxnId, 5)
+        let appTxn = this.algosdk.makeApplicationUpdateTxn(addr, params, Number(this.applicationId),
+            compiledResultUint8, compiledClearResultUint8, /* [this.algosdk.encodeUint64(1), this.algosdk.encodeUint64(1)] */);
+        let appTxnId = appTxn.txID().toString();
 
-        // let transactionResponse = await this.algodClient.pendingTransactionInformation(appTxnId).do();
+        this.logger.info('------------------------------')
+        this.logger.info("GoraNetwork Main Application Update TXId =  %s", appTxnId);
+        let signedAppTxn = appTxn.signTxn(this.accountObject.sk);
+        await this.algodClient.sendRawTransaction(signedAppTxn).do();
+        await this.algosdk.waitForConfirmation(this.algodClient, appTxnId, 5)
 
+        let transactionResponse = await this.algodClient.pendingTransactionInformation(appTxnId).do();
+        await this.printTransactionLogs(appTxnId)
         this.logger.info('------------------------------')
         this.logger.info("GoraNetwork Updated Main Application ID: %s", this.applicationId);
         this.logger.info('------------------------------')

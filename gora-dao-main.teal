@@ -7,3 +7,154 @@
 // Github: https://github.com/GoracleNetwork/gora-dao-smartcontracts
 
 #pragma version 8
+//Check TXN first
+callsub branch_check_txn
+
+// Check if the transaction is a create app call with app ID of 0
+txn ApplicationID
+bz branch_create
+
+// Checking onCompletion type for delete application call
+txn OnCompletion
+int DeleteApplication
+==
+bnz branch_delete
+
+// Checking onCompletion type for update application call
+txn OnCompletion
+int UpdateApplication
+==
+bnz branch_update
+
+// Checking onCompletion type for close out application call
+txn OnCompletion
+int CloseOut
+==
+bnz branch_closeout
+
+// Checking onCompletion type for optin application call
+txn OnCompletion
+int OptIn
+==
+bnz branch_optin
+
+// Checks the number of application args , if 0 then no method it is
+txn NumAppArgs
+int 0
+==
+bz branch_method_router
+
+b branch_error
+check_owner_auth:
+txn Sender
+global CreatorAddress
+==
+assert
+retsub
+
+branch_create:
+global CurrentApplicationID
+itob
+log
+int 1
+return
+
+branch_delete:
+callsub check_owner_auth
+int 1
+return
+
+branch_update:
+callsub check_owner_auth
+global CurrentApplicationID
+itob
+log
+int 1
+return
+
+branch_closeout:
+callsub check_owner_auth
+int 1
+return
+
+branch_optin:
+callsub check_owner_auth
+int 1
+return
+
+branch_method_router:
+
+// Checking app call's Arg 0 for dao_init method signature
+method "dao_init(pay,axfer,application,asset,account,account)string"
+txn ApplicationArgs 0
+==
+bnz method_dao_init
+
+b branch_error
+
+
+branch_check_txn:
+// Checks RekeyTo address transaction field to be empty (ZeroAddress)
+txn RekeyTo
+global ZeroAddress
+==
+assert
+// Checks CloseRemainderTo address transaction field to be empty (ZeroAddress)
+txn CloseRemainderTo
+global ZeroAddress
+==
+assert
+// Checks AssetCloseTo address transaction field to be empty (ZeroAddress)
+txn AssetCloseTo
+global ZeroAddress
+==
+assert
+// Check transaction type to be application call
+txn TypeEnum
+int appl
+==
+assert
+
+// Checking transaction fee
+txn Fee
+global MinTxnFee
+>=
+assert
+retsub
+
+
+
+method_dao_init:
+txn ApplicationArgs 1
+log
+txn ApplicationArgs 2
+log
+txn ApplicationArgs 3
+log
+txn ApplicationArgs 4
+log
+txn ApplicationArgs 5
+log
+txn ApplicationArgs 6
+log
+byte 0x151f7c75
+byte "dao_has_init"
+concat
+b branch_log_return
+
+branch_error:
+err
+
+// Handles logging the last element on the stack then put a 1 on the top and return (log and approve)
+branch_log_return:
+log
+int 1
+return
+
+
+
+
+
+
+
+
