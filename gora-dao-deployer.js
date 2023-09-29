@@ -150,8 +150,6 @@ const GoraDaoDeployer = class {
                                 this.logger.info(`GoraDAO TXN log [${index}]:bytes: %s`, log)
                             }
                             
-                           
-                            
                         } catch (error) {
                             this.logger.error(error)
                         }

@@ -87,6 +87,13 @@ load 1
 log
 load 2
 log
+//int 18446744073709551615
+global CurrentApplicationID
+dup
++
+itob
+log
+
 byte "gs_bytes"
 load 2
 app_global_put
