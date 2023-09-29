@@ -55,7 +55,17 @@ retsub
 branch_create:
 global CurrentApplicationID
 itob
+store 1
+byte "Global state bytes..."
+store 2
+load 1
 log
+byte "gs_bytes"
+load 2
+app_global_put
+byte "gs_int"
+global CurrentApplicationID
+app_global_put
 int 1
 return
 
@@ -68,7 +78,17 @@ branch_update:
 callsub check_owner_auth
 global CurrentApplicationID
 itob
+store 1
+byte "Global state bytes..."
+store 2
+load 1
 log
+byte "gs_bytes"
+load 2
+app_global_put
+byte "gs_int"
+global CurrentApplicationID
+app_global_put
 int 1
 return
 

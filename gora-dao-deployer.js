@@ -139,22 +139,71 @@ const GoraDaoDeployer = class {
             let dataTrx = await resTrx.json()
             if (dataTrx) {
                 if (dataTrx.transaction.logs) {
-                    dataTrx.transaction.logs.map((item) => {
+                    dataTrx.transaction.logs.map((item, index) => {
                         try {
-                            const buffer = Buffer.from(item, 'hex');
-                            const bigint = buffer.readUIntBE(0, 4);
-                            this.logger.info('GoraDAO TXN uint64 log: %s', bigint)
+                            const buffer = Buffer.from(item, 'base64');
+                            const bigint = buffer.readUIntBE(2,6)
+                            this.logger.info(`GoraDAO TXN log [${index}]:uint64:  %s`, bigint)
                         } catch (error) {
                             let log = atob(item)
-
-
-                            this.logger.info('GoraDAO TXN bytes log: %s', log)
+                            this.logger.info(`GoraDAO TXN log [${index}]:bytes: %s`, log)
                         }
-
-
                     })
 
 
+                }
+            }
+
+
+        }
+    }
+    async printAppGlobalState(appId) {
+        if (this.algosdk.isValidAddress(this.accountObject.addr)) {
+            const urlApp = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/applications/${appId}`;
+
+            let resApp = await fetch(urlApp, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            let dataApp = await resApp.json()
+            if (dataApp) {
+                if (dataApp.params["global-state"]) {
+                    let gs = dataApp.params["global-state"];
+                    let gsKeys = Object.keys(gs);
+                    for (let i = 0; i < gsKeys.length; i++) {
+                        let k = gsKeys[i];
+                     
+                       
+                        let kv = gs[k];
+                        let gsValueDecoded = null;
+                        let keyStr = Buffer.from(
+                            kv.key,
+                            "base64"
+                        ).toString();
+                        this.logger.info('GoraDAO App Global State Key: %s', keyStr)
+                        if (kv.value.bytes !== "" && kv.value.uint === 0) {
+                            try {
+                                let buf = Buffer.from(kv.value.bytes, "base64");
+                                let uintArr = new Uint8Array(buf);
+                                let addr = algosdk.encodeAddress(uintArr);
+                                if (algosdk.isValidAddress(addr)) {
+                                    gsValueDecoded = algosdk.encodeAddress(uintArr);
+                                } else {
+                                    throw new Error();
+                                }
+                            } catch (error) {
+                                let buf = Buffer.from(kv.value.bytes, "base64");
+                                let uintArr = new Uint8Array(buf);
+                                //uintArr = uintArr.slice(2, uintArr.length);
+                                gsValueDecoded = new TextDecoder().decode(uintArr);
+                            }
+                        } else if (kv.value.uint > 0) {
+                            gsValueDecoded = kv.value.uint;
+                        }
+                        this.logger.info('GoraDAO GlobalState Uint64 value: %s', gsValueDecoded)
+                    }
                 }
             }
 
@@ -320,6 +369,7 @@ const GoraDaoDeployer = class {
         let transactionResponse = await this.algodClient.pendingTransactionInformation(appTxnId).do();
         let appId = transactionResponse['application-index'];
         await this.printTransactionLogs(appTxnId)
+        await this.printAppGlobalState(appId)
         this.logger.info('------------------------------')
         this.logger.info("GoraNetwork Main Application ID: %s", appId);
         this.logger.info('------------------------------')
@@ -359,7 +409,9 @@ const GoraDaoDeployer = class {
         await this.algosdk.waitForConfirmation(this.algodClient, appTxnId, 5)
 
         let transactionResponse = await this.algodClient.pendingTransactionInformation(appTxnId).do();
+        let appId = transactionResponse['application-index'];
         await this.printTransactionLogs(appTxnId)
+        await this.printAppGlobalState(this.applicationId)
         this.logger.info('------------------------------')
         this.logger.info("GoraNetwork Updated Main Application ID: %s", this.applicationId);
         this.logger.info('------------------------------')
