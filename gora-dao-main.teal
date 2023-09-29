@@ -87,8 +87,6 @@ load 1
 log
 load 2
 log
-itob
-log
 
 byte "gs_bytes"
 load 2
