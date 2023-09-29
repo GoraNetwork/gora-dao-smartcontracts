@@ -54,11 +54,11 @@ retsub
 
 branch_create:
 global CurrentApplicationID
-itob
 store 1
 byte "GoraDAO contract created!"
 store 2
 load 1
+itob
 log
 load 2
 log
@@ -66,7 +66,7 @@ byte "gs_bytes"
 load 2
 app_global_put
 byte "gs_int"
-global CurrentApplicationID
+load 1
 app_global_put
 int 1
 return
@@ -79,11 +79,11 @@ return
 branch_update:
 callsub check_owner_auth
 global CurrentApplicationID
-itob
 store 1
 byte "GoraDAO contract updated!"
 store 2
 load 1
+itob
 log
 load 2
 log
@@ -92,7 +92,7 @@ byte "gs_bytes"
 load 2
 app_global_put
 byte "gs_int"
-global CurrentApplicationID
+load 1
 app_global_put
 int 1
 return
