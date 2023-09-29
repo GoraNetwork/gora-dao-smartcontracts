@@ -87,10 +87,6 @@ load 1
 log
 load 2
 log
-//int 18446744073709551615
-global CurrentApplicationID
-dup
-+
 itob
 log
 
