@@ -56,9 +56,11 @@ branch_create:
 global CurrentApplicationID
 itob
 store 1
-byte "Global state bytes..."
+byte "GoraDAO contract created!"
 store 2
 load 1
+log
+load 2
 log
 byte "gs_bytes"
 load 2
@@ -79,9 +81,11 @@ callsub check_owner_auth
 global CurrentApplicationID
 itob
 store 1
-byte "Global state bytes..."
+byte "GoraDAO contract updated!"
 store 2
 load 1
+log
+load 2
 log
 byte "gs_bytes"
 load 2

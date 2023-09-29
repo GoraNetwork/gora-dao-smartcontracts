@@ -141,12 +141,19 @@ const GoraDaoDeployer = class {
                 if (dataTrx.transaction.logs) {
                     dataTrx.transaction.logs.map((item, index) => {
                         try {
-                            const buffer = Buffer.from(item, 'base64');
-                            const bigint = buffer.readUIntBE(2,6)
-                            this.logger.info(`GoraDAO TXN log [${index}]:uint64:  %s`, bigint)
+                            if(Buffer.from(item, 'base64').byteLength === 8){
+                                const buffer = Buffer.from(item, 'base64');
+                                let uint64Log = buffer.readUIntBE(2, 6)
+                                this.logger.info(`GoraDAO TXN log [${index}]:uint64:  %s`, uint64Log)
+                            }else{
+                                let log = atob(item)
+                                this.logger.info(`GoraDAO TXN log [${index}]:bytes: %s`, log)
+                            }
+                            
+                           
+                            
                         } catch (error) {
-                            let log = atob(item)
-                            this.logger.info(`GoraDAO TXN log [${index}]:bytes: %s`, log)
+                            this.logger.error(error)
                         }
                     })
 
@@ -174,8 +181,8 @@ const GoraDaoDeployer = class {
                     let gsKeys = Object.keys(gs);
                     for (let i = 0; i < gsKeys.length; i++) {
                         let k = gsKeys[i];
-                     
-                       
+
+
                         let kv = gs[k];
                         let gsValueDecoded = null;
                         let keyStr = Buffer.from(
