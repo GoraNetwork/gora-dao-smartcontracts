@@ -147,7 +147,7 @@ sequenceDiagram
     Manager->>StakeDelegator: configure_settings(manager_address, manager_algo_share, manager_gora_share)
     StakeDelegator-->>Manager: void
 
-    User->>StakeDelegator: withdraw_non_stake(vesting_on_behalf_of, goracle_token_reference, main_app_reference, manager_reference)
+    User->>StakeDelegator: withdraw_non_stake(vesting_on_behalf_of, gora_token_reference, main_app_reference, manager_reference)
     StakeDelegator-->>User: void
 
 

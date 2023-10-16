@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GoracleNetwork/gora-dao-smartcontracts.git"
+    "url": "git+https://github.com/GoraNetwork/gora-dao-smartcontracts.git"
   },
   "keywords": [],
   "author": "MG (emg110@gmail.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/GoracleNetwork/gora-dao-smartcontracts/issues"
+    "url": "https://github.com/GoraNetwork/gora-dao-smartcontracts/issues"
   },
-  "homepage": "https://github.com/GoracleNetwork/gora-dao-smartcontracts#readme",
+  "homepage": "https://github.com/GoraNetwork/gora-dao-smartcontracts#readme",
   "dependencies": {
     "algosdk": "^2.5.0",
     "node-fetch": "2",
