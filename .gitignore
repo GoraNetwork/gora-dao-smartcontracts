@@ -134,3 +134,4 @@ gora_rekey_mnemonic.txt
 dump.js
 dump.txt
 dump/vote.teal
+package-lock.json
