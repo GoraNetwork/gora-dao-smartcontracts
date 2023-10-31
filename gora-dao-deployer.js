@@ -324,7 +324,6 @@ const GoraDaoDeployer = class {
             }
         }
     }
-    //TODO OPS
     async deployerReport() {
         try {
             await this.fetchAlgoWalletInfo();
