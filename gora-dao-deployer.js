@@ -3,33 +3,65 @@ const sha512_256 = require('js-sha512').sha512_256;
 
 const GoraDaoDeployer = class {
     constructor(props) {
+        // Configurations instance
         this.config = props.config
+        // Logger instance with Winston-Chalk logger module
         this.logger = props.logger
+        // AlgoSDK instance
         this.algosdk = props.algosdk
-        this.mnemonic = props.mnemonic
-        this.mnemonicRekey = props.mnemonicRekey
+
+        // Menmonic for proposer account
+        this.mnemonic0 = props.mnemonic0
+
+        // Menmonic for participant 1 account
+        this.mnemonic1 = props.mnemonic1
+        // Menmonic for participant 2 account
+        this.mnemonic2 = props.mnemonic2
+        // Menmonic for participant 3 account
+        this.mnemonic3 = props.mnemonic3
+
+        // Remote or local mode for deployer , defaults to remote
         this.mode = props.config.deployer.mode
+
+        // Algod API Server MAINNET & TESTNET
         this.algodServer = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.algod_testnet_remote_server : props.config.gora_dao.algod_remote_server
         this.algodTestServer = props.config.gora_dao.algod_testnet_remote_server
-        this.algodToken = props.config.gora_dao.algod_remote_token
-        this.algodPort = props.config.gora_dao.algod_remote_port
-        this.algodClient = new props.algosdk.Algodv2(this.algodToken, this.algodServer, this.algodPort)
-        this.indexerServer = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.indexer_testnet_remote_server : props.config.gora_dao.indexer_remote_server
-        this.indexerToken = props.config.gora_dao.indexer_remote_token
-        this.indexerPort = props.config.gora_dao.indexer_remote_port
 
-        this.applicationId = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_main_id : props.config.gora_dao.asc_main_id
-        this.applicationAddr = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_main_address : props.config.gora_dao.asc_main_address
-        this.applicationItemId = props.config.gora_dao.asc_item_id
-        this.applicationItemAddr = props.config.gora_dao.asc_item_address
-        this.itemAsaId = props.config.gora_dao.item_asa_id
+        // Algod API Token
+        this.algodToken = props.config.gora_dao.algod_remote_token
+        // Algod API Port
+        this.algodPort = props.config.gora_dao.algod_remote_port
+        // Algod API Client
+        this.algodClient = new props.algosdk.Algodv2(this.algodToken, this.algodServer, this.algodPort)
+
+        // Indexer API Server MAINNET & TESTNET
+        this.indexerServer = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.indexer_testnet_remote_server : props.config.gora_dao.indexer_remote_server
+        // Indexer API Token
+        this.indexerToken = props.config.gora_dao.indexer_remote_token
+        // Algod API Port
+        this.indexerPort = props.config.gora_dao.indexer_remote_port
+        // Indexer API Client
         this.indexerClient = new props.algosdk.Indexer(this.algodToken, this.indexerServer, this.indexerPort)
+
+
+        // GoraDAO Main Contract
+        this.applicationId = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_main_id : props.config.gora_dao.asc_main_id
+        // GoraDAO Main Contract Address
+        this.applicationAddr = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_main_address : props.config.gora_dao.asc_main_address
+        
+
+        this.proposalApplicationId = props.config.gora_dao.asc_proposal_id
+        this.proposalApplicationAddress = props.config.gora_dao.asc_proposal_address
+
         this.contract = props.contract
         this.approvalProgData = props.approvalProgData
         this.clearProgData = props.clearProgData
         this.approvalPyTealProgData = props.approvalPyTealProgData
 
         this.proposalItem = props.proposalItem
+
+
+        // Global Variables attached to class instance object
         this.accountObject = null
         this.accountBalance = null
         this.assetsHeld = null
@@ -141,11 +173,11 @@ const GoraDaoDeployer = class {
                 if (dataTrx.transaction.logs) {
                     dataTrx.transaction.logs.map((item, index) => {
                         try {
-                            if(Buffer.from(item, 'base64').byteLength === 8){
+                            if (Buffer.from(item, 'base64').byteLength === 8) {
                                 const buffer = Buffer.from(item, 'base64');
                                 let uint64Log = buffer.readUIntBE(2, 6)
                                 this.logger.info(`GoraDAO TXN log [${index}]:uint64:  %s`, uint64Log)
-                            }else{
+                            } else {
                                 let log = atob(item)
                                 this.logger.info(`GoraDAO TXN log [${index}]:bytes: %s`, log)
                             }
