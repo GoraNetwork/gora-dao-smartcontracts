@@ -27,28 +27,29 @@
       "mode": "remote",
       "deployer_report": false,
       "delete_apps": false,
+      "apps_to_delete": [],
+      
       "create_dao_contracts": false,
       "update_dao_contracts": true,
       "setup_dao_contract": false,
-      "test_dao_closeout": false,
-      "test_dao_optin": false,
+
+
       "create_proposal_contracts": false,
-      "update_proposal_contracts": false,
-      "withdraw_from_dao_vault": false,
       "write_proposal_source_box": false,
-      "test_proposal_closeout": false,
-      "test_proposal_optin": false,
-      "test_proposal_delete": false,
+      "update_proposal_contracts": false,
+
       "test_proposal_setup": false,
       "test_proposal_activate": false,
-      "test_proposal_close": false,
+      "test_proposal_closure": false,
       "test_proposal_participate": false,
+      "test_proposal_withdraw_participate": false,
       "test_proposal_vote": false,
-      "apps_to_delete": [],
+
       "num_local_int": 0,
       "num_local_byte": 0,
       "num_global_int": 4,
       "num_global_byte": 4,
+      
       "proposal": {
         "proposalName": "proposal_name",
         "proposalBanner": "proposal_banner",
