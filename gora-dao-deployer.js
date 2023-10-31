@@ -44,27 +44,29 @@ const GoraDaoDeployer = class {
         this.indexerClient = new props.algosdk.Indexer(this.algodToken, this.indexerServer, this.indexerPort)
 
 
-        // GoraDAO Main Contract
+        // GoraDAO Main Application ID
         this.goraDaoMainApplicationId = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_main_id : props.config.gora_dao.asc_main_id
-        // GoraDAO Main Contract Address
+        // GoraDAO Main Application Address
         this.goraDaoMainApplicationAddress = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_main_address : props.config.gora_dao.asc_main_address
 
-        // Proposal application ID
+        // GoraDAO Proposal application ID
         this.proposalApplicationId = props.config.gora_dao.asc_proposal_id
-        // Proposal application Address
+        // GoraDAO Proposal application Address
         this.proposalApplicationAddress = props.config.gora_dao.asc_proposal_address
-        // Proposal Asset ID
+        // GoraDAO Proposal Asset ID
         this.proposalAsset = props.config.gora_dao.proposal_asa_id
 
-
+        // GoraDao Main contracts
         this.daoContract = props.daoContract
         this.daoApprovalProgData = props.daoApprovalProgData
         this.daoClearProgData = props.daoClearProgData
 
+        // GoraDao Proposal contracts
         this.proposalContract = props.proposalContract
         this.proposalApprovalProgData = props.proposalApprovalProgData
         this.proposalClearProgData = props.proposalClearProgData
 
+        // GoraDao Vesting contracts
         this.vestingContract = props.vestingContract
         this.vestingApprovalProgData = props.vestingApprovalProgData
         this.vestingClearProgData = props.vestingClearProgData
