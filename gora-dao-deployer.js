@@ -1,7 +1,9 @@
 const fetch = require('node-fetch');
 const sha512_256 = require('js-sha512').sha512_256;
 
+// GoraDAO deployer Class
 const GoraDaoDeployer = class {
+    // Class constructor
     constructor(props) {
         // Configurations instance
         this.config = props.config
@@ -84,6 +86,7 @@ const GoraDaoDeployer = class {
         this.trxTransfer = null
 
     }
+    // Imports the accounts from Mnemonics
     importAccount() {
         const acc = this.algosdk.mnemonicToSecretKey(this.mnemonic0);
         let addr = acc.addr
@@ -97,13 +100,14 @@ const GoraDaoDeployer = class {
         this.logger.warn(this.config.gora_dao['algo_dispenser'] + addr);
         return { acc, accRekey };
     };
+    // Gets the contract method instance for a given method
     getMethodByName(name, contract) {
         const m = contract.methods.find((mt) => { return mt.name == name })
         if (m === undefined)
             throw Error("Method undefined: " + name)
         return m
     }
-// Gets the balance information for GoraDAO account address
+    // Gets the balance information for GoraDAO account address
     async fetchAlgoWalletInfo() {
         if (this.algosdk.isValidAddress(this.accountObject.addr)) {
             const url = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/accounts/${this.accountObject.addr}`;
@@ -439,7 +443,7 @@ const GoraDaoDeployer = class {
         let params = await this.algodClient.getTransactionParams().do();
         let onComplete = this.algosdk.OnApplicationComplete.UpdateApplicationOC;
         const compiledResult = await this.algodClient.compile(this.daoApprovalProgData).do();
-   
+
         const compiledClearResult = await this.algodClient.compile(this.daoClearProgData).do();
         this.logger.info("GoraNetwork Main Contract Hash = %s", compiledResult.hash);
         this.logger.info("GoraNetwork Main Contract Result = %s", compiledResult.result)
@@ -477,14 +481,14 @@ const GoraDaoDeployer = class {
         this.logger.info('------------------------------')
     }
     // Required Proposal Operations
-    async runProposalCreation() {}
-    async writeProposalContractSourceBox() {}
-    async runProposalUpdate() {}
-    async runProposalConfiguration() {}
-    async runProposalParticipation() {}
-    async runProposalWithdrawParticipation() {}
-    async runProposalActivation() {}
-    async runProposalVote() {}
+    async runProposalCreation() { }
+    async writeProposalContractSourceBox() { }
+    async runProposalUpdate() { }
+    async runProposalConfiguration() { }
+    async runProposalParticipation() { }
+    async runProposalWithdrawParticipation() { }
+    async runProposalActivation() { }
+    async runProposalVote() { }
 
     // Running deployer
     async runDeployer() {
