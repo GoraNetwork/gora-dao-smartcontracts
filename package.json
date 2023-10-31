@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/GoraNetwork/gora-dao-smartcontracts#readme",
   "dependencies": {
-    "algosdk": "^2.5.0",
+    "algosdk": "^2.7.0",
     "node-fetch": "2",
     "esrever": "latest",
     "winston": "latest",
