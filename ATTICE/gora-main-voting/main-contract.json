@@ -1,5 +1,5 @@
 {
-  "name": "GoracleMain",
+  "name": "GoraMain",
   "networks": {
     "default": {
       "appID": 1
@@ -17,7 +17,7 @@
     },
     {
       "name": "update_protocol_settings",
-      "desc": "a hook to change settings for the goracle protocol",
+      "desc": "a hook to change settings for the Gora protocol",
       "args": [
         { "name": "manager_address", "type": "address" },
         { "name": "refund_request_made_percentage", "type": "uint64" },

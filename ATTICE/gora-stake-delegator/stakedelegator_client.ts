@@ -15,7 +15,7 @@ export class StakeDelegator extends bkr.ApplicationClient {
         new algosdk.ABIMethod({ name: "manual_process_aggregation", desc: "", args: [{ type: "asset", name: "asset_reference", desc: "" }, { type: "application", name: "main_app_reference", desc: "" }, { type: "account", name: "manager_reference", desc: "" }], returns: { type: "void", desc: "" } }),
         new algosdk.ABIMethod({ name: "register_participation_key", desc: "", args: [{ type: "address", name: "new_key", desc: "" }, { type: "application", name: "main_ref", desc: "" }], returns: { type: "void", desc: "" } }),
         new algosdk.ABIMethod({ name: "configure_settings", desc: "", args: [{ type: "address", name: "manager_address", desc: "" }, { type: "uint64", name: "manager_algo_share", desc: "" }, { type: "uint64", name: "manager_gora_share", desc: "" }], returns: { type: "void", desc: "" } }),
-        new algosdk.ABIMethod({ name: "withdraw_non_stake", desc: "", args: [{ type: "account", name: "vesting_on_behalf_of", desc: "" }, { type: "asset", name: "goracle_token_reference", desc: "" }, { type: "application", name: "main_app_reference", desc: "" }, { type: "account", name: "manager_reference", desc: "" }], returns: { type: "void", desc: "" } })
+        new algosdk.ABIMethod({ name: "withdraw_non_stake", desc: "", args: [{ type: "account", name: "vesting_on_behalf_of", desc: "" }, { type: "asset", name: "gora_token_reference", desc: "" }, { type: "application", name: "main_app_reference", desc: "" }, { type: "account", name: "manager_reference", desc: "" }], returns: { type: "void", desc: "" } })
     ];
     async init_app(args: {
         asset: bigint;
@@ -88,11 +88,11 @@ export class StakeDelegator extends bkr.ApplicationClient {
     }
     async withdraw_non_stake(args: {
         vesting_on_behalf_of: string;
-        goracle_token_reference: bigint;
+        gora_token_reference: bigint;
         main_app_reference: bigint;
         manager_reference: string;
     }, txnParams?: bkr.TransactionOverrides): Promise<bkr.ABIResult<void>> {
-        const result = await this._execute(await this.compose.withdraw_non_stake({ vesting_on_behalf_of: args.vesting_on_behalf_of, goracle_token_reference: args.goracle_token_reference, main_app_reference: args.main_app_reference, manager_reference: args.manager_reference }, txnParams));
+        const result = await this._execute(await this.compose.withdraw_non_stake({ vesting_on_behalf_of: args.vesting_on_behalf_of, gora_token_reference: args.gora_token_reference, main_app_reference: args.main_app_reference, manager_reference: args.manager_reference }, txnParams));
         return new bkr.ABIResult<void>(result);
     }
     compose = {
@@ -159,11 +159,11 @@ export class StakeDelegator extends bkr.ApplicationClient {
         },
         withdraw_non_stake: async (args: {
             vesting_on_behalf_of: string;
-            goracle_token_reference: bigint;
+            gora_token_reference: bigint;
             main_app_reference: bigint;
             manager_reference: string;
         }, txnParams?: bkr.TransactionOverrides, atc?: algosdk.AtomicTransactionComposer): Promise<algosdk.AtomicTransactionComposer> => {
-            return this._addMethodCall(algosdk.getMethodByName(this.methods, "withdraw_non_stake"), { vesting_on_behalf_of: args.vesting_on_behalf_of, goracle_token_reference: args.goracle_token_reference, main_app_reference: args.main_app_reference, manager_reference: args.manager_reference }, txnParams, atc);
+            return this._addMethodCall(algosdk.getMethodByName(this.methods, "withdraw_non_stake"), { vesting_on_behalf_of: args.vesting_on_behalf_of, gora_token_reference: args.gora_token_reference, main_app_reference: args.main_app_reference, manager_reference: args.manager_reference }, txnParams, atc);
         }
     };
 }

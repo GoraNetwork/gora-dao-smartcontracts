@@ -60,7 +60,7 @@
                 "global_aggregation_round": {
                     "type": "bytes",
                     "key": "ar",
-                    "descr": "Keeps track of current aggregation round, aggregation round start (algorand round), goracle timeout"
+                    "descr": "Keeps track of current aggregation round, aggregation round start (algorand round), Gora timeout"
                 },
                 "global_most_recent_aggregation": {
                     "type": "bytes",
@@ -288,7 +288,7 @@
                     },
                     {
                         "type": "asset",
-                        "name": "goracle_token_reference"
+                        "name": "gora_token_reference"
                     },
                     {
                         "type": "application",
