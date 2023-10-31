@@ -360,7 +360,7 @@
         
         {
             "name": "proposal_vote",
-            "description": "Votes to a Proposal! Returns the Proposal contract ID!",
+            "description": "Optionally Votes to a Proposal! Returns the Proposal contract ID!",
             "args": [
                 {
                     "type": "pay",
