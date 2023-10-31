@@ -8,11 +8,17 @@ GoraDAO uses dynamic generation of Proposals and Vesting (optional ) contracts v
 
 - Optional Vesting
 - Optional Staking
+- Configurable Voting
 - Configurable Vesting
 - Configurable Algo and/or BYOT
-- Configurable voting patterns ( `A/B`, `A-B`, `%` )
 
+A note on thresholds structure:
+`[100,100,51]` is a threshold scenario and is consisted of 3 unsigned integers between 0-100! First is threshold of participation , second is the percentage of vesting application and third is the required percentage for approval! Gora proposal accepts array of this array as array of voting scenarios depending of participation percentage!
+This lets a proposal to continue operation and go to vote even if the originally anticipated participation has not occured! This can have either the same or different allocations and required approval percentages!
 
+Example: `[[100,100, 52],[80, 70, 70], [60, 50, 70]]`
+
+With this innovative approach DAO proposals get more dynamic and proactive in the face of different participation behaviors from community!
 
 ## Gora DAO Contracts: V1
 
