@@ -45,9 +45,9 @@ const GoraDaoDeployer = class {
 
 
         // GoraDAO Main Contract
-        this.applicationId = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_main_id : props.config.gora_dao.asc_main_id
+        this.goraDaoMainApplicationId = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_main_id : props.config.gora_dao.asc_main_id
         // GoraDAO Main Contract Address
-        this.applicationAddr = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_main_address : props.config.gora_dao.asc_main_address
+        this.goraDaoMainApplicationAddress = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_main_address : props.config.gora_dao.asc_main_address
 
         // Proposal application ID
         this.proposalApplicationId = props.config.gora_dao.asc_proposal_id
@@ -58,11 +58,16 @@ const GoraDaoDeployer = class {
 
 
         this.daoContract = props.daoContract
-        this.approvalProgData = props.approvalProgData
-        this.clearProgData = props.clearProgData
-        this.approvalPyTealProgData = props.approvalPyTealProgData
+        this.daoApprovalProgData = props.daoApprovalProgData
+        this.daoClearProgData = props.daoClearProgData
 
-        this.proposalItem = props.proposalItem
+        this.proposalContract = props.proposalContract
+        this.proposalApprovalProgData = props.proposalApprovalProgData
+        this.proposalClearProgData = props.proposalClearProgData
+
+        this.vestingContract = props.vestingContract
+        this.vestingApprovalProgData = props.vestingApprovalProgData
+        this.vestingClearProgData = props.vestingClearProgData
 
 
         // Global Variables attached to class instance object
@@ -382,8 +387,8 @@ const GoraDaoDeployer = class {
         let params = await this.algodClient.getTransactionParams().do();
         let onComplete = this.algosdk.OnApplicationComplete.NoOpOC;
 
-        const compiledResult = await this.algodClient.compile(this.approvalProgData).do();
-        const compiledClearResult = await this.algodClient.compile(this.clearProgData).do();
+        const compiledResult = await this.algodClient.compile(this.daoApprovalProgData).do();
+        const compiledClearResult = await this.algodClient.compile(this.daoClearProgData).do();
         const compiledResultUint8 = new Uint8Array(Buffer.from(compiledResult.result, "base64"));
         const compiledClearResultUint8 = new Uint8Array(Buffer.from(compiledClearResult.result, "base64"));
         this.logger.info('------------------------------')
@@ -413,8 +418,8 @@ const GoraDaoDeployer = class {
         this.logger.info('------------------------------')
         this.logger.info("GoraNetwork Main Application ID: %s", appId);
         this.logger.info('------------------------------')
-        this.applicationId = appId
-        this.applicationAddr = this.algosdk.getApplicationAddress(appId);
+        this.goraDaoMainApplicationId = appId
+        this.goraDaoMainApplicationAddress = this.algosdk.getApplicationAddress(appId);
         this.logger.info('------------------------------')
         this.logger.info("GoraNetwork Main Application Address: %s", this.algosdk.getApplicationAddress(Number(appId)));
         this.logger.info('------------------------------')
@@ -423,9 +428,9 @@ const GoraDaoDeployer = class {
         let addr = this.accountObject.addr;
         let params = await this.algodClient.getTransactionParams().do();
         let onComplete = this.algosdk.OnApplicationComplete.UpdateApplicationOC;
-        const compiledResult = await this.algodClient.compile(this.approvalProgData).do();
+        const compiledResult = await this.algodClient.compile(this.daoApprovalProgData).do();
         const compiledPyTealResult = await this.algodClient.compile(this.approvalPyTealProgData).do();
-        const compiledClearResult = await this.algodClient.compile(this.clearProgData).do();
+        const compiledClearResult = await this.algodClient.compile(this.daoClearProgData).do();
         this.logger.info("GoraNetwork Main Contract Hash = %s", compiledResult.hash);
         this.logger.info("GoraNetwork Main Contract Result = %s", compiledResult.result)
         this.logger.info("GoraNetwork Clear Hash = %s", compiledClearResult.hash);
@@ -438,7 +443,7 @@ const GoraDaoDeployer = class {
         this.logger.info('------------------------------')
 
 
-        let appTxn = this.algosdk.makeApplicationUpdateTxn(addr, params, Number(this.applicationId),
+        let appTxn = this.algosdk.makeApplicationUpdateTxn(addr, params, Number(this.goraDaoMainApplicationId),
             compiledResultUint8, compiledClearResultUint8, /* [this.algosdk.encodeUint64(1), this.algosdk.encodeUint64(1)] */);
         let appTxnId = appTxn.txID().toString();
 
@@ -451,14 +456,14 @@ const GoraDaoDeployer = class {
         let transactionResponse = await this.algodClient.pendingTransactionInformation(appTxnId).do();
         let appId = transactionResponse['application-index'];
         await this.printTransactionLogs(appTxnId)
-        await this.printAppGlobalState(this.applicationId)
+        await this.printAppGlobalState(this.goraDaoMainApplicationId)
         this.logger.info('------------------------------')
-        this.logger.info("GoraNetwork Updated Main Application ID: %s", this.applicationId);
+        this.logger.info("GoraNetwork Updated Main Application ID: %s", this.goraDaoMainApplicationId);
         this.logger.info('------------------------------')
 
-        this.applicationAddr = this.algosdk.getApplicationAddress(Number(this.applicationId));
+        this.goraDaoMainApplicationAddress = this.algosdk.getApplicationAddress(Number(this.goraDaoMainApplicationId));
         this.logger.info('------------------------------')
-        this.logger.info("GoraNetwork Updated Main Application Address: %s", this.applicationAddr);
+        this.logger.info("GoraNetwork Updated Main Application Address: %s", this.goraDaoMainApplicationAddress);
         this.logger.info('------------------------------')
     }
     async runDeployer() {
