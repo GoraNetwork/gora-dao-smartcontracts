@@ -48,13 +48,16 @@ const GoraDaoDeployer = class {
         this.applicationId = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_main_id : props.config.gora_dao.asc_main_id
         // GoraDAO Main Contract Address
         this.applicationAddr = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_main_address : props.config.gora_dao.asc_main_address
-        
 
+        // Proposal application ID
         this.proposalApplicationId = props.config.gora_dao.asc_proposal_id
+        // Proposal application Address
         this.proposalApplicationAddress = props.config.gora_dao.asc_proposal_address
-        this.proposalAsset= props.config.gora_dao.proposal_asa_id
+        // Proposal Asset ID
+        this.proposalAsset = props.config.gora_dao.proposal_asa_id
 
-        this.contract = props.contract
+
+        this.daoContract = props.daoContract
         this.approvalProgData = props.approvalProgData
         this.clearProgData = props.clearProgData
         this.approvalPyTealProgData = props.approvalPyTealProgData
