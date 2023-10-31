@@ -13,6 +13,7 @@ GoraDAO uses dynamic generation of Proposals and Vesting (optional ) contracts v
 - Configurable Algo and/or BYOT
 
 A note on thresholds structure:
+
 `[100,100,51]` is a threshold scenario and is consisted of 3 unsigned integers between 0-100! First is threshold of participation , second is the percentage of vesting application and third is the required percentage for approval! Gora proposal accepts array of this array as array of voting scenarios depending of participation percentage!
 This lets a proposal to continue operation and go to vote even if the originally anticipated participation has not occured! This can have either the same or different allocations and required approval percentages!
 
