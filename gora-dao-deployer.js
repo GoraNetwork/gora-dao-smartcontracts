@@ -52,6 +52,7 @@ const GoraDaoDeployer = class {
 
         this.proposalApplicationId = props.config.gora_dao.asc_proposal_id
         this.proposalApplicationAddress = props.config.gora_dao.asc_proposal_address
+        this.proposalAsset= props.config.gora_dao.proposal_asa_id
 
         this.contract = props.contract
         this.approvalProgData = props.approvalProgData
