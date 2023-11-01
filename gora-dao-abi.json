@@ -315,6 +315,44 @@
             }
         },
         {
+            "name": "write_source_box",
+            "args": [
+                {
+                    "type": "byte[]",
+                    "name": "proposal_approval_source"
+                },
+                {
+                    "type": "byte[]",
+                    "name": "proposal_clear_source"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            },
+            "desc": "Writes the compiled teal source of proposal to a corresponding box proposal_approval or proposal_clear"
+        },
+        {
+            "name": "update_proposal",
+            "args": [
+                {
+                    "type": "application",
+                    "name": "application"
+                },
+                {
+                    "type": "byte[]",
+                    "name": "proposal_approval_source"
+                },
+                {
+                    "type": "byte[]",
+                    "name": "proposal_clear_source"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            },
+            "desc": "Updates a Proposal smart contract and returns application ID"
+        }, 
+        {
             "name": "proposal_participate",
             "description": "Participates a member to a Proposal! Returns the Proposal contract ID!",
             "args": [
