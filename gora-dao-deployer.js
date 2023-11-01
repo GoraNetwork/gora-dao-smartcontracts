@@ -671,6 +671,7 @@ const GoraDaoDeployer = class {
             [[100,100,52],[80,80,60]],
             24,
             10000000,
+            this.proposalAsset
         ]
         const atcProposalConfig = new this.algosdk.AtomicTransactionComposer()
 

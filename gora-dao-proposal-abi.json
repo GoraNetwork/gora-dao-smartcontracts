@@ -138,30 +138,27 @@
                     "description": "GoraDAO Proposal minimum participation in microGora"
                 },
                 {
-                    "type": "(uint64,uint64[])",
+                    "type": "(uint64[])",
                     "name": "proposal_threshold",
-                    "description": "GoraDAO Proposal threshold program! (#threshold, [%participation, %amount])"
+                    "description": "GoraDAO Proposal threshold program! ([%participation, %threshold, %allocation])"
                 },
                 {
                     "type": "uint64",
                     "name": "proposal_duration",
-                    "description": "GoraDAO Proposal total duration in working days"
+                    "description": "GoraDAO Proposal total duration in hours"
                 },
-                {
-                    "type": "(uint64,uint64[])",
-                    "name": "proposal_duration_program",
-                    "description": "GoraDAO Proposal vesting durations program! (#duration, [duration])"
-                },
+            
                 {
                     "type": "uint64",
                     "name": "proposal_amount",
                     "description": "GoraDAO Proposal total amount in microGora"
                 },
                 {
-                    "type": "(uint64,uint64[])",
-                    "name": "proposal_vesting_program",
-                    "description": "GoraDAO Proposal vesting amounts program! (#amount, [amount])"
+                    "type": "uint64",
+                    "name": "proposal_asset",
+                    "description": "GoraDAO Proposal asset ID, 0 if Algo"
                 }
+             
             ],
             "boxes": [
                 {
