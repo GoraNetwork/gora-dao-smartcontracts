@@ -1,7 +1,9 @@
 const fetch = require('node-fetch');
 const sha512_256 = require('js-sha512').sha512_256;
 
+// GoraDAO deployer Class
 const GoraDaoDeployer = class {
+    // Class constructor
     constructor(props) {
         // Configurations instance
         this.config = props.config
@@ -84,6 +86,7 @@ const GoraDaoDeployer = class {
         this.trxTransfer = null
 
     }
+    // Imports the accounts from Mnemonics
     importAccount() {
         const acc = this.algosdk.mnemonicToSecretKey(this.mnemonic0);
         let addr = acc.addr
@@ -97,13 +100,14 @@ const GoraDaoDeployer = class {
         this.logger.warn(this.config.gora_dao['algo_dispenser'] + addr);
         return { acc, accRekey };
     };
+    // Gets the contract method instance for a given method
     getMethodByName(name, contract) {
         const m = contract.methods.find((mt) => { return mt.name == name })
         if (m === undefined)
             throw Error("Method undefined: " + name)
         return m
     }
-
+    // Gets the balance information for GoraDAO account address
     async fetchAlgoWalletInfo() {
         if (this.algosdk.isValidAddress(this.accountObject.addr)) {
             const url = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/accounts/${this.accountObject.addr}`;
@@ -169,6 +173,7 @@ const GoraDaoDeployer = class {
 
         }
     }
+    // Prints the transaction logs for a given transaction ID
     async printTransactionLogs(txID) {
         if (this.algosdk.isValidAddress(this.accountObject.addr)) {
             const urlTrx = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['indexer_testnet_remote_server'] : this.config.gora_dao['indexer_remote_server']}/v2/transactions/${txID}`;
@@ -204,6 +209,7 @@ const GoraDaoDeployer = class {
 
         }
     }
+    // Prints the global state for a given application ID
     async printAppGlobalState(appId) {
         if (this.algosdk.isValidAddress(this.accountObject.addr)) {
             const urlApp = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/applications/${appId}`;
@@ -257,6 +263,7 @@ const GoraDaoDeployer = class {
 
         }
     }
+    // Prints the created assets for a given account address
     async printCreatedAsset() {
         let accountInfo = await this.indexerClient.lookupAccountByID(this.accountObject.addr).do();
         this.accountBalance = accountInfo.account.amount
@@ -291,6 +298,7 @@ const GoraDaoDeployer = class {
             }
         }
     }
+    // Prints the held assets for a given account address
     async printAssetHolding(account, assetid) {
         let accountInfo = await this.indexerClient.lookupAccountByID(account).do();
         this.accountBalance = accountInfo.account.amount
@@ -324,6 +332,7 @@ const GoraDaoDeployer = class {
             }
         }
     }
+    // Prints the general report on GoraDAO account
     async deployerReport() {
         try {
             await this.fetchAlgoWalletInfo();
@@ -334,6 +343,7 @@ const GoraDaoDeployer = class {
             this.logger.error(err);
         }
     }
+    // Deletes GoraDAO applications
     async deleteApps(appsToDelete) {
         let wallet = this.config.gora_dao.algo_wallet_address
         let apps = appsToDelete || [];
@@ -370,6 +380,7 @@ const GoraDaoDeployer = class {
         }
 
     }
+    // Grabs the accounts from Mnemonics
     async deployerAccount() {
         try {
             const accounts = await this.importAccount();
@@ -379,6 +390,7 @@ const GoraDaoDeployer = class {
             this.logger.error(err);
         }
     }
+    // Deploying GoraDAO Main Contract
     async deployMainContract() {
         let addr = this.accountObject.addr;
         let localInts = this.config.deployer['num_local_int'];
@@ -425,12 +437,13 @@ const GoraDaoDeployer = class {
         this.logger.info("GoraNetwork Main Application Address: %s", this.algosdk.getApplicationAddress(Number(appId)));
         this.logger.info('------------------------------')
     }
+    // Updating GoraDAO Main Contract
     async updateMainContract() {
         let addr = this.accountObject.addr;
         let params = await this.algodClient.getTransactionParams().do();
         let onComplete = this.algosdk.OnApplicationComplete.UpdateApplicationOC;
         const compiledResult = await this.algodClient.compile(this.daoApprovalProgData).do();
-   
+
         const compiledClearResult = await this.algodClient.compile(this.daoClearProgData).do();
         this.logger.info("GoraNetwork Main Contract Hash = %s", compiledResult.hash);
         this.logger.info("GoraNetwork Main Contract Result = %s", compiledResult.result)
@@ -467,7 +480,19 @@ const GoraDaoDeployer = class {
         this.logger.info("GoraNetwork Updated Main Application Address: %s", this.goraDaoMainApplicationAddress);
         this.logger.info('------------------------------')
     }
+    // Required Proposal Operations
+    async runProposalCreation() { }
+    async writeProposalContractSourceBox() { }
+    async runProposalUpdate() { }
+    async runProposalConfiguration() { }
+    async runProposalParticipation() { }
+    async runProposalWithdrawParticipation() { }
+    async runProposalActivation() { }
+    async runProposalVote() { }
+
+    // Running deployer
     async runDeployer() {
+        // Running deployer account instantiation
         await this.deployerAccount()
         if (this.config.deployer['deployer_report']) await this.deployerReport();
         if (this.config.deployer['create_dao_contracts']) await this.deployMainContract();
