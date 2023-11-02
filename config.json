@@ -4,11 +4,13 @@
       "network": "testnet",
       "asc_main_id": 0,
       "asc_main_address": "",
-      "asc_testnet_main_id": 396868296,
-      "asc_testnet_main_address": "45ZA5EKRHMPKT2FK6NKIJH6PP7BOYO24Y7SZDI73KMYTO37PAJNRIVVHJA",
+      "asc_testnet_main_id": 466874344,
+      "asc_testnet_main_address": "C6POX57SJQNFAIO4FVHJ5TSCSKR6ABE2HVP3CUF3DYZAIK4BU3KNYNJXBQ",
       "asc_proposal_id": 0,
       "asc_proposal_address": "",
       "proposal_asa_id": 0,
+      "asc_vesting_id": 0,
+      "asc_vesting_address": "",
       
       "algo_wallet_address": "7BJQ2EUCPO4D3AJAJ6ZUCLH64E6X6ZQQTZEP3QICUSSZNWYZLN3RFFU5TE",
       "algod_remote_server": "https://mainnet-api.algonode.cloud",
@@ -29,13 +31,13 @@
       "delete_apps": false,
       "apps_to_delete": [],
       
-      "create_dao_contracts": false,
+      "create_dao_contracts": true,
       "update_dao_contracts": false,
       "setup_dao_contract": false,
 
 
       "create_proposal_contracts": false,
-      "write_proposal_source_box": true,
+      "write_proposal_source_box": false,
       "update_proposal_contracts": false,
 
       "test_proposal_config": false,

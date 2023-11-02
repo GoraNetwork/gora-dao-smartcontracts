@@ -421,7 +421,9 @@ const GoraDaoDeployer = class {
         this.logger.info('------------------------------')
         this.logger.info("GoraNetwork Main Application Creation TXId =  %s", appTxnId);
         let signedAppTxn = appTxn.signTxn(this.accountObject.sk);
+
         await this.algodClient.sendRawTransaction(signedAppTxn).do();
+
         await this.algosdk.waitForConfirmation(this.algodClient, appTxnId, 5)
 
         let transactionResponse = await this.algodClient.pendingTransactionInformation(appTxnId).do();
@@ -433,8 +435,21 @@ const GoraDaoDeployer = class {
         this.logger.info('------------------------------')
         this.goraDaoMainApplicationId = appId
         this.goraDaoMainApplicationAddress = this.algosdk.getApplicationAddress(appId);
-        this.logger.info('------------------------------')
+
+
         this.logger.info("GoraNetwork Main Application Address: %s", this.algosdk.getApplicationAddress(Number(appId)));
+        this.logger.info('------------------------------')
+        const ptxn = new this.algosdk.Transaction({
+            from: addr,
+            to: this.goraDaoMainApplicationAddress,
+            amount: 1000000,
+            fee: params.minFee,
+            ...params
+        })
+        let signedPayTxn = ptxn.signTxn(this.accountObject.sk);
+
+        await this.algodClient.sendRawTransaction(signedPayTxn).do();
+        this.logger.info("GoraNetwork Main Application Address: %s funded!", this.goraDaoMainApplicationAddress);
         this.logger.info('------------------------------')
     }
     // Updating GoraDAO Main Contract
