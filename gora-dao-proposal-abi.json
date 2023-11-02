@@ -82,15 +82,41 @@
                 {
                     "name": "manager_reference",
                     "description": "Dynamic box ref per manager account address"
+                },
+                {
+                    "name": "proposal_app",
+                    "description": "Dynamic box ref for proposal approval prog source code"
+                },
+                {
+                    "name": "proposal_clr",
+                    "description": "Dynamic box ref for proposal clear prog source code"
                 }
             ],
             "returns": {
                 "type": "uint64"
             }
         },
+        
+        {
+            "name": "write_source_box",
+            "args": [
+                {
+                    "type": "byte[]",
+                    "name": "proposal_app"
+                },
+                {
+                    "type": "byte[]",
+                    "name": "proposal_clr"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            },
+            "desc": "Writes the compiled teal source of Proposal to a corresponding boxes proposal_app and proposal_clr"
+        },
         {
             "name": "update_proposal",
-            "description": "Creates a new Proposal contract! Returns the Proposal contract ID!",
+            "description": "Updates an existing Proposal contract! Returns the Proposal contract ID!",
             "args": [
                 {
                     "type": "asset",
@@ -160,6 +186,14 @@
                 {
                     "name": "manager_reference",
                     "description": "Dynamic box ref per manager account address"
+                },
+                {
+                    "name": "proposal_app",
+                    "description": "Dynamic box ref for proposal approval prog source code"
+                },
+                {
+                    "name": "proposal_clr",
+                    "description": "Dynamic box ref for proposal clear prog source code"
                 }
             ],
             "returns": {
