@@ -38,7 +38,7 @@
       "write_proposal_source_box": false,
       "update_proposal_contracts": false,
 
-      "test_proposal_setup": false,
+      "test_proposal_config": false,
       "test_proposal_activate": false,
       "test_proposal_closure": false,
       "test_proposal_participate": false,

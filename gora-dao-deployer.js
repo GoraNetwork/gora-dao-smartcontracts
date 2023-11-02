@@ -482,7 +482,7 @@ const GoraDaoDeployer = class {
     }
     // Required Proposal Operations
 
-    async runProposalCreation() {
+    async createProposalContract() {
         let addr = this.accountObject.addr;
         let params = await this.algodClient.getTransactionParams().do();
         const atc = new this.algosdk.AtomicTransactionComposer()
@@ -579,7 +579,7 @@ const GoraDaoDeployer = class {
         }
     }
     // Only temporary because the actual GoraDao contracts will not be updatable
-    async runProposalUpdate() {
+    async updateProposalContract() {
         let addr = this.accountObject.addr;
         let params = await this.algodClient.getTransactionParams().do();
         const atc = new this.algosdk.AtomicTransactionComposer()
@@ -627,7 +627,7 @@ const GoraDaoDeployer = class {
         }
     }
 
-    async runProposalConfiguration() {
+    async configureProposalContract() {
         let addr = this.accountObject.addr;
         let params = await this.algodClient.getTransactionParams().do();
         let application = Number(this.proposalApplicationId)
@@ -696,10 +696,10 @@ const GoraDaoDeployer = class {
        
         }
     }
-    async runProposalParticipation() { }
-    async runProposalWithdrawParticipation() { }
-    async runProposalActivation() { }
-    async runProposalVote() { }
+    async participateProposalContract() { }
+    async participationWithdrawProposalContract() { }
+    async activateProposalContract() { }
+    async voteProposalContract() { }
 
     // Running deployer
     async runDeployer() {
@@ -709,6 +709,12 @@ const GoraDaoDeployer = class {
         if (this.config.deployer['create_dao_contracts']) await this.deployMainContract();
         if (this.config.deployer['update_dao_contracts']) await this.updateMainContract();
         if (this.config.deployer['delete_apps']) await this.deleteApps(this.config.deployer.apps_to_delete);
+
+
+        if (this.config.deployer['create_proposal_contracts']) await this.createProposalContract();
+        if (this.config.deployer['write_proposal_source_box']) await this.writeProposalContractSourceBox();
+        if (this.config.deployer['update_proposal_contracts']) await this.updateProposalContract();
+        if (this.config.deployer['test_proposal_config']) await this.configureProposalContract();
         //TODO OPS
         process.exit();
     }
