@@ -4,6 +4,7 @@
 // Creators: @emg110.algo
 // Github: https://github.com/GoraNetwork/gora-dao-smartcontracts
 #pragma version 8
+
 //Check TXN first
 callsub branch_check_txn
 

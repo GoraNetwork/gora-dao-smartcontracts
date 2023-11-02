@@ -550,6 +550,7 @@ const GoraDaoDeployer = class {
         const compiledItemResult = await this.algodClient.compile(this.proposalApprovalProgData).do();
         const compiledItemClearResult = await this.algodClient.compile(this.proposalClearProgData).do();
         const compiledResultUint8 = new Uint8Array(Buffer.from(compiledItemResult.result, "base64"));
+        const compiledResultUint8Dummy = new Uint8Array(compiledResultUint8.length);
         const compiledClearResultUint8 = new Uint8Array(Buffer.from(compiledItemClearResult.result, "base64"));
         const contract = new this.algosdk.ABIContract(JSON.parse(this.proposalContract.toString()))
         let approvalName = new Uint8Array(Buffer.from("proposal_app"))
@@ -578,7 +579,7 @@ const GoraDaoDeployer = class {
 
         atc.addMethodCall({
             method: method,
-            methodArgs: [tws, compiledResultUint8, compiledClearResultUint8],
+            methodArgs: [tws, compiledResultUint8Dummy, compiledClearResultUint8],
             ...commonParams
         })
         this.logger.info('------------------------------')
