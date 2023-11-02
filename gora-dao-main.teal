@@ -66,13 +66,6 @@ branch_create:
 	load 2
 	log
 
-	byte "gs_bytes"
-	load 2
-	app_global_put
-
-	byte "gs_int"
-	load 1
-	app_global_put
 
 	byte "proposals_count"
 	int 0
@@ -105,13 +98,6 @@ branch_update:
 	load 2
 	log
 
-	byte "gs_bytes"
-	load 2
-	app_global_put
-
-	byte "gs_int"
-	load 1
-	app_global_put
 
 	int 1
 	return
@@ -273,7 +259,7 @@ method_proposal_create:
 	>=
 	assert
 
-	// Inner transaction to create the new Proposal smart contract
+	// Inner transaction to create the Proposal smart contract
 	itxn_begin
 
 	int appl
@@ -445,7 +431,6 @@ branch_error:
 branch_log_return:
 
 	log
-
 	int 1
 	return
 
