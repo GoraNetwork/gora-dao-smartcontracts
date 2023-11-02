@@ -1,185 +1,437 @@
 // Gora DAO Smart Contract
 // Version 1
-
 // Website: https://www.gora.io/
-
 // Creators: @emg110.algo
 // Github: https://github.com/GoraNetwork/gora-dao-smartcontracts
-
 #pragma version 8
 //Check TXN first
-callsub branch_check_txn
+callsub sub_check_txn
 
-// Check if the transaction is a create app call with app ID of 0
+// Check creation TXN
 txn ApplicationID
-bz branch_create
 
-// Checking onCompletion type for delete application call
-txn OnCompletion
-int DeleteApplication
-==
-bnz branch_delete
+bz branch_create
 
 // Checking onCompletion type for update application call
 txn OnCompletion
+
 int UpdateApplication
 ==
 bnz branch_update
 
+// Checking onCompletion type for delete application call
+txn OnCompletion
+
+int DeleteApplication
+==
+bnz branch_delete
+
 // Checking onCompletion type for close out application call
 txn OnCompletion
+
 int CloseOut
 ==
 bnz branch_closeout
 
 // Checking onCompletion type for optin application call
 txn OnCompletion
+
 int OptIn
 ==
-bnz branch_optin
+bnz branch_error
 
 // Checks the number of application args , if 0 then no method it is
 txn NumAppArgs
+
 int 0
 ==
 bz branch_method_router
-
 b branch_error
+
 check_owner_auth:
-txn Sender
-global CreatorAddress
-==
-assert
-retsub
+
+	txn Sender
+	global CreatorAddress
+	==
+	assert
+	retsub
 
 branch_create:
-global CurrentApplicationID
-store 1
-byte "GoraDAO contract created!"
-store 2
-load 1
-itob
-log
-load 2
-log
-byte "gs_bytes"
-load 2
-app_global_put
-byte "gs_int"
-load 1
-app_global_put
-int 1
-return
+
+	global CurrentApplicationID
+	store 1
+
+	byte "GoraDAO contract created!"
+	store 2
+
+	load 1
+	itob
+	log
+
+	load 2
+	log
+
+	byte "proposals_count"
+	int 0
+	app_global_put
+
+	int 1
+	return
 
 branch_delete:
-callsub check_owner_auth
-int 1
-return
+
+	callsub check_owner_auth
+
+	int 1
+	return
 
 branch_update:
-callsub check_owner_auth
-global CurrentApplicationID
-store 1
-byte "GoraDAO contract updated!"
-store 2
-load 1
-itob
-log
-load 2
-log
 
-byte "gs_bytes"
-load 2
-app_global_put
-byte "gs_int"
-load 1
-app_global_put
-int 1
-return
+	callsub check_owner_auth
+
+	global CurrentApplicationID
+	store 1
+
+	byte "GoraDAO contract updated: "
+	store 2
+
+	load 2
+	load 1
+	itob
+	concat
+	log
+
+	int 1
+	return
 
 branch_closeout:
-callsub check_owner_auth
-int 1
-return
 
-branch_optin:
-callsub check_owner_auth
-int 1
-return
+	callsub check_owner_auth
+
+	int 1
+	return
 
 branch_method_router:
 
-// Checking app call's Arg 0 for dao_init method signature
-method "dao_init(pay,axfer,application,asset,account,account)string"
-txn ApplicationArgs 0
-==
-bnz method_dao_init
+	method "dao_init(pay,axfer,application,asset,account,account)string"
+	txn ApplicationArgs 0
+	==
+	bnz method_dao_init
 
-b branch_error
+	method "write_source_box(byte[],byte[])string"
+	txn ApplicationArgs 0
+	==
+	bnz method_write_source_box
 
+	method "create_proposal(pay,byte[],byte[])string"
+	txn ApplicationArgs 0
+	==
+	bnz method_proposal_create
 
-branch_check_txn:
-// Checks RekeyTo address transaction field to be empty (ZeroAddress)
-txn RekeyTo
-global ZeroAddress
-==
-assert
-// Checks CloseRemainderTo address transaction field to be empty (ZeroAddress)
-txn CloseRemainderTo
-global ZeroAddress
-==
-assert
-// Checks AssetCloseTo address transaction field to be empty (ZeroAddress)
-txn AssetCloseTo
-global ZeroAddress
-==
-assert
-// Check transaction type to be application call
-txn TypeEnum
-int appl
-==
-assert
+	method "update_proposal(application,byte[],byte[])string"
+	txn ApplicationArgs 0
+	==
+	bnz method_proposal_update
+	b branch_error
 
-// Checking transaction fee
-txn Fee
-global MinTxnFee
->=
-assert
-retsub
+sub_check_txn:
 
+	// Checks RekeyTo address transaction field to be empty (ZeroAddress)
+	txn RekeyTo
 
+	global ZeroAddress
+	==
+	assert
+
+	// Checks CloseRemainderTo address transaction field to be empty (ZeroAddress)
+	txn CloseRemainderTo
+
+	global ZeroAddress
+	==
+	assert
+
+	// Checks AssetCloseTo address transaction field to be empty (ZeroAddress)
+	txn AssetCloseTo
+
+	global ZeroAddress
+	==
+	assert
+
+	// Check transaction type to be application call
+	txn TypeEnum
+
+	int appl
+	==
+	assert
+
+	// Checking transaction fee
+	txn Fee
+
+	global MinTxnFee
+	>=
+	assert
+	retsub
+
+sub_check_owner_auth:
+
+	txn Sender
+	global CreatorAddress
+	==
+	assert
+	retsub
 
 method_dao_init:
-txn ApplicationArgs 1
-log
-txn ApplicationArgs 2
-log
-txn ApplicationArgs 3
-log
-txn ApplicationArgs 4
-log
-txn ApplicationArgs 5
-log
-txn ApplicationArgs 6
-log
-byte 0x151f7c75
-byte "dao_has_init"
-concat
-b branch_log_return
+
+	txn ApplicationArgs 1
+	log
+
+	txn ApplicationArgs 2
+	log
+
+	txn ApplicationArgs 3
+	log
+
+	txn ApplicationArgs 4
+	log
+
+	txn ApplicationArgs 5
+	log
+
+	txn ApplicationArgs 6
+	log
+
+	byte 0x151f7c75
+	byte "dao_has_init"
+	concat
+	b branch_log_return
+
+// Handles ABI method call for contract to contract creation of a Proposal contract
+method_proposal_create:
+
+	global GroupSize
+	int 2
+	==
+	assert
+
+	gtxn 0 RekeyTo
+	global ZeroAddress
+	==
+	assert
+
+	gtxn 0 CloseRemainderTo
+	global ZeroAddress
+	==
+	assert
+
+	gtxn 0 AssetCloseTo
+	global ZeroAddress
+	==
+	assert
+
+	gtxn 0 TypeEnum
+	int pay
+	==
+	assert
+
+	gtxn 0 Fee
+	global MinTxnFee
+	>=
+	assert
+
+	gtxn 0 Amount
+	global MinTxnFee
+	>=
+	assert
+
+	txn GroupIndex
+	int 1
+	-
+	dup
+	gtxns Receiver
+	global CurrentApplicationAddress
+	==
+	assert
+
+	gtxns Amount
+	global MinTxnFee
+	int 2
+	*
+	>=
+	assert
+
+	// Inner transaction to create the Proposal smart contract
+	itxn_begin
+
+	int appl
+	itxn_field TypeEnum
+	int NoOp
+	itxn_field OnCompletion
+	//txn ApplicationArgs 1
+	byte "proposal_app"
+
+	box_get
+	bz branch_error
+
+	dup
+	len
+	int 2
+	swap
+	substring3
+	itxn_field ApprovalProgram
+	//txn ApplicationArgs 2
+	byte "proposal_clr"
+
+	box_get
+	bz branch_error
+
+	dup
+	len
+	int 2
+	swap
+	substring3
+	itxn_field ClearStateProgram
+	int 5
+	itxn_field GlobalNumByteSlice
+	int 5
+	itxn_field GlobalNumUint
+	int 0
+	itxn_field LocalNumUint
+	int 0
+	itxn_field LocalNumByteSlice
+	txn Sender
+	itxn_field Note
+	itxn_submit
+
+	itxn TxID
+	log
+
+	itxn CreatedApplicationID
+	store 2
+
+	byte "proposals_count"
+	dup
+	app_global_get
+	int 1
+	+
+	app_global_put
+
+	byte 0x151f7c75
+	load 2
+	itob
+	concat
+	b branch_log_return
+
+// Handles ABI method call for contract to contract update of a Proposal contract
+method_proposal_update:
+
+	// Inner transaction to update the Proposal smart contract
+	itxn_begin
+
+	int appl
+	itxn_field TypeEnum
+	int UpdateApplication
+	itxn_field OnCompletion
+	txn ApplicationArgs 1
+	btoi
+	txnas Applications
+	dup
+	store 1
+
+	itxn_field ApplicationID
+	load 1
+	byte "proposal_creator_address"
+	app_global_get_ex
+	assert
+
+	txn Sender
+	==
+	assert
+
+	//txn ApplicationArgs 2
+	byte "proposal_app"
+
+	box_get
+	bz branch_error
+
+	dup
+	len
+	int 2
+	swap
+	substring3
+	itxn_field ApprovalProgram
+	//txn ApplicationArgs 3
+	byte "proposal_clr"
+
+	box_get
+	bz branch_error
+
+	dup
+	len
+	int 2
+	swap
+	substring3
+	itxn_field ClearStateProgram
+	txn Sender
+	itxn_field Note
+	itxn_submit
+
+	itxn TxID
+	store 0
+
+	load 0
+	log
+
+	byte 0x151f7c75
+	load 1
+	itob
+	dup
+	log
+
+	concat
+	b branch_log_return
+
+method_write_source_box:
+
+	callsub sub_check_owner_auth
+
+	byte "proposal_app"
+	store 1
+
+	byte "proposal_clr"
+	store 2
+
+	load 1
+	box_get
+	bz branch_write_box_app
+
+	load 1
+	box_del
+	pop
+	load 2
+	box_del
+	pop
+branch_write_box_app:
+
+	load 1
+	txn ApplicationArgs 1
+	box_put
+	load 2
+	txn ApplicationArgs 2
+	box_put
+	byte 0x151f7c75
+	byte "GoraDAO Teal Source Codes Updated!"
+	concat
+	b branch_log_return
 
 branch_error:
-err
+
+	err
 
 // Handles logging the last element on the stack then put a 1 on the top and return (log and approve)
 branch_log_return:
-log
-int 1
-return
 
+	log
 
-
-
-
-
-
+	int 1
+	return
 
