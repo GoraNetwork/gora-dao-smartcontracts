@@ -616,9 +616,9 @@ const GoraDaoDeployer = class {
         for (const idx in result.methodResults) {
             let txid = result.txIDs[idx]
 
-         
+
             let confirmedRound = result.confirmedRound
-           await this.printTransactionLogs(txid, confirmedRound)
+            await this.printTransactionLogs(txid, confirmedRound)
 
             let returnedResults = result.methodResults[idx].rawReturnValue
             let buff = Buffer.from(returnedResults, "base64")
@@ -668,7 +668,7 @@ const GoraDaoDeployer = class {
             "Proposal_Test",
             "This is a test proposal for GoraDAO",
             1000000,
-            [[100,100,52],[80,80,60]],
+            [[100, 100, 52], [80, 80, 60]],
             24,
             10000000,
             this.proposalAsset
@@ -689,11 +689,11 @@ const GoraDaoDeployer = class {
 
             //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
             let confirmedRound = proposalConfigResults.confirmedRound
-              if (Number(idx) === 0) await this.printTransactionLogs(txid, confirmedRound)
+            if (Number(idx) === 0) await this.printTransactionLogs(txid, confirmedRound)
 
             let returnedResults = proposalConfigResults.methodResults[idx].rawReturnValue
             this.logger.info("GoraDAO Proposal Contract ABI Exec result = %s", returnedResults);
-       
+
         }
     }
     async participateProposalContract() { }
@@ -706,16 +706,18 @@ const GoraDaoDeployer = class {
         // Running deployer account instantiation
         await this.deployerAccount()
         if (this.config.deployer['deployer_report']) await this.deployerReport();
+
+        // Running deployer DAO main contract operations
         if (this.config.deployer['create_dao_contracts']) await this.deployMainContract();
         if (this.config.deployer['update_dao_contracts']) await this.updateMainContract();
         if (this.config.deployer['delete_apps']) await this.deleteApps(this.config.deployer.apps_to_delete);
 
-
+        // Running deployer DAO proposal contract operations
         if (this.config.deployer['create_proposal_contracts']) await this.createProposalContract();
         if (this.config.deployer['write_proposal_source_box']) await this.writeProposalContractSourceBox();
         if (this.config.deployer['update_proposal_contracts']) await this.updateProposalContract();
         if (this.config.deployer['test_proposal_config']) await this.configureProposalContract();
-        //TODO OPS
+       
         process.exit();
     }
 }
