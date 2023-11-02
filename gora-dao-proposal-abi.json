@@ -98,14 +98,14 @@
                     "description": "Payment from Proposal manager to GoraDAO for fees and Proposal configuration MBRs!"
                 },
                 {
-                    "type": "application",
-                    "name": "gora_dao_main_app_id",
-                    "description": "GoraDAO Main application ID"
-                },
-                {
                     "type": "asset",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "account",
+                    "name": "member_reference",
+                    "description": "GoraDAO member account reference"
                 },
                 {
                     "type": "account",
@@ -152,6 +152,16 @@
                     "type": "uint64",
                     "name": "proposal_asset",
                     "description": "GoraDAO Proposal asset ID, 0 if Algo"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_voting_duration",
+                    "description": "GoraDAO Proposal voting duration in working days"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_voting_start",
+                    "description": "GoraDAO Proposal voting start in working days"
                 }
              
             ],
