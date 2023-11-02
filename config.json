@@ -31,7 +31,7 @@
       "delete_apps": false,
       "apps_to_delete": [],
       
-      "create_dao_contracts": false,
+      "create_dao_contracts": true,
       "update_dao_contracts": false,
       "config_dao_contract": false,
 

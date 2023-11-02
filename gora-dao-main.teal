@@ -4,40 +4,45 @@
 // Creators: @emg110.algo
 // Github: https://github.com/GoraNetwork/gora-dao-smartcontracts
 #pragma version 8
-
 //Check TXN first
 callsub sub_check_txn
 
 // Check creation TXN
 txn ApplicationID
+
 bz branch_create
 
 // Checking onCompletion type for update application call
 txn OnCompletion
+
 int UpdateApplication
 ==
 bnz branch_update
 
 // Checking onCompletion type for delete application call
 txn OnCompletion
+
 int DeleteApplication
 ==
 bnz branch_delete
 
 // Checking onCompletion type for close out application call
 txn OnCompletion
+
 int CloseOut
 ==
 bnz branch_closeout
 
 // Checking onCompletion type for optin application call
 txn OnCompletion
+
 int OptIn
 ==
 bnz branch_error
 
 // Checks the number of application args , if 0 then no method it is
 txn NumAppArgs
+
 int 0
 ==
 bz branch_method_router
@@ -66,7 +71,6 @@ branch_create:
 	load 2
 	log
 
-
 	byte "proposals_count"
 	int 0
 	app_global_put
@@ -88,16 +92,14 @@ branch_update:
 	global CurrentApplicationID
 	store 1
 
-	byte "GoraDAO contract updated!"
+	byte "GoraDAO contract updated: "
 	store 2
 
+	load 2
 	load 1
 	itob
+	concat
 	log
-
-	load 2
-	log
-
 
 	int 1
 	return
@@ -111,9 +113,7 @@ branch_closeout:
 
 branch_method_router:
 
-	// Checking app call's Arg 0 for dao_init method signature
 	method "dao_init(pay,axfer,application,asset,account,account)string"
-
 	txn ApplicationArgs 0
 	==
 	bnz method_dao_init
@@ -431,6 +431,7 @@ branch_error:
 branch_log_return:
 
 	log
+
 	int 1
 	return
 
