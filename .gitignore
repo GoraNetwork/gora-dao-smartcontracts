@@ -130,7 +130,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 gora_mnemonic.txt
-
 gora_rekey_mnemonic.txt
 dump.js
 dump.txt
