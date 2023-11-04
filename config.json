@@ -4,8 +4,8 @@
       "network": "testnet",
       "asc_main_id": 0,
       "asc_main_address": "",
-      "asc_testnet_main_id": 0,
-      "asc_testnet_main_address": "",
+      "asc_testnet_main_id": 467607348,
+      "asc_testnet_main_address": "7M3BC5ROZTWZ4HU4XKSM256AVXE3QMJ33GULD3LGCSE565AY2YR37IQVY4",
       "asc_proposal_id": 0,
       "asc_proposal_address": "",
       "proposal_asa_id": 0,
@@ -31,9 +31,9 @@
       "delete_apps": false,
       "apps_to_delete": [],
       
-      "create_dao_contracts": true,
+      "create_dao_contracts": false,
       "update_dao_contracts": false,
-      "config_dao_contract": false,
+      "config_dao_contract": true,
 
 
       "create_proposal_contracts": false,

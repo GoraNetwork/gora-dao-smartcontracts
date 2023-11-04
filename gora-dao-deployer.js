@@ -670,7 +670,7 @@ const GoraDaoDeployer = class {
         const ptxn = new this.algosdk.Transaction({
             from: addr,
             to: this.goraDaoMainApplicationAddress,
-            amount: 1000000,
+            amount: 0,
             fee: params.minFee,
             ...params
         })
