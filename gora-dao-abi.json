@@ -11,7 +11,7 @@
     },
     "methods": [
         {
-            "name": "config_proposal",
+            "name": "config_dao",
             "description": "Initializes DAO! Should be sent by owner (Creator) of DAO! Returns the manager address!",
             "args": [
                 {
@@ -20,9 +20,9 @@
                     "description": "Payment from manager to GoraDAO for fees and initiation MBRs!"
                 },
                 {
-                    "type": "axfer",
-                    "name": "asset_transfer_transaction",
-                    "description": "Asset transfer transaction to deposit Gora!"
+                    "type": "asset",
+                    "name": "asset reference for GoraDAO",
+                    "description": "Asset ID reference for GoraDAO!"
                 },
                 {
                     "type": "application",

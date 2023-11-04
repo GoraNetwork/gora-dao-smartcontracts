@@ -113,10 +113,10 @@ branch_closeout:
 
 branch_method_router:
 
-	method "config_proposal(pay,axfer,application,asset,account,account)string"
+	method "config_dao(pay,asset,application,asset,account,account)string"
 	txn ApplicationArgs 0
 	==
-	bnz method_config_proposal
+	bnz method_config_dao
 
 	method "write_source_box(byte[],byte[])string"
 	txn ApplicationArgs 0
@@ -180,7 +180,7 @@ sub_check_owner_auth:
 	assert
 	retsub
 // Handles configuration of GoraDAO
-method_config_proposal:
+method_config_dao:
 
 	txn ApplicationArgs 1
 	log
@@ -201,7 +201,7 @@ method_config_proposal:
 	log
 
 	byte 0x151f7c75
-	byte "dao_has_init"
+	byte "dao has configured!"
 	concat
 	b branch_log_return
 

@@ -676,6 +676,7 @@ const GoraDaoDeployer = class {
         })
 
         const tws0 = { txn: ptxn, signer: signer }
+        //config_proposal(pay,axfer,application,asset,account,account)string
         const args = [
             tws0,
             this.goraDaoMainApplicationId,
