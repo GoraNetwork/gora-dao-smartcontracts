@@ -27,13 +27,13 @@
     "deployer": {
       "version": "v1.0.0",
       "mode": "remote",
-      "deployer_report": false,
+      "deployer_report": true,
       "delete_apps": false,
       "apps_to_delete": [],
       
       "create_dao_contracts": false,
       "update_dao_contracts": false,
-      "config_dao_contract": true,
+      "config_dao_contract": false,
 
 
       "create_proposal_contracts": false,

@@ -113,7 +113,7 @@ branch_closeout:
 
 branch_method_router:
 
-	method "config_dao(pay,asset,application,asset,account,account)string"
+	method "config_dao(pay,asset,account)string"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_dao
