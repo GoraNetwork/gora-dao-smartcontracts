@@ -113,7 +113,7 @@ branch_closeout:
 
 branch_method_router:
 
-	method "config_proposal(pay,asset,account,account,string,string,uint64,uint64,(uint64[]),uint64)string"
+	method "config_proposal(pay,axfer,application,asset,account,account)string"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_proposal

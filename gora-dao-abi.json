@@ -11,7 +11,7 @@
     },
     "methods": [
         {
-            "name": "dao_init",
+            "name": "config_proposal",
             "description": "Initializes DAO! Should be sent by owner (Creator) of DAO! Returns the manager address!",
             "args": [
                 {
