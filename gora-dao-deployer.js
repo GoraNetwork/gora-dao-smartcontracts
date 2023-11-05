@@ -495,6 +495,101 @@ const GoraDaoDeployer = class {
         this.logger.info("GoraNetwork Updated Main Application Address: %s", this.goraDaoMainApplicationAddress);
         this.logger.info('------------------------------')
     }
+    async createDaoAsset() {
+       
+        let params = await this.algodClient.getTransactionParams().do();
+        const atxn =  this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
+            assetMetadataHash: new Uint8Array(32),
+            assetName: 'GoraDAO TEST ASSET',
+            assetURL: 'https://gora.io',
+            clawback: this.accountObject.addr,
+            decimals: 0,
+            defaultFrozen: false,
+            freeze: this.accountObject.addr,
+            from: this.accountObject.addr,
+            manager: this.accountObject.addr,
+            note: new Uint8Array(Buffer.from('GoraDAO TEST Asset')),
+            reserve: this.accountObject.addr,
+            suggestedParams: { ...params, fee: 1000, flatFee: true, },
+            total: 1000000,
+            unitName: 'INNERTX',
+
+        })
+
+
+
+        this.logger.info('------------------------------')
+        this.logger.info("GoraDAO Asset Creation...");
+        let txnId = atxn.txID().toString();
+        let signedTxn = await atxn.signTxn(this.accountObject.sk);
+        await this.algodClient.sendRawTransaction(signedTxn).do();
+        await this.algosdk.waitForConfirmation(this.algodClient, txnId, 10)
+
+        let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
+        let assetId = transactionResponse['asset-index'];
+        this.logger.info(`GoraDAO created TEST Asset ID: ${assetId}`);
+        
+    }
+    async configMainContract() {
+        let addr = this.accountObject.addr;
+        let params = await this.algodClient.getTransactionParams().do();
+        let application = Number(this.goraDaoMainApplicationId)
+        const contract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.accountObject)
+        let methodDaoConfig = this.getMethodByName("config_dao", contract)
+        const commonParamsSetup = {
+            appID: application,
+            accounts: [addr],
+            sender: addr,
+            suggestedParams: params,
+            signer: signer,
+            boxes: [
+                // { appIndex: Number(application), name: addrUint8Array.publicKey },
+                // { appIndex: Number(application), name: addrUint8Array.publicKey },
+
+
+
+            ],
+        }
+        const ptxn = new this.algosdk.Transaction({
+            from: addr,
+            to: this.goraDaoMainApplicationAddress,
+            amount: 0,
+            fee: params.minFee,
+            ...params
+        })
+
+        const tws0 = { txn: ptxn, signer: signer }
+        //(pay,asset,account)string
+        const args = [
+            tws0,
+            this.proposalAsset,
+            addr,
+
+        ]
+        const atcDaoConfig = new this.algosdk.AtomicTransactionComposer()
+
+        atcDaoConfig.addMethodCall({
+            method: methodDaoConfig,
+            accounts: [this.goraDaoMainApplicationAddress],
+            methodArgs: args,
+            ...commonParamsSetup
+        })
+        this.logger.info('------------------------------')
+        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodDaoConfig);
+        const daoConfigResults = await atcDaoConfig.execute(this.algodClient, 10);
+        for (const idx in daoConfigResults.methodResults) {
+            let txid = daoConfigResults.txIDs[idx]
+
+
+            let confirmedRound = daoConfigResults.confirmedRound
+            if (Number(idx) === 0) await this.printTransactionLogs(txid, confirmedRound)
+
+            let returnedResults = daoConfigResults.methodResults[idx].rawReturnValue
+            this.logger.info("GoraDAO Contract ABI Exec result = %s", returnedResults);
+
+        }
+    }
     // Only temporary because the actual GoraDao contracts will not be updatable
     async writeProposalContractSourceBox() {
         let addr = this.accountObject.addr;
@@ -676,9 +771,9 @@ const GoraDaoDeployer = class {
         })
 
         const tws0 = { txn: ptxn, signer: signer }
-        //(pay,asset,account,account)string
         const args = [
             tws0,
+            this.goraDaoMainApplicationId,
             this.proposalAsset,
             addr,
             "Proposal_Test",
@@ -726,6 +821,8 @@ const GoraDaoDeployer = class {
         // Running deployer DAO main contract operations
         if (this.config.deployer['create_dao_contracts']) await this.deployMainContract();
         if (this.config.deployer['update_dao_contracts']) await this.updateMainContract();
+        if (this.config.deployer['create_dao_asset']) await this.createDaoAsset();
+        if (this.config.deployer['config_dao_contract']) await this.configMainContract();
         if (this.config.deployer['delete_apps']) await this.deleteApps(this.config.deployer.apps_to_delete);
 
         // Running deployer DAO proposal contract operations

@@ -8,7 +8,7 @@
       "asc_testnet_main_address": "7M3BC5ROZTWZ4HU4XKSM256AVXE3QMJ33GULD3LGCSE565AY2YR37IQVY4",
       "asc_proposal_id": 0,
       "asc_proposal_address": "",
-      "proposal_asa_id": 0,
+      "proposal_asa_id": 468782020,
       "asc_vesting_id": 0,
       "asc_vesting_address": "",
       
@@ -27,13 +27,14 @@
     "deployer": {
       "version": "v1.0.0",
       "mode": "remote",
-      "deployer_report": true,
+      "deployer_report": false,
       "delete_apps": false,
       "apps_to_delete": [],
       
       "create_dao_contracts": false,
-      "update_dao_contracts": false,
-      "config_dao_contract": false,
+      "update_dao_contracts": true,
+      "create_dao_asset": false,
+      "config_dao_contract": true,
 
 
       "create_proposal_contracts": false,
