@@ -173,6 +173,35 @@ const GoraDaoDeployer = class {
 
         }
     }
+    // Gets the stateproof for the transaction in specified round
+    async fetchTransactionStateProof(txID, round) {
+        if (this.algosdk.isValidAddress(this.accountObject.addr)) {
+            ///v2/blocks/{round}/transactions/{txid}/proof
+
+            const url = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/blocks/${round}/transactions/${txID}/proof`;
+            let res = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            let data = await res.json()
+            if (data) {
+                if (data) {
+                    this.logger.info(`GoraDAO Transaction StateProof: ${JSON.stringify(data, null, 2)}`)
+                    return data
+                }
+                return null
+
+            }
+            return null
+
+
+
+
+
+        }
+    }
     // Prints the transaction logs for a given transaction ID
     async printTransactionLogs(txID) {
         if (this.algosdk.isValidAddress(this.accountObject.addr)) {
@@ -496,9 +525,9 @@ const GoraDaoDeployer = class {
         this.logger.info('------------------------------')
     }
     async createDaoAsset() {
-       
+
         let params = await this.algodClient.getTransactionParams().do();
-        const atxn =  this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
+        const atxn = this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
             assetMetadataHash: new Uint8Array(32),
             assetName: 'GoraDAO TEST ASSET',
             assetURL: 'https://gora.io',
@@ -528,7 +557,7 @@ const GoraDaoDeployer = class {
         let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
         let assetId = transactionResponse['asset-index'];
         this.logger.info(`GoraDAO created TEST Asset ID: ${assetId}`);
-        
+
     }
     async configMainContract() {
         let addr = this.accountObject.addr;
@@ -579,15 +608,18 @@ const GoraDaoDeployer = class {
         this.logger.info("GoraDAO Contract ABI Exec method = %s", methodDaoConfig);
         const daoConfigResults = await atcDaoConfig.execute(this.algodClient, 10);
         for (const idx in daoConfigResults.methodResults) {
+
             let txid = daoConfigResults.txIDs[idx]
 
 
             let confirmedRound = daoConfigResults.confirmedRound
+            let sp = await this.fetchTransactionStateProof(txid, confirmedRound)
+            ///v2/blocks/{round}/transactions/{txid}/proof
             if (Number(idx) === 0) await this.printTransactionLogs(txid, confirmedRound)
 
             let returnedResults = daoConfigResults.methodResults[idx].rawReturnValue
             this.logger.info("GoraDAO Contract ABI Exec result = %s", returnedResults);
-
+            this.logger.info("GoraDAO Transaction StateProof %s", sp);
         }
     }
     // Only temporary because the actual GoraDao contracts will not be updatable
