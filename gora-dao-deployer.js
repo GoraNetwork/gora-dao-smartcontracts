@@ -704,7 +704,7 @@ const GoraDaoDeployer = class {
         })
         const atxn = new this.algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
             from: addr,
-            to: this.goraDaoMainApplicationAddress,
+            to: this.proposalApplicationAddress,
             amount: 100,
             fee: params.minFee,
             ...params

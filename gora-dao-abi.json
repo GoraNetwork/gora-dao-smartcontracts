@@ -169,11 +169,7 @@
                     "name": "payment_transaction",
                     "description": "Payment from Proposer to GoraDAO for Proposal fees and initiation MBRs!"
                 },
-                {
-                    "type": "axfer",
-                    "name": "asset_transfer_transaction",
-                    "description": "Asset transfer transaction to deposit Gora!"
-                },
+               
                 {
                     "type": "application",
                     "name": "gora_dao_main_app_id",
@@ -182,7 +178,7 @@
                 {
                     "type": "asset",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
+                    "description": "GoraNetwork Proposal asset ID"
                 },
                 {
                     "type": "account",
@@ -202,7 +198,7 @@
                 {
                     "type": "uint64",
                     "name": "proposal_quorum",
-                    "description": "GoraDAO Proposal minimum participation in Gora"
+                    "description": "GoraDAO Proposal minimum participation in Proposal asset"
                 },
                 {
                     "type": "(uint64,uint64[])",
@@ -242,7 +238,7 @@
                 {
                     "type": "uint64",
                     "name": "proposal_voting_threshold",
-                    "description": "GoraDAO Proposal voting threshold in Gora"
+                    "description": "GoraDAO Proposal voting threshold in proposal asset"
                 }
             ],
             "boxes": [
@@ -275,7 +271,7 @@
                 {
                     "type": "axfer",
                     "name": "asset_transfer_transaction",
-                    "description": "Asset transfer transaction to deposit Gora!"
+                    "description": "Asset transfer transaction to deposit Proposal asset!"
                 },
                 {
                     "type": "application",
@@ -290,7 +286,7 @@
                 {
                     "type": "asset",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
+                    "description": "GoraNetwork Proposal asset (Gora) ID"
                 },
                 {
                     "type": "account",
