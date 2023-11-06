@@ -679,7 +679,7 @@ const GoraDaoDeployer = class {
         // const compiledResultUint8 = new Uint8Array(Buffer.from(compiledItemResult.result, "base64"));
         // const compiledResultUint8Dummy = new Uint8Array(compiledResultUint8.length);
         // const compiledClearResultUint8 = new Uint8Array(Buffer.from(compiledItemClearResult.result, "base64"));
-        const contractJson = JSON.parse(this.proposalContract.toString())
+        const contractJson = JSON.parse(this.daoContract.toString())
         const contract = new this.algosdk.ABIContract(contractJson)
         let approvalName = new Uint8Array(Buffer.from("proposal_app"))
         let clearName = new Uint8Array(Buffer.from("proposal_clr"))
@@ -702,22 +702,15 @@ const GoraDaoDeployer = class {
             fee: params.minFee,
             ...params
         })
-        const atxn = new this.algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
-            from: addr,
-            to: this.proposalApplicationAddress,
-            amount: 100,
-            fee: params.minFee,
-            ...params
-        })
+       
 
         const tws0 = { txn: ptxn, signer: signer }
-        const tws1 = { txn: atxn, signer: signer }
+
 
         atc.addMethodCall({
             method: method,
             methodArgs: [
                 tws0,
-                tws1,
             ],
             ...commonParams
         })
