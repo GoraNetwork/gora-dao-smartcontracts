@@ -25,8 +25,9 @@
                     "description": "GoraDAO member account reference"
                 },
                 {
+                    "type": "account",
                     "name": "manager_reference",
-                    "description": "Dynamic box ref per manager account address"
+                    "description": "GoraDAO manager account reference"
                 },
                 {
                     "type": "string",
@@ -80,8 +81,9 @@
                     "description": "Dynamic box ref per member account address"
                 },
                 {
+                    "type": "account",
                     "name": "manager_reference",
-                    "description": "Dynamic box ref per manager account address"
+                    "description": "GoraDAO manager account reference"
                 },
                 {
                     "name": "proposal_app",
@@ -129,8 +131,9 @@
                     "description": "GoraDAO member account reference"
                 },
                 {
+                    "type": "account",
                     "name": "manager_reference",
-                    "description": "Dynamic box ref per manager account address"
+                    "description": "GoraDAO manager account reference"
                 },
                 {
                     "type": "string",

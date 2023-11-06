@@ -144,6 +144,23 @@
             }
         },
         {
+            "name": "write_source_box",
+            "args": [
+                {
+                    "type": "byte[]",
+                    "name": "proposal_approval_source"
+                },
+                {
+                    "type": "byte[]",
+                    "name": "proposal_clear_source"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            },
+            "desc": "Writes the compiled teal source of proposal to a corresponding box proposal_approval or proposal_clear"
+        },
+        {
             "name": "create_proposal",
             "description": "Creates a new Proposal contract! Returns the Proposal contract ID!",
             "args": [
@@ -299,23 +316,7 @@
                 "type": "uint64"
             }
         },
-        {
-            "name": "write_source_box",
-            "args": [
-                {
-                    "type": "byte[]",
-                    "name": "proposal_approval_source"
-                },
-                {
-                    "type": "byte[]",
-                    "name": "proposal_clear_source"
-                }
-            ],
-            "returns": {
-                "type": "string"
-            },
-            "desc": "Writes the compiled teal source of proposal to a corresponding box proposal_approval or proposal_clear"
-        },
+        
         {
             "name": "update_proposal",
             "args": [
