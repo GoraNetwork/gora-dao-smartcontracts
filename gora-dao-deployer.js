@@ -711,6 +711,18 @@ const GoraDaoDeployer = class {
             method: method,
             methodArgs: [
                 tws0,
+                this.goraDaoMainApplicationId,
+                this.proposalAsset,
+                this.accountObject.addr,
+                "Proposal_Test",
+                "This is a test proposal for GoraDAO",
+                10,
+                [2, [100, 100, 52], [80, 80, 60]],
+                2,
+                100000,
+                [1, [10, 30, 60]],
+
+
             ],
             ...commonParams
         })

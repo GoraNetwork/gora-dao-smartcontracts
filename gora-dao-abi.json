@@ -210,11 +210,7 @@
                     "name": "proposal_duration",
                     "description": "GoraDAO Proposal total duration in working days"
                 },
-                {
-                    "type": "(uint64,uint64[])",
-                    "name": "proposal_duration_program",
-                    "description": "GoraDAO Proposal vesting durations program! (#duration, [duration])"
-                },
+               
                 {
                     "type": "uint64",
                     "name": "proposal_amount",
