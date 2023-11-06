@@ -1,12 +1,238 @@
 // Gora DAO proposal Smart Contract
 // Version 1
-
 // Website: https://www.gora.io/
-
 // Creators: @emg110.algo
 // Github: https://github.com/GoraNetwork/gora-dao-smartcontracts
-
-
+///////////////////////////////////////////
 
 #pragma version 8
+//Check TXN first
+callsub sub_check_txn
+
+// Check creation TXN
+txn ApplicationID
+bz branch_create
+
+// Checking onCompletion type for update application call
+txn OnCompletion
+int UpdateApplication
+==
+bnz branch_update
+
+// Checking onCompletion type for delete application call
+txn OnCompletion
+
+int DeleteApplication
+==
+bnz branch_delete
+
+// Checking onCompletion type for close out application call
+txn OnCompletion
+
+int CloseOut
+==
+bnz branch_closeout
+
+// Checking onCompletion type for optin application call
+txn OnCompletion
+
+int OptIn
+==
+bnz branch_error
+
+// Checks the number of application args , if 0 then no method it is
+txn NumAppArgs
+
+int 0
+==
+bz branch_method_router
+b branch_error
+
+///////////////////////////////////////////
+check_owner_auth:
+
+	txn Sender
+	global CreatorAddress
+	==
+	assert
+	retsub
+
+branch_create:
+
+	global CurrentApplicationID
+	store 1
+
+	byte "GoraDAO Proposal created!"
+	store 2
+
+	load 1
+	itob
+	log
+
+	load 2
+	log
+
+	byte "participation_count"
+	int 0
+	app_global_put
+
+	byte "vote_count"
+	int 0
+	app_global_put
+
+	int 1
+	return
+
+branch_delete:
+
+	callsub check_owner_auth
+
+	int 1
+	return
+
+branch_update:
+
+	callsub check_owner_auth
+
+	global CurrentApplicationID
+	store 1
+
+	byte "GoraDAO Proposal updated: "
+	store 2
+
+	load 2
+	load 1
+	itob
+	concat
+	log
+
+	int 1
+	return
+
+branch_closeout:
+
+	callsub check_owner_auth
+
+	int 1
+	return
+
+///////////////////////////////////////////
+branch_method_router:
+
+	method "config_proposal(pay,asset,account)string"
+	txn ApplicationArgs 0
+	==
+	bnz method_config_proposal
+
+	method "update_manager_address(pay,byte[],byte[])string"
+	txn ApplicationArgs 0
+	==
+	bnz method_update_manager_address
+
+	method "activate_proposal(application,byte[],byte[])string"
+	txn ApplicationArgs 0
+	==
+	bnz method_activate_proposal
+	b branch_error
+
+sub_check_txn:
+
+	// Checks RekeyTo address transaction field to be empty (ZeroAddress)
+	txn RekeyTo
+
+	global ZeroAddress
+	==
+	assert
+
+	// Checks CloseRemainderTo address transaction field to be empty (ZeroAddress)
+	txn CloseRemainderTo
+
+	global ZeroAddress
+	==
+	assert
+
+	// Checks AssetCloseTo address transaction field to be empty (ZeroAddress)
+	txn AssetCloseTo
+
+	global ZeroAddress
+	==
+	assert
+
+	// Check transaction type to be application call
+	txn TypeEnum
+
+	int appl
+	==
+	assert
+
+	// Checking transaction fee
+	txn Fee
+
+	global MinTxnFee
+	>=
+	assert
+	retsub
+
+// Checks owner address authentication
+sub_check_owner_auth:
+
+	txn Sender
+	global CreatorAddress
+	==
+	assert
+	retsub
+// Checks manager address authentication	
+sub_check_manager_auth:
+
+	txn Sender
+	byte "manager_address"
+	app_global_get
+	==
+	assert
+	retsub
+
+method_update_manager_address:
+	callsub sub_check_owner_auth
+
+	txn ApplicationArgs 1
+	byte "manager_address"
+	app_global_put
+
+	byte 0x151f7c75
+	byte "Proposal manager address is now updated!"
+	concat
+	b branch_log_return
+
+method_activate_proposal:
+
+	byte 0x151f7c75
+	byte "Proposal is activated!"
+	concat
+	b branch_log_return
+
+// Handles configuration of Proposal
+method_config_proposal:
+
+	txn ApplicationArgs 1
+	log
+
+	txn ApplicationArgs 2
+	log
+
+	byte 0x151f7c75
+	byte "Proposal has configured!"
+	concat
+	b branch_log_return
+
+branch_error:
+
+	err
+
+// Handles logging the last element on the stack then put a 1 on the top and return (log and approve)
+branch_log_return:
+
+	log
+
+	int 1
+	return
 

@@ -34,11 +34,11 @@
       "create_dao_contracts": false,
       "update_dao_contracts": false,
       "create_dao_asset": false,
-      "config_dao_contract": true,
+      "config_dao_contract": false,
 
 
-      "create_proposal_contracts": false,
       "write_proposal_source_box": false,
+      "create_proposal_contracts": true,
       "update_proposal_contracts": false,
 
       "test_proposal_config": false,
