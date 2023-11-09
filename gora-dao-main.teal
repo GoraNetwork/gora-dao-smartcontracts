@@ -123,12 +123,13 @@ branch_method_router:
 	==
 	bnz method_write_source_box
 
-	method "create_proposal(pay,byte[],byte[])string"
+	//string,string,uint64,(uint64, uint64[]),uint64,uint64,(uint64,uint64[]),uint64
+	method "create_proposal(pay,application,asset,account)string"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_create
 
-	method "update_proposal(application,byte[],byte[])string"
+	method "update_proposal(application)string"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_update
@@ -202,6 +203,7 @@ method_proposal_create:
 	==
 	assert
 
+	// Checking the pay txn at index 0 of gtxn
 	gtxn 0 RekeyTo
 	global ZeroAddress
 	==
@@ -232,6 +234,7 @@ method_proposal_create:
 	>=
 	assert
 
+	// Checking if the receiver of pay txn is the same as the current application address
 	txn GroupIndex
 	int 1
 	-
@@ -240,6 +243,7 @@ method_proposal_create:
 	global CurrentApplicationAddress
 	==
 	assert
+
 
 	gtxns Amount
 	global MinTxnFee
@@ -250,7 +254,7 @@ method_proposal_create:
 
 	// Inner transaction to create the Proposal smart contract
 	itxn_begin
-
+	
 	int appl
 	itxn_field TypeEnum
 	int NoOp

@@ -683,6 +683,8 @@ const GoraDaoDeployer = class {
         const contract = new this.algosdk.ABIContract(contractJson)
         let approvalName = new Uint8Array(Buffer.from("proposal_app"))
         let clearName = new Uint8Array(Buffer.from("proposal_clr"))
+        let memberPublicKey = this.algosdk.encodeAddress(this.accountObject.addr)
+      
         const commonParams = {
             appID: Number(this.goraDaoMainApplicationId),
             sender: addr,
@@ -691,6 +693,8 @@ const GoraDaoDeployer = class {
             boxes: [
                 { appIndex: Number(this.goraDaoMainApplicationId), name: approvalName },
                 { appIndex: Number(this.goraDaoMainApplicationId), name: clearName },
+                { appIndex: Number(this.goraDaoMainApplicationId), name: memberPublicKey.publicKey },
+  
             ],
         }
         let method = this.getMethodByName("create_proposal", contract)
@@ -710,19 +714,18 @@ const GoraDaoDeployer = class {
         atc.addMethodCall({
             method: method,
             methodArgs: [
-                tws0,
-                this.goraDaoMainApplicationId,
-                this.proposalAsset,
-                this.accountObject.addr,
-                "Proposal_Test",
-                "This is a test proposal for GoraDAO",
-                10,
-                [2, [100, 100, 52], [80, 80, 60]],
-                2,
-                100000,
-                [1, [10, 30, 60]],
-
-
+                tws0,//pay
+                this.goraDaoMainApplicationId,//application
+                this.proposalAsset,//asset
+                this.accountObject.addr,//member_reference
+                // "Proposal_Test",//title
+                // "This is a test proposal for GoraDAO",//description
+                // 10,//quorum
+                // [2, [100, 100, 52], [80, 80, 60]],//threshold
+                // 12,//total duration
+                // 10000,//amount
+                // [1, [10, 30, 60]],//vesting_schedule
+                // 2,//voting duration
             ],
             ...commonParams
         })
