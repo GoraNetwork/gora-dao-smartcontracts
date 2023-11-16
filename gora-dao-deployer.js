@@ -622,7 +622,8 @@ const GoraDaoDeployer = class {
         //(pay,asset,account)string
         const args = [
             tws0,
-            this.proposalAsset,
+            Number(this.proposalAsset),
+            Number(this.proposalAsset),
             addr,
 
         ]
@@ -803,7 +804,7 @@ const GoraDaoDeployer = class {
         const ptxn = new this.algosdk.Transaction({
             from: addr,
             to: this.goraDaoMainApplicationAddress,
-            amount: 1000000,
+            amount: 3000,
             fee: params.minFee,
             ...params
         })
@@ -820,8 +821,8 @@ const GoraDaoDeployer = class {
                 Number(this.proposalApplicationId),
                 addr,// member account (Proposal manager)
                 Number(this.proposalAsset),// Proposal asset
-                "Proposal_Test",//title
-                "This is a test proposal for GoraDAO",//description
+                "Proposal_Test_updated",//title
+                "This is an updated test proposal for GoraDAO",//description
                 // 10,//quorum
                 // [2, [100, 100, 52], [80, 80, 60]],//threshold
                 // 12,//total duration

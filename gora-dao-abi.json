@@ -20,12 +20,17 @@
                     "description": "Payment from manager to GoraDAO for fees and initiation MBRs!"
                 },
                 {
-                    "type": "uint64",
+                    "type": "asset",
                     "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) reference"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_id",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
                 {
-                    "type": "account",
+                    "type": "address",
                     "name": "manager_reference",
                     "description": "GoraDAO manager account reference"
                 }
