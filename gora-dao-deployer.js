@@ -713,7 +713,7 @@ const GoraDaoDeployer = class {
         const contract = new this.algosdk.ABIContract(contractJson)
         let approvalName = new Uint8Array(Buffer.from("proposal_app"))
         let clearName = new Uint8Array(Buffer.from("proposal_clr"))
-        let memberPublicKey = this.algosdk.encodeAddress(this.accountObject.addr)
+        let memberPublicKey = this.algosdk.decodeAddress(this.accountObject.addr)
 
         const commonParams = {
             appID: Number(this.goraDaoMainApplicationId),
@@ -745,11 +745,10 @@ const GoraDaoDeployer = class {
             method: method,
             methodArgs: [
                 tws0,//pay
-                this.goraDaoMainApplicationId,//application
-                this.proposalAsset,//asset
-                this.accountObject.addr,//member_reference
-                // "Proposal_Test",//title
-                // "This is a test proposal for GoraDAO",//description
+                addr,// member account (Proposal manager)
+                Number(this.proposalAsset),// Proposal asset
+                "Proposal_Test",//title
+                "This is a test proposal for GoraDAO",//description
                 // 10,//quorum
                 // [2, [100, 100, 52], [80, 80, 60]],//threshold
                 // 12,//total duration

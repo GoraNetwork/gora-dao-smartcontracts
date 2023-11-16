@@ -20,12 +20,12 @@
                     "description": "GoraNetwork Main App (GoraDao) ID"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Proposal asset ID"
                 },
@@ -83,12 +83,12 @@
                     "description": "GoraNetwork Main App (GoraDao) ID"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Proposal asset ID"
                 },
@@ -145,7 +145,7 @@
                     "description": "Payment from Proposal manager to GoraDAO for fees and Proposal configuration MBRs!"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -237,7 +237,7 @@
                     "description": "GoraDAO Main application ID"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -261,7 +261,7 @@
                     "description": "Payment from Proposal manager to GoraDAO for fees and Proposal activation MBRs!"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -286,7 +286,7 @@
             "description": "Updates the vesting stats and counters for a Proposal by calling vesting contract ABI with C2C call! inner_transaction! Returns Vesting contract's ID!",
             "args": [
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -321,7 +321,7 @@
             "description": "Force closes a Proposal contract as last resort after Proposal Creator, manager_address and GoraDAO manager_address send this ABI call and last one clears and closes Proposal and re-funds everyone! Returns the Proposal contract ID!",
             "args": [
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -366,7 +366,7 @@
                     "description": "Asset transfer transaction to deposit Gora!"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -396,7 +396,7 @@
                     "description": "Payment from Proposal participant to GoraDAO for fees!"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -431,7 +431,7 @@
                     "description": "Asset transfer transaction to deposit Gora!"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },

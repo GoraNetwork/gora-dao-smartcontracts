@@ -102,7 +102,7 @@ branch_closeout:
 ///////////////////////////////////////////
 branch_method_router:
 
-	method "create_proposal(application,asset, asset, account,account,string,string)string"
+	method "create_proposal(application,uint64,uint64,address,address,string,string)string"
 	txn ApplicationArgs 0
 	==
 	txn ApplicationID
@@ -111,12 +111,12 @@ branch_method_router:
 	&&
 	bnz method_create_proposal
 
-	method "update_proposal(application,asset, asset, account,account,string,string)string"
+	method "update_proposal(application,uint64,uint64,address,address,string,string)string"
 	txn ApplicationArgs 0
 	==
 	bnz method_update_proposal
 
-	method "config_proposal(pay,asset,account)string"
+	method "config_proposal(pay,uint64,account)string"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_proposal
@@ -340,7 +340,7 @@ method_activate_proposal:
 	int 1
 	==
 	assert
-	
+
 	byte 0x151f7c75
 	byte "Proposal is activated!"
 	concat
