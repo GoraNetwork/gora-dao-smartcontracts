@@ -254,9 +254,11 @@ method_proposal_create:
 
 	// Inner transaction to create the Proposal smart contract
 	itxn_begin
-	
+	// itxn Type to "appl"
 	int appl
 	itxn_field TypeEnum
+
+	// itxn OnCompletion
 	int NoOp
 	itxn_field OnCompletion
 	//txn ApplicationArgs 1

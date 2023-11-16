@@ -4,17 +4,16 @@
 // Creators: @emg110.algo
 // Github: https://github.com/GoraNetwork/gora-dao-smartcontracts
 ///////////////////////////////////////////
-
 #pragma version 8
 //Check TXN first
 callsub sub_check_txn
 
 // Check creation TXN
-txn ApplicationID
-bz branch_create
-
+// txn ApplicationID
+// bz branch_create
 // Checking onCompletion type for update application call
 txn OnCompletion
+
 int UpdateApplication
 ==
 bnz branch_update
@@ -57,32 +56,6 @@ check_owner_auth:
 	assert
 	retsub
 
-branch_create:
-
-	global CurrentApplicationID
-	store 1
-
-	byte "GoraDAO Proposal created!"
-	store 2
-
-	load 1
-	itob
-	log
-
-	load 2
-	log
-
-	byte "participation_count"
-	int 0
-	app_global_put
-
-	byte "vote_count"
-	int 0
-	app_global_put
-
-	int 1
-	return
-
 branch_delete:
 
 	callsub check_owner_auth
@@ -118,6 +91,16 @@ branch_closeout:
 
 ///////////////////////////////////////////
 branch_method_router:
+
+	method "create_proposal(application,asset, asset, account,account,string,string)string"
+	txn ApplicationArgs 0
+	==
+	bnz method_create_proposal
+
+	method "update_proposal(application,asset, asset, account,account,string,string)string"
+	txn ApplicationArgs 0
+	==
+	bnz method_update_proposal
 
 	method "config_proposal(pay,asset,account)string"
 	txn ApplicationArgs 0
@@ -181,7 +164,8 @@ sub_check_owner_auth:
 	==
 	assert
 	retsub
-// Checks manager address authentication	
+
+// Checks manager address authentication
 sub_check_manager_auth:
 
 	txn Sender
@@ -191,7 +175,60 @@ sub_check_manager_auth:
 	assert
 	retsub
 
+method_create_proposal:
+
+	global CurrentApplicationID
+	store 1
+
+	byte "GoraDAO Proposal created!"
+	store 2
+
+	load 1
+	itob
+	log
+
+	load 2
+	log
+
+	byte "participation_count"
+	int 0
+	app_global_put
+
+	byte "vote_count"
+	int 0
+	app_global_put
+
+	int 1
+	return
+
+method_update_proposal:
+
+	global CurrentApplicationID
+	store 1
+
+	byte "GoraDAO Proposal created!"
+	store 2
+
+	load 1
+	itob
+	log
+
+	load 2
+	log
+
+	byte "participation_count"
+	int 0
+	app_global_put
+
+	byte "vote_count"
+	int 0
+	app_global_put
+
+	int 1
+	return
+
 method_update_manager_address:
+
 	callsub sub_check_owner_auth
 
 	txn ApplicationArgs 1
