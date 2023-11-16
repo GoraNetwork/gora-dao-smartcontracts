@@ -536,7 +536,7 @@ const GoraDaoDeployer = class {
             reserve: this.accountObject.addr,
             suggestedParams: { ...params, fee: 1000, flatFee: true, },
             total: 1000000,
-            unitName: 'INNERTX',
+            unitName: 'GDT',
 
         })
 
@@ -552,6 +552,41 @@ const GoraDaoDeployer = class {
         let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
         let assetId = transactionResponse['asset-index'];
         this.logger.info(`GoraDAO created TEST Asset ID: ${assetId}`);
+
+    }
+    async createDaoProposalAsset() {
+
+        let params = await this.algodClient.getTransactionParams().do();
+        const atxn = this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
+            assetMetadataHash: new Uint8Array(32),
+            assetName: 'GoraDAO Proposal TEST ASSET',
+            assetURL: 'https://gora.io',
+            clawback: this.accountObject.addr,
+            decimals: 0,
+            defaultFrozen: false,
+            freeze: this.accountObject.addr,
+            from: this.accountObject.addr,
+            manager: this.accountObject.addr,
+            note: new Uint8Array(Buffer.from('GoraDAO Proposal TEST Asset')),
+            reserve: this.accountObject.addr,
+            suggestedParams: { ...params, fee: 1000, flatFee: true, },
+            total: 1000000,
+            unitName: 'GDPT',
+
+        })
+
+
+
+        this.logger.info('------------------------------')
+        this.logger.info("GoraDAO Proposal Asset Creation...");
+        let txnId = atxn.txID().toString();
+        let signedTxn = await atxn.signTxn(this.accountObject.sk);
+        await this.algodClient.sendRawTransaction(signedTxn).do();
+        await this.algosdk.waitForConfirmation(this.algodClient, txnId, 10)
+
+        let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
+        let assetId = transactionResponse['asset-index'];
+        this.logger.info(`GoraDAO Proposal TEST created Asset ID: ${assetId}`);
 
     }
     async configMainContract() {
@@ -872,6 +907,7 @@ const GoraDaoDeployer = class {
         if (this.config.deployer['create_dao_contracts']) await this.deployMainContract();
         if (this.config.deployer['update_dao_contracts']) await this.updateMainContract();
         if (this.config.deployer['create_dao_asset']) await this.createDaoAsset();
+        if (this.config.deployer['create_dao_proposal_asset']) await this.createDaoProposalAsset();
         if (this.config.deployer['config_dao_contract']) await this.configMainContract();
         if (this.config.deployer['delete_apps']) await this.deleteApps(this.config.deployer.apps_to_delete);
 
