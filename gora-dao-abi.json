@@ -180,14 +180,24 @@
                     "description": "Payment from Proposer to GoraDAO for Proposal fees and initiation MBRs!"
                 },
                 {
-                    "type": "application",
-                    "name": "gora_dao_main_app_id",
-                    "description": "GoraDAO Main application ID"
-                },
-                {
                     "type": "account",
                     "name": "member_reference",
-                    "description": "GoraDAO member account reference"
+                    "description": "GoraDAO member account reference (Proposal manager)"
+                },
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Proposal asset ID"
+                },
+                {
+                    "type": "string",
+                    "name": "proposal_title",
+                    "description": "GoraDAO Proposal title"
+                },
+                {
+                    "type": "string",
+                    "name": "proposal_description",
+                    "description": "GoraDAO Proposal description"
                 }
             ],
             "boxes": [
@@ -225,14 +235,24 @@
                     "description": "Payment from Proposer to GoraDAO for Proposal fees and initiation MBRs!"
                 },
                 {
-                    "type": "application",
-                    "name": "gora_dao_main_app_id",
-                    "description": "GoraDAO Main application ID"
-                },
-                {
                     "type": "account",
                     "name": "member_reference",
-                    "description": "GoraDAO member account reference"
+                    "description": "GoraDAO member account reference (Proposal manager)"
+                },
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Proposal asset ID"
+                },
+                {
+                    "type": "string",
+                    "name": "proposal_title",
+                    "description": "GoraDAO Proposal title"
+                },
+                {
+                    "type": "string",
+                    "name": "proposal_description",
+                    "description": "GoraDAO Proposal description"
                 }
             ],
             "returns": {

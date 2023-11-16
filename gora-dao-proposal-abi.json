@@ -15,6 +15,11 @@
             "description": "Creates a new Proposal contract! Returns the Proposal contract ID!",
             "args": [
                 {
+                    "type": "application",
+                    "name": "gora_dao_main_app_id",
+                    "description": "GoraNetwork Main App (GoraDao) ID"
+                },
+                {
                     "type": "asset",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
@@ -22,7 +27,7 @@
                 {
                     "type": "account",
                     "name": "member_reference",
-                    "description": "GoraDAO member account reference"
+                    "description": "GoraDAO member account reference (Proposal manager)"
                 },
                 {
                     "type": "account",
@@ -68,6 +73,11 @@
             "description": "Updates an existing Proposal contract! Returns the Proposal contract ID!",
             "args": [
                 {
+                    "type": "application",
+                    "name": "gora_dao_main_app_id",
+                    "description": "GoraNetwork Main App (GoraDao) ID"
+                },
+                {
                     "type": "asset",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
@@ -75,7 +85,7 @@
                 {
                     "type": "account",
                     "name": "member_reference",
-                    "description": "GoraDAO member account reference"
+                    "description": "GoraDAO member account reference (Proposal manager)"
                 },
                 {
                     "type": "account",
