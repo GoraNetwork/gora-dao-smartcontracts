@@ -27,7 +27,7 @@
                     "descr": "The longest a timeframe can be"
                 },
                 "manager_address": {
-                    "type": "bytes",
+                    "type": "byte[]",
                     "key": "ma",
                     "descr": "Contract manager"
                 }

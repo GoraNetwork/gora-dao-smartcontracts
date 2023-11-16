@@ -20,7 +20,7 @@
                     "description": "Payment from manager to GoraDAO for fees and initiation MBRs!"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -59,7 +59,7 @@
                     "description": "GoraNetwork Main application ID"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -88,7 +88,7 @@
                     "description": "Asset transfer transaction to deposit Gora!"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -118,7 +118,7 @@
             "description": "Unsubscribes an Algorand account from GoraDAO! Returns total number of members! Member's participation will be withdrawn!",
             "args": [
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -180,12 +180,12 @@
                     "description": "Payment from Proposer to GoraDAO for Proposal fees and initiation MBRs!"
                 },
                 {
-                    "type": "account",
+                    "type": "address",
                     "name": "member_reference",
                     "description": "GoraDAO member account reference (Proposal manager)"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Proposal asset ID"
                 },
@@ -215,7 +215,7 @@
                 }
             ],
             "returns": {
-                "type": "uint64"
+                "type": "string"
             }
         },
         {
@@ -227,12 +227,22 @@
                     "description": "Payment from Proposer to GoraDAO for Proposal fees and initiation MBRs!"
                 },
                 {
-                    "type": "account",
+                    "type": "application",
+                    "name": "proposal_app_ref",
+                    "description": "Proposal application  to be referenced"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_app_rid",
+                    "description": "Proposal application  ID to be updated"
+                },
+                {
+                    "type": "address",
                     "name": "member_reference",
                     "description": "GoraDAO member account reference (Proposal manager)"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Proposal asset ID"
                 },
@@ -295,7 +305,7 @@
                     "description": "GoraDAO Proposal application ID"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Proposal asset (Gora) ID"
                 },
@@ -338,7 +348,7 @@
                     "description": "Asset transfer transaction to deposit Gora!"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -381,7 +391,7 @@
                     "description": "Asset transfer transaction to deposit Gora!"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -414,7 +424,7 @@
             "description": "Withdraws a member participation from a  Proposal! Returns the Proposal contract ID! Withdraw is possible only before voting starts",
             "args": [
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -452,7 +462,7 @@
                     "description": "Payment from manager to GoraDAO for fees!"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -490,7 +500,7 @@
                     "description": "Payment from manager to GoraDAO for fees!"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -538,7 +548,7 @@
                     "description": "Payment from manager to GoraDAO for fees!"
                 },
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
