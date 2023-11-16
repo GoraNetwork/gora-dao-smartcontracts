@@ -3,8 +3,10 @@
 // Website: https://www.gora.io/
 // Creators: @emg110.algo
 // Github: https://github.com/GoraNetwork/gora-dao-smartcontracts
-///////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+
 #pragma version 8
+
 //Check TXN first
 callsub sub_check_txn
 
@@ -50,7 +52,6 @@ bnz branch_error
 
 // Checks the number of application args , if 0 then no method it is
 txn NumAppArgs
-
 int 0
 ==
 bz branch_method_router
@@ -104,6 +105,10 @@ branch_method_router:
 	method "create_proposal(application,asset, asset, account,account,string,string)string"
 	txn ApplicationArgs 0
 	==
+	txn ApplicationID
+	int 0
+	==
+	&&
 	bnz method_create_proposal
 
 	method "update_proposal(application,asset, asset, account,account,string,string)string"
@@ -176,7 +181,6 @@ sub_check_owner_auth:
 
 // Checks manager address authentication
 sub_check_manager_auth:
-
 	txn Sender
 	byte "manager_address"
 	app_global_get
@@ -187,17 +191,51 @@ sub_check_manager_auth:
 method_create_proposal:
 
 	global CurrentApplicationID
+	store 0
+
+	txn ApplicationArgs 1
 	store 1
-
-	byte "GoraDAO Proposal created!"
-	store 2
-
+	byte "gora_dao_app_id"
 	load 1
-	itob
-	log
+	app_global_put
 
+
+	txn ApplicationArgs 2
+	store 2
+	byte "gora_dao_asset_id"
 	load 2
-	log
+	app_global_put
+
+	txn ApplicationArgs 3
+	store 3
+	byte "gora_dao_proposal_asset_id"
+	load 3
+	app_global_put
+
+	txn ApplicationArgs 4
+	store 4
+	byte "gora_dao_proposal_creator_address"
+	load 4
+	app_global_put
+
+	txn ApplicationArgs 5
+	store 5
+	byte "gora_dao_manager_address"
+	load 5
+	app_global_put
+
+	txn ApplicationArgs 6
+	store 6
+	byte "gora_dao_proposal_title"
+	load 6
+	app_global_put
+
+	txn ApplicationArgs 7
+	store 7
+	byte "gora_dao_proposal_description"
+	load 7
+	app_global_put
+
 
 	byte "participation_count"
 	int 0
@@ -207,23 +245,66 @@ method_create_proposal:
 	int 0
 	app_global_put
 
-	int 1
-	return
+	byte "gora_dao_proposal_is_activated"
+	int 0
+	app_global_put
+
+
+	byte 0x151f7c75
+	byte "GoraDAO Proposal contarct updated!"
+	concat
+	b branch_log_return
 
 method_update_proposal:
-
+	byte "gora_dao_proposal_is_activated"
+	app_global_get
+	int 1
+	!=
+	assert
 	global CurrentApplicationID
+	store 0
+
+	txn ApplicationArgs 1
 	store 1
-
-	byte "GoraDAO Proposal created!"
-	store 2
-
+	byte "gora_dao_app_id"
 	load 1
-	itob
-	log
+	app_global_put
 
+	txn ApplicationArgs 2
+	store 2
+	byte "gora_dao_asset_id"
 	load 2
-	log
+	app_global_put
+
+	txn ApplicationArgs 3
+	store 3
+	byte "gora_dao_proposal_asset_id"
+	load 3
+	app_global_put
+
+	txn ApplicationArgs 4
+	store 4
+	byte "gora_dao_proposal_creator_address"
+	load 4
+	app_global_put
+
+	txn ApplicationArgs 5
+	store 5
+	byte "gora_dao_manager_address"
+	load 5
+	app_global_put
+
+	txn ApplicationArgs 6
+	store 6
+	byte "gora_dao_proposal_title"
+	load 6
+	app_global_put
+
+	txn ApplicationArgs 7
+	store 7
+	byte "gora_dao_proposal_description"
+	load 7
+	app_global_put
 
 	byte "participation_count"
 	int 0
@@ -233,12 +314,14 @@ method_update_proposal:
 	int 0
 	app_global_put
 
-	int 1
-	return
+
+	byte 0x151f7c75
+	byte "GoraDAO Proposal contarct updated!"
+	concat
+	b branch_log_return
 
 method_update_manager_address:
-
-	callsub sub_check_owner_auth
+	callsub sub_check_manager_auth
 
 	txn ApplicationArgs 1
 	byte "manager_address"
@@ -250,7 +333,14 @@ method_update_manager_address:
 	b branch_log_return
 
 method_activate_proposal:
-
+	callsub sub_check_manager_auth
+	// Requiring that agreement on proposal activation is true
+	byte "gora_dao_proposal_activation_allowed"
+	app_global_get
+	int 1
+	==
+	assert
+	
 	byte 0x151f7c75
 	byte "Proposal is activated!"
 	concat
