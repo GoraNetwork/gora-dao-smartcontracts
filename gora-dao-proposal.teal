@@ -111,7 +111,7 @@ branch_method_router:
 	&&
 	bnz method_create_proposal
 
-	method "update_proposal(application,uint64,uint64,address,address,string,string)string"
+	method "update_proposal(application,uint64,uint64,address,address,string,string)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_update_proposal
@@ -261,22 +261,26 @@ method_update_proposal:
 	int 1
 	!=
 	assert
+
 	global CurrentApplicationID
 	store 0
 
 	txn ApplicationArgs 1
+	btoi
 	store 1
 	byte "gora_dao_app_id"
 	load 1
 	app_global_put
 
 	txn ApplicationArgs 2
+	btoi
 	store 2
 	byte "gora_dao_asset_id"
 	load 2
 	app_global_put
 
 	txn ApplicationArgs 3
+	btoi
 	store 3
 	byte "gora_dao_proposal_asset_id"
 	load 3
@@ -316,7 +320,8 @@ method_update_proposal:
 
 
 	byte 0x151f7c75
-	byte "GoraDAO Proposal contarct updated!"
+	global CurrentApplicationID
+	itob
 	concat
 	b branch_log_return
 

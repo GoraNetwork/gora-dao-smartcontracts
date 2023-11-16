@@ -70,7 +70,10 @@ branch_create:
 
 	load 2
 	log
-
+	
+	byte "gora_dao_manager_address"
+	txn Sender
+	app_global_put
 	byte "proposals_count"
 	int 0
 	app_global_put
@@ -100,7 +103,9 @@ branch_update:
 	itob
 	concat
 	log
-
+	byte "gora_dao_manager_address"
+	txn Sender
+	app_global_put
 	int 1
 	return
 
@@ -113,7 +118,7 @@ branch_closeout:
 
 branch_method_router:
 
-	method "config_dao(pay,asset,account)string"
+	method "config_dao(pay,asset,uint64,address)string"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_dao
@@ -184,9 +189,22 @@ sub_check_owner_auth:
 method_config_dao:
 
 	txn ApplicationArgs 1
+	btoi
+	store 1
+	byte "gora_dao_asset_id"
+	load 1
+	app_global_put
+	load 1
+	itob
 	log
 
 	txn ApplicationArgs 2
+	store 2
+	byte "gora_dao_manager_address"
+	load 2
+	app_global_put
+
+	load 2
 	log
 
 
@@ -311,6 +329,7 @@ method_proposal_create:
     load 1
     itxn_field ApplicationArgs
     byte "gora_dao_manager_address"
+	app_global_get
     itxn_field ApplicationArgs
     load 3
     itxn_field ApplicationArgs
@@ -419,7 +438,7 @@ method_proposal_update:
     // itxn 
     txn Sender
     itxn_field Note
-    method "update_proposal(application,uint64,uint64,address,address,string,string)string"
+    method "update_proposal(application,uint64,uint64,address,address,string,string)uint64"
     itxn_field ApplicationArgs
     byte "proposal_app"
     box_get
@@ -447,14 +466,19 @@ method_proposal_update:
     app_global_get
 	itob
     itxn_field ApplicationArgs
+	// Proposal asset id
     load 2
     itxn_field ApplicationArgs
+	// Proposal manager address
     load 1
     itxn_field ApplicationArgs
     byte "gora_dao_manager_address"
+	app_global_get
     itxn_field ApplicationArgs
+	// Proposal title
     load 3
     itxn_field ApplicationArgs
+	// Proposal description
     load 4
     itxn_field ApplicationArgs
     
@@ -462,8 +486,8 @@ method_proposal_update:
     itxn_submit
     itxn TxID
     log
-    itxn CreatedApplicationID
-    store 2
+    itxn LastLog
+    store 10
     byte "proposals_count"
     dup
     app_global_get
@@ -473,8 +497,7 @@ method_proposal_update:
 
 
 	byte 0x151f7c75
-	load 0
-	itob
+	load 10
 	concat
 	b branch_log_return
 
