@@ -25,6 +25,11 @@
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
                 {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Proposal asset ID"
+                },
+                {
                     "type": "account",
                     "name": "member_reference",
                     "description": "GoraDAO member account reference (Proposal manager)"
@@ -81,6 +86,11 @@
                     "type": "asset",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Proposal asset ID"
                 },
                 {
                     "type": "account",
