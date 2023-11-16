@@ -206,20 +206,12 @@
                     "description": "Dynamic box ref per member account address"
                 },
                 {
-                    "name": "proposal_reference",
-                    "description": "Dynamic box ref per proposal account address"
-                },
-                {
-                    "name": "proposals",
-                    "description": "Proposals box reference for proposal contract IDs"
-                },
-                {
                     "name": "proposal_app",
-                    "description": "Dynamic box ref per member account address"
+                    "description": "Proposal approval source box ref"
                 },
                 {
                     "name": "proposal_clr",
-                    "description": "Dynamic box ref per proposal account address"
+                    "description": "Proposal clear source box ref"
                 }
             ],
             "returns": {
@@ -253,6 +245,24 @@
                     "type": "string",
                     "name": "proposal_description",
                     "description": "GoraDAO Proposal description"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address (proposal creator)"
+                },
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address (proposal manager)"
+                },
+                {
+                    "name": "proposal_app",
+                    "description": "Proposal approval source box ref"
+                },
+                {
+                    "name": "proposal_clr",
+                    "description": "Proposal clear source box ref"
                 }
             ],
             "returns": {
