@@ -775,46 +775,71 @@ const GoraDaoDeployer = class {
         let params = await this.algodClient.getTransactionParams().do();
         const atc = new this.algosdk.AtomicTransactionComposer()
         const signer = this.algosdk.makeBasicAccountTransactionSigner(this.accountObject)
-        const contract = new this.algosdk.ABIContract(JSON.parse(this.proposalContract.toString()))
-
+        // const compiledItemResult = await this.algodClient.compile(this.proposalApprovalProgData).do();
+        // const compiledItemClearResult = await this.algodClient.compile(this.proposalClearProgData).do();
+        // const compiledResultUint8 = new Uint8Array(Buffer.from(compiledItemResult.result, "base64"));
+        // const compiledResultUint8Dummy = new Uint8Array(compiledResultUint8.length);
+        // const compiledClearResultUint8 = new Uint8Array(Buffer.from(compiledItemClearResult.result, "base64"));
+        const contractJson = JSON.parse(this.daoContract.toString())
+        const contract = new this.algosdk.ABIContract(contractJson)
         let approvalName = new Uint8Array(Buffer.from("proposal_app"))
         let clearName = new Uint8Array(Buffer.from("proposal_clr"))
+        let memberPublicKey = this.algosdk.decodeAddress(this.accountObject.addr)
+
         const commonParams = {
             appID: Number(this.goraDaoMainApplicationId),
             sender: addr,
-            ForeignApps: [this.proposalApplicationId],
             suggestedParams: params,
             signer: signer,
             boxes: [
                 { appIndex: Number(this.goraDaoMainApplicationId), name: approvalName },
                 { appIndex: Number(this.goraDaoMainApplicationId), name: clearName },
+                { appIndex: Number(this.goraDaoMainApplicationId), name: memberPublicKey.publicKey },
+
             ],
         }
         let method = this.getMethodByName("update_proposal", contract)
-        let application = Number(this.applicationItemId)
+
+        const ptxn = new this.algosdk.Transaction({
+            from: addr,
+            to: this.goraDaoMainApplicationAddress,
+            amount: 1000000,
+            fee: params.minFee,
+            ...params
+        })
+
+
+        const tws0 = { txn: ptxn, signer: signer }
+
 
         atc.addMethodCall({
             method: method,
-            methodArgs: [application, approvalName, clearName],
+            methodArgs: [
+                tws0,//pay
+                Number(this.proposalApplicationId),
+                Number(this.proposalApplicationId),
+                addr,// member account (Proposal manager)
+                Number(this.proposalAsset),// Proposal asset
+                "Proposal_Test",//title
+                "This is a test proposal for GoraDAO",//description
+                // 10,//quorum
+                // [2, [100, 100, 52], [80, 80, 60]],//threshold
+                // 12,//total duration
+                // 10000,//amount
+                // [1, [10, 30, 60]],//vesting_schedule
+                // 2,//voting duration
+            ],
             ...commonParams
         })
-
         this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Main Contract ABI Exec method = %s", method);
-
+        this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", method);
         const result = await atc.execute(this.algodClient, 10)
+        for (let idx in result.methodResults) {
 
-        for (const idx in result.methodResults) {
-            let txid = result.txIDs[idx]
+            let res = this.algosdk.decodeUint64(result.methodResults[idx].rawReturnValue)
+            this.logger.info("GpraDAO Proposal Contract ABI Exec method result = %s", res);
 
 
-            let confirmedRound = result.confirmedRound
-            await this.printTransactionLogs(txid, confirmedRound)
-
-            let returnedResults = result.methodResults[idx].rawReturnValue
-            let buff = Buffer.from(returnedResults, "base64")
-            let res = buff.toString()
-            this.logger.info("GoraDAO Main Contract ABI Exec result = %s", res);
         }
     }
     // Configures and sets parameters of a proposal contract (before proposal activation)

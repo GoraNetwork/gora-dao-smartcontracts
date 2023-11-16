@@ -129,7 +129,7 @@ branch_method_router:
 	==
 	bnz method_proposal_create
 
-	method "update_proposal(pay,address,uint64,string,string)string"
+	method "update_proposal(pay,application,uint64,address,uint64,string,string)string"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_update
@@ -340,69 +340,141 @@ method_proposal_create:
 // Handles ABI method call for contract to contract update of a Proposal contract
 method_proposal_update:
 
-	// Inner transaction to update the Proposal smart contract
-	itxn_begin
+	// Checking Transaction group
+    global GroupSize
+    int 2
+    ==
+    assert
+    // Checking the pay txn at index 0 of gtxn
+    gtxn 0 RekeyTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 CloseRemainderTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 AssetCloseTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 TypeEnum
+    int pay
+    ==
+    assert
+    gtxn 0 Fee
+    global MinTxnFee
+    >=
+    assert
+    gtxn 0 Amount
+    global MinTxnFee
+    >=
+    assert
+    // Checking if the receiver of pay txn is the same as the current application address
+    txn GroupIndex
+    int 1
+    -
+    dup
+    gtxns Receiver
+    global CurrentApplicationAddress
+    ==
+    assert
 
-	int appl
-	itxn_field TypeEnum
-	int UpdateApplication
-	itxn_field OnCompletion
-	txn ApplicationArgs 1
+    gtxns Amount
+    global MinTxnFee
+    int 2
+    *
+    >=
+    assert
+	
+    // Process Transaction args
+	// Proposal app id
+    txn ApplicationArgs 2
 	btoi
-	txnas Applications
-	dup
-	store 1
+    store 0
+    // Proposal manager address
+    txn ApplicationArgs 3
+    store 1
+    // Proposal asset id
+    txn ApplicationArgs 4
+    store 2
+    // Proposal title
+    txn ApplicationArgs 5
+    store 3
+    // Proposal description
+    txn ApplicationArgs 6
+    store 4
 
-	itxn_field ApplicationID
-	load 1
-	byte "proposal_creator_address"
-	app_global_get_ex
-	assert
+    // Inner transaction to create the Proposal smart contract
+    itxn_begin
+    // itxn Type to "appl"
+    int appl
+    itxn_field TypeEnum
+    // itxn OnCompletion
+    int UpdateApplication
+    itxn_field OnCompletion
+	// itxn ApplicationID
+    load 0
+    itxn_field ApplicationID
+    // itxn 
+    txn Sender
+    itxn_field Note
+    method "update_proposal(application,uint64,uint64,address,address,string,string)string"
+    itxn_field ApplicationArgs
+    byte "proposal_app"
+    box_get
+    bz branch_error
+    dup
+    len
+    int 2
+    swap
+    substring3
+    itxn_field ApprovalProgram
+    
+    byte "proposal_clr"
+    box_get
+    bz branch_error
+    dup
+    len
+    int 2
+    swap
+    substring3
+    itxn_field ClearStateProgram
+    global CurrentApplicationID
+    itob
+    itxn_field ApplicationArgs
+    byte "gora_dao_asset_id"
+    app_global_get
+	itob
+    itxn_field ApplicationArgs
+    load 2
+    itxn_field ApplicationArgs
+    load 1
+    itxn_field ApplicationArgs
+    byte "gora_dao_manager_address"
+    itxn_field ApplicationArgs
+    load 3
+    itxn_field ApplicationArgs
+    load 4
+    itxn_field ApplicationArgs
+    
+    
+    itxn_submit
+    itxn TxID
+    log
+    itxn CreatedApplicationID
+    store 2
+    byte "proposals_count"
+    dup
+    app_global_get
+    int 1
+    +
+    app_global_put
 
-	txn Sender
-	==
-	assert
-
-	//txn ApplicationArgs 2
-	byte "proposal_app"
-
-	box_get
-	bz branch_error
-
-	dup
-	len
-	int 2
-	swap
-	substring3
-	itxn_field ApprovalProgram
-	//txn ApplicationArgs 3
-	byte "proposal_clr"
-
-	box_get
-	bz branch_error
-
-	dup
-	len
-	int 2
-	swap
-	substring3
-	itxn_field ClearStateProgram
-	txn Sender
-	itxn_field Note
-	itxn_submit
-
-	itxn TxID
-	store 0
-
-	load 0
-	log
 
 	byte 0x151f7c75
-	load 1
+	load 0
 	itob
-	dup
-	log
-
 	concat
 	b branch_log_return
 
