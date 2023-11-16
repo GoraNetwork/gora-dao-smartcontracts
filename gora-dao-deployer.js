@@ -195,11 +195,6 @@ const GoraDaoDeployer = class {
 
             }
             return null
-
-
-
-
-
         }
     }
     // Prints the transaction logs for a given transaction ID
@@ -684,7 +679,7 @@ const GoraDaoDeployer = class {
         let approvalName = new Uint8Array(Buffer.from("proposal_app"))
         let clearName = new Uint8Array(Buffer.from("proposal_clr"))
         let memberPublicKey = this.algosdk.encodeAddress(this.accountObject.addr)
-      
+
         const commonParams = {
             appID: Number(this.goraDaoMainApplicationId),
             sender: addr,
@@ -694,7 +689,7 @@ const GoraDaoDeployer = class {
                 { appIndex: Number(this.goraDaoMainApplicationId), name: approvalName },
                 { appIndex: Number(this.goraDaoMainApplicationId), name: clearName },
                 { appIndex: Number(this.goraDaoMainApplicationId), name: memberPublicKey.publicKey },
-  
+
             ],
         }
         let method = this.getMethodByName("create_proposal", contract)
@@ -706,7 +701,7 @@ const GoraDaoDeployer = class {
             fee: params.minFee,
             ...params
         })
-       
+
 
         const tws0 = { txn: ptxn, signer: signer }
 
@@ -740,7 +735,6 @@ const GoraDaoDeployer = class {
 
         }
     }
-
     // Only temporary because the actual GoraDao contracts will not be updatable
     async updateProposalContract() {
         let addr = this.accountObject.addr;
@@ -789,7 +783,7 @@ const GoraDaoDeployer = class {
             this.logger.info("GoraDAO Main Contract ABI Exec result = %s", res);
         }
     }
-
+    // Configures and sets parameters of a proposal contract (before proposal activation)
     async configureProposalContract() {
         let addr = this.accountObject.addr;
         let params = await this.algodClient.getTransactionParams().do();
@@ -859,10 +853,14 @@ const GoraDaoDeployer = class {
 
         }
     }
+    // participates to a proposal from e member account
     async participateProposalContract() { }
     async participationWithdrawProposalContract() { }
     async activateProposalContract() { }
     async voteProposalContract() { }
+    async haltProposalContract() { }
+    async closeProposalContract() { }
+    async proposalContractReport() { }
 
     // Running deployer
     async runDeployer() {

@@ -179,16 +179,10 @@
                     "name": "payment_transaction",
                     "description": "Payment from Proposer to GoraDAO for Proposal fees and initiation MBRs!"
                 },
-               
                 {
                     "type": "application",
                     "name": "gora_dao_main_app_id",
                     "description": "GoraDAO Main application ID"
-                },
-                {
-                    "type": "asset",
-                    "name": "asset_reference",
-                    "description": "GoraNetwork Proposal asset ID"
                 },
                 {
                     "type": "account",
@@ -221,6 +215,30 @@
             "returns": {
                 "type": "uint64"
             }
+        },
+        {
+            "name": "update_proposal",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Proposer to GoraDAO for Proposal fees and initiation MBRs!"
+                },
+                {
+                    "type": "application",
+                    "name": "gora_dao_main_app_id",
+                    "description": "GoraDAO Main application ID"
+                },
+                {
+                    "type": "account",
+                    "name": "member_reference",
+                    "description": "GoraDAO member account reference"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            },
+            "desc": "Updates a Proposal smart contract and returns application ID"
         },
         {
             "name": "config_proposal",
@@ -275,28 +293,6 @@
                 "type": "uint64"
             }
         },
-        
-        {
-            "name": "update_proposal",
-            "args": [
-                {
-                    "type": "application",
-                    "name": "application"
-                },
-                {
-                    "type": "byte[]",
-                    "name": "proposal_approval_source"
-                },
-                {
-                    "type": "byte[]",
-                    "name": "proposal_clear_source"
-                }
-            ],
-            "returns": {
-                "type": "string"
-            },
-            "desc": "Updates a Proposal smart contract and returns application ID"
-        }, 
         {
             "name": "proposal_participate",
             "description": "Participates a member to a Proposal! Returns the Proposal contract ID!",
@@ -340,7 +336,6 @@
                 "type": "uint64"
             }
         },
-        
         {
             "name": "proposal_vote",
             "description": "Optionally Votes to a Proposal! Returns the Proposal contract ID!",

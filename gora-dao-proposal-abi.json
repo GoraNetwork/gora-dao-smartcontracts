@@ -38,41 +38,6 @@
                     "type": "string",
                     "name": "proposal_description",
                     "description": "GoraDAO Proposal description"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_min_participation_algo",
-                    "description": "GoraDAO Proposal minimum participation staking in microAlgos"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_min_participation",
-                    "description": "GoraDAO Proposal minimum participation staking in proposal asset units"
-                },
-                {
-                    "type": "(uint64[])",
-                    "name": "proposal_threshold",
-                    "description": "GoraDAO Proposal threshold program! ([%participation, %threshold, %allocation])"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_amount",
-                    "description": "GoraDAO Proposal total amount in proposal asset units"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_asset",
-                    "description": "GoraDAO Proposal asset ID, 0 if Algo"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_voting_duration",
-                    "description": "GoraDAO Proposal voting duration in working days"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_voting_start",
-                    "description": "GoraDAO Proposal voting start in working days"
                 }
             ],
             "boxes": [
@@ -97,24 +62,6 @@
             "returns": {
                 "type": "uint64"
             }
-        },
-        
-        {
-            "name": "write_source_box",
-            "args": [
-                {
-                    "type": "byte[]",
-                    "name": "proposal_app"
-                },
-                {
-                    "type": "byte[]",
-                    "name": "proposal_clr"
-                }
-            ],
-            "returns": {
-                "type": "string"
-            },
-            "desc": "Writes the compiled teal source of Proposal to a corresponding boxes proposal_app and proposal_clr"
         },
         {
             "name": "update_proposal",
@@ -144,41 +91,6 @@
                     "type": "string",
                     "name": "proposal_description",
                     "description": "GoraDAO Proposal description"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_min_participation_algo",
-                    "description": "GoraDAO Proposal minimum participation staking in microAlgos"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_min_participation",
-                    "description": "GoraDAO Proposal minimum participation staking in proposal asset units"
-                },
-                {
-                    "type": "(uint64[])",
-                    "name": "proposal_threshold",
-                    "description": "GoraDAO Proposal threshold program! ([%participation, %threshold, %allocation])"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_amount",
-                    "description": "GoraDAO Proposal total amount in proposal asset units"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_asset",
-                    "description": "GoraDAO Proposal asset ID, 0 if Algo"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_voting_duration",
-                    "description": "GoraDAO Proposal voting duration in working days"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_voting_start",
-                    "description": "GoraDAO Proposal voting start in working days"
                 }
             ],
             "boxes": [
