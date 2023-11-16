@@ -11,30 +11,39 @@ callsub sub_check_txn
 // Check creation TXN
 // txn ApplicationID
 // bz branch_create
+
 // Checking onCompletion type for update application call
 txn OnCompletion
-
 int UpdateApplication
 ==
+txn ApplicationID
+int 0
+!=
+&&
 bnz branch_update
 
 // Checking onCompletion type for delete application call
 txn OnCompletion
-
 int DeleteApplication
 ==
+txn ApplicationID
+int 0
+!=
+&&
 bnz branch_delete
 
 // Checking onCompletion type for close out application call
 txn OnCompletion
-
 int CloseOut
 ==
+txn ApplicationID
+int 0
+!=
+&&
 bnz branch_closeout
 
 // Checking onCompletion type for optin application call
 txn OnCompletion
-
 int OptIn
 ==
 bnz branch_error
