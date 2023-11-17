@@ -37,11 +37,11 @@
       "write_proposal_source_box": false,
       "create_dao_asset": false,
       "create_dao_proposal_asset": false,
-      "config_dao_contract": true,
+      "config_dao_contract": false,
 
     
       "create_proposal_contracts": false,
-      "update_proposal_contracts": false,
+      "update_proposal_contracts": true,
 
       "test_proposal_config": false,
       "test_proposal_activate": false,

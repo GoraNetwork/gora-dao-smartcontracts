@@ -220,7 +220,7 @@
                 }
             ],
             "returns": {
-                "type": "string"
+                "type": "uint64"
             }
         },
         {
@@ -281,7 +281,7 @@
                 }
             ],
             "returns": {
-                "type": "string"
+                "type": "uint64"
             },
             "desc": "Updates a Proposal smart contract and returns application ID"
         },
