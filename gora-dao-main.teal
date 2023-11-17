@@ -214,6 +214,39 @@ method_config_dao:
 	concat
 	b branch_log_return
 
+method_write_source_box:
+
+	callsub sub_check_owner_auth
+
+	byte "proposal_app"
+	store 1
+
+	byte "proposal_clr"
+	store 2
+
+	load 1
+	box_get
+	bz branch_write_box_app
+
+	load 1
+	box_del
+	pop
+	load 2
+	box_del
+	pop
+branch_write_box_app:
+
+	load 1
+	txn ApplicationArgs 1
+	box_put
+	load 2
+	txn ApplicationArgs 2
+	box_put
+	byte 0x151f7c75
+	byte "GoraDAO Teal Source Codes Updated!"
+	concat
+	b branch_log_return
+	
 // Handles ABI method call for contract to contract creation of a Proposal contract
 method_proposal_create:
 
@@ -505,38 +538,7 @@ method_proposal_update:
 	concat
 	b branch_log_return
 
-method_write_source_box:
 
-	callsub sub_check_owner_auth
-
-	byte "proposal_app"
-	store 1
-
-	byte "proposal_clr"
-	store 2
-
-	load 1
-	box_get
-	bz branch_write_box_app
-
-	load 1
-	box_del
-	pop
-	load 2
-	box_del
-	pop
-branch_write_box_app:
-
-	load 1
-	txn ApplicationArgs 1
-	box_put
-	load 2
-	txn ApplicationArgs 2
-	box_put
-	byte 0x151f7c75
-	byte "GoraDAO Teal Source Codes Updated!"
-	concat
-	b branch_log_return
 
 branch_error:
 

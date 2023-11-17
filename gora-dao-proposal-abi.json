@@ -138,19 +138,24 @@
                     "description": "Payment from Proposal manager to GoraDAO for fees and Proposal configuration MBRs!"
                 },
                 {
-                    "type": "uint64",
+                    "type": "appl",
+                    "name": "application_call_dao_main_app",
+                    "description": "Application ABI call of same method on GoraDAO app!"
+                },
+                {
+                    "type": "asset",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
                 {
                     "type": "account",
                     "name": "member_reference",
-                    "description": "GoraDAO member account reference"
+                    "description": "GoraDAO member account reference (Proposal Manager)"
                 },
                 {
                     "type": "account",
                     "name": "manager_reference",
-                    "description": "GoraDAO Proposal new manager account reference"
+                    "description": "GoraDAO manager account ref"
                 },
                 {
                     "type": "string",
