@@ -70,7 +70,19 @@ branch_create:
 	byte "gora_dao_manager_address"
 	txn Sender
 	app_global_put
-	byte "proposals_count"
+	byte "total_proposals_count"
+	int 0
+	app_global_put
+
+	byte "ready_proposals_count"
+	int 0
+	app_global_put
+
+	byte "active_proposals_count"
+	int 0
+	app_global_put
+
+	byte "total_votes_count"
 	int 0
 	app_global_put
 
@@ -102,6 +114,24 @@ branch_update:
 	byte "gora_dao_manager_address"
 	txn Sender
 	app_global_put
+
+	byte "total_proposals_count"
+	int 0
+	app_global_put
+
+	byte "ready_proposals_count"
+	int 0
+	app_global_put
+
+	byte "active_proposals_count"
+	int 0
+	app_global_put
+
+	byte "total_votes_count"
+	int 0
+	app_global_put
+
+
 	int 1
 	return
 
@@ -326,7 +356,7 @@ method_proposal_create:
     itxn_field LocalNumByteSlice
     txn Sender
     itxn_field Note
-    method "create_proposal(application,uint64,uint64,address,address,string,string)uint64"
+    method "create_proposal(application,uint64,uint64,address,address,string,string)address"
     itxn_field ApplicationArgs
     byte "proposal_app"
     box_get
@@ -365,21 +395,35 @@ method_proposal_create:
     itxn_field ApplicationArgs
     load 4
     itxn_field ApplicationArgs
-    
-    
     itxn_submit
     itxn TxID
     log
+	itxn LastLog
+	extract 4 0
+    store 10
+
     itxn CreatedApplicationID
     store 2
-    byte "proposals_count"
+    byte "total_proposals_count"
     dup
     app_global_get
     int 1
     +
     app_global_put
 
-
+ 	itxn_begin
+	global CurrentApplicationAddress
+	itxn Sender
+	int pay
+	itxn_field TypeEnum
+	load 10
+	itxn Receiver
+	int 300000
+	itxn_field Amount
+	itxn_submit
+	itxn TxID
+    log
+	
 	byte 0x151f7c75
 	load 2
 	itob
@@ -468,7 +512,7 @@ method_proposal_update:
     // itxn 
     txn Sender
     itxn_field Note
-    method "update_proposal(application,uint64,uint64,address,address,string,string)uint64"
+    method "update_proposal(application,uint64,uint64,address,address,string,string)address"
     itxn_field ApplicationArgs
     byte "proposal_app"
     box_get
@@ -518,18 +562,11 @@ method_proposal_update:
     log
     itxn LastLog
 	extract 4 0
-	btoi
-    store 10
-    byte "proposals_count"
-    dup
-    app_global_get
-    int 1
-    +
-    app_global_put
+    log
 
 
 	byte 0x151f7c75
-	load 10
+	load 0
 	itob
 	concat
 	b branch_log_return

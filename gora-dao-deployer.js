@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const sha512_256 = require('js-sha512').sha512_256;
-
+const base32 = require('hi-base32');
 // GoraDAO deployer Class
 const GoraDaoDeployer = class {
     // Class constructor
@@ -174,6 +174,11 @@ const GoraDaoDeployer = class {
 
         }
     }
+    // This method detects failed decoding string results
+    hasBadChars(str) {
+        const regex = /[^\x00-\x7F]/g;
+        return str.match(regex) !== null;
+    }
     // Gets the stateproof for the transaction in specified round
     async fetchTransactionStateProof(txID, round) {
         if (this.algosdk.isValidAddress(this.accountObject.addr)) {
@@ -198,10 +203,97 @@ const GoraDaoDeployer = class {
             return null
         }
     }
-    // Prints the transaction logs for a given transaction ID
-    async printTransactionLogs(txID) {
+    // This is the method to get transaction logs from indexer endpoints
+    async printTransactionLogsFromIndexer(txID, confirmedRound) {
+        try {
+            if (this.algosdk.isValidAddress(this.accountObject.addr)) {
+
+                //this.logger.info(` The ${txnName} TxnID being logged: ${txID}`)
+
+                const urlTrx = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['indexer_testnet_remote_server'] : this.config.gora_dao['indexer_remote_server']}/v2/transactions/${txID}`;
+
+                let resTrx = await fetch(urlTrx, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                let dataTrx = await resTrx.json()
+
+                if (dataTrx && dataTrx.transaction) {
+                    if (dataTrx && dataTrx.transaction) {
+                        if (dataTrx.transaction.logs) {
+                            dataTrx.transaction.logs.map((item, index) => {
+                                
+                                try {
+                                    let address = this.algosdk.decodeAddress(item)
+                                    if(address){
+                                        this.logger.info(`  TXN log [${index}]:Address: %s`, address)
+                                    }
+                                } catch (error) {
+                                    let buff = Buffer.from(item, 'base64')
+                                    if(buff.byteLength === 32) {
+                                        let logTxId = base32.encode(buff).replace(/=/g, '').slice(0, 52)
+                                        if(logTxId){
+                                            this.logger.info(`  TXN log [${index}]:TXID: %s`, logTxId)
+                                        }
+                                    } else  {
+                                        if (Buffer.from(item, 'base64').byteLength === 12) {
+                                            const buffer = Buffer.from(item, 'base64');
+                                            let uint64Log = this.algosdk.decodeUint64(buffer.slice(4,12))
+                                            this.logger.info(` TXN log [${index}]:uint64:  %s`, uint64Log)
+                                        } else {
+                                            let log = atob(item)
+                                            if (!this.hasBadChars(log)) {
+                                                this.logger.info(`  TXN log [${index}]:ATOB bytes: %s`, log)
+                                            } else {
+                                                const buffer = Buffer.from(item)
+                                                const log = buffer.toString()
+                                                this.logger.info(` TXN log [${index}]:BUFFER STRING bytes: %s`, log)
+                                            }
+                                        }
+                                        
+                                    }
+
+                                }
+                            })
+
+
+                        }
+
+                    }
+                    // if (dataTrx.transaction["inner-txns"] && dataTrx.transaction["inner-txns"][0].logs) {
+                    //     dataTrx.transaction["inner-txns"][0].logs.map((item, index) => {
+                    //         try {
+                    //             if (Buffer.from(item, 'base64').byteLength === 8) {
+                    //                 const buffer = Buffer.from(item, 'base64');
+                    //                 let uint64Log = buffer.readUIntBE(2, 6)
+                    //                 this.logger.info(` ${txnName} INNER TXN LOG [${index}]:uint64:  %s`, uint64Log)
+                    //             } else {
+                    //                 //let log = atob(item)
+                    //                 let log = msgpack.decode(item)
+                    //                 this.logger.info(` ${txnName} INNER TXN LOG [${index}]:bytes: %s`, log)
+                    //             }
+                    //         } catch (error) {
+                    //             this.logger.error(error)
+                    //         }
+                    //     })
+
+
+                    // }
+                }
+            }
+        } catch (error) {
+            console.error(error)
+        }
+
+    }
+    // This is the method to get transaction logs from algod /blocks/{round} endpoint
+    async printTransactionLogsFromBlocks(txID, confirmedRound, txnName) {
         if (this.algosdk.isValidAddress(this.accountObject.addr)) {
-            const urlTrx = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['indexer_testnet_remote_server'] : this.config.gora_dao['indexer_remote_server']}/v2/transactions/${txID}`;
+
+            this.logger.info(` The TxnID being logged: ${txID}`)
+            const urlTrx = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_desense['algod_remote_server']}/v2/blocks/${confirmedRound}`;
 
             let resTrx = await fetch(urlTrx, {
                 method: "GET",
@@ -211,26 +303,87 @@ const GoraDaoDeployer = class {
             })
             let dataTrx = await resTrx.json()
             if (dataTrx) {
-                if (dataTrx.transaction.logs) {
-                    dataTrx.transaction.logs.map((item, index) => {
+                if (dataTrx.block && dataTrx.block.txns) {
+                    const block = dataTrx.block
+                    let txnBody
+                    let innerTxnBody
+
+                    dataTrx.block.txns.map((item, index) => {
                         try {
-                            if (Buffer.from(item, 'base64').byteLength === 8) {
-                                const buffer = Buffer.from(item, 'base64');
-                                let uint64Log = buffer.readUIntBE(2, 6)
-                                this.logger.info(`GoraDAO TXN log [${index}]:uint64:  %s`, uint64Log)
-                            } else {
-                                let log = atob(item)
-                                this.logger.info(`GoraDAO TXN log [${index}]:bytes: %s`, log)
+                            if (item && item.txn && item.dt && item.dt.lg && item.txn.snd === this.accountObject.addr) {
+
+                                let logData = item.dt.lg
+                                let innerTxnData = Array.isArray(item.dt.itx) ? item.dt.itx[0] : item.dt.itx
+                                txnBody = item
+                                innerTxnBody = innerTxnData
+                                logData.map((log, logIndex) => {
+                                    try {
+                                        const decodedAddress = this.algosdk.decodeAddress(log)
+                                        this.logger.info(`  log decodedAddress [${logIndex}]: %s`, decodedAddress)
+
+                                    } catch (error) {
+                                        //console.log('Address SDK decoding failed!')
+                                        try {
+                                            const logDecoded = atob(log)
+                                            this.logger.info(`  log ATOB [${logIndex}]: %s`, logDecoded)
+                                        } catch (error) {
+                                            try {
+                                                const buffer = Buffer.from(log);
+                                                const decodedUint64 = buffer.readUIntBE(2, 6)
+                                                // this.logger.info(`  TXN log [${logIndex}]:  %s`, decodedUint64)
+                                                // this.logger.info(`  TXN  SDK [${logIndex}]:  %s`,  this.algosdk.decodeUint64(log))
+                                                // const decodedUint64 = this.algosdk.decodeUint64(log)
+
+                                                if (decodedUint64 > 0 && decodedUint64 < 9999999999) {
+                                                    this.logger.info(`  log decodedUint64 [${logIndex}]: %s`, decodedUint64)
+                                                } else if (Buffer.from(log).byteLength === 8 && decodedUint64 === 0) {
+                                                    this.logger.info(`  log decodedUint64 [${logIndex}]: %s`, 0)
+                                                } else if (logIndex === logData.length - 1) {
+                                                    const buffer = new Uint8Array(Buffer.from(log)).slice(4);
+                                                    const decodedUint64 = Buffer.from(buffer).readUIntBE(2, 6)
+                                                    if (decodedUint64 > 0 && decodedUint64 < 9999999999) {
+                                                        this.logger.info(`  log decodedUint64 [${logIndex}]: %s`, decodedUint64)
+                                                    } else {
+                                                        //let uintArr = this.concatArrays([new Uint8Array(Buffer.from("TX")), new Uint8Array(buffer)]);
+                                                        const buffer = new Uint8Array(Buffer.from(log)).slice(4);
+                                                        let uintArr = new Uint8Array(buffer);
+                                                        const logDecoded = base32.encode(buffer).replace(/=/g, '').slice(0, 52);
+                                                        this.logger.info(`  log RETURN TxID decoded [${logIndex}]: %s`, logDecoded)
+
+
+                                                    }
+                                                } else {
+                                                    throw new Error();
+                                                }
+                                            } catch (error) {
+
+                                                let res = Buffer.from(log)
+                                                let logDecoded = base32.encode(res).replace(/=/g, '').slice(0, 52)
+                                                this.logger.info(`  log TxID decoded [${logIndex}]: %s`, logDecoded)
+
+                                            }
+
+                                        }
+
+                                    }
+                                })
+
                             }
                         } catch (error) {
-                            this.logger.error(error)
+                            //this.logger.error(error)
+
                         }
                     })
+                    return {
+                        block,
+                        txnBody,
+                        innerTxnBody
+                    }
 
 
                 }
-            }
 
+            }
 
         }
     }
@@ -767,6 +920,15 @@ const GoraDaoDeployer = class {
 
             let res = this.algosdk.decodeUint64(result.methodResults[idx].rawReturnValue)
             this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", res);
+            let addr = this.algosdk.getApplicationAddress(Number(res))
+            this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", addr);
+            
+            let txid = result.methodResults[idx].txID
+            let confirmedRound = result.confirmedRound
+            let sp = await this.fetchTransactionStateProof(txid, confirmedRound)
+            ///v2/blocks/{round}/transactions/{txid}/proof
+             await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+            this.logger.info("GoraDAO Transaction StateProof %s", sp);
 
 
         }
@@ -889,23 +1051,26 @@ const GoraDaoDeployer = class {
 
             ],
         }
-        const axferProposal = new this.algosdk.makeAssetTransferTxnWithSuggestedParams({
+        const axferProposal = new this.algosdk.Transaction({
             from: addr,
-            to: this.proposalApplicationAddress,
+            to: `${this.proposalApplicationAddress}`,
             amount: 100,
             assetIndex: Number(this.proposalAsset),
-            suggestedParams: params,
+            type: 'axfer',
+            ...params
         })
         const ptxnProposal = new this.algosdk.Transaction({
             from: addr,
             to: this.proposalApplicationAddress,
             amount: 3000,
+            type: 'pay',
             ...params
         })
         const ptxnDao = new this.algosdk.Transaction({
             from: addr,
             to: this.goraDaoMainApplicationAddress,
             amount: 3000,
+            type: 'pay',
             ...params
         })
 
@@ -946,6 +1111,8 @@ const GoraDaoDeployer = class {
             methodArgs: argsProposal,
             ...commonParamsProposalSetup
         })
+        this.logger.info('------------------------------')
+        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodDaoProposalConfig);
         atcProposalConfig.addMethodCall({
             method: methodDaoProposalConfig,
             accounts: [this.proposalApplicationAddress],
@@ -953,7 +1120,7 @@ const GoraDaoDeployer = class {
             ...commonParamsDaoSetup
         })
         this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", methodSetup);
+        this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", methodProposalConfig);
         const proposalConfigResults = await atcProposalConfig.execute(this.algodClient, 10);
         for (const idx in proposalConfigResults.methodResults) {
             let txid = proposalConfigResults.txIDs[idx]
