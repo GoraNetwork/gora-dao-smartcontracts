@@ -56,6 +56,7 @@ const GoraDaoDeployer = class {
         // GoraDAO Proposal application Address
         this.proposalApplicationAddress = props.config.gora_dao.asc_proposal_address
         // GoraDAO Proposal Asset ID
+        this.goraDaoAsset = props.config.gora_dao.main_asa_id
         this.proposalAsset = props.config.gora_dao.proposal_asa_id
 
         // GoraDao Main contracts
@@ -847,12 +848,15 @@ const GoraDaoDeployer = class {
     async configureProposalContract() {
         let addr = this.accountObject.addr;
         let params = await this.algodClient.getTransactionParams().do();
-        let application = Number(this.proposalApplicationId)
+        let proposalApplication = Number(this.proposalApplicationId)
+        let daoApplication = Number(this.goraDaoMainApplicationId)
+        const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
         const proposalContract = new this.algosdk.ABIContract(JSON.parse(this.proposalContract.toString()))
         const signer = this.algosdk.makeBasicAccountTransactionSigner(this.accountObject)
         let methodProposalConfig = this.getMethodByName("config_proposal", proposalContract)
-        const commonParamsSetup = {
-            appID: application,
+        let methodDaoProposalConfig = this.getMethodByName("config_proposal", daoContract)
+        const commonParamsProposalSetup = {
+            appID: proposalApplication,
             accounts: [this.goraDaoMainApplicationAddress],
             sender: addr,
             suggestedParams: params,
@@ -868,35 +872,85 @@ const GoraDaoDeployer = class {
 
             ],
         }
-        const ptxn = new this.algosdk.Transaction({
+        const commonParamsDaoSetup = {
+            appID: daoApplication,
+            accounts: [this.proposalApplicationAddress],
+            sender: addr,
+            suggestedParams: params,
+            signer: signer,
+            boxes: [
+                // { appIndex: Number(application), name: addrUint8Array.publicKey },
+                // { appIndex: Number(application), name: addrUint8Array.publicKey },
+
+
+                // { appIndex: Number(application), name: account1.publicKey },
+                // { appIndex: Number(application), name: account2.publicKey },
+                // { appIndex: Number(application), name: account3.publicKey },
+
+            ],
+        }
+        const axferProposal = new this.algosdk.makeAssetTransferTxnWithSuggestedParams({
+            from: addr,
+            to: this.proposalApplicationAddress,
+            amount: 100,
+            assetIndex: Number(this.proposalAsset),
+            suggestedParams: params,
+        })
+        const ptxnProposal = new this.algosdk.Transaction({
+            from: addr,
+            to: this.proposalApplicationAddress,
+            amount: 3000,
+            ...params
+        })
+        const ptxnDao = new this.algosdk.Transaction({
             from: addr,
             to: this.goraDaoMainApplicationAddress,
-            amount: 0,
-            fee: params.minFee,
+            amount: 3000,
             ...params
         })
 
-        const tws0 = { txn: ptxn, signer: signer }
-        const args = [
+        const tws0 = { txn: ptxnDao, signer: signer }
+        const tws1 = { txn: ptxnProposal, signer: signer }
+        const tws2 = { txn: axferProposal, signer: signer }
+        const argsDao = [
             tws0,
-            this.goraDaoMainApplicationId,
+            addr,
+            this.proposalApplicationId,
+            this.proposalAsset,
+            this.proposalAsset,
+    
+            
+        ]
+        //this.goraDaoMainApplicationId,
+        const argsProposal = [
+            tws1,
+            tws2,
+            this.proposalAsset,
             this.proposalAsset,
             addr,
-            "Proposal_Test",
-            "This is a test proposal for GoraDAO",
-            1000000,
+            addr,
+            100000,
+            100,
             [[100, 100, 52], [80, 80, 60]],
+            72,
+            10000,
+            this.proposalAsset,
             24,
-            10000000,
-            this.proposalAsset
+            0,
         ]
         const atcProposalConfig = new this.algosdk.AtomicTransactionComposer()
-
+     
         atcProposalConfig.addMethodCall({
             method: methodProposalConfig,
             accounts: [this.goraDaoMainApplicationAddress],
-            methodArgs: args,
-            ...commonParamsSetup
+            methodArgs: argsProposal,
+            ...commonParamsProposalSetup
+        })
+        atcProposalConfig.addMethodCall({
+            method: methodDaoProposalConfig,
+            accounts: [this.proposalApplicationAddress],
+            methodArgs: argsDao,
+            ...commonParamsDaoSetup
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", methodSetup);

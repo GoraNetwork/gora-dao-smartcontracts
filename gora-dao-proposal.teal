@@ -94,7 +94,7 @@ branch_method_router:
 	==
 	bnz method_update_proposal
 
-	method "config_proposal(pay,uint64,account)string"
+	method "config_proposal(pay,axfer,asset,uint64,account,account,uint64,uint64,(uint64[]),uint64,uint64,uint64,uint64,uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_proposal

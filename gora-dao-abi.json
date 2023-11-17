@@ -290,11 +290,7 @@
                     "name": "payment_transaction",
                     "description": "Payment from Proposer to GoraDAO for fees and Proposal MBRs!"
                 },
-                {
-                    "type": "axfer",
-                    "name": "asset_transfer_transaction",
-                    "description": "Asset transfer transaction to deposit Proposal asset!"
-                },
+               
                 {
                     "type": "account",
                     "name": "manager_reference",

@@ -31,7 +31,7 @@
                 },
                 {
                     "type": "account",
-                    "name": "member_reference",
+                    "name": "manager_reference",
                     "description": "GoraDAO member account reference (Proposal manager)"
                 },
                 {
@@ -52,7 +52,7 @@
             ],
             "boxes": [
                 {
-                    "name": "member_reference",
+                    "name": "manager_reference",
                     "description": "Dynamic box ref for Proposal manager GoraDAO member"
                 },
                
@@ -90,7 +90,7 @@
                 },
                 {
                     "type": "account",
-                    "name": "member_reference",
+                    "name": "manager_reference",
                     "description": "GoraDAO member account reference (Proposal manager)"
                 },
                 {
@@ -111,7 +111,7 @@
             ],
             "boxes": [
                 {
-                    "name": "member_reference",
+                    "name": "manager_reference",
                     "description": "Dynamic box ref for Proposal manager GoraDAO member"
                 },
               
@@ -132,40 +132,37 @@
             "name": "config_proposal",
             "description": "Configures a Proposal contract! Returns the Proposal contract ID!",
             "args": [
+                
                 {
                     "type": "pay",
                     "name": "payment_transaction",
                     "description": "Payment from Proposal manager to GoraDAO for fees and Proposal configuration MBRs!"
                 },
+                
                 {
-                    "type": "appl",
-                    "name": "application_call_dao_main_app",
-                    "description": "Application ABI call of same method on GoraDAO app!"
+                    "type": "axfer",
+                    "name": "asset_transfer_transaction",
+                    "description": "Asset transfer transaction to deposit Proposal asset!"
                 },
                 {
                     "type": "asset",
                     "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) Ref"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_id",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
                 {
                     "type": "account",
-                    "name": "member_reference",
+                    "name": "manager_reference",
                     "description": "GoraDAO member account reference (Proposal Manager)"
                 },
                 {
                     "type": "account",
                     "name": "manager_reference",
                     "description": "GoraDAO manager account ref"
-                },
-                {
-                    "type": "string",
-                    "name": "proposal_title",
-                    "description": "GoraDAO Proposal title"
-                },
-                {
-                    "type": "string",
-                    "name": "proposal_description",
-                    "description": "GoraDAO Proposal description"
                 },
                 {
                     "type": "uint64",
@@ -201,12 +198,12 @@
                 {
                     "type": "uint64",
                     "name": "proposal_voting_duration",
-                    "description": "GoraDAO Proposal voting duration in working days"
+                    "description": "GoraDAO Proposal voting duration in working hours"
                 },
                 {
                     "type": "uint64",
                     "name": "proposal_voting_start",
-                    "description": "GoraDAO Proposal voting start in working days"
+                    "description": "GoraDAO Proposal voting start in working hours"
                 }
              
             ],
@@ -217,7 +214,7 @@
                 }
             ],
             "returns": {
-                "type": "string"
+                "type": "uint64"
             }
         },
         {

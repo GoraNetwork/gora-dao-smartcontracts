@@ -130,6 +130,11 @@ branch_method_router:
 	==
 	bnz method_proposal_update
 
+	method "config_proposal(pay,account,application,asset,uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_proposal_config
+
 	b branch_error
 
 sub_check_txn:
@@ -529,8 +534,78 @@ method_proposal_update:
 	concat
 	b branch_log_return
 
+method_proposal_config:
+	// Checking Transaction group
+    global GroupSize
+    int 5
+    ==
+    assert
+    // Checking the pay txn at index 0 of gtxn
+    gtxn 0 RekeyTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 CloseRemainderTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 AssetCloseTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 TypeEnum
+    int pay
+    ==
+    assert
+    gtxn 0 Fee
+    global MinTxnFee
+    >=
+    assert
+    gtxn 0 Amount
+    global MinTxnFee
+    >=
+    assert
 
+    // Checking if the receiver of pay txn is the same as the current application address
+    txn GroupIndex
+    int 1
+    -
+    dup
+    gtxns Receiver
+    global CurrentApplicationAddress
+    ==
+    assert
 
+    gtxns Amount
+    global MinTxnFee
+    int 2
+    *
+    >=
+    assert
+	
+    // Process Transaction args
+	// Proposal app id
+    txn ApplicationArgs 2
+	btoi
+    store 0
+    // Proposal manager address
+    txn ApplicationArgs 3
+    store 1
+    // Proposal asset id
+    txn ApplicationArgs 4
+    store 2
+    // Proposal title
+    txn ApplicationArgs 5
+    store 3
+    // Proposal description
+    txn ApplicationArgs 6
+    store 4
+
+	byte 0x151f7c75
+	int 10
+	itob
+	concat
+	b branch_log_return
 branch_error:
 
 	err

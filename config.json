@@ -8,8 +8,8 @@
       "asc_testnet_main_address": "7M3BC5ROZTWZ4HU4XKSM256AVXE3QMJ33GULD3LGCSE565AY2YR37IQVY4",
       "asc_proposal_id": 479951637,
       "asc_proposal_address": "DW4IOOYOYXLB2K7TNRI5M2FM37XB2ROCCJCRPX2SMGIQIKZOENMX4XULYY",
-      "proposal_asa_id": 479869829,
-      "proposal_proposal_asa_id": 479869851,
+      "main_asa_id": 479869829,
+      "proposal_asa_id": 479869851,
       "asc_vesting_id": 0,
       "asc_vesting_address": "",
       
@@ -37,12 +37,12 @@
       "write_proposal_source_box": false,
       "create_dao_asset": false,
       "create_dao_proposal_asset": false,
-      "config_dao_contract": true,
+      "config_dao_contract": false,
 
     
       "create_proposal_contracts": false,
       "update_proposal_contracts": false,
-      "config_proposal_contracts": false,
+      "config_proposal_contracts": true,
 
       "activate_proposal_contracts": false,
       "close_proposal_contracts": false,
