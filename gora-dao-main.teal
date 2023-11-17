@@ -14,28 +14,24 @@ bz branch_create
 
 // Checking onCompletion type for update application call
 txn OnCompletion
-
 int UpdateApplication
 ==
 bnz branch_update
 
 // Checking onCompletion type for delete application call
 txn OnCompletion
-
 int DeleteApplication
 ==
 bnz branch_delete
 
 // Checking onCompletion type for close out application call
 txn OnCompletion
-
 int CloseOut
 ==
-bnz branch_closeout
+bnz branch_error
 
 // Checking onCompletion type for optin application call
 txn OnCompletion
-
 int OptIn
 ==
 bnz branch_error
@@ -109,12 +105,7 @@ branch_update:
 	int 1
 	return
 
-branch_closeout:
 
-	callsub check_owner_auth
-
-	int 1
-	return
 
 branch_method_router:
 
@@ -246,7 +237,7 @@ branch_write_box_app:
 	byte "GoraDAO Teal Source Codes Updated!"
 	concat
 	b branch_log_return
-	
+
 // Handles ABI method call for contract to contract creation of a Proposal contract
 method_proposal_create:
 
