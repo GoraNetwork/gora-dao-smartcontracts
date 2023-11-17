@@ -53,13 +53,9 @@
             "boxes": [
                 {
                     "name": "member_reference",
-                    "description": "Dynamic box ref per member account address"
+                    "description": "Dynamic box ref for Proposal manager GoraDAO member"
                 },
-                {
-                    "type": "account",
-                    "name": "manager_reference",
-                    "description": "GoraDAO manager account reference"
-                },
+               
                 {
                     "name": "proposal_app",
                     "description": "Dynamic box ref for proposal approval prog source code"
@@ -116,12 +112,9 @@
             "boxes": [
                 {
                     "name": "member_reference",
-                    "description": "Dynamic box ref per member account address"
+                    "description": "Dynamic box ref for Proposal manager GoraDAO member"
                 },
-                {
-                    "name": "manager_reference",
-                    "description": "Dynamic box ref per manager account address"
-                },
+              
                 {
                     "name": "proposal_app",
                     "description": "Dynamic box ref for proposal approval prog source code"
