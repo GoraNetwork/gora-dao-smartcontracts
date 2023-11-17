@@ -765,7 +765,7 @@ const GoraDaoDeployer = class {
         for (let idx in result.methodResults) {
 
             let res = this.algosdk.decodeUint64(result.methodResults[idx].rawReturnValue)
-            this.logger.info("GpraDAO Proposal Contract ABI Exec method result = %s", res);
+            this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", res);
 
 
         }
@@ -838,7 +838,7 @@ const GoraDaoDeployer = class {
         for (let idx in result.methodResults) {
 
             let res = this.algosdk.decodeUint64(result.methodResults[idx].rawReturnValue)
-            this.logger.info("GpraDAO Proposal Contract ABI Exec method result = %s", res);
+            this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", res);
 
 
         }
