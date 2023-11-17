@@ -297,7 +297,7 @@ method_proposal_create:
     itxn_field LocalNumByteSlice
     txn Sender
     itxn_field Note
-    method "create_proposal(application,uint64,uint64,address,address,string,string)string"
+    method "create_proposal(application,uint64,uint64,address,address,string,string)uint64"
     itxn_field ApplicationArgs
     byte "proposal_app"
     box_get
