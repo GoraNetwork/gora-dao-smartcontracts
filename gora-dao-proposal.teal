@@ -15,14 +15,14 @@ callsub sub_check_txn
 // bz branch_create
 
 // Checking onCompletion type for update application call
-txn OnCompletion
-int UpdateApplication
-==
-txn ApplicationID
-int 0
-!=
-&&
-bnz branch_update
+//txn OnCompletion
+//int UpdateApplication
+//==
+//txn ApplicationID
+//int 0
+//!=
+//&&
+//bnz branch_update
 
 // Checking onCompletion type for delete application call
 txn OnCompletion
@@ -58,43 +58,21 @@ bz branch_method_router
 b branch_error
 
 ///////////////////////////////////////////
-check_owner_auth:
 
-	txn Sender
-	global CreatorAddress
-	==
-	assert
-	retsub
 
 branch_delete:
 
-	callsub check_owner_auth
+	callsub sub_check_owner_auth
 
 	int 1
 	return
 
-branch_update:
 
-	callsub check_owner_auth
 
-	global CurrentApplicationID
-	store 1
-
-	byte "GoraDAO Proposal updated: "
-	store 2
-
-	load 2
-	load 1
-	itob
-	concat
-	log
-
-	int 1
-	return
 
 branch_closeout:
 
-	callsub check_owner_auth
+	callsub sub_check_owner_auth
 
 	int 1
 	return
@@ -102,7 +80,7 @@ branch_closeout:
 ///////////////////////////////////////////
 branch_method_router:
 
-	method "create_proposal(application,uint64,uint64,address,address,string,string)string"
+	method "create_proposal(application,uint64,uint64,address,address,string,string)uint64"
 	txn ApplicationArgs 0
 	==
 	txn ApplicationID

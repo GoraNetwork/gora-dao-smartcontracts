@@ -128,16 +128,17 @@ branch_method_router:
 	==
 	bnz method_write_source_box
 
-	//string,string,uint64,(uint64, uint64[]),uint64,uint64,(uint64,uint64[]),uint64
-	method "create_proposal(pay,address,uint64,string,string)string"
+
+	method "create_proposal(pay,address,uint64,string,string)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_create
 
-	method "update_proposal(pay,application,uint64,address,uint64,string,string)string"
+	method "update_proposal(pay,application,uint64,address,uint64,string,string)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_update
+
 	b branch_error
 
 sub_check_txn:
@@ -487,6 +488,8 @@ method_proposal_update:
     itxn TxID
     log
     itxn LastLog
+	extract 4 0
+	btoi
     store 10
     byte "proposals_count"
     dup
@@ -498,6 +501,7 @@ method_proposal_update:
 
 	byte 0x151f7c75
 	load 10
+	itob
 	concat
 	b branch_log_return
 
