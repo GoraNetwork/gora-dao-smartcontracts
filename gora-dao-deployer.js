@@ -937,10 +937,15 @@ const GoraDaoDeployer = class {
         if (this.config.deployer['delete_apps']) await this.deleteApps(this.config.deployer.apps_to_delete);
 
         // Running deployer DAO proposal contract operations
-        if (this.config.deployer['create_proposal_contracts']) await this.createProposalContract();
         if (this.config.deployer['write_proposal_source_box']) await this.writeProposalContractSourceBox();
+        if (this.config.deployer['create_proposal_contracts']) await this.createProposalContract();
         if (this.config.deployer['update_proposal_contracts']) await this.updateProposalContract();
-        if (this.config.deployer['test_proposal_config']) await this.configureProposalContract();
+        if (this.config.deployer['config_proposal_contracts']) await this.configureProposalContract();
+
+        if (this.config.deployer['activate_proposal_contracts']) await this.activateProposalContract();
+        if (this.config.deployer['close_proposal_contracts']) await this.participateProposalContract();
+        if (this.config.deployer['withdraw_participate_proposal_contracts']) await this.participationWithdrawProposalContract();
+        if (this.config.deployer['vote_proposal_contracts']) await this.voteProposalContract();
 
         process.exit();
     }

@@ -33,22 +33,26 @@
       "apps_to_delete": [],
       
       "create_dao_contracts": false,
-      "update_dao_contracts": true,
-      "write_proposal_source_box": true,
+      "update_dao_contracts": false,
+      "write_proposal_source_box": false,
       "create_dao_asset": false,
       "create_dao_proposal_asset": false,
-      "config_dao_contract": false,
+      "config_dao_contract": true,
 
     
       "create_proposal_contracts": false,
       "update_proposal_contracts": false,
+      "config_proposal_contracts": false,
 
-      "test_proposal_config": false,
-      "test_proposal_activate": false,
-      "test_proposal_closure": false,
-      "test_proposal_participate": false,
-      "test_proposal_withdraw_participate": false,
-      "test_proposal_vote": false,
+      "activate_proposal_contracts": false,
+      "close_proposal_contracts": false,
+      "participate_proposal_contracts": false,
+      "withdraw_participate_proposal_contracts": false,
+      "vote_proposal_contracts": false,
+
+
+
+
 
       "num_local_int": 0,
       "num_local_byte": 0,
