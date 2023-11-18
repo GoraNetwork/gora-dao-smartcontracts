@@ -618,7 +618,7 @@ const GoraDaoDeployer = class {
 
         let transactionResponse = await this.algodClient.pendingTransactionInformation(appTxnId).do();
         let appId = transactionResponse['application-index'];
-        await this.printTransactionLogs(appTxnId)
+        await this.printTransactionLogsFromIndexer(appTxnId)
         await this.printAppGlobalState(appId)
         this.logger.info('------------------------------')
         this.logger.info("GoraNetwork Main Application ID: %s", appId);
@@ -674,7 +674,7 @@ const GoraDaoDeployer = class {
 
         let transactionResponse = await this.algodClient.pendingTransactionInformation(appTxnId).do();
         let appId = transactionResponse['application-index'];
-        await this.printTransactionLogs(appTxnId)
+        await this.printTransactionLogsFromIndexer(appTxnId)
         await this.printAppGlobalState(this.goraDaoMainApplicationId)
         this.logger.info('------------------------------')
         this.logger.info("GoraNetwork Updated Main Application ID: %s", this.goraDaoMainApplicationId);
@@ -812,7 +812,7 @@ const GoraDaoDeployer = class {
             let confirmedRound = daoConfigResults.confirmedRound
             let sp = await this.fetchTransactionStateProof(txid, confirmedRound)
             ///v2/blocks/{round}/transactions/{txid}/proof
-            if (Number(idx) === 0) await this.printTransactionLogs(txid, confirmedRound)
+            if (Number(idx) === 0) await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
             let returnedResults = daoConfigResults.methodResults[idx].rawReturnValue
             this.logger.info("GoraDAO Contract ABI Exec result = %s", returnedResults);
@@ -1143,7 +1143,7 @@ const GoraDaoDeployer = class {
 
             //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
             let confirmedRound = proposalConfigResults.confirmedRound
-            if (Number(idx) === 0) await this.printTransactionLogs(txid, confirmedRound)
+            if (Number(idx) === 0) await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
             let returnedResults = proposalConfigResults.methodResults[idx].rawReturnValue
             this.logger.info("GoraDAO Proposal Contract ABI Exec result = %s", returnedResults);

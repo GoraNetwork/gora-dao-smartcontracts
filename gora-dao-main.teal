@@ -401,6 +401,19 @@ method_proposal_create:
 	itxn LastLog
 	extract 4 0
     store 10
+    load 10
+    dup
+    log
+    global ZeroAddress
+    !=
+    load 10 
+    len
+    int 32
+    ==
+    &&
+    assert
+
+
 
     itxn CreatedApplicationID
     store 2
@@ -413,11 +426,11 @@ method_proposal_create:
 
  	itxn_begin
 	global CurrentApplicationAddress
-	itxn Sender
+	itxn_field Sender
 	int pay
 	itxn_field TypeEnum
 	load 10
-	itxn Receiver
+	itxn_field Receiver
 	int 300000
 	itxn_field Amount
 	itxn_submit

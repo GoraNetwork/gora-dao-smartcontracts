@@ -40,8 +40,8 @@
       "config_dao_contract": false,
 
     
-      "create_proposal_contracts": false,
-      "update_proposal_contracts": true,
+      "create_proposal_contracts": true,
+      "update_proposal_contracts": false,
       "config_proposal_contracts": false,
 
       "activate_proposal_contracts": false,
