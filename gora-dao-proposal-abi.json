@@ -70,7 +70,7 @@
             }
         },
         {
-            "name":"method_optin_proposal_asset",
+            "name":"optin_proposal_asset",
             "description": "Signal to optin to proposal asset",
             "args":[
                 {
@@ -84,7 +84,10 @@
                     
                 }
 
-            ]
+            ],
+            "returns": {
+                "type": "uint64"
+            }
 
         },
         {
