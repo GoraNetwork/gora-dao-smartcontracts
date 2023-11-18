@@ -139,7 +139,7 @@ branch_update:
 
 branch_method_router:
 
-	method "config_dao(pay,asset,uint64,address)string"
+	method "config_dao(pay,asset,uint64,address)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_dao
@@ -160,7 +160,7 @@ branch_method_router:
 	==
 	bnz method_proposal_update
 
-	method "config_proposal(pay,account,application,asset,uint64)uint64"
+	method "config_proposal(pay,axfer,account,application,asset,uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_config
@@ -235,8 +235,25 @@ method_config_dao:
 	log
 
 
+	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int axfer
+	itxn_field TypeEnum
+	global CurrentApplicationAddress
+	itxn_field AssetReceiver
+	int 0
+	itxn_field AssetAmount
+	txna Assets 0
+	itxn_field XferAsset
+	itxn_submit
+	itxn TxID
+    log
+	
+	
 	byte 0x151f7c75
-	byte "dao has configured!"
+	txna Assets 0
+	itob
 	concat
 	b branch_log_return
 

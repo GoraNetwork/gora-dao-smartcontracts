@@ -46,7 +46,7 @@
                 }
             ],
             "returns": {
-                "type": "string"
+                "type": "uint64"
             }
         },
         {
@@ -294,6 +294,11 @@
                     "type": "pay",
                     "name": "payment_transaction",
                     "description": "Payment from Proposer to GoraDAO for fees and Proposal MBRs!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "dao_asset_transfer_transaction",
+                    "description": "Asset transfer transaction to deposit DAO asset (Gora)!"
                 },
                
                 {

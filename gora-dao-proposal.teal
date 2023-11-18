@@ -101,7 +101,7 @@ branch_method_router:
 
 
 
-	method "config_proposal(pay,axfer,asset,uint64,account,account,uint64,uint64,(uint64[]),uint64,uint64,uint64,uint64,uint64)uint64"
+	method "config_proposal(pay,asset,uint64,account,account,uint64,uint64,(uint64[]),uint64,uint64,uint64,uint64,uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_proposal

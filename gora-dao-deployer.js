@@ -788,8 +788,8 @@ const GoraDaoDeployer = class {
         //(pay,asset,account)string
         const args = [
             tws0,
-            Number(this.proposalAsset),
-            Number(this.proposalAsset),
+            Number(this.goraDaoAsset),
+            Number(this.goraDaoAsset),
             addr,
 
         ]
@@ -814,9 +814,9 @@ const GoraDaoDeployer = class {
             ///v2/blocks/{round}/transactions/{txid}/proof
             if (Number(idx) === 0) await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
-            let returnedResults = daoConfigResults.methodResults[idx].rawReturnValue
+            let returnedResults = this.algosdk.decodeUint64(daoConfigResults.methodResults[idx].rawReturnValue)
             this.logger.info("GoraDAO Contract ABI Exec result = %s", returnedResults);
-            this.logger.info("GoraDAO Transaction StateProof %s", sp);
+            //this.logger.info("GoraDAO Transaction StateProof %s", sp);
         }
     }
     // Only temporary because the actual GoraDao contracts will not be updatable
@@ -1074,9 +1074,9 @@ const GoraDaoDeployer = class {
         }
         const axferProposal = new this.algosdk.Transaction({
             from: addr,
-            to: `${this.proposalApplicationAddress}`,
+            to: `${this.goraDaoMainApplicationAddress}`,
             amount: 100,
-            assetIndex: Number(this.proposalAsset),
+            assetIndex: Number(this.goraDaoAsset),
             type: 'axfer',
             ...params
         })
@@ -1100,6 +1100,7 @@ const GoraDaoDeployer = class {
         const tws2 = { txn: axferProposal, signer: signer }
         const argsDao = [
             tws0,
+            tws2,
             addr,
             this.proposalApplicationId,
             this.proposalAsset,
@@ -1110,7 +1111,7 @@ const GoraDaoDeployer = class {
         //this.goraDaoMainApplicationId,
         const argsProposal = [
             tws1,
-            tws2,
+            
             this.proposalAsset,
             this.proposalAsset,
             addr,
