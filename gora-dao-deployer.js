@@ -235,7 +235,7 @@ const GoraDaoDeployer = class {
                                         let address = this.algosdk.encodeAddress(Buffer.from(item, 'base64'))
                                         if (this.algosdk.isValidAddress(address)) {
                                             this.logger.info(`  TXN log [${index}]:Address: %s`, address)
-                                        }else{
+                                        } else {
                                             throw new Error()
                                         }
 
@@ -810,7 +810,7 @@ const GoraDaoDeployer = class {
 
 
             let confirmedRound = daoConfigResults.confirmedRound
-            let sp = await this.fetchTransactionStateProof(txid, confirmedRound)
+            //let sp = await this.fetchTransactionStateProof(txid, confirmedRound)
             ///v2/blocks/{round}/transactions/{txid}/proof
             if (Number(idx) === 0) await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
@@ -881,10 +881,11 @@ const GoraDaoDeployer = class {
         let approvalName = new Uint8Array(Buffer.from("proposal_app"))
         let clearName = new Uint8Array(Buffer.from("proposal_clr"))
         let memberPublicKey = this.algosdk.decodeAddress(this.accountObject.addr)
-
+        this.logger.info(`${Number(this.proposalAsset) } ${Number(this.goraDaoAsset)}`)
         const commonParams = {
             appID: Number(this.goraDaoMainApplicationId),
             sender: addr,
+            
             suggestedParams: params,
             signer: signer,
             boxes: [
@@ -910,10 +911,12 @@ const GoraDaoDeployer = class {
 
         atc.addMethodCall({
             method: method,
+            
             methodArgs: [
                 tws0,//pay
                 addr,// member account (Proposal manager)
-                Number(this.proposalAsset),// Proposal asset
+                Number(this.proposalAsset),// Proposal asset ref
+                Number(this.proposalAsset),// Proposal asset id
                 "Proposal_Test",//title
                 "This is a test proposal for GoraDAO",//description
                 // 10,//quorum
@@ -1015,7 +1018,7 @@ const GoraDaoDeployer = class {
             this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", res);
             let addr = this.algosdk.getApplicationAddress(Number(res))
             this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", addr);
-     
+
 
             let txid = result.methodResults[idx].txID
             let confirmedRound = result.confirmedRound

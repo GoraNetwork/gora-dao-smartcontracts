@@ -70,6 +70,19 @@
             }
         },
         {
+            "name":"method_optin_proposal_asset",
+            "description": "Signal to optin to proposal asset",
+            "args":[
+                {
+                    "type": "string",
+                    "name": "free_message"
+                    
+                }
+
+            ]
+
+        },
+        {
             "name": "update_proposal",
             "description": "Updates an existing Proposal contract! Returns the Proposal contract ID!",
             "args": [

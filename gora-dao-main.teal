@@ -150,7 +150,7 @@ branch_method_router:
 	bnz method_write_source_box
 
 
-	method "create_proposal(pay,address,uint64,string,string)uint64"
+	method "create_proposal(pay,address,asset,uint64,string,string)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_create
@@ -322,16 +322,22 @@ method_proposal_create:
     *
     >=
     assert
+
     // Process Transaction args
+
     // Proposal manager address
     txn ApplicationArgs 1
     store 1
+
     // Proposal asset id
     txn ApplicationArgs 2
+    btoi
     store 2
+
     // Proposal title
     txn ApplicationArgs 3
     store 3
+
     // Proposal description
     txn ApplicationArgs 4
     store 4
@@ -385,6 +391,7 @@ method_proposal_create:
 	itob
     itxn_field ApplicationArgs
     load 2
+    itob
     itxn_field ApplicationArgs
     load 1
     itxn_field ApplicationArgs
@@ -416,7 +423,7 @@ method_proposal_create:
 
 
     itxn CreatedApplicationID
-    store 2
+    store 9
     byte "total_proposals_count"
     dup
     app_global_get
@@ -436,9 +443,37 @@ method_proposal_create:
 	itxn_submit
 	itxn TxID
     log
+
+    itxn_begin
+    method "optin_proposal_asset(asset,uint64)uint64"
+    itxn_field ApplicationArgs
+    int appl
+	itxn_field TypeEnum
+    int NoOp
+    itxn_field OnCompletion
+    load 9
+	itxn_field ApplicationID
+    global CurrentApplicationAddress
+	itxn_field Sender
+    txn Assets 0
+    itxn_field Assets
+    load 2
+    itob
+    dup
+    itxn_field ApplicationArgs
+    itxn_field ApplicationArgs
+	itxn_submit
+
+	itxn TxID
+    log
+	itxn LastLog
+	extract 4 0
+    store 11
+    load 11
+    log
 	
 	byte 0x151f7c75
-	load 2
+	load 9
 	itob
 	concat
 	b branch_log_return
