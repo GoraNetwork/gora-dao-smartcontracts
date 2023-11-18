@@ -679,15 +679,10 @@ method_proposal_config:
     // Proposal asset id
     txn ApplicationArgs 4
     store 2
-    // Proposal title
-    txn ApplicationArgs 5
-    store 3
-    // Proposal description
-    txn ApplicationArgs 6
-    store 4
+
 
 	byte 0x151f7c75
-	int 10
+	global CurrentApplicationID
 	itob
 	concat
 	b branch_log_return

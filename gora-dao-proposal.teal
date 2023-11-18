@@ -378,7 +378,8 @@ method_config_proposal:
 	log
 
 	byte 0x151f7c75
-	byte "Proposal has configured!"
+	global CurrentApplicationID
+	itob
 	concat
 	b branch_log_return
 

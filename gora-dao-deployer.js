@@ -1150,7 +1150,7 @@ const GoraDaoDeployer = class {
             let confirmedRound = proposalConfigResults.confirmedRound
             if (Number(idx) === 0) await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
-            let returnedResults = proposalConfigResults.methodResults[idx].rawReturnValue
+            let returnedResults = this.algosdk.decodeUint64(proposalConfigResults.methodResults[idx].rawReturnValue)
             this.logger.info("GoraDAO Proposal Contract ABI Exec result = %s", returnedResults);
 
         }
