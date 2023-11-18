@@ -41,8 +41,8 @@
       "create_dao_proposal_asset": false,
     
       "create_proposal_contracts": false,
-      "update_proposal_contracts": true,
-      "config_proposal_contracts": false,
+      "update_proposal_contracts": false,
+      "config_proposal_contracts": true,
 
       "activate_proposal_contracts": false,
       "close_proposal_contracts": false,

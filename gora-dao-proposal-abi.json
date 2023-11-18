@@ -74,8 +74,13 @@
             "description": "Signal to optin to proposal asset",
             "args":[
                 {
-                    "type": "string",
-                    "name": "free_message"
+                    "type": "asset",
+                    "name": "proposal_asset_ref"
+                    
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_asset_id"
                     
                 }
 
