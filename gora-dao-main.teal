@@ -643,42 +643,39 @@ method_proposal_config:
     ==
     assert
     // Checking the pay txn at index 0 of gtxn
-    gtxn 0 RekeyTo
+    gtxn 2 RekeyTo
     global ZeroAddress
     ==
     assert
-    gtxn 0 CloseRemainderTo
+    gtxn 2 CloseRemainderTo
     global ZeroAddress
     ==
     assert
-    gtxn 0 AssetCloseTo
+    gtxn 2 AssetCloseTo
     global ZeroAddress
     ==
     assert
-    gtxn 0 TypeEnum
+    gtxn 2 TypeEnum
     int pay
     ==
     assert
-    gtxn 0 Fee
+    gtxn 2 Fee
     global MinTxnFee
     >=
     assert
-    gtxn 0 Amount
+    gtxn 2 Amount
     global MinTxnFee
     >=
     assert
 
     // Checking if the receiver of pay txn is the same as the current application address
-    txn GroupIndex
-    int 1
-    -
-    dup
-    gtxns Receiver
+  
+    gtxn 2 Receiver
     global CurrentApplicationAddress
     ==
     assert
 
-    gtxns Amount
+    gtxn 2 Amount
     global MinTxnFee
     int 2
     *
