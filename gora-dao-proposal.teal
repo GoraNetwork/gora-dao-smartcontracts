@@ -80,7 +80,7 @@ branch_closeout:
 ///////////////////////////////////////////
 branch_method_router:
 
-	method "create_proposal(application,uint64,uint64,address,address,string,string)uint64"
+	method "create_proposal(application,uint64,uint64,address,address,string,string)address"
 	txn ApplicationArgs 0
 	==
 	txn ApplicationID
@@ -89,12 +89,14 @@ branch_method_router:
 	&&
 	bnz method_create_proposal
 
-	method "update_proposal(application,uint64,uint64,address,address,string,string)uint64"
+	method "update_proposal(application,uint64,uint64,address,address,string,string)address"
 	txn ApplicationArgs 0
 	==
 	bnz method_update_proposal
 
-	method "config_proposal(pay,uint64,account)string"
+
+
+	method "config_proposal(pay,axfer,asset,uint64,account,account,uint64,uint64,(uint64[]),uint64,uint64,uint64,uint64,uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_proposal
@@ -166,6 +168,7 @@ sub_check_manager_auth:
 	assert
 	retsub
 
+
 method_create_proposal:
 
 	global CurrentApplicationID
@@ -229,7 +232,7 @@ method_create_proposal:
 
 
 	byte 0x151f7c75
-	byte "GoraDAO Proposal contarct updated!"
+	global CurrentApplicationAddress
 	concat
 	b branch_log_return
 
@@ -298,8 +301,7 @@ method_update_proposal:
 
 
 	byte 0x151f7c75
-	global CurrentApplicationID
-	itob
+	global CurrentApplicationAddress
 	concat
 	b branch_log_return
 

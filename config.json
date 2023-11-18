@@ -4,12 +4,12 @@
       "network": "testnet",
       "asc_main_id": 0,
       "asc_main_address": "",
-      "asc_testnet_main_id": 467607348,
-      "asc_testnet_main_address": "7M3BC5ROZTWZ4HU4XKSM256AVXE3QMJ33GULD3LGCSE565AY2YR37IQVY4",
-      "asc_proposal_id": 479951637,
-      "asc_proposal_address": "DW4IOOYOYXLB2K7TNRI5M2FM37XB2ROCCJCRPX2SMGIQIKZOENMX4XULYY",
-      "proposal_asa_id": 479869829,
-      "proposal_proposal_asa_id": 479869851,
+      "asc_testnet_main_id": 480152386,
+      "asc_testnet_main_address": "IHE65N6R4FBLY6AZJ76RYD6YG7RDTLE6OMAGSBAWO5A4QDKOJ6ROYHNJXU",
+      "asc_proposal_id": 480335462,
+      "asc_proposal_address": "EN74IBVTNWOF4YGPOBZLJKSU6RKOL6EFS3TFPJEXI5Q3N7SSFR5JEWJVMI",
+      "main_asa_id": 479869829,
+      "proposal_asa_id": 479869851,
       "asc_vesting_id": 0,
       "asc_vesting_address": "",
       
@@ -40,20 +40,24 @@
       "config_dao_contract": false,
 
     
-      "create_proposal_contracts": false,
-      "update_proposal_contracts": true,
+      "create_proposal_contracts": true,
+      "update_proposal_contracts": false,
+      "config_proposal_contracts": false,
 
-      "test_proposal_config": false,
-      "test_proposal_activate": false,
-      "test_proposal_closure": false,
-      "test_proposal_participate": false,
-      "test_proposal_withdraw_participate": false,
-      "test_proposal_vote": false,
+      "activate_proposal_contracts": false,
+      "close_proposal_contracts": false,
+      "participate_proposal_contracts": false,
+      "withdraw_participate_proposal_contracts": false,
+      "vote_proposal_contracts": false,
+
+
+
+
 
       "num_local_int": 0,
       "num_local_byte": 0,
-      "num_global_int": 4,
-      "num_global_byte": 4,
+      "num_global_int": 15,
+      "num_global_byte": 15,
       
       "proposal": {
         "proposalName": "proposal_name",

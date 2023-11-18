@@ -208,7 +208,7 @@
             "boxes": [
                 {
                     "name": "member_reference",
-                    "description": "Dynamic box ref per member account address"
+                    "description": "Dynamic box ref for Proposal manager GoraDAO member"
                 },
                 {
                     "name": "proposal_app",
@@ -265,11 +265,7 @@
             "boxes": [
                 {
                     "name": "member_reference",
-                    "description": "Dynamic box ref per member account address (proposal creator)"
-                },
-                {
-                    "name": "member_reference",
-                    "description": "Dynamic box ref per member account address (proposal manager)"
+                    "description": "Dynamic box ref for Proposal manager GoraDAO member"
                 },
                 {
                     "name": "proposal_app",
@@ -294,15 +290,11 @@
                     "name": "payment_transaction",
                     "description": "Payment from Proposer to GoraDAO for fees and Proposal MBRs!"
                 },
+               
                 {
-                    "type": "axfer",
-                    "name": "asset_transfer_transaction",
-                    "description": "Asset transfer transaction to deposit Proposal asset!"
-                },
-                {
-                    "type": "application",
-                    "name": "gora_dao_main_app_id",
-                    "description": "GoraDAO Main application ID"
+                    "type": "account",
+                    "name": "manager_reference",
+                    "description": "GoraDAO manager account reference"
                 },
                 {
                     "type": "application",
@@ -310,20 +302,20 @@
                     "description": "GoraDAO Proposal application ID"
                 },
                 {
-                    "type": "uint64",
+                    "type": "asset",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Proposal asset (Gora) ID"
+                    "description": "GoraNetwork Proposal asset Reference"
                 },
                 {
-                    "type": "account",
-                    "name": "manager_reference",
-                    "description": "GoraDAO manager account reference"
+                    "type": "uint64",
+                    "name": "asset_id",
+                    "description": "GoraNetwork Proposal asset ID"
                 }
             ],
             "boxes": [
                 {
                     "name": "manager_reference",
-                    "description": "Dynamic box ref per manager account address"
+                    "description": "Dynamic box ref per proposal manager account address"
                 },
                 {
                     "name": "proposal_reference",

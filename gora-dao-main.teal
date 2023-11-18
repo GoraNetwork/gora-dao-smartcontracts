@@ -14,28 +14,24 @@ bz branch_create
 
 // Checking onCompletion type for update application call
 txn OnCompletion
-
 int UpdateApplication
 ==
 bnz branch_update
 
 // Checking onCompletion type for delete application call
 txn OnCompletion
-
 int DeleteApplication
 ==
 bnz branch_delete
 
 // Checking onCompletion type for close out application call
 txn OnCompletion
-
 int CloseOut
 ==
-bnz branch_closeout
+bnz branch_error
 
 // Checking onCompletion type for optin application call
 txn OnCompletion
-
 int OptIn
 ==
 bnz branch_error
@@ -74,7 +70,19 @@ branch_create:
 	byte "gora_dao_manager_address"
 	txn Sender
 	app_global_put
-	byte "proposals_count"
+	byte "total_proposals_count"
+	int 0
+	app_global_put
+
+	byte "ready_proposals_count"
+	int 0
+	app_global_put
+
+	byte "active_proposals_count"
+	int 0
+	app_global_put
+
+	byte "total_votes_count"
 	int 0
 	app_global_put
 
@@ -106,15 +114,28 @@ branch_update:
 	byte "gora_dao_manager_address"
 	txn Sender
 	app_global_put
+
+	byte "total_proposals_count"
+	int 0
+	app_global_put
+
+	byte "ready_proposals_count"
+	int 0
+	app_global_put
+
+	byte "active_proposals_count"
+	int 0
+	app_global_put
+
+	byte "total_votes_count"
+	int 0
+	app_global_put
+
+
 	int 1
 	return
 
-branch_closeout:
 
-	callsub check_owner_auth
-
-	int 1
-	return
 
 branch_method_router:
 
@@ -138,6 +159,11 @@ branch_method_router:
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_update
+
+	method "config_proposal(pay,account,application,asset,uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_proposal_config
 
 	b branch_error
 
@@ -211,6 +237,39 @@ method_config_dao:
 
 	byte 0x151f7c75
 	byte "dao has configured!"
+	concat
+	b branch_log_return
+
+method_write_source_box:
+
+	callsub sub_check_owner_auth
+
+	byte "proposal_app"
+	store 1
+
+	byte "proposal_clr"
+	store 2
+
+	load 1
+	box_get
+	bz branch_write_box_app
+
+	load 1
+	box_del
+	pop
+	load 2
+	box_del
+	pop
+branch_write_box_app:
+
+	load 1
+	txn ApplicationArgs 1
+	box_put
+	load 2
+	txn ApplicationArgs 2
+	box_put
+	byte 0x151f7c75
+	byte "GoraDAO Teal Source Codes Updated!"
 	concat
 	b branch_log_return
 
@@ -297,7 +356,7 @@ method_proposal_create:
     itxn_field LocalNumByteSlice
     txn Sender
     itxn_field Note
-    method "create_proposal(application,uint64,uint64,address,address,string,string)string"
+    method "create_proposal(application,uint64,uint64,address,address,string,string)address"
     itxn_field ApplicationArgs
     byte "proposal_app"
     box_get
@@ -336,21 +395,48 @@ method_proposal_create:
     itxn_field ApplicationArgs
     load 4
     itxn_field ApplicationArgs
-    
-    
     itxn_submit
     itxn TxID
     log
+	itxn LastLog
+	extract 4 0
+    store 10
+    load 10
+    dup
+    log
+    global ZeroAddress
+    !=
+    load 10 
+    len
+    int 32
+    ==
+    &&
+    assert
+
+
+
     itxn CreatedApplicationID
     store 2
-    byte "proposals_count"
+    byte "total_proposals_count"
     dup
     app_global_get
     int 1
     +
     app_global_put
 
-
+ 	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int pay
+	itxn_field TypeEnum
+	load 10
+	itxn_field Receiver
+	int 300000
+	itxn_field Amount
+	itxn_submit
+	itxn TxID
+    log
+	
 	byte 0x151f7c75
 	load 2
 	itob
@@ -439,7 +525,7 @@ method_proposal_update:
     // itxn 
     txn Sender
     itxn_field Note
-    method "update_proposal(application,uint64,uint64,address,address,string,string)uint64"
+    method "update_proposal(application,uint64,uint64,address,address,string,string)address"
     itxn_field ApplicationArgs
     byte "proposal_app"
     box_get
@@ -489,55 +575,87 @@ method_proposal_update:
     log
     itxn LastLog
 	extract 4 0
-	btoi
-    store 10
-    byte "proposals_count"
-    dup
-    app_global_get
-    int 1
-    +
-    app_global_put
+    log
 
 
 	byte 0x151f7c75
-	load 10
+	load 0
 	itob
 	concat
 	b branch_log_return
 
-method_write_source_box:
+method_proposal_config:
+	// Checking Transaction group
+    global GroupSize
+    int 5
+    ==
+    assert
+    // Checking the pay txn at index 0 of gtxn
+    gtxn 0 RekeyTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 CloseRemainderTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 AssetCloseTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 TypeEnum
+    int pay
+    ==
+    assert
+    gtxn 0 Fee
+    global MinTxnFee
+    >=
+    assert
+    gtxn 0 Amount
+    global MinTxnFee
+    >=
+    assert
 
-	callsub sub_check_owner_auth
+    // Checking if the receiver of pay txn is the same as the current application address
+    txn GroupIndex
+    int 1
+    -
+    dup
+    gtxns Receiver
+    global CurrentApplicationAddress
+    ==
+    assert
 
-	byte "proposal_app"
-	store 1
+    gtxns Amount
+    global MinTxnFee
+    int 2
+    *
+    >=
+    assert
+	
+    // Process Transaction args
+	// Proposal app id
+    txn ApplicationArgs 2
+	btoi
+    store 0
+    // Proposal manager address
+    txn ApplicationArgs 3
+    store 1
+    // Proposal asset id
+    txn ApplicationArgs 4
+    store 2
+    // Proposal title
+    txn ApplicationArgs 5
+    store 3
+    // Proposal description
+    txn ApplicationArgs 6
+    store 4
 
-	byte "proposal_clr"
-	store 2
-
-	load 1
-	box_get
-	bz branch_write_box_app
-
-	load 1
-	box_del
-	pop
-	load 2
-	box_del
-	pop
-branch_write_box_app:
-
-	load 1
-	txn ApplicationArgs 1
-	box_put
-	load 2
-	txn ApplicationArgs 2
-	box_put
 	byte 0x151f7c75
-	byte "GoraDAO Teal Source Codes Updated!"
+	int 10
+	itob
 	concat
 	b branch_log_return
-
 branch_error:
 
 	err
