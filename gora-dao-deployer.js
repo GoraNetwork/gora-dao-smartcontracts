@@ -251,6 +251,10 @@ const GoraDaoDeployer = class {
                                                 const buffer = Buffer.from(item, 'base64');
                                                 let uint64Log = this.algosdk.decodeUint64(buffer.slice(4, 12))
                                                 this.logger.info(` TXN log [${index}]:uint64:  %s`, uint64Log)
+                                            }else if (Buffer.from(item, 'base64').byteLength === 8) {
+                                                const buffer = Buffer.from(item, 'base64');
+                                                let uint64Log = this.algosdk.decodeUint64(buffer)
+                                                this.logger.info(` TXN log [${index}]:uint64:  %s`, uint64Log)
                                             } else {
                                                 let log = atob(item)
                                                 if (!this.hasBadChars(log)) {
@@ -812,7 +816,7 @@ const GoraDaoDeployer = class {
             let confirmedRound = daoConfigResults.confirmedRound
             //let sp = await this.fetchTransactionStateProof(txid, confirmedRound)
             ///v2/blocks/{round}/transactions/{txid}/proof
-            if (Number(idx) === 0) await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+            await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
             let returnedResults = this.algosdk.decodeUint64(daoConfigResults.methodResults[idx].rawReturnValue)
             this.logger.info("GoraDAO Contract ABI Exec result = %s", returnedResults);
@@ -1149,10 +1153,11 @@ const GoraDaoDeployer = class {
 
             //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
             let confirmedRound = proposalConfigResults.confirmedRound
-            if (Number(idx) === 0) await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+           
 
             let returnedResults = this.algosdk.decodeUint64(proposalConfigResults.methodResults[idx].rawReturnValue)
             this.logger.info("GoraDAO Proposal Contract ABI Exec result = %s", returnedResults);
+            await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
         }
     }

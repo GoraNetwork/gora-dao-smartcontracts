@@ -33,15 +33,15 @@
       "apps_to_delete": [],
       
       "create_dao_contracts": false,
-      "update_dao_contracts": false,
-      "write_proposal_source_box": false,
+      "update_dao_contracts": true,
+      "write_proposal_source_box": true,
       "config_dao_contract": false,
 
       "create_dao_asset": false,
       "create_dao_proposal_asset": false,
     
       "create_proposal_contracts": false,
-      "update_proposal_contracts": false,
+      "update_proposal_contracts": true,
       "config_proposal_contracts": true,
 
       "activate_proposal_contracts": false,

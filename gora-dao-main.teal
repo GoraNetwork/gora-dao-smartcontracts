@@ -687,12 +687,19 @@ method_proposal_config:
     txn ApplicationArgs 2
 	btoi
     store 0
+    load 0
+    itob
+    log
     // Proposal manager address
     txn ApplicationArgs 3
     store 1
+    load 1
+    log
     // Proposal asset id
     txn ApplicationArgs 4
     store 2
+    load 2
+    log
 
 
 	byte 0x151f7c75

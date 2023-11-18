@@ -372,10 +372,10 @@ method_activate_proposal:
 method_config_proposal:
 
 	txn ApplicationArgs 1
-	log
+	//log
 
 	txn ApplicationArgs 2
-	log
+	//log
 
 	byte 0x151f7c75
 	global CurrentApplicationID
