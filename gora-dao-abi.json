@@ -190,8 +190,13 @@
                     "description": "GoraDAO member account reference (Proposal manager)"
                 },
                 {
-                    "type": "uint64",
+                    "type": "asset",
                     "name": "asset_reference",
+                    "description": "GoraNetwork Proposal asset ref"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_id",
                     "description": "GoraNetwork Proposal asset ID"
                 },
                 {

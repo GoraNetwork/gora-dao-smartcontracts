@@ -94,6 +94,11 @@ branch_method_router:
 	==
 	bnz method_update_proposal
 
+	method "optin_proposal_asset(asset,uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_optin_proposal_asset
+
 
 
 	method "config_proposal(pay,axfer,asset,uint64,account,account,uint64,uint64,(uint64[]),uint64,uint64,uint64,uint64,uint64)uint64"
@@ -175,6 +180,7 @@ method_create_proposal:
 	store 0
 
 	txn ApplicationArgs 1
+	btoi
 	store 1
 	byte "gora_dao_app_id"
 	load 1
@@ -182,12 +188,14 @@ method_create_proposal:
 
 
 	txn ApplicationArgs 2
+	btoi
 	store 2
 	byte "gora_dao_asset_id"
 	load 2
 	app_global_put
 
 	txn ApplicationArgs 3
+	btoi
 	store 3
 	byte "gora_dao_proposal_asset_id"
 	load 3
@@ -304,6 +312,35 @@ method_update_proposal:
 	global CurrentApplicationAddress
 	concat
 	b branch_log_return
+
+method_optin_proposal_asset:
+	callsub sub_check_owner_auth
+	txn ApplicationArgs 2
+	btoi
+	store 0
+
+	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int axfer
+	itxn_field TypeEnum
+	global CurrentApplicationAddress
+	itxn_field AssetReceiver
+	int 0
+	itxn_field AssetAmount
+	txna Assets 0
+	itxn_field XferAsset
+	itxn_submit
+	itxn TxID
+    log
+	
+	
+	byte 0x151f7c75
+	load 0
+	itob
+	concat
+	b branch_log_return
+
 
 method_update_manager_address:
 	callsub sub_check_manager_auth
