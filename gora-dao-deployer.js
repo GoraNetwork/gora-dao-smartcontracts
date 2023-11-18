@@ -1149,7 +1149,7 @@ const GoraDaoDeployer = class {
         this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", methodProposalConfig);
         const proposalConfigResults = await atcProposalConfig.execute(this.algodClient, 10);
         for (const idx in proposalConfigResults.methodResults) {
-            let txid = proposalConfigResults.txIDs[idx]
+            let txid = proposalConfigResults.methodResults[idx].txID
 
             //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
             let confirmedRound = proposalConfigResults.confirmedRound

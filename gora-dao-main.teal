@@ -684,21 +684,27 @@ method_proposal_config:
 	
     // Process Transaction args
 	// Proposal app id
+    txn ApplicationArgs 1
+	btoi
+    store 1
+    load 1
+    itob
+    log
     txn ApplicationArgs 2
 	btoi
-    store 0
-    load 0
+    store 2
+    load 2
     itob
     log
     // Proposal manager address
     txn ApplicationArgs 3
-    store 1
-    load 1
+    store 3
+    load 3
     log
     // Proposal asset id
     txn ApplicationArgs 4
-    store 2
-    load 2
+    store 4
+    load 4
     log
 
 
