@@ -934,6 +934,7 @@ const GoraDaoDeployer = class {
             this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", res);
             let addr = this.algosdk.getApplicationAddress(Number(res))
             this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", addr);
+            this.logger.info("GoraDAO Proposal Contract topped up by 0.3 Algo!");
 
             let txid = result.methodResults[idx].txID
             let confirmedRound = result.confirmedRound
@@ -1014,7 +1015,7 @@ const GoraDaoDeployer = class {
             this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", res);
             let addr = this.algosdk.getApplicationAddress(Number(res))
             this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", addr);
-            this.logger.info("GoraDAO Proposal Contract topped up by 0.3 Algo!");
+     
 
             let txid = result.methodResults[idx].txID
             let confirmedRound = result.confirmedRound
