@@ -369,9 +369,9 @@ method_proposal_create:
     itxn_field OnCompletion
 
     // itxn 
-    int 7
+    int 10
     itxn_field GlobalNumByteSlice
-    int 7
+    int 12
     itxn_field GlobalNumUint
     int 0
     itxn_field LocalNumUint
