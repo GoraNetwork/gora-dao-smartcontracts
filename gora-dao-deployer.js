@@ -1068,13 +1068,9 @@ const GoraDaoDeployer = class {
             signer: signer,
             boxes: [
                
-                // { appIndex: Number(application), name: addrUint8Array.publicKey },
+                 { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.proposalApplicationId) },
                 // { appIndex: Number(application), name: addrUint8Array.publicKey },
 
-
-                // { appIndex: Number(application), name: account1.publicKey },
-                // { appIndex: Number(application), name: account2.publicKey },
-                // { appIndex: Number(application), name: account3.publicKey },
 
             ],
         }
@@ -1109,6 +1105,7 @@ const GoraDaoDeployer = class {
             tws2,
             addr,
             this.proposalApplicationId,
+            this.proposalApplicationAddress,
             this.proposalAsset,
             this.proposalAsset,
 

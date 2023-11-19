@@ -160,7 +160,7 @@ branch_method_router:
 	==
 	bnz method_proposal_update
 
-	method "config_proposal(pay,axfer,account,application,asset,uint64)uint64"
+	method "config_proposal(pay,axfer,address,uint64,address,asset,uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_config
@@ -683,36 +683,79 @@ method_proposal_config:
     assert
 	
     // Process Transaction args
-	// Proposal app id
+
+	// Proposal manager address
     txn ApplicationArgs 1
-	btoi
     store 1
     load 1
-    itob
     log
+    // Proposal app id
     txn ApplicationArgs 2
 	btoi
     store 2
     load 2
     itob
     log
-    // Proposal manager address
+    // Proposal app address
     txn ApplicationArgs 3
     store 3
     load 3
     log
+
     // Proposal asset id
     txn ApplicationArgs 4
+    btoi
     store 4
     load 4
+    itob
     log
 
+    // Proposal asset id
+    txn ApplicationArgs 5
+    btoi
+    store 5
+    load 5
+    itob
+    log
+
+    // Creating Proposal box, adding proposal id to dao_proposals_list box! Proposal box with proposal id as key
+    // containts 32 byte proposal address followed by 32 bytes proposal manager address
+    load 2
+    itob
+    box_get
+    bnz branch_delete_proposal_box
+    load 2
+    itob
+    load 1
+    load 3
+    concat
+    box_put
 
 	byte 0x151f7c75
 	global CurrentApplicationID
 	itob
 	concat
 	b branch_log_return
+
+branch_delete_proposal_box:
+    load 2
+    itob
+    box_del
+    pop
+
+    load 2
+    itob
+    load 1
+    load 3
+    concat
+    box_put
+
+    byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
 branch_error:
 
 	err
