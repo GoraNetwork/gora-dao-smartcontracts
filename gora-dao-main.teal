@@ -139,7 +139,7 @@ branch_update:
 
 branch_method_router:
 
-	method "config_dao(pay,asset,uint64,address)uint64"
+	method "config_dao(pay,asset,account,uint64,uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_dao
@@ -164,6 +164,16 @@ branch_method_router:
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_config
+
+    method "subscribe_dao(pay,asset,account,address)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_subscribe_dao
+
+    method "unsubscribe_dao(asset,account,address)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_unsubscribe_dao
 
 	b branch_error
 
@@ -214,26 +224,33 @@ sub_check_owner_auth:
 	retsub
 // Handles configuration of GoraDAO
 method_config_dao:
-
-	txn ApplicationArgs 1
-	btoi
+    txn Accounts 0
 	store 1
-	byte "gora_dao_asset_id"
-	load 1
-	app_global_put
-	load 1
-	itob
-	log
-
-	txn ApplicationArgs 2
-	store 2
 	byte "gora_dao_manager_address"
-	load 2
+	load 1
 	app_global_put
 
-	load 2
+	load 1
 	log
 
+	txn Assets 0
+	store 2
+	byte "gora_dao_asset_id"
+	load 2
+	app_global_put
+	load 2
+    itob
+	log
+
+	
+
+    txn ApplicationArgs 4
+    btoi
+	store 3
+	byte "gora_dao_min_subscription"
+    load 3
+    app_global_put
+	
 
 	itxn_begin
 	global CurrentApplicationAddress
@@ -251,6 +268,7 @@ method_config_dao:
     log
 	
 	
+
 	byte 0x151f7c75
 	txna Assets 0
 	itob
@@ -737,6 +755,105 @@ method_proposal_config:
 	concat
 	b branch_log_return
 
+method_subscribe_dao:
+    // Checking Transaction group
+    global GroupSize
+    int 2
+    ==
+    assert
+    // Checking the pay txn at index 0 of gtxn
+    gtxn 0 RekeyTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 CloseRemainderTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 AssetCloseTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 TypeEnum
+    int pay
+    ==
+    assert
+    gtxn 0 Fee
+    global MinTxnFee
+    >=
+    assert
+    gtxn 0 Amount
+    global MinTxnFee
+    >=
+    assert
+
+    // Checking if the receiver of pay txn is the same as the current application address
+  
+    gtxn 0 Receiver
+    global CurrentApplicationAddress
+    ==
+    assert
+
+    gtxn 0 Amount
+    global MinTxnFee
+    int 2
+    *
+    >=
+    assert
+	
+    txn Accounts 0
+    txn Assets 0
+    asset_holding_get AssetBalance
+    assert
+    byte "gora_dao_min_subscription"
+    app_global_get
+    >
+    assert
+
+
+	// Proposal manager address
+    txn Accounts 0
+    store 1
+    load 1
+    dup
+    log
+    box_get
+    bnz branch_delet_member_box
+    load 1
+    byte ""
+    box_put
+    byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+branch_delet_member_box:
+    load 1
+    byte ""
+    box_put
+    byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+method_unsubscribe_dao:
+    
+    // Process Transaction args
+
+	// Proposal manager address
+    txn Accounts 0
+    store 1
+    load 1
+    dup
+    log
+    box_del
+    byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
 branch_delete_proposal_box:
     load 2
     itob

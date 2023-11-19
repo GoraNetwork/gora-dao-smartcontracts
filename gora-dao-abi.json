@@ -25,14 +25,20 @@
                     "description": "GoraNetwork Main asset (Gora) reference"
                 },
                 {
+                    "type": "account",
+                    "name": "manager_reference",
+                    "description": "GoraDAO manager account reference"
+                },
+                {
                     "type": "uint64",
                     "name": "asset_id",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
+                 
                 {
-                    "type": "address",
-                    "name": "manager_reference",
-                    "description": "GoraDAO manager account reference"
+                    "type": "uint64",
+                    "name": "gora_dao_min_subscription",
+                    "description": "Minimum posession of Gora Dao Asset for subscription"
                 }
             ],
             "boxes": [
@@ -49,37 +55,9 @@
                 "type": "uint64"
             }
         },
+  
         {
-            "name": "update_manager_address",
-            "description": "Updates DAO manager address! Should be sent by either owner (creator) or current manager! Returns new manager address",
-            "args": [
-                {
-                    "type": "pay",
-                    "name": "payment_transaction",
-                    "description": "Payment from manager to GoraDAO for fees!"
-                },
-                {
-                    "type": "application",
-                    "name": "main_app_id",
-                    "description": "GoraNetwork Main application ID"
-                },
-                {
-                    "type": "uint64",
-                    "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
-                },
-                {
-                    "type": "account",
-                    "name": "manager_reference",
-                    "description": "GoraDAO new manager account reference"
-                }
-            ],
-            "returns": {
-                "type": "string"
-            }
-        },
-        {
-            "name": "dao_subscribe",
+            "name": "subscribe_dao",
             "description": "Subscribes an Algorand account into GoraDAO! Returns total number of members!",
             "args": [
                 {
@@ -88,24 +66,19 @@
                     "description": "Payment from subscriber to GoraDAO for fees and initiation MBRs!"
                 },
                 {
-                    "type": "axfer",
-                    "name": "asset_transfer_transaction",
-                    "description": "Asset transfer transaction to deposit Gora!"
-                },
-                {
-                    "type": "uint64",
+                    "type": "asset",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
-                },
-                {
-                    "type": "address",
-                    "name": "member_address",
-                    "description": "GoraDAO subscribing member account address"
+                    "description": "GoraNetwork Main asset (Gora) Ref"
                 },
                 {
                     "type": "account",
                     "name": "member_reference",
                     "description": "GoraDAO subscribing member account reference"
+                },
+                {
+                    "type": "address",
+                    "name": "member_address",
+                    "description": "GoraDAO subscribing member account address"
                 }
             ],
             "boxes": [
@@ -119,23 +92,23 @@
             }
         },
         {
-            "name": "dao_unsubscribe",
+            "name": "unsubscribe_dao",
             "description": "Unsubscribes an Algorand account from GoraDAO! Returns total number of members! Member's participation will be withdrawn!",
             "args": [
                 {
-                    "type": "uint64",
+                    "type": "asset",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
-                },
-                {
-                    "type": "address",
-                    "name": "member_address",
-                    "description": "GoraDAO member account address"
+                    "description": "GoraNetwork Main asset (Gora) Ref"
                 },
                 {
                     "type": "account",
                     "name": "member_reference",
                     "description": "GoraDAO member account reference"
+                },
+                {
+                    "type": "address",
+                    "name": "member_address",
+                    "description": "GoraDAO member account address"
                 }
             ],
             "boxes": [
