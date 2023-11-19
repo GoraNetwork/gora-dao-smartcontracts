@@ -189,11 +189,7 @@
                     "name": "proposal_min_participation",
                     "description": "GoraDAO Proposal minimum participation staking in proposal asset units"
                 },
-                {
-                    "type": "(uint64[])",
-                    "name": "proposal_threshold",
-                    "description": "GoraDAO Proposal threshold program! ([%participation, %threshold, %allocation])"
-                },
+              
                 {
                     "type": "uint64",
                     "name": "proposal_duration",
@@ -219,13 +215,22 @@
                     "type": "uint64",
                     "name": "proposal_voting_start",
                     "description": "GoraDAO Proposal voting start in working hours"
+                },
+                {
+                    "type": "(uint64,uint64,uint64,uint64,uint64,uint64)",
+                    "name": "proposal_threshold",
+                    "description": "GoraDAO Proposal threshold program! ([%participation, %threshold, %allocation])"
                 }
              
             ],
             "boxes": [
                 {
                     "name": "manager_reference",
-                    "description": "Dynamic box ref per manager account address"
+                    "description": "Dynamic box ref for proposal manager account"
+                },
+                {
+                    "name": "proposal_threshold",
+                    "description": "Dynamic box per proposal with proposal app id as key"
                 }
             ],
             "returns": {

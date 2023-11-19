@@ -371,7 +371,7 @@ method_proposal_create:
     // itxn 
     int 10
     itxn_field GlobalNumByteSlice
-    int 12
+    int 15
     itxn_field GlobalNumUint
     int 0
     itxn_field LocalNumUint
