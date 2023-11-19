@@ -369,9 +369,9 @@ method_proposal_create:
     itxn_field OnCompletion
 
     // itxn 
-    int 7
+    int 10
     itxn_field GlobalNumByteSlice
-    int 7
+    int 15
     itxn_field GlobalNumUint
     int 0
     itxn_field LocalNumUint
@@ -643,42 +643,39 @@ method_proposal_config:
     ==
     assert
     // Checking the pay txn at index 0 of gtxn
-    gtxn 0 RekeyTo
+    gtxn 2 RekeyTo
     global ZeroAddress
     ==
     assert
-    gtxn 0 CloseRemainderTo
+    gtxn 2 CloseRemainderTo
     global ZeroAddress
     ==
     assert
-    gtxn 0 AssetCloseTo
+    gtxn 2 AssetCloseTo
     global ZeroAddress
     ==
     assert
-    gtxn 0 TypeEnum
+    gtxn 2 TypeEnum
     int pay
     ==
     assert
-    gtxn 0 Fee
+    gtxn 2 Fee
     global MinTxnFee
     >=
     assert
-    gtxn 0 Amount
+    gtxn 2 Amount
     global MinTxnFee
     >=
     assert
 
     // Checking if the receiver of pay txn is the same as the current application address
-    txn GroupIndex
-    int 1
-    -
-    dup
-    gtxns Receiver
+  
+    gtxn 2 Receiver
     global CurrentApplicationAddress
     ==
     assert
 
-    gtxns Amount
+    gtxn 2 Amount
     global MinTxnFee
     int 2
     *
@@ -687,15 +684,28 @@ method_proposal_config:
 	
     // Process Transaction args
 	// Proposal app id
+    txn ApplicationArgs 1
+	btoi
+    store 1
+    load 1
+    itob
+    log
     txn ApplicationArgs 2
 	btoi
-    store 0
+    store 2
+    load 2
+    itob
+    log
     // Proposal manager address
     txn ApplicationArgs 3
-    store 1
+    store 3
+    load 3
+    log
     // Proposal asset id
     txn ApplicationArgs 4
-    store 2
+    store 4
+    load 4
+    log
 
 
 	byte 0x151f7c75

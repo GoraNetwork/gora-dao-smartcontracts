@@ -249,7 +249,11 @@ const GoraDaoDeployer = class {
                                         } else {
                                             if (Buffer.from(item, 'base64').byteLength === 12) {
                                                 const buffer = Buffer.from(item, 'base64');
-                                                let uint64Log = this.algosdk.decodeUint64(buffer.slice(4, 12))
+                                                let uint64Log = this.algosdk.decodeUint64(buffer.slice(4, 12), "mixed")
+                                                this.logger.info(` TXN log [${index}]:uint64:  %s`, uint64Log)
+                                            }else if (Buffer.from(item, 'base64').byteLength === 8) {
+                                                const buffer = Buffer.from(item, 'base64');
+                                                let uint64Log = this.algosdk.decodeUint64(buffer, "mixed")
                                                 this.logger.info(` TXN log [${index}]:uint64:  %s`, uint64Log)
                                             } else {
                                                 let log = atob(item)
@@ -812,9 +816,9 @@ const GoraDaoDeployer = class {
             let confirmedRound = daoConfigResults.confirmedRound
             //let sp = await this.fetchTransactionStateProof(txid, confirmedRound)
             ///v2/blocks/{round}/transactions/{txid}/proof
-            if (Number(idx) === 0) await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+            await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
-            let returnedResults = this.algosdk.decodeUint64(daoConfigResults.methodResults[idx].rawReturnValue)
+            let returnedResults = this.algosdk.decodeUint64(daoConfigResults.methodResults[idx].rawReturnValue, "mixed")
             this.logger.info("GoraDAO Contract ABI Exec result = %s", returnedResults);
             //this.logger.info("GoraDAO Transaction StateProof %s", sp);
         }
@@ -933,7 +937,7 @@ const GoraDaoDeployer = class {
         const result = await atc.execute(this.algodClient, 10)
         for (let idx in result.methodResults) {
 
-            let res = this.algosdk.decodeUint64(result.methodResults[idx].rawReturnValue)
+            let res = this.algosdk.decodeUint64(result.methodResults[idx].rawReturnValue, "mixed")
             this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", res);
             let addr = this.algosdk.getApplicationAddress(Number(res))
             this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", addr);
@@ -1014,7 +1018,7 @@ const GoraDaoDeployer = class {
         const result = await atc.execute(this.algodClient, 10)
         for (let idx in result.methodResults) {
 
-            let res = this.algosdk.decodeUint64(result.methodResults[idx].rawReturnValue)
+            let res = this.algosdk.decodeUint64(result.methodResults[idx].rawReturnValue, "mixed")
             this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", res);
             let addr = this.algosdk.getApplicationAddress(Number(res))
             this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", addr);
@@ -1045,6 +1049,7 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_threshold"))},
                 // { appIndex: Number(application), name: addrUint8Array.publicKey },
                 // { appIndex: Number(application), name: addrUint8Array.publicKey },
 
@@ -1062,6 +1067,7 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
+               
                 // { appIndex: Number(application), name: addrUint8Array.publicKey },
                 // { appIndex: Number(application), name: addrUint8Array.publicKey },
 
@@ -1108,6 +1114,10 @@ const GoraDaoDeployer = class {
 
 
         ]
+ 
+       
+     
+        
         //this.goraDaoMainApplicationId,
         const argsProposal = [
             tws1,
@@ -1118,12 +1128,12 @@ const GoraDaoDeployer = class {
             addr,
             100000,
             100,
-            [[100, 100, 52], [80, 80, 60]],
             72,
             10000,
             this.proposalAsset,
             24,
             0,
+            [10001, 100, 52, 80, 80, 60],
         ]
         const atcProposalConfig = new this.algosdk.AtomicTransactionComposer()
 
@@ -1145,14 +1155,15 @@ const GoraDaoDeployer = class {
         this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", methodProposalConfig);
         const proposalConfigResults = await atcProposalConfig.execute(this.algodClient, 10);
         for (const idx in proposalConfigResults.methodResults) {
-            let txid = proposalConfigResults.txIDs[idx]
+            let txid = proposalConfigResults.methodResults[idx].txID
 
             //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
             let confirmedRound = proposalConfigResults.confirmedRound
-            if (Number(idx) === 0) await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+           
 
-            let returnedResults = this.algosdk.decodeUint64(proposalConfigResults.methodResults[idx].rawReturnValue)
+            let returnedResults = this.algosdk.decodeUint64(proposalConfigResults.methodResults[idx].rawReturnValue, "mixed")
             this.logger.info("GoraDAO Proposal Contract ABI Exec result = %s", returnedResults);
+            await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
         }
     }
