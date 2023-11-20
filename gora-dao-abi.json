@@ -373,7 +373,7 @@
             }
         },
         {
-            "name": "proposal_withdraw_participation",
+            "name": "proposal_withdraw_participate",
             "description": "Withdraws a member participation from a  Proposal! Returns the Proposal contract ID! Withdraw is possible only before voting starts",
             "args": [
                 {
@@ -389,7 +389,7 @@
                 {
                     "type": "application",
                     "name": "proposal_reference",
-                    "description": "GoraDAO Proposal app ref"
+                    "description": "GoraDAO proposal app reference"
                 }
             ],
             "boxes": [

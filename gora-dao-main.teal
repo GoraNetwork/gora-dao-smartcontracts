@@ -813,6 +813,8 @@ method_proposal_config:
 	b branch_log_return
 
 method_subscribe_dao:
+    txna Accounts 0
+    store 0
     // Checking Transaction group
     global GroupSize
     int 2
@@ -858,7 +860,7 @@ method_subscribe_dao:
     >=
     assert
 	
-    txna Accounts 0
+    load 0
     txna Assets 0
     asset_holding_get AssetBalance
     assert
@@ -868,15 +870,14 @@ method_subscribe_dao:
     assert
 
 
-	// Participating memeber address
-    txna Accounts 0
-    store 1
-    load 1
+	
+    load 0
     dup
     log
     box_get
     bnz branch_delet_member_box
-    load 1
+    pop
+    load 0
     byte ""
     box_put
     byte 0x151f7c75
@@ -886,9 +887,14 @@ method_subscribe_dao:
 	b branch_log_return
 
 branch_delet_member_box:
-    load 1
+    load 0
+    box_del
+    pop
+    load 0
     byte ""
     box_put
+    
+
     byte 0x151f7c75
 	global CurrentApplicationID
 	itob
@@ -930,6 +936,21 @@ branch_delete_proposal_box:
 
 
 method_proposal_participate:
+    txna Accounts 0
+    store 0
+
+    txna Applications 1
+    byte "proposal_min_participation_algo"
+    app_global_get_ex
+    assert
+    store 1
+
+    txna Applications 1
+    byte "proposal_min_participation"
+    app_global_get_ex
+    assert
+    store 2
+
     // Checking Transaction group
     global GroupSize
     int 5
@@ -992,18 +1013,12 @@ method_proposal_participate:
 
 
     gtxn 0 Amount
-    txna Applications 1
-    byte "proposal_min_participation_algo"
-    app_global_get_ex
-    assert
+    load 1
     >=
     assert
 
     gtxn 1 AssetAmount
-    txna Applications 1
-    byte "proposal_min_participation"
-    app_global_get_ex
-    assert
+    load 2
     ==
     assert
 
@@ -1020,7 +1035,7 @@ method_proposal_participate:
 
 
     // Checking account ref to be Sender
-    txna Accounts 0
+    load 0
     txn Sender
     ==
     assert
@@ -1033,10 +1048,15 @@ method_proposal_participate:
     assert
   
     
-    txna Accounts 0
+    load 0
     txna Assets 0
     asset_holding_get AssetBalance
     assert
+
+    load 0
+    box_get
+    assert
+    pop
     
 
 	
@@ -1048,6 +1068,64 @@ method_proposal_participate:
 
 
 method_proposal_withdraw_participate:
+
+    txna Accounts 0
+    store 0
+
+    txna Applications 1
+    byte "proposal_min_participation_algo"
+    app_global_get_ex
+    assert
+    store 1
+
+    txna Applications 1
+    byte "proposal_min_participation"
+    app_global_get_ex
+    assert
+    store 2
+
+
+    // Checking account ref to be Sender
+    load 0
+    txn Sender
+    ==
+    assert
+
+    itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int pay
+	itxn_field TypeEnum
+	load 0
+	itxn_field Receiver
+	load 1
+	itxn_field Amount
+	itxn_submit
+	itxn TxID
+    log
+
+    itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int axfer
+	itxn_field TypeEnum
+    txna Assets 0
+    itxn_field XferAsset
+	load 0
+	itxn_field AssetReceiver
+	load 2
+	itxn_field AssetAmount
+	itxn_submit
+	itxn TxID
+    log
+
+    byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+
 branch_error:
 
 	err

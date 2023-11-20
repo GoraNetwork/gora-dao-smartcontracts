@@ -406,23 +406,24 @@
             }
         },
         {
-            "name": "proposal_withdraw_participation",
+            "name": "proposal_withdraw_participate",
             "description": "Withdraws participation of a member account from a Proposal! Returns the withdrawing member's account address!",
             "args": [
+               
                 {
-                    "type": "pay",
-                    "name": "payment_transaction",
-                    "description": "Payment from Proposal participant to GoraDAO for fees!"
-                },
-                {
-                    "type": "uint64",
+                    "type": "asset",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
+                    "description": "GoraNetwork Main asset (Gora) ref"
                 },
                 {
                     "type": "account",
                     "name": "member_reference",
                     "description": "GoraDAO member account reference"
+                },
+                {
+                    "type": "application",
+                    "name": "dao_reference",
+                    "description": "GoraDAO main app reference"
                 }
             ],
             "boxes": [
