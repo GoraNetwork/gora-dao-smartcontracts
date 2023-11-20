@@ -187,9 +187,8 @@
                 {
                     "type": "uint64",
                     "name": "proposal_min_participation",
-                    "description": "GoraDAO Proposal minimum participation staking in proposal asset units"
+                    "description": "GoraDAO Proposal minimum participation staking in DAO asset units"
                 },
-              
                 {
                     "type": "uint64",
                     "name": "proposal_duration",
@@ -215,6 +214,11 @@
                     "type": "uint64",
                     "name": "proposal_voting_start",
                     "description": "GoraDAO Proposal voting start in working hours"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_min_participation_fee",
+                    "description": "GoraDAO Proposal minimum participation fee"
                 },
                 {
                     "type": "(uint64,uint64,uint64,uint64,uint64,uint64)",
@@ -376,19 +380,19 @@
                     "description": "Payment from Proposal participant to GoraDAO for fees and Proposal participation MBRs!"
                 },
                 {
-                    "type": "axfer",
-                    "name": "asset_transfer_transaction",
-                    "description": "Asset transfer transaction to deposit Gora!"
-                },
-                {
-                    "type": "uint64",
+                    "type": "asset",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
+                    "description": "GoraNetwork Main asset (Gora) ref"
                 },
                 {
                     "type": "account",
                     "name": "member_reference",
                     "description": "GoraDAO member account reference"
+                },
+                {
+                    "type": "application",
+                    "name": "dao_reference",
+                    "description": "GoraDAO main app reference"
                 }
             ],
             "boxes": [

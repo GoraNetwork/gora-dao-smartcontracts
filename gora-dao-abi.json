@@ -22,7 +22,7 @@
                 {
                     "type": "asset",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) reference"
+                    "description": "GoraDAO Main asset (Gora) reference"
                 },
                 {
                     "type": "account",
@@ -32,30 +32,34 @@
                 {
                     "type": "uint64",
                     "name": "asset_id",
-                    "description": "GoraNetwork Main asset (Gora) ID"
+                    "description": "GoraDAO Main asset (Gora) ID"
                 },
-                 
                 {
                     "type": "uint64",
                     "name": "gora_dao_min_subscription",
-                    "description": "Minimum posession of Gora Dao Asset for subscription"
+                    "description": "Minimum holdings of Gora Dao Asset for subscription"
+                },
+                {
+                    "type": "uint64",
+                    "name": "gora_dao_proposal_fee",
+                    "description": "Fee for creating a new proposal paid in Gora Dao Asset"
+                },
+                {
+                    "type": "uint64",
+                    "name": "gora_dao_proposal_fee_algo",
+                    "description": "Fee for creating a new proposal paid in Algo"
                 }
             ],
             "boxes": [
                 {
                     "name": "manager_address",
                     "description": "Dynamic box ref per manager account address"
-                },
-                {
-                    "name": "proposals",
-                    "description": "Proposals box reference for proposal contract IDs"
                 }
             ],
             "returns": {
                 "type": "uint64"
             }
         },
-  
         {
             "name": "subscribe_dao",
             "description": "Subscribes an Algorand account into GoraDAO! Returns total number of members!",
@@ -68,7 +72,7 @@
                 {
                     "type": "asset",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) Ref"
+                    "description": "GoraDAO Main asset (Gora) Ref"
                 },
                 {
                     "type": "account",
@@ -98,7 +102,7 @@
                 {
                     "type": "asset",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) Ref"
+                    "description": "GoraDAO Main asset (Gora) Ref"
                 },
                 {
                     "type": "account",
@@ -158,19 +162,24 @@
                     "description": "Payment from Proposer to GoraDAO for Proposal fees and initiation MBRs!"
                 },
                 {
-                    "type": "address",
+                    "type": "account",
                     "name": "member_reference",
                     "description": "GoraDAO member account reference (Proposal manager)"
                 },
                 {
                     "type": "asset",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Proposal asset ref"
+                    "description": "GoraDAO Proposal asset ref"
+                },
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraDAO dao asset ref"
                 },
                 {
                     "type": "uint64",
                     "name": "asset_id",
-                    "description": "GoraNetwork Proposal asset ID"
+                    "description": "GoraDAO Proposal asset ID"
                 },
                 {
                     "type": "string",
@@ -227,7 +236,7 @@
                 {
                     "type": "uint64",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Proposal asset ID"
+                    "description": "GoraDAO Proposal asset ID"
                 },
                 {
                     "type": "string",
@@ -273,11 +282,20 @@
                     "name": "dao_asset_transfer_transaction",
                     "description": "Asset transfer transaction to deposit DAO asset (Gora)!"
                 },
-               
                 {
-                    "type": "address",
+                    "type": "account",
                     "name": "member_address",
                     "description": "GoraDAO Proposal manager account reference"
+                },
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraDAO Proposal asset Reference"
+                },
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraDAO asset Reference"
                 },
                 {
                     "type": "uint64",
@@ -289,15 +307,11 @@
                     "name": "proposal_address",
                     "description": "GoraDAO Proposal application address"
                 },
-                {
-                    "type": "asset",
-                    "name": "asset_reference",
-                    "description": "GoraNetwork Proposal asset Reference"
-                },
+               
                 {
                     "type": "uint64",
                     "name": "asset_id",
-                    "description": "GoraNetwork Proposal asset ID"
+                    "description": "GoraDAO Proposal asset ID"
                 }
             ],
             "boxes": [
@@ -308,10 +322,6 @@
                 {
                     "name": "proposal_reference",
                     "description": "Dynamic box ref per proposal account address"
-                },
-                {
-                    "name": "proposals",
-                    "description": "Proposals box reference for proposal contract IDs"
                 }
             ],
             "returns": {
@@ -333,14 +343,19 @@
                     "description": "Asset transfer transaction to deposit Gora!"
                 },
                 {
-                    "type": "uint64",
+                    "type": "asset",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
+                    "description": "GoraDAO Main asset (Gora) ref"
                 },
                 {
                     "type": "account",
                     "name": "member_reference",
                     "description": "GoraDAO member account reference"
+                },
+                {
+                    "type": "application",
+                    "name": "proposal_reference",
+                    "description": "GoraDAO proposal app reference"
                 }
             ],
             "boxes": [
@@ -350,11 +365,41 @@
                 },
                 {
                     "name": "proposal_reference",
-                    "description": "Dynamic box ref per proposal account address"
+                    "description": "Dynamic box ref per proposal app id"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "proposal_withdraw_participation",
+            "description": "Withdraws a member participation from a  Proposal! Returns the Proposal contract ID! Withdraw is possible only before voting starts",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraDAO Main asset (Gora) ref"
                 },
                 {
-                    "name": "proposals",
-                    "description": "Proposals box reference for proposal contract IDs"
+                    "type": "account",
+                    "name": "member_reference",
+                    "description": "GoraDAO member account reference"
+                },
+                {
+                    "type": "application",
+                    "name": "proposal_reference",
+                    "description": "GoraDAO Proposal app ref"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address"
+                },
+                {
+                    "name": "proposal_reference",
+                    "description": "Dynamic box ref per proposal app id"
                 }
             ],
             "returns": {
@@ -378,7 +423,7 @@
                 {
                     "type": "uint64",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
+                    "description": "GoraDAO Main asset (Gora) ID"
                 },
                 {
                     "type": "account",
@@ -394,43 +439,6 @@
                 {
                     "name": "proposal_reference",
                     "description": "Dynamic box ref per proposal account address"
-                },
-                {
-                    "name": "proposals",
-                    "description": "Proposals box reference for proposal contract IDs"
-                }
-            ],
-            "returns": {
-                "type": "uint64"
-            }
-        },
-        {
-            "name": "proposal_withdraw_participation",
-            "description": "Withdraws a member participation from a  Proposal! Returns the Proposal contract ID! Withdraw is possible only before voting starts",
-            "args": [
-                {
-                    "type": "uint64",
-                    "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
-                },
-                {
-                    "type": "account",
-                    "name": "member_reference",
-                    "description": "GoraDAO member account reference"
-                }
-            ],
-            "boxes": [
-                {
-                    "name": "member_reference",
-                    "description": "Dynamic box ref per member account address"
-                },
-                {
-                    "name": "proposal_reference",
-                    "description": "Dynamic box ref per proposal account address"
-                },
-                {
-                    "name": "proposals",
-                    "description": "Proposals box reference for proposal contract IDs"
                 }
             ],
             "returns": {
@@ -449,7 +457,7 @@
                 {
                     "type": "uint64",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
+                    "description": "GoraDAO Main asset (Gora) ID"
                 },
                 {
                     "type": "account",
@@ -465,10 +473,6 @@
                 {
                     "name": "proposal_reference",
                     "description": "Dynamic box ref per proposal account address"
-                },
-                {
-                    "name": "proposals",
-                    "description": "Proposals box reference for proposal contract IDs"
                 }
             ],
             "returns": {
@@ -487,17 +491,17 @@
                 {
                     "type": "uint64",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
+                    "description": "GoraDAO Main asset (Gora) ID"
                 },
                 {
                     "type": "application",
                     "name": "proposal_reference",
-                    "description": "GoraNetwork Proposal ID"
+                    "description": "GoraDAO Proposal ID"
                 },
                 {
                     "type": "application",
                     "name": "vesting_reference",
-                    "description": "GoraNetwork Vesting OR GoraDAO vesting contract ID"
+                    "description": "GoraDAO Vesting OR GoraDAO vesting contract ID"
                 },
                 {
                     "type": "account",
@@ -513,10 +517,6 @@
                 {
                     "name": "proposal_reference",
                     "description": "Dynamic box ref per proposal account address"
-                },
-                {
-                    "name": "proposals",
-                    "description": "Proposals box reference for proposal contract IDs"
                 }
             ],
             "returns": {
@@ -535,7 +535,7 @@
                 {
                     "type": "uint64",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
+                    "description": "GoraDAO Main asset (Gora) ID"
                 },
                 {
                     "type": "account",
@@ -561,10 +561,6 @@
                 {
                     "name": "proposal_reference",
                     "description": "Dynamic box ref per proposal account address"
-                },
-                {
-                    "name": "proposals",
-                    "description": "Proposals box reference for proposal contract IDs"
                 }
             ],
             "returns": {
