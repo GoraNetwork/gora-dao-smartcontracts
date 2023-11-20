@@ -139,7 +139,7 @@ branch_update:
 
 branch_method_router:
 
-	method "config_dao(pay,asset,account,uint64,uint64)uint64"
+	method "config_dao(pay,asset,account,uint64,uint64,uint64,uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_dao
@@ -149,8 +149,7 @@ branch_method_router:
 	==
 	bnz method_write_source_box
 
-
-	method "create_proposal(pay,address,asset,uint64,string,string)uint64"
+	method "create_proposal(pay,account,asset,asset,uint64,string,string)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_create
@@ -160,7 +159,7 @@ branch_method_router:
 	==
 	bnz method_proposal_update
 
-	method "config_proposal(pay,axfer,address,uint64,address,asset,uint64)uint64"
+	method "config_proposal(pay,axfer,account,asset,asset,uint64,address,uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_config
@@ -174,6 +173,16 @@ branch_method_router:
 	txn ApplicationArgs 0
 	==
 	bnz method_unsubscribe_dao
+
+    method "proposal_participate(pay,axfer,asset,account,application)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_proposal_participate
+
+    method "proposal_withdraw_participate(asset,account,application)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_proposal_withdraw_participate
 
 	b branch_error
 
@@ -224,7 +233,7 @@ sub_check_owner_auth:
 	retsub
 // Handles configuration of GoraDAO
 method_config_dao:
-    txn Accounts 0
+    txna Accounts 0
 	store 1
 	byte "gora_dao_manager_address"
 	load 1
@@ -233,7 +242,7 @@ method_config_dao:
 	load 1
 	log
 
-	txn Assets 0
+	txna Assets 0
 	store 2
 	byte "gora_dao_asset_id"
 	load 2
@@ -249,6 +258,20 @@ method_config_dao:
 	store 3
 	byte "gora_dao_min_subscription"
     load 3
+    app_global_put
+
+    txn ApplicationArgs 5
+    btoi
+	store 4
+	byte "gora_dao_proposal_fee"
+    load 4
+    app_global_put
+
+    txn ApplicationArgs 6
+    btoi
+	store 5
+	byte "gora_dao_proposal_fee_algo"
+    load 5
     app_global_put
 	
 
@@ -346,36 +369,58 @@ method_proposal_create:
     int 1
     -
     dup
-    gtxns Receiver
+    gtxn 0 Receiver
     global CurrentApplicationAddress
     ==
     assert
 
-    gtxns Amount
-    global MinTxnFee
-    int 2
-    *
+    gtxn 0 Amount
+    byte "gora_dao_proposal_fee_algo"
+    app_global_get
+    dup
+    itob
+    log
     >=
     assert
 
     // Process Transaction args
 
     // Proposal manager address
-    txn ApplicationArgs 1
+    txna Accounts 0
     store 1
 
     // Proposal asset id
-    txn ApplicationArgs 2
+    txn ApplicationArgs 1
     btoi
     store 2
 
     // Proposal title
-    txn ApplicationArgs 3
+    txn ApplicationArgs 2
     store 3
 
     // Proposal description
-    txn ApplicationArgs 4
+    txn ApplicationArgs 3
     store 4
+
+
+    // Checks on Proposal creat 
+    // Check Proposal manager Dao subscription (using amanger account box ref existing)
+    txna Accounts 0
+    box_get
+    assert
+    pop
+    // Check Proposal manager Dao asset optin
+    txna Accounts 0
+    txna Assets 0
+    asset_holding_get AssetBalance
+    assert
+    pop
+    // Check Proposal manager Proposal asset optin
+    txna Accounts 0
+    txna Assets 1
+    asset_holding_get AssetBalance
+    assert
+    pop
 
     // Inner transaction to create the Proposal smart contract
     itxn_begin
@@ -455,8 +500,6 @@ method_proposal_create:
     &&
     assert
 
-
-
     itxn CreatedApplicationID
     store 9
     byte "total_proposals_count"
@@ -473,7 +516,7 @@ method_proposal_create:
 	itxn_field TypeEnum
 	load 10
 	itxn_field Receiver
-	int 300000
+	int 400000
 	itxn_field Amount
 	itxn_submit
 	itxn TxID
@@ -490,7 +533,9 @@ method_proposal_create:
 	itxn_field ApplicationID
     global CurrentApplicationAddress
 	itxn_field Sender
-    txn Assets 0
+    txna Assets 0
+    itxn_field Assets
+    txna Assets 1
     itxn_field Assets
     load 2
     itob
@@ -703,43 +748,55 @@ method_proposal_config:
     // Process Transaction args
 
 	// Proposal manager address
-    txn ApplicationArgs 1
+    txna Accounts 0
     store 1
     load 1
     log
     // Proposal app id
-    txn ApplicationArgs 2
+    txn ApplicationArgs 1
 	btoi
     store 2
     load 2
     itob
     log
+
     // Proposal app address
-    txn ApplicationArgs 3
+    txn ApplicationArgs 2
     store 3
     load 3
     log
 
     // Proposal asset id
-    txn ApplicationArgs 4
+    txn ApplicationArgs 3
     btoi
     store 4
     load 4
     itob
     log
 
-    // Proposal asset id
-    txn ApplicationArgs 5
-    btoi
-    store 5
-    load 5
-    itob
-    log
+    // Checks on Proposal config 
+    // Check Proposal manager Dao subscription (using amanger account box ref existing)
+    txna Accounts 0
+    box_get
+    assert
+    pop
+    // Check Proposal manager Dao asset optin
+    txna Accounts 0
+    txna Assets 0
+    asset_holding_get AssetBalance
+    assert
+    pop
+    // Check Proposal manager Proposal asset optin
+    txna Accounts 0
+    txna Assets 1
+    asset_holding_get AssetBalance
+    assert
+    pop
+
 
     // Creating Proposal box, adding proposal id to dao_proposals_list box! Proposal box with proposal id as key
     // containts 32 byte proposal address followed by 32 bytes proposal manager address
-    load 2
-    itob
+    txna Accounts 0
     box_get
     bnz branch_delete_proposal_box
     load 2
@@ -801,8 +858,8 @@ method_subscribe_dao:
     >=
     assert
 	
-    txn Accounts 0
-    txn Assets 0
+    txna Accounts 0
+    txna Assets 0
     asset_holding_get AssetBalance
     assert
     byte "gora_dao_min_subscription"
@@ -811,8 +868,8 @@ method_subscribe_dao:
     assert
 
 
-	// Proposal manager address
-    txn Accounts 0
+	// Participating memeber address
+    txna Accounts 0
     store 1
     load 1
     dup
@@ -842,8 +899,8 @@ method_unsubscribe_dao:
     
     // Process Transaction args
 
-	// Proposal manager address
-    txn Accounts 0
+	// Proposal participating memeber address
+    txna Accounts 0
     store 1
     load 1
     dup
@@ -855,13 +912,11 @@ method_unsubscribe_dao:
 	concat
 	b branch_log_return
 branch_delete_proposal_box:
-    load 2
-    itob
+    txna Accounts 0
     box_del
     pop
 
-    load 2
-    itob
+    txna Accounts 0
     load 1
     load 3
     concat
@@ -873,6 +928,126 @@ branch_delete_proposal_box:
 	concat
 	b branch_log_return
 
+
+method_proposal_participate:
+    // Checking Transaction group
+    global GroupSize
+    int 5
+    ==
+    assert
+
+    // Checking the pay and axfer txns at index 0 and 1 of gtxn
+    gtxn 0 RekeyTo
+    global ZeroAddress
+    ==
+    assert
+
+    gtxn 1 RekeyTo
+    global ZeroAddress
+    ==
+    assert
+
+    gtxn 0 CloseRemainderTo
+    global ZeroAddress
+    ==
+    assert
+
+    gtxn 1 CloseRemainderTo
+    global ZeroAddress
+    ==
+    assert
+
+    gtxn 0 AssetCloseTo
+    global ZeroAddress
+    ==
+    assert
+
+    gtxn 1 AssetCloseTo
+    global ZeroAddress
+    ==
+    assert
+
+
+    gtxn 0 TypeEnum
+    int pay
+    ==
+    assert
+   
+
+    gtxn 1 TypeEnum
+    int axfer
+    ==
+    assert
+
+
+    gtxn 0 Fee
+    global MinTxnFee
+    >=
+    assert
+
+    gtxn 1 Fee
+    global MinTxnFee
+    >=
+    assert
+
+
+    gtxn 0 Amount
+    txna Applications 1
+    byte "proposal_min_participation_algo"
+    app_global_get_ex
+    assert
+    >=
+    assert
+
+    gtxn 1 AssetAmount
+    txna Applications 1
+    byte "proposal_min_participation"
+    app_global_get_ex
+    assert
+    ==
+    assert
+
+  
+    gtxn 0 Receiver
+    global CurrentApplicationAddress
+    ==
+    assert
+
+    gtxn 1 AssetReceiver
+    global CurrentApplicationAddress
+    ==
+    assert
+
+
+    // Checking account ref to be Sender
+    txna Accounts 0
+    txn Sender
+    ==
+    assert
+
+    // Checking the asset ref to be DAO asset
+    
+    byte "gora_dao_asset_id"
+    app_global_get
+    txna Assets 0
+    assert
+  
+    
+    txna Accounts 0
+    txna Assets 0
+    asset_holding_get AssetBalance
+    assert
+    
+
+	
+    byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+
+method_proposal_withdraw_participate:
 branch_error:
 
 	err
