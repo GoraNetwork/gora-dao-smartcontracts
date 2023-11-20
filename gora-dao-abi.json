@@ -36,18 +36,28 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "gora_dao_min_subscription",
+                    "name": "min_subscription",
                     "description": "Minimum holdings of Gora Dao Asset for subscription"
                 },
                 {
                     "type": "uint64",
-                    "name": "gora_dao_proposal_fee",
+                    "name": "proposal_fee",
                     "description": "Fee for creating a new proposal paid in Gora Dao Asset"
                 },
                 {
                     "type": "uint64",
-                    "name": "gora_dao_proposal_fee_algo",
+                    "name": "proposal_fee_algo",
                     "description": "Fee for creating a new proposal paid in Algo"
+                },
+                {
+                    "type": "uint64",
+                    "name": "min_subscription_algo",
+                    "description": "Minimum Algo balance for subscription, Default is 0!"
+                },
+                {
+                    "type": "uint64",
+                    "name": "min_subscription_fee",
+                    "description": "GoraDAO minimum subscription fee in Algo"
                 }
             ],
             "boxes": [
@@ -421,7 +431,7 @@
                     "description": "Asset transfer transaction to deposit Gora!"
                 },
                 {
-                    "type": "uint64",
+                    "type": "asset",
                     "name": "asset_reference",
                     "description": "GoraDAO Main asset (Gora) ID"
                 },
@@ -429,6 +439,16 @@
                     "type": "account",
                     "name": "member_reference",
                     "description": "GoraDAO member account reference"
+                },
+                {
+                    "type": "application",
+                    "name": "app_reference",
+                    "description": "GoraDAO proposal app reference"
+                },
+                {
+                    "type": "uint64",
+                    "name": "vote",
+                    "description": "Vote Uint64, 0 Nay, 1 Yay, 2 Abstain"
                 }
             ],
             "boxes": [
@@ -479,50 +499,7 @@
                 "type": "uint64"
             }
         },
-        {
-            "name": "proposal_vesting_stats",
-            "description": "Updates the vesting stats and counters for a Proposal by calling vesting contract ABI with C2C call! inner_transaction! Returns Vesting contract's ID!",
-            "args": [
-                {
-                    "type": "pay",
-                    "name": "payment_transaction",
-                    "description": "Payment from manager to GoraDAO for fees!"
-                },
-                {
-                    "type": "uint64",
-                    "name": "asset_reference",
-                    "description": "GoraDAO Main asset (Gora) ID"
-                },
-                {
-                    "type": "application",
-                    "name": "proposal_reference",
-                    "description": "GoraDAO Proposal ID"
-                },
-                {
-                    "type": "application",
-                    "name": "vesting_reference",
-                    "description": "GoraDAO Vesting OR GoraDAO vesting contract ID"
-                },
-                {
-                    "type": "account",
-                    "name": "member_reference",
-                    "description": "GoraDAO member account reference"
-                }
-            ],
-            "boxes": [
-                {
-                    "name": "member_reference",
-                    "description": "Dynamic box ref per member account address"
-                },
-                {
-                    "name": "proposal_reference",
-                    "description": "Dynamic box ref per proposal account address"
-                }
-            ],
-            "returns": {
-                "type": "uint64"
-            }
-        },
+     
         {
             "name": "close_proposal",
             "description": "Force closes a Proposal contract as last resort after Proposal Creator, manager_address and GoraDAO manager_address send this ABI call and last one clears and closes Proposal and re-funds everyone! Returns the Proposal contract ID!",

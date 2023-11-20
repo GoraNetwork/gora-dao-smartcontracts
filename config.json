@@ -4,10 +4,10 @@
       "network": "testnet",
       "asc_main_id": 0,
       "asc_main_address": "",
-      "asc_testnet_main_id": 480773525,
-      "asc_testnet_main_address": "SBJD7SV4LCCPJLUBSNMFGXO3IFXLWOGMMOMDHYNZM2ROPFICMFE7W5YPS4",
-      "asc_proposal_id": 480774206,
-      "asc_proposal_address": "SYRSSEZIYQ333W2W2PNGEGBCLA26KLRUOLAQV3I5MSQGCUFNQCJPBWCUI4",
+      "asc_testnet_main_id": 480815999,
+      "asc_testnet_main_address": "7LUT2JW435UWPT6ENDYYSUVG5JKXFWTA5MMG2HJD5GXBTHHVQOABWO5YO4",
+      "asc_proposal_id": 480865574,
+      "asc_proposal_address": "JK4ZMYGA7E56IJWICFNFNAGDEPJKPBOX5RQRCX7VFFHRDZ3QXDQHCFAWBA",
       "main_asa_id": 479869829,
       "proposal_asa_id": 479869851,
       "asc_vesting_id": 0,
@@ -49,9 +49,9 @@
       "activate_proposal_contracts": false,
       "close_proposal_contracts": false,
 
-      "participate_proposal_contracts": true,
+      "participate_proposal_contracts": false,
       "withdraw_participate_proposal_contracts": false,
-      "vote_proposal_contracts": false,
+      "vote_proposal_contracts": true,
 
 
       "num_local_int": 0,

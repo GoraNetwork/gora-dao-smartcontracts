@@ -16,7 +16,7 @@
             "args": [
                 {
                     "type": "application",
-                    "name": "gora_dao_main_app_id",
+                    "name": "main_app_id",
                     "description": "GoraNetwork Main App (GoraDao) ID"
                 },
                 {
@@ -96,7 +96,7 @@
             "args": [
                 {
                     "type": "application",
-                    "name": "gora_dao_main_app_id",
+                    "name": "main_app_id",
                     "description": "GoraNetwork Main App (GoraDao) ID"
                 },
                 {
@@ -221,6 +221,16 @@
                     "description": "GoraDAO Proposal minimum participation fee"
                 },
                 {
+                    "type": "uint64",
+                    "name": "proposal_min_vote_fee",
+                    "description": "GoraDAO Proposal voting fee in DAO asset units"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_min_vote_fee_algo",
+                    "description": "GoraDAO Proposal voting fee in Algos"
+                },
+                {
                     "type": "(uint64,uint64,uint64,uint64,uint64,uint64)",
                     "name": "proposal_threshold",
                     "description": "GoraDAO Proposal threshold program! ([%participation, %threshold, %allocation])"
@@ -252,7 +262,7 @@
                 },
                 {
                     "type": "application",
-                    "name": "gora_dao_main_app_id",
+                    "name": "main_app_id",
                     "description": "GoraDAO Main application ID"
                 },
                 {
@@ -300,41 +310,7 @@
                 "type": "uint64"
             }
         },
-        {
-            "name": "proposal_vesting_stats",
-            "description": "Updates the vesting stats and counters for a Proposal by calling vesting contract ABI with C2C call! inner_transaction! Returns Vesting contract's ID!",
-            "args": [
-                {
-                    "type": "uint64",
-                    "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
-                },
-                {
-                    "type": "application",
-                    "name": "gora_dao_main_app_id",
-                    "description": "GoraDAO main contract ID"
-                },
-                {
-                    "type": "application",
-                    "name": "vesting_reference",
-                    "description": "GoraNetwork Vesting OR GoraDAO vesting contract ID"
-                },
-                {
-                    "type": "account",
-                    "name": "manager_reference",
-                    "description": "GoraDAO manager account reference"
-                }
-            ],
-            "boxes": [
-                {
-                    "name": "manager_reference",
-                    "description": "Dynamic box ref per manager account address"
-                }
-            ],
-            "returns": {
-                "type": "uint64"
-            }
-        },
+      
         {
             "name": "close_proposal",
             "description": "Force closes a Proposal contract as last resort after Proposal Creator, manager_address and GoraDAO manager_address send this ABI call and last one clears and closes Proposal and re-funds everyone! Returns the Proposal contract ID!",
@@ -346,7 +322,7 @@
                 },
                 {
                     "type": "application",
-                    "name": "gora_dao_main_app_id",
+                    "name": "main_app_id",
                     "description": "GoraDAO main contract ID"
                 },
                 {
@@ -399,6 +375,10 @@
                 {
                     "name": "member_reference",
                     "description": "Dynamic box ref per member account address"
+                },
+                {
+                    "name": "proposal_threshold",
+                    "description": "Dynamic box ref for proposal threshold program"
                 }
             ],
             "returns": {
@@ -446,12 +426,7 @@
                     "description": "Payment from Proposal participant to GoraDAO for fees!"
                 },
                 {
-                    "type": "axfer",
-                    "name": "asset_transfer_transaction",
-                    "description": "Asset transfer transaction to deposit Gora!"
-                },
-                {
-                    "type": "uint64",
+                    "type": "asset",
                     "name": "asset_reference",
                     "description": "GoraNetwork Main asset (Gora) ID"
                 },
@@ -461,20 +436,24 @@
                     "description": "GoraDAO member account reference"
                 },
                 {
-                    "type": "uint64",
-                    "name": "vote",
-                    "description": "GoraDAO vote"
+                    "type": "application",
+                    "name": "app_reference",
+                    "description": "GoraDAO main app reference"
                 },
                 {
-                    "type": "string",
-                    "name": "vote_note",
-                    "description": "GoraDAO optional note for the vote"
+                    "type": "uint64",
+                    "name": "vote",
+                    "description": "Vote Uint64, 0 Nay, 1 Yay, 2 Abstain"
                 }
             ],
             "boxes": [
                 {
                     "name": "member_reference",
                     "description": "Dynamic box ref per member account address"
+                },
+                {
+                    "name": "proposal_threshold",
+                    "description": "Dynamic box ref for proposal threshold program"
                 }
             ],
             "returns": {
