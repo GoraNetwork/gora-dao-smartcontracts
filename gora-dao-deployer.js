@@ -1315,7 +1315,7 @@ const GoraDaoDeployer = class {
             signer: signer,
             boxes: [
                  { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.proposalApplicationId) },
-                 { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
+                 { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
             ],
         }
         
@@ -1392,6 +1392,83 @@ const GoraDaoDeployer = class {
        
     }
     async participationWithdrawProposalContract() { 
+        let addr = this.accountObject.addr;
+        let params = await this.algodClient.getTransactionParams().do();
+        let proposalApplication = Number(this.proposalApplicationId)
+        let daoApplication = Number(this.goraDaoMainApplicationId)
+        const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
+        const proposalContract = new this.algosdk.ABIContract(JSON.parse(this.proposalContract.toString()))
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.accountObject)
+        let methodProposalParticipate = this.getMethodByName("proposal_withdraw_participate", proposalContract)
+        let methodDaoProposalParticipate = this.getMethodByName("proposal_withdraw_participate", daoContract)
+        let memberPublicKey = this.algosdk.decodeAddress(this.accountObject.addr)
+        const commonParamsProposalSetup = {
+            appID: proposalApplication,
+            sender: addr,
+            suggestedParams: params,
+            signer: signer,
+            boxes: [
+   
+                { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
+           
+
+            ],
+        }
+        const commonParamsDaoSetup = {
+            appID: daoApplication,
+            sender: addr,
+            suggestedParams: params,
+            signer: signer,
+            boxes: [
+                 { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.proposalApplicationId) },
+                 { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
+            ],
+        }
+        
+
+        const argsDao = [
+      
+            this.goraDaoAsset,
+            addr,
+            this.proposalApplicationId
+          
+        ]
+
+        const argsProposal = [
+ 
+            this.goraDaoAsset,
+            addr,
+            this.goraDaoMainApplicationId,
+        ]
+        const atcProposalParticipate = new this.algosdk.AtomicTransactionComposer()
+        atcProposalParticipate.addMethodCall({
+            method: methodDaoProposalParticipate,
+            methodArgs: argsDao,
+            ...commonParamsDaoSetup
+        })
+        this.logger.info('------------------------------')
+        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodProposalParticipate);
+        atcProposalParticipate.addMethodCall({
+            method: methodProposalParticipate,
+            methodArgs: argsProposal,
+            ...commonParamsProposalSetup
+        })
+        this.logger.info('------------------------------')
+        this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", methodDaoProposalParticipate);
+       
+        const proposalParticipateResults = await atcProposalParticipate.execute(this.algodClient, 10);
+        for (const idx in proposalParticipateResults.methodResults) {
+            let txid = proposalParticipateResults.methodResults[idx].txID
+
+            //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
+            let confirmedRound = proposalParticipateResults.confirmedRound
+           
+
+            let returnedResults = this.algosdk.decodeUint64(proposalParticipateResults.methodResults[idx].rawReturnValue, "mixed")
+            this.logger.info("GoraDAO Proposal Contract ABI Exec result = %s", returnedResults);
+            await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+
+        }
         
     }
     async activateProposalContract() { }

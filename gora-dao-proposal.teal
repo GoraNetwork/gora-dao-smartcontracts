@@ -657,7 +657,7 @@ branch_delete_participate_box:
 	load 0
 	box_del
 	load 0
-    byte ""
+    byte "VOTE_PLACE_HOLDER"
     box_put
 
 	byte 0x151f7c75
@@ -668,6 +668,18 @@ branch_delete_participate_box:
 
 
 method_proposal_withdraw_participate:
+ 	txna Accounts 0
+    store 0
+
+	load 0
+    box_del
+    pop
+
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
 
 branch_error:
 	err
