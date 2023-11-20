@@ -70,19 +70,19 @@ branch_create:
 	byte "gora_dao_manager_address"
 	txn Sender
 	app_global_put
-	byte "total_proposals_count"
+	byte "gora_dao_total_proposals_count"
 	int 0
 	app_global_put
 
-	byte "ready_proposals_count"
+	byte "gora_dao_ready_proposals_count"
 	int 0
 	app_global_put
 
-	byte "active_proposals_count"
+	byte "gora_dao_active_proposals_count"
 	int 0
 	app_global_put
 
-	byte "total_votes_count"
+	byte "gora_dao_total_votes_count"
 	int 0
 	app_global_put
 
@@ -115,19 +115,19 @@ branch_update:
 	txn Sender
 	app_global_put
 
-	byte "total_proposals_count"
+	byte "gora_dao_total_proposals_count"
 	int 0
 	app_global_put
 
-	byte "ready_proposals_count"
+	byte "gora_dao_ready_proposals_count"
 	int 0
 	app_global_put
 
-	byte "active_proposals_count"
+	byte "gora_dao_active_proposals_count"
 	int 0
 	app_global_put
 
-	byte "total_votes_count"
+	byte "gora_dao_total_votes_count"
 	int 0
 	app_global_put
 
@@ -502,7 +502,7 @@ method_proposal_create:
 
     itxn CreatedApplicationID
     store 9
-    byte "total_proposals_count"
+    byte "gora_dao_total_proposals_count"
     dup
     app_global_get
     int 1
@@ -940,13 +940,13 @@ method_proposal_participate:
     store 0
 
     txna Applications 1
-    byte "proposal_min_participation_algo"
+    byte "gora_dao_proposal_min_participation_algo"
     app_global_get_ex
     assert
     store 1
 
     txna Applications 1
-    byte "proposal_min_participation"
+    byte "gora_dao_proposal_min_participation"
     app_global_get_ex
     assert
     store 2
@@ -1073,13 +1073,13 @@ method_proposal_withdraw_participate:
     store 0
 
     txna Applications 1
-    byte "proposal_min_participation_algo"
+    byte "gora_dao_proposal_min_participation_algo"
     app_global_get_ex
     assert
     store 1
 
     txna Applications 1
-    byte "proposal_min_participation"
+    byte "gora_dao_proposal_min_participation"
     app_global_get_ex
     assert
     store 2

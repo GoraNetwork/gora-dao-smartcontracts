@@ -4,10 +4,10 @@
       "network": "testnet",
       "asc_main_id": 0,
       "asc_main_address": "",
-      "asc_testnet_main_id": 480152386,
-      "asc_testnet_main_address": "IHE65N6R4FBLY6AZJ76RYD6YG7RDTLE6OMAGSBAWO5A4QDKOJ6ROYHNJXU",
-      "asc_proposal_id": 480633856,
-      "asc_proposal_address": "WY2KGSYTABSGXU2ZTZ4VAHB2GPV2C23MNM6Y6HL3ILVJOFXOKAOVSTVVSI",
+      "asc_testnet_main_id": 480773525,
+      "asc_testnet_main_address": "SBJD7SV4LCCPJLUBSNMFGXO3IFXLWOGMMOMDHYNZM2ROPFICMFE7W5YPS4",
+      "asc_proposal_id": 480774206,
+      "asc_proposal_address": "SYRSSEZIYQ333W2W2PNGEGBCLA26KLRUOLAQV3I5MSQGCUFNQCJPBWCUI4",
       "main_asa_id": 479869829,
       "proposal_asa_id": 479869851,
       "asc_vesting_id": 0,
@@ -33,7 +33,7 @@
       "apps_to_delete": [],
       
       "create_dao_contracts": false,
-      "update_dao_contracts": true,
+      "update_dao_contracts": false,
       "write_proposal_source_box": false,
       "config_dao_contract": false,
       "subscribe_dao_contract": false,
@@ -49,8 +49,8 @@
       "activate_proposal_contracts": false,
       "close_proposal_contracts": false,
 
-      "participate_proposal_contracts": false,
-      "withdraw_participate_proposal_contracts": true,
+      "participate_proposal_contracts": true,
+      "withdraw_participate_proposal_contracts": false,
       "vote_proposal_contracts": false,
 
 

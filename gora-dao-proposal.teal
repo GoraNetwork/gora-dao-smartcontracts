@@ -229,11 +229,11 @@ method_create_proposal:
 	app_global_put
 
 
-	byte "participation_count"
+	byte "gora_dao_participation_count"
 	int 0
 	app_global_put
 
-	byte "vote_count"
+	byte "gora_dao_vote_count"
 	int 0
 	app_global_put
 
@@ -302,11 +302,11 @@ method_update_proposal:
 	load 7
 	app_global_put
 
-	byte "participation_count"
+	byte "gora_dao_participation_count"
 	int 0
 	app_global_put
 
-	byte "vote_count"
+	byte "gora_dao_vote_count"
 	int 0
 	app_global_put
 
@@ -454,39 +454,39 @@ method_config_proposal:
 	//log
 
 	
-	byte "proposal_min_participation_algo"
+	byte "gora_dao_proposal_min_participation_algo"
 	load 5
 	btoi
 	app_global_put
 
 	
-	byte "proposal_min_participation"
+	byte "gora_dao_proposal_min_participation"
 	load 6
 	btoi
 	app_global_put
 
-	byte "proposal_min_participation_fee"
+	byte "gora_dao_proposal_min_participation_fee"
 	load 12
 	btoi
 	app_global_put
 	
-	byte "proposal_duration"
+	byte "gora_dao_proposal_duration"
 	load 7
 	btoi
 	app_global_put
 
-	byte "proposal_amount"
+	byte "gora_dao_proposal_amount"
 	load 8
 	btoi
 	app_global_put
 
 	
-	byte "proposal_vote_duration"
+	byte "gora_dao_proposal_vote_duration"
 	load 10
 	btoi
 	app_global_put
 
-	byte "proposal_vote_start"
+	byte "gora_dao_proposal_vote_start"
 	load 11
 	btoi
 	app_global_put
@@ -607,7 +607,7 @@ method_proposal_participate:
     assert
 
     gtxn 3 Amount
-    byte "proposal_min_participation_fee"
+    byte "gora_dao_proposal_min_participation_fee"
     app_global_get
     >=
     assert
