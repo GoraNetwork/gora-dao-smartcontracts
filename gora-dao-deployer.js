@@ -603,7 +603,7 @@ const GoraDaoDeployer = class {
     async deployerAccount() {
         try {
             const goraDaoAdminAccount = await this.importAccounts('mnemonic0');
-            this.goraDaoAdminAccount = accounts.acc
+            this.goraDaoAdminAccount = goraDaoAdminAccount.acc
             this.accountObject = goraDaoAdminAccount
             const goraDaoProposalAdminAccount = await this.importAccounts('mnemonic1');
             this.goraDaoProposalAdminAccount = goraDaoProposalAdminAccount.acc
