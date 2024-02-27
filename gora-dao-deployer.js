@@ -78,6 +78,9 @@ const GoraDaoDeployer = class {
 
         // Global Variables attached to class instance object
         this.accountObject = null
+        this.goraDaoAdminAccount = null
+        this.goraDaoProposalAdminAccount = null
+        this.goraDaoUserAccount = null
         this.accountBalance = null
         this.assetsHeld = null
         this.assetsCreated = null
@@ -599,8 +602,14 @@ const GoraDaoDeployer = class {
     // Grabs the accounts from Mnemonics
     async deployerAccount() {
         try {
-            const accounts = await this.importAccounts();
-            this.accountObject = accounts.acc
+            const goraDaoAdminAccount = await this.importAccounts('mnemonic0');
+            this.goraDaoAdminAccount = accounts.acc
+            this.accountObject = goraDaoAdminAccount
+            const goraDaoProposalAdminAccount = await this.importAccounts('mnemonic1');
+            this.goraDaoProposalAdminAccount = goraDaoProposalAdminAccount.acc
+            const goraDaoUserAccount = await this.importAccounts('mnemonic2');
+            this.goraDaoUserAccount = goraDaoUserAccount.acc
+
         }
         catch (err) {
             this.logger.error(err);
