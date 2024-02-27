@@ -103,7 +103,7 @@ const GoraDaoDeployer = class {
                 this.logger.info(`${filenames[i]} loaded successfully.`);
             } catch (error) {
                 // If file does not exist, generate a new mnemonic and save it
-                const {addr, sk} = this.algosdk.generateAccount();
+                const { addr, sk } = this.algosdk.generateAccount();
                 let mnemonic = this.algosdk.secretKeyToMnemonic(sk);
                 await fs.writeFile(filenames[i], mnemonic, 'utf8');
                 this[mnemonicKeys[i]] = mnemonic;
@@ -111,13 +111,13 @@ const GoraDaoDeployer = class {
             }
         }
     }
-    testAccountDispense(){
+    testAccountDispense() {
         console.log("")
         console.log('--------------------------GoraDAO Test Accounts DISPENSE-------------------------------------')
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoAdminAccount.addr);
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoProposalAdminAccount.addr);
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount.addr);
-       
+
 
     }
     // Imports the accounts from Mnemonics
@@ -127,7 +127,7 @@ const GoraDaoDeployer = class {
             const acc = this.algosdk.generateAccount();
             this.logger.info("Account Address = %s", acc.addr);
             return { acc, accRekey: null };
-        }else{
+        } else {
             const acc = this.algosdk.mnemonicToSecretKey(this[mnemonicKey]);
             let addr = acc.addr;
             this.logger.info("Account Address = %s", addr);
@@ -139,7 +139,7 @@ const GoraDaoDeployer = class {
             this.logger.warn(this.config.gora_dao['algo_dispenser'] + addr);
             return { acc, accRekey: null };
         }
-       
+
     }
     // Gets the contract method instance for a given method
     getMethodByName(name, contract) {
@@ -569,7 +569,17 @@ const GoraDaoDeployer = class {
     async deployerReport() {
         try {
             await this.fetchAlgoWalletInfo();
+        }
+        catch (err) {
+            this.logger.error(err);
+        }
+        try {
             await this.printCreatedAsset();
+        }
+        catch (err) {
+            this.logger.error(err);
+        }
+        try {
             await this.printAssetHolding(this.accountObject.addr);
         }
         catch (err) {
@@ -1635,17 +1645,17 @@ const GoraDaoDeployer = class {
     }
     async saveConfigToFile(config) {
         try {
-          // Convert the config object to a JSON string with indentation for readability
-          const configJson = JSON.stringify(config, null, 2);
-          
-          // Use fs.promises.writeFile to save the JSON string to config.json
-          await fs.writeFile('config.json', configJson, 'utf8');
-          
-          console.log('Configuration saved to config.json successfully.');
+            // Convert the config object to a JSON string with indentation for readability
+            const configJson = JSON.stringify(config, null, 2);
+
+            // Use fs.promises.writeFile to save the JSON string to config.json
+            await fs.writeFile('config.json', configJson, 'utf8');
+
+            console.log('Configuration saved to config.json successfully.');
         } catch (error) {
-          console.error('Failed to save configuration to config.json:', error);
+            console.error('Failed to save configuration to config.json:', error);
         }
-      }
+    }
     // Running GoraDAO deployer
     async runDeployer(isInteractive) {
         // Running deployer account instantiation
