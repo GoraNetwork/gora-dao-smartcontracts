@@ -163,15 +163,15 @@ async function mainMenu() {
                                                                            
                                                                            
                                                                            `)
+                                                                           
     const answers = await inquirer.prompt([
         {
             type: 'list',
             name: 'action',
             message: 'Select the operation you would like to perform:',
             choices: [
-                'Create Test Accounts',
-                'Test Account Stats',
-                'Test Account Dispense',
+                'Tester Accounts Stats',
+                'Tester Accounts Dispense',
                 'GoraDAO Operations',
                 'Proposals Operations',
                 'Exit'
@@ -180,11 +180,8 @@ async function mainMenu() {
     ]);
     await goraDaoDeployer.runDeployer(true)
     switch (answers.action) {
-        case 'Create Test Accounts':
-            // Assuming createTestAccounts is a method in GoraDaoDeployer
-            await goraDaoDeployer.createTestAccounts();
-            break;
-        case 'Test Account Stats':
+       
+        case 'Tester Accounts Stats':
             // Assuming testAccountStats is a method in GoraDaoDeployer
 
             await goraDaoDeployer.deployerReport();
@@ -196,9 +193,16 @@ async function mainMenu() {
                 },
               ]);
             break;
-        case 'Test Account Dispense':
+        case 'Tester Accounts Dispense':
             // Assuming testAccountDispense is a method in GoraDaoDeployer
             await goraDaoDeployer.testAccountDispense();
+            await inquirer.prompt([
+                {
+                  type: 'input',
+                  name: 'continue',
+                  message: 'Press Enter to go back to menu...',
+                },
+              ]);
             break;
         case 'GoraDAO Operations':
             await goraDAOOperations();
