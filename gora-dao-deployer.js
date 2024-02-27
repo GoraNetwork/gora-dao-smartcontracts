@@ -884,7 +884,8 @@ const GoraDaoDeployer = class {
         let methodDaoConfig = this.getMethodByName("config_dao", contract)
         const commonParamsSetup = {
             appID: application,
-            accounts: [addr],
+            appAccounts: [addr],
+            appForeignAssets: [Number(this.goraDaoAsset)],
             sender: addr,
             suggestedParams: params,
             signer: signer,
@@ -907,23 +908,17 @@ const GoraDaoDeployer = class {
         const tws0 = { txn: ptxn, signer: signer }
         //(pay,asset,account)string
         const args = [
+            //1 pay
             tws0,
-            //asset id on assets array for ref
             Number(this.goraDaoAsset),
-            // Manager id in accounts array for ref
-            addr,
-            //asset id in ARGS as Uint64
-            Number(this.goraDaoAsset),
-            //min_subscription_stake
-            2000,
-            //proposal_fee_stake
+            //2 proposal_fee_stake
             10,
-            //proposal_fee_algo
+            //3 proposal_fee_algo
             500000,
-            // min_subscription_algo
+            //4 min_subscription_algo
             1000000,
-            // min_subscription_stake
-            142000,
+            //5 min_subscription_stake
+            2000,
 
         ]
         const atcDaoConfig = new this.algosdk.AtomicTransactionComposer()

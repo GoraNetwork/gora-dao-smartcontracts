@@ -20,24 +20,9 @@
                     "description": "Payment from manager to GoraDAO for fees and initiation MBRs!"
                 },
                 {
-                    "type": "asset",
-                    "name": "asset_reference",
-                    "description": "GoraDAO Main asset (Gora) reference"
-                },
-                {
-                    "type": "account",
-                    "name": "manager_reference",
-                    "description": "GoraDAO manager account reference"
-                },
-                {
                     "type": "uint64",
                     "name": "asset_id",
                     "description": "GoraDAO Main asset (Gora) ID"
-                },
-                {
-                    "type": "uint64",
-                    "name": "min_subscription_stake",
-                    "description": "Minimum holdings of Gora Dao Asset for subscription"
                 },
                 {
                     "type": "uint64",
@@ -57,7 +42,7 @@
                 {
                     "type": "uint64",
                     "name": "min_subscription_stake",
-                    "description": "GoraDAO minimum subscription fee in Algo"
+                    "description": "Minimum holdings of Gora Dao Asset for subscription"
                 }
             ],
             "boxes": [
@@ -317,7 +302,6 @@
                     "name": "proposal_address",
                     "description": "GoraDAO Proposal application address"
                 },
-               
                 {
                     "type": "uint64",
                     "name": "asset_id",
@@ -499,7 +483,6 @@
                 "type": "uint64"
             }
         },
-     
         {
             "name": "close_proposal",
             "description": "Force closes a Proposal contract as last resort after Proposal Creator, manager_address and GoraDAO manager_address send this ABI call and last one clears and closes Proposal and re-funds everyone! Returns the Proposal contract ID!",

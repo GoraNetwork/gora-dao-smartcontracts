@@ -103,7 +103,7 @@ branch_update:
 
 branch_method_router:
 
-	method "config_dao(pay,asset,account,uint64,uint64,uint64,uint64,uint64,uint64)uint64"
+	method "config_dao(pay,uint64,uint64,uint64,uint64,uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_dao
@@ -215,28 +215,28 @@ method_config_dao:
 	app_global_put
 	
 
-    txn ApplicationArgs 4
+    txn ApplicationArgs 2
     btoi
 	store 3
-	byte "min_subscription_stake"
+	byte "proposal_fee_stake"
     load 3
     app_global_put
 
-    txn ApplicationArgs 5
+    txn ApplicationArgs 3
     btoi
 	store 4
-	byte "proposal_fee_stake"
+	byte "proposal_fee_algo"
     load 4
     app_global_put
 
-    txn ApplicationArgs 6
+    txn ApplicationArgs 4
     btoi
 	store 6
 	byte "min_subscription_algo"
     load 6
     app_global_put
 	
-    txn ApplicationArgs 7
+    txn ApplicationArgs 5
     btoi
 	store 7
 	byte "min_subscription_stake"
