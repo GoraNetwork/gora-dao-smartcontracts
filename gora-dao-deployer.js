@@ -1587,7 +1587,19 @@ const GoraDaoDeployer = class {
 
         }
     }
-
+    async saveConfigToFile(config) {
+        try {
+          // Convert the config object to a JSON string with indentation for readability
+          const configJson = JSON.stringify(config, null, 2);
+          
+          // Use fs.promises.writeFile to save the JSON string to config.json
+          await fs.writeFile('config.json', configJson, 'utf8');
+          
+          console.log('Configuration saved to config.json successfully.');
+        } catch (error) {
+          console.error('Failed to save configuration to config.json:', error);
+        }
+      }
     // Running GoraDAO deployer
     async runDeployer(isInteractive) {
         // Running deployer account instantiation
