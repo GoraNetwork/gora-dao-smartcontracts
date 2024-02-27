@@ -25,6 +25,7 @@
       "algo_dispenser": "https://dispenser.testnet.aws.algodev.network/?account=",
       "verbose": false
     },
+    "emg110":"LP6QRRBRDTDSP4HF7CSPWJV4AG4QWE437OYHGW7K5Y7DETKCSK5H3HCA7Q",
     "deployer": {
       "version": "v1.0.0",
       "mode": "remote",

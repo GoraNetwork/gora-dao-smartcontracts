@@ -55,7 +55,7 @@ async function goraDAOOperations() {
                 'Configure Deployed GoraDAO',
                 'Subscribe to GoraDAO',
                 'Unsubscribe from GoraDAO',
-                'Create GoraDAO Asset',
+
                 'Back to Main Menu'
             ],
         },
@@ -77,9 +77,7 @@ async function goraDAOOperations() {
         case 'Unsubscribe from GoraDAO':
             await goraDaoDeployer.unsubscribeFromGoraDAO();
             break;
-        case 'Create GoraDAO Asset':
-            await goraDaoDeployer.createGoraDAOAsset();
-            break;
+
         case 'Back to Main Menu':
             await mainMenu();
             break;
@@ -97,7 +95,7 @@ async function proposalsOperations() {
             name: 'proposalOperation',
             message: 'Select a proposal operation:',
             choices: [
-                'Create GoraDAO Proposals Asset',
+
                 'Deploy New Proposal',
                 'Update Deployed Proposal',
                 'Configure Proposal',
@@ -112,9 +110,7 @@ async function proposalsOperations() {
     ]);
 
     switch (answers.proposalOperation) {
-        case 'Create GoraDAO Proposals Asset':
-            await goraDaoDeployer.createGoraDAOProposalsAsset();
-            break;
+
         case 'Deploy New Proposal':
             await goraDaoDeployer.deployNewProposal();
             break;
@@ -163,46 +159,68 @@ async function mainMenu() {
                                                                            
                                                                            
                                                                            `)
-                                                                           
+
     const answers = await inquirer.prompt([
         {
             type: 'list',
             name: 'action',
             message: 'Select the operation you would like to perform:',
             choices: [
+
                 'Tester Accounts Stats',
                 'Tester Accounts Dispense',
+                'Create GoraDAO Asset',
+                'Create GoraDAO Proposals Asset',
                 'GoraDAO Operations',
                 'Proposals Operations',
+                'Tester Accounts Recreate',
                 'Exit'
             ],
         },
     ]);
     await goraDaoDeployer.runDeployer(true)
     switch (answers.action) {
-       
+        case 'Create GoraDAO Asset':
+            await goraDaoDeployer.createDaoAsset();
+            break;
+        case 'Create GoraDAO Proposals Asset':
+            await goraDaoDeployer.createDaoProposalAsset();
+            break;
+        case 'Tester Accounts Recreate':
+            // Assuming testAccountStats is a method in GoraDaoDeployer
+
+            await goraDaoDeployer.sendAllAlgosAndDeleteMnemonics();
+            await goraDaoDeployer.deployerReport();
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
+            break;
         case 'Tester Accounts Stats':
             // Assuming testAccountStats is a method in GoraDaoDeployer
 
             await goraDaoDeployer.deployerReport();
             await inquirer.prompt([
                 {
-                  type: 'input',
-                  name: 'continue',
-                  message: 'Press Enter to go back to menu...',
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
                 },
-              ]);
+            ]);
             break;
         case 'Tester Accounts Dispense':
             // Assuming testAccountDispense is a method in GoraDaoDeployer
             await goraDaoDeployer.testAccountDispense();
             await inquirer.prompt([
                 {
-                  type: 'input',
-                  name: 'continue',
-                  message: 'Press Enter to go back to menu...',
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
                 },
-              ]);
+            ]);
             break;
         case 'GoraDAO Operations':
             await goraDAOOperations();

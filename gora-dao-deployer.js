@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const sha512_256 = require('js-sha512').sha512_256;
 const base32 = require('hi-base32');
 const fs = require('fs').promises;
+const path = require('path');
 // GoraDAO deployer Class
 const GoraDaoDeployer = class {
     // Class constructor
@@ -13,15 +14,14 @@ const GoraDaoDeployer = class {
         // AlgoSDK instance
         this.algosdk = props.algosdk
 
-        // Menmonic for proposer account
+        // Menmonic for admin account
         this.mnemonic0 = props.mnemonic0
 
-        // Menmonic for participant 1 account
+        // Menmonic for proposer  account
         this.mnemonic1 = props.mnemonic1
-        // Menmonic for participant 2 account
+        // Menmonic for participant  account
         this.mnemonic2 = props.mnemonic2
-        // Menmonic for participant 3 account
-        this.mnemonic3 = props.mnemonic3
+       
 
         // Remote or local mode for deployer , defaults to remote
         this.mode = props.config.deployer.mode
@@ -640,6 +640,54 @@ const GoraDaoDeployer = class {
         }
         catch (err) {
             this.logger.error(err);
+        }
+    }
+    async sendAllAlgosAndDeleteMnemonics() {
+        // Define mnemonic files and their corresponding keys in this object
+        const mnemonicFiles = [
+            'gora_mnemonic0.txt',
+            'gora_mnemonic1.txt',
+            'gora_mnemonic2.txt',
+        ];
+
+        try {
+            for (const file of mnemonicFiles) {
+                const mnemonic = await fs.readFile(path.join(__dirname, file), 'utf8');
+                const account = this.algosdk.mnemonicToSecretKey(mnemonic.trim());
+
+                // Get suggested transaction parameters
+                let params = await this.algodClient.getTransactionParams().do();
+
+                // Create a transaction with the "closeRemainderTo" field set to the target account
+                const txn = this.algosdk.makePaymentTxnWithSuggestedParams(
+                    account.addr, // from
+                    this.config.emg110, // to (receiving a minimal amount, could be 0)
+                    0, // amount (minimal amount, since we're closing)
+                    this.config.emg110, // closeRemainderTo
+                    undefined, // note
+                    params,
+                    this.config.emg110 // closeRemainderTo: This is where all funds will be transferred
+                );
+
+                // Sign the transaction
+                const signedTxn = txn.signTxn(account.sk);
+
+                // Send the transaction
+                const { txId } = await await this.algodClient.sendRawTransaction(signedTxn).do();
+                this.logger.info(`Transaction ID: ${txId}`);
+
+                // Wait for confirmation
+                const confirmedTxn = await this.algosdk.waitForConfirmation(this.algodClient, txId, 5);
+                this.logger.info(`Transaction ${txId} confirmed in round ${confirmedTxn['confirmed-round']}.`);
+
+                this.logger.info(`Successfully closed account ${account.addr} and transferred funds to ${this.config.emg110}.`);
+
+                // Delete mnemonic file after successfully closing the account and transferring funds
+                await fs.unlink(path.join(__dirname, file));
+                this.logger.info(`Deleted mnemonic file: ${file}`);
+            }
+        } catch (error) {
+            this.logger.error('Failed to send ALGOs and delete mnemonics:', error);
         }
     }
     // Deploying GoraDAO Main Contract
