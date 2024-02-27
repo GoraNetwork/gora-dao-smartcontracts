@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const sha512_256 = require('js-sha512').sha512_256;
 const base32 = require('hi-base32');
+
 // GoraDAO deployer Class
 const GoraDaoDeployer = class {
     // Class constructor
