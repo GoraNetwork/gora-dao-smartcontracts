@@ -103,7 +103,8 @@ const GoraDaoDeployer = class {
                 this.logger.info(`${filenames[i]} loaded successfully.`);
             } catch (error) {
                 // If file does not exist, generate a new mnemonic and save it
-                const {mnemonic} = this.algosdk.generateAccount();
+                const {addr, sk} = this.algosdk.generateAccount();
+                let mnemonic = this.algosdk.secretKeyToMnemonic(sk);
                 await fs.writeFile(filenames[i], mnemonic, 'utf8');
                 this[mnemonicKeys[i]] = mnemonic;
                 this.logger.info(`${filenames[i]} created and saved.`);
@@ -111,21 +112,25 @@ const GoraDaoDeployer = class {
         }
     }
     // Imports the accounts from Mnemonics
-    importAccounts(mnemonicKey = 'mnemonic0') {
+    importAccounts(mnemonicKey) {
         if (!this[mnemonicKey]) {
             this.logger.error(`The ${mnemonicKey} does not exist.`);
-            return;
+            const acc = this.algosdk.generateAccount();
+            this.logger.info("Account Address = %s", acc.addr);
+            return { acc, accRekey: null };
+        }else{
+            const acc = this.algosdk.mnemonicToSecretKey(this[mnemonicKey]);
+            let addr = acc.addr;
+            this.logger.info("Account Address = %s", addr);
+            let acc_decoded = this.algosdk.decodeAddress(addr);
+            this.logger.info("Account Address Decoded Public Key = %s", acc_decoded.publicKey.toString());
+            this.logger.info("Account Address Decoded Checksum = %s", acc_decoded.checksum.toString());
+            let acc_encoded = this.algosdk.encodeAddress(acc_decoded.publicKey);
+            this.logger.info("Account Address Encoded = %s", acc_encoded);
+            this.logger.warn(this.config.gora_dao['algo_dispenser'] + addr);
+            return { acc, accRekey: null };
         }
-        const acc = this.algosdk.mnemonicToSecretKey(this[mnemonicKey]);
-        let addr = acc.addr;
-        this.logger.info("Account Address = %s", addr);
-        let acc_decoded = this.algosdk.decodeAddress(addr);
-        this.logger.info("Account Address Decoded Public Key = %s", acc_decoded.publicKey.toString());
-        this.logger.info("Account Address Decoded Checksum = %s", acc_decoded.checksum.toString());
-        let acc_encoded = this.algosdk.encodeAddress(acc_decoded.publicKey);
-        this.logger.info("Account Address Encoded = %s", acc_encoded);
-        this.logger.warn(this.config.gora_dao['algo_dispenser'] + addr);
-        return { acc, accRekey: null };
+       
     }
     // Gets the contract method instance for a given method
     getMethodByName(name, contract) {
@@ -602,6 +607,7 @@ const GoraDaoDeployer = class {
     // Grabs the accounts from Mnemonics
     async deployerAccount() {
         try {
+            await this.loadOrCreateMnemonics()
             const goraDaoAdminAccount = await this.importAccounts('mnemonic0');
             this.goraDaoAdminAccount = goraDaoAdminAccount.acc
             this.accountObject = goraDaoAdminAccount

@@ -139,3 +139,6 @@ package-lock.json
 .gitignore
 
 .DS_Store
+gora_mnemonic0.txt
+gora_mnemonic1.txt
+gora_mnemonic2.txt
