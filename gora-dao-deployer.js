@@ -21,7 +21,7 @@ const GoraDaoDeployer = class {
         this.mnemonic1 = props.mnemonic1
         // Menmonic for participant  account
         this.mnemonic2 = props.mnemonic2
-       
+
 
         // Remote or local mode for deployer , defaults to remote
         this.mode = props.config.deployer.mode
@@ -641,6 +641,79 @@ const GoraDaoDeployer = class {
             this.logger.error(err);
         }
     }
+    async sendGoraDaoAssetTransaction() {
+        let addrFrom = this.goraDaoAdminAccount.addr;
+        let addrTo = this.goraDaoProposalAdminAccount.addr;
+        let appAddrTo = this.config.gora_dao.asc_testnet_main_address;
+        let amount = 2000;
+        let params = await this.algodClient.getTransactionParams().do();
+        const txnOptinProposer = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrTo, // from
+            addrTo, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            0, // amount 
+            undefined,// Note
+            this.goraDaoAsset, // assetID
+            params,
+            undefined
+        );
+        const txnSendToProposer = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrFrom, // from
+            addrTo, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            amount, // amount 
+            undefined,// Note
+            this.goraDaoAsset, // assetID
+            params,
+            undefined
+        );
+        const txnSendToApp = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrFrom, // from
+            appAddrTo, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            amount, // amount 
+            undefined,// Note
+            this.goraDaoAsset, // assetID
+            params,
+            undefined
+        );
+
+        // Sign the transaction
+        const signedOptinProposerTxn = txnOptinProposer.signTxn(this.goraDaoProposalAdminAccount.sk);
+        const signedSendToProposerTxn = txnSendToProposer.signTxn(this.goraDaoAdminAccount.sk);
+        const signedSendToAppTxn = txnSendToApp.signTxn(this.goraDaoAdminAccount.sk);
+
+        const signedOptinProposerTxnResponse = await await this.algodClient.sendRawTransaction(signedOptinProposerTxn).do();
+
+        this.logger.info(`Transaction ID: ${signedOptinProposerTxnResponse.txId}`);
+
+        // Wait for confirmation
+        const confirmedSignedOptinProposerTxnResponse = await this.algosdk.waitForConfirmation(this.algodClient, signedOptinProposerTxnResponse.txId, 5);
+        this.logger.info(`Transaction ${signedOptinProposerTxnResponse.txId} confirmed in round ${confirmedSignedOptinProposerTxnResponse['confirmed-round']}.`);
+        this.logger.info('The proposer account has opted in to the GoraDAO Asset')
+
+
+        // Send the transaction
+        const signedSendToProposerTxnResponse = await await this.algodClient.sendRawTransaction(signedSendToProposerTxn).do();
+
+        this.logger.info(`Transaction ID: ${signedSendToProposerTxnResponse.txId}`);
+
+        // Wait for confirmation
+        const confirmedSignedSendToProposerTxn = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToProposerTxnResponse.txId, 5);
+        this.logger.info(`Transaction ${signedSendToProposerTxnResponse.txId} confirmed in round ${confirmedSignedSendToProposerTxn['confirmed-round']}.`);
+        this.logger.info('GoraDAO Asset has been sent to The proposer account successfully')
+        const signedSendToAppTxnResponse = await await this.algodClient.sendRawTransaction(signedSendToAppTxn).do();
+
+        this.logger.info(`Transaction ID: ${signedSendToAppTxnResponse.txId}`);
+
+        // Wait for confirmation
+        const confirmedSignedSendToAppTxn = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToAppTxnResponse.txId, 5);
+        this.logger.info(`Transaction ${signedSendToAppTxnResponse.txId} confirmed in round ${confirmedSignedSendToAppTxn['confirmed-round']}.`);
+        this.logger.info('GoraDAO Asset has been sent to The GoraDAO App successfully')
+    }
     async sendAllAlgosAndDeleteMnemonics() {
         // Define mnemonic files and their corresponding keys in this object
         const mnemonicFiles = [
@@ -719,7 +792,7 @@ const GoraDaoDeployer = class {
         let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
         let assetId = transactionResponse['asset-index'];
         this.logger.info(`GoraDAO created TEST Asset ID: ${assetId}`);
-        let config  = this.config;
+        let config = this.config;
         config['gora_dao']['main_asa_id'] = assetId;
         await this.saveConfigToFile(config)
         this.logger.info(`GoraDAO Asset ID: ${assetId} written to config file!`);
@@ -759,7 +832,7 @@ const GoraDaoDeployer = class {
         let assetId = transactionResponse['asset-index'];
         this.logger.info(`GoraDAO Proposal TEST created Asset ID: ${assetId}`);
 
-        let config  = this.config;
+        let config = this.config;
         config['gora_dao']['proposal_asa_id'] = assetId;
         await this.saveConfigToFile(config)
         this.logger.info(`GoraDAO Proposal Asset ID: ${assetId} written to config file!`);
@@ -826,9 +899,9 @@ const GoraDaoDeployer = class {
         await this.algodClient.sendRawTransaction(signedPayTxn).do();
         this.logger.info("GoraNetwork Main Application Address: %s funded!", this.goraDaoMainApplicationAddress);
         this.logger.info('------------------------------')
-        let config  = this.config;
+        let config = this.config;
         config['gora_dao']['asc_testnet_main_id'] = appId;
-        config['gora_dao']['asc_testnet_main_address'] =  this.goraDaoMainApplicationAddress;
+        config['gora_dao']['asc_testnet_main_address'] = this.goraDaoMainApplicationAddress;
         await this.saveConfigToFile(config)
         this.logger.info(`GoraDAO Main Application ID: ${appId} written to config file!`);
     }
@@ -960,6 +1033,8 @@ const GoraDaoDeployer = class {
 
         const commonParams = {
             appID: Number(this.goraDaoMainApplicationId),
+            appAccounts: [addr],
+            appForeignAssets: [Number(this.goraDaoAsset)],
             sender: addr,
             suggestedParams: params,
             signer: signer,
