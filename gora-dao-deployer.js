@@ -111,6 +111,15 @@ const GoraDaoDeployer = class {
             }
         }
     }
+    testAccountDispense(){
+        console.log("")
+        console.log('--------------------------GoraDAO Test Accounts DISPENSE-------------------------------------')
+        this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoAdminAccount.addr);
+        this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoProposalAdminAccount.addr);
+        this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount.addr);
+       
+
+    }
     // Imports the accounts from Mnemonics
     importAccounts(mnemonicKey) {
         if (!this[mnemonicKey]) {

@@ -199,6 +199,13 @@ async function mainMenu() {
         case 'Test Account Dispense':
             // Assuming testAccountDispense is a method in GoraDaoDeployer
             await goraDaoDeployer.testAccountDispense();
+            await inquirer.prompt([
+                {
+                  type: 'input',
+                  name: 'continue',
+                  message: 'Press Enter to go back to menu...',
+                },
+              ]);
             break;
         case 'GoraDAO Operations':
             await goraDAOOperations();
