@@ -173,3 +173,30 @@ graph TB
  
 
 ```
+
+## GoraDAO Main Contract Methods
+
+- config_dao: Initializes DAO! Should be sent by owner (Creator) of DAO! Returns the manager address!
+- subscribe_dao: Subscribes an Algorand account into GoraDAO! Returns total number of members!
+- unsubscribe_dao: Unsubscribes an Algorand account from GoraDAO! Returns total number of members!
+- write_source_box: Writes the compiled teal source of proposal to a corresponding box - proposal_approval or proposal_clear.
+- create_proposal: Creates a new Proposal contract! Returns the Proposal contract ID!
+- update_proposal: Updates a Proposal smart contract and returns application ID.
+- config_proposal: Configures a Proposal contract! Returns the Proposal contract ID!
+- proposal_participate: Participates a member to a Proposal! Returns the Proposal contract ID!
+- proposal_withdraw_participate: Withdraws a member participation from a Proposal! Returns the Proposal contract ID!
+- proposal_vote: Optionally Votes to a Proposal! Returns the Proposal contract ID!
+activate_proposal: Activates a Proposal! Returns the Proposal contract ID!
+- close_proposal: Force closes a Proposal contract as last resort. Returns the Proposal contract ID!
+
+## GoraDAO Proposals Contract Methods
+- create_proposal: Creates a new Proposal contract! Returns the Proposal contract ID!
+- optin_proposal_asset: Signal to optin to proposal asset.
+- update_proposal: Updates an existing Proposal contract! Returns the Proposal contract ID!
+- config_proposal: Configures a Proposal contract! Returns the Proposal contract ID!
+- update_manager_address: Updates Proposal manager address! Returns new manager address.
+- activate_proposal: Activates a Proposal voting! Returns the Proposal contract ID!
+- close_proposal: Force closes a Proposal contract as last resort. Returns the Proposal contract ID!
+- proposal_participate: Participates with a member account into a Proposal! Returns the participating member's account address!
+- proposal_withdraw_participate: Withdraws participation of a member account from a Proposal! Returns the withdrawing member's account address!
+- proposal_vote: Votes for a Proposal! Returns the voting member's account address concatenated with vote!
