@@ -182,9 +182,23 @@ async function mainMenu() {
     switch (answers.action) {
         case 'Create GoraDAO Asset':
             await goraDaoDeployer.createDaoAsset();
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
             break;
         case 'Create GoraDAO Proposals Asset':
             await goraDaoDeployer.createDaoProposalAsset();
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
             break;
         case 'Tester Accounts Recreate':
             // Assuming testAccountStats is a method in GoraDaoDeployer

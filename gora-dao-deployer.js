@@ -117,8 +117,6 @@ const GoraDaoDeployer = class {
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoAdminAccount.addr);
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoProposalAdminAccount.addr);
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount.addr);
-
-
     }
     // Imports the accounts from Mnemonics
     importAccounts(mnemonicKey) {
@@ -802,14 +800,14 @@ const GoraDaoDeployer = class {
             assetMetadataHash: new Uint8Array(32),
             assetName: 'GoraDAO TEST ASSET',
             assetURL: 'https://gora.io',
-            clawback: this.accountObject.addr,
+            clawback: this.goraDaoAdminAccount.addr,
             decimals: 0,
             defaultFrozen: false,
-            freeze: this.accountObject.addr,
-            from: this.accountObject.addr,
-            manager: this.accountObject.addr,
+            freeze: this.goraDaoAdminAccount.addr,
+            from: this.goraDaoAdminAccount.addr,
+            manager: this.goraDaoAdminAccount.addr,
             note: new Uint8Array(Buffer.from('GoraDAO TEST Asset')),
-            reserve: this.accountObject.addr,
+            reserve: this.goraDaoAdminAccount.addr,
             suggestedParams: { ...params, fee: 1000, flatFee: true, },
             total: 1000000,
             unitName: 'GDT',
@@ -821,13 +819,17 @@ const GoraDaoDeployer = class {
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Asset Creation...");
         let txnId = atxn.txID().toString();
-        let signedTxn = await atxn.signTxn(this.accountObject.sk);
+        let signedTxn = await atxn.signTxn(this.goraDaoAdminAccount.sk);
         await this.algodClient.sendRawTransaction(signedTxn).do();
         await this.algosdk.waitForConfirmation(this.algodClient, txnId, 10)
 
         let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
         let assetId = transactionResponse['asset-index'];
         this.logger.info(`GoraDAO created TEST Asset ID: ${assetId}`);
+        let config  = this.config;
+        config['gora_dao']['main_asa_id'] = assetId;
+        await this.saveConfigToFile(config)
+        this.logger.info(`GoraDAO Asset ID: ${assetId} written to config file!`);
 
     }
     async createDaoProposalAsset() {
@@ -837,14 +839,14 @@ const GoraDaoDeployer = class {
             assetMetadataHash: new Uint8Array(32),
             assetName: 'GoraDAO Proposal TEST ASSET',
             assetURL: 'https://gora.io',
-            clawback: this.accountObject.addr,
+            clawback: this.goraDaoProposalAdminAccount.addr,
             decimals: 0,
             defaultFrozen: false,
-            freeze: this.accountObject.addr,
-            from: this.accountObject.addr,
-            manager: this.accountObject.addr,
+            freeze: this.goraDaoProposalAdminAccount.addr,
+            from: this.goraDaoProposalAdminAccount.addr,
+            manager: this.goraDaoProposalAdminAccount.addr,
             note: new Uint8Array(Buffer.from('GoraDAO Proposal TEST Asset')),
-            reserve: this.accountObject.addr,
+            reserve: this.goraDaoProposalAdminAccount.addr,
             suggestedParams: { ...params, fee: 1000, flatFee: true, },
             total: 1000000,
             unitName: 'GDPT',
@@ -856,13 +858,18 @@ const GoraDaoDeployer = class {
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Proposal Asset Creation...");
         let txnId = atxn.txID().toString();
-        let signedTxn = await atxn.signTxn(this.accountObject.sk);
+        let signedTxn = await atxn.signTxn(this.goraDaoProposalAdminAccount.sk);
         await this.algodClient.sendRawTransaction(signedTxn).do();
         await this.algosdk.waitForConfirmation(this.algodClient, txnId, 10)
 
         let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
         let assetId = transactionResponse['asset-index'];
         this.logger.info(`GoraDAO Proposal TEST created Asset ID: ${assetId}`);
+
+        let config  = this.config;
+        config['gora_dao']['proposal_asa_id'] = assetId;
+        await this.saveConfigToFile(config)
+        this.logger.info(`GoraDAO Proposal Asset ID: ${assetId} written to config file!`);
 
     }
     async configMainContract() {
