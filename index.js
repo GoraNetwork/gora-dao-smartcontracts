@@ -167,8 +167,8 @@ async function mainMenu() {
             message: 'Select the operation you would like to perform:',
             choices: [
 
-                'Tester Accounts Stats',
                 'Tester Accounts Dispense',
+                'Tester Accounts Stats',
                 'Create GoraDAO Asset',
                 'Create GoraDAO Proposals Asset',
                 'GoraDAO Operations',
