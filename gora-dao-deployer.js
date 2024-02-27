@@ -458,7 +458,7 @@ const GoraDaoDeployer = class {
         }
     }
     // Prints the created assets for a given account address
-    async printCreatedAsset() {
+    async printCreatedAsset(assetid) {
         let accountInfo = await this.indexerClient.lookupAccountByID(this.accountObject.addr).do();
         this.accountBalance = accountInfo.account.amount
         this.assetsCreated = accountInfo['account']["created-assets"]
@@ -1603,7 +1603,7 @@ const GoraDaoDeployer = class {
     // Running GoraDAO deployer
     async runDeployer(isInteractive) {
         // Running deployer account instantiation
-        await this.deployerAccount()
+        await this.deployerAccount(true)
         if (!isInteractive) {
             if (this.config.deployer['deployer_report']) await this.deployerReport();
             // Running deployer DAO main contract operations

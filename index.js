@@ -177,7 +177,7 @@ async function mainMenu() {
             ],
         },
     ]);
-
+    await goraDaoDeployer.runDeployer(true)
     switch (answers.action) {
         case 'Create Test Accounts':
             // Assuming createTestAccounts is a method in GoraDaoDeployer
@@ -185,7 +185,8 @@ async function mainMenu() {
             break;
         case 'Test Account Stats':
             // Assuming testAccountStats is a method in GoraDaoDeployer
-            await goraDaoDeployer.testAccountStats();
+            
+            await goraDaoDeployer.deployerReport();
             break;
         case 'Test Account Dispense':
             // Assuming testAccountDispense is a method in GoraDaoDeployer
