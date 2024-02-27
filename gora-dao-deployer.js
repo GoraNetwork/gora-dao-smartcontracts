@@ -1070,10 +1070,10 @@ const GoraDaoDeployer = class {
     }
     // Only temporary because the actual GoraDao contracts will not be updatable
     async writeProposalContractSourceBox() {
-        let addr = this.accountObject.addr;
+        let addr = this.goraDaoAdminAccount.addr;
         let params = await this.algodClient.getTransactionParams().do();
         const atc = new this.algosdk.AtomicTransactionComposer()
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.accountObject);
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoAdminAccount);
         const compiledItemResult = await this.algodClient.compile(this.proposalApprovalProgData).do();
         const compiledItemClearResult = await this.algodClient.compile(this.proposalClearProgData).do();
         const compiledResultUint8 = new Uint8Array(Buffer.from(compiledItemResult.result, "base64"));

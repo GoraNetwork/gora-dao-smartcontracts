@@ -64,6 +64,7 @@ async function goraDAOOperations() {
     switch (answers.goraDAOOperation) {
         case 'Deploy GoraDAO Contract':
             await goraDaoDeployer.deployMainContract();
+            await goraDaoDeployer.writeProposalContractSourceBox();
             await inquirer.prompt([
                 {
                     type: 'input',
@@ -74,6 +75,7 @@ async function goraDAOOperations() {
             break;
         case 'Update GoraDAO Contracts':
             await goraDaoDeployer.updateMainContract();
+            await goraDaoDeployer.writeProposalContractSourceBox();
             await inquirer.prompt([
                 {
                     type: 'input',
