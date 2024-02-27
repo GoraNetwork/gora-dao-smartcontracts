@@ -73,11 +73,14 @@ The scope of authority Proposal manager account has is not broad and is only to 
 
 The phases of a proposal lifecycle are:
 
-- Configure_Proposal
-- Activate_Voting
-- Proposal_Participate
-- Proposal_Withdraw_Participation
-- Force_Close_Proposal
+- Creation
+- Configuration
+- Participation
+- Voting activation
+- Voting
+- Closure
+- Force Closure
+
 
 Force_Close_Proposal is a multi step process , only designed for extreme emergency cases where something is agreed by almost everyone to go wrong and therefore grants from owner, manager_address and also Gora main contract manager are needed to be effective and close the Proposal and archive it! There are no limitations on creating a new Proposal with identical specifications though!
 
