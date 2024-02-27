@@ -3,6 +3,7 @@
 // Website: https://www.gora.io/
 // Creators: @emg110.algo
 // Github: https://github.com/GoraNetwork/gora-dao-smartcontracts
+
 #pragma version 8
 //Check TXN first
 callsub sub_check_txn
@@ -57,6 +58,7 @@ branch_create:
 	byte "manager_address"
 	txn Sender
 	app_global_put
+
 	byte "total_proposals_count"
 	int 0
 	app_global_put
@@ -94,31 +96,6 @@ branch_update:
 	global CurrentApplicationID
 	store 1
 
-	byte "manager_address"
-	txn Sender
-	app_global_put
-
-	byte "total_proposals_count"
-	int 0
-	app_global_put
-
-	byte "ready_proposals_count"
-	int 0
-	app_global_put
-
-	byte "active_proposals_count"
-	int 0
-	app_global_put
-
-    byte "passed_proposals_count"
-	int 0
-	app_global_put
-
-	byte "total_votes_count"
-	int 0
-	app_global_put
-
-
 	int 1
 	return
 
@@ -126,7 +103,7 @@ branch_update:
 
 branch_method_router:
 
-	method "config_dao(pay,asset,account,uint64,uint64,uint64,uint64,uint64,uint64)uint64"
+	method "config_dao(pay,uint64,uint64,uint64,uint64,uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_dao
@@ -233,36 +210,36 @@ method_config_dao:
 
 	txna Assets 0
 	store 2
-	byte "asset_id"
+	byte "dao_asset_id"
 	load 2
 	app_global_put
 	
 
-    txn ApplicationArgs 4
+    txn ApplicationArgs 2
     btoi
 	store 3
-	byte "min_subscription"
+	byte "proposal_fee_stake"
     load 3
     app_global_put
 
-    txn ApplicationArgs 5
+    txn ApplicationArgs 3
     btoi
 	store 4
-	byte "proposal_fee"
+	byte "proposal_fee_algo"
     load 4
     app_global_put
 
-    txn ApplicationArgs 6
+    txn ApplicationArgs 4
     btoi
 	store 6
 	byte "min_subscription_algo"
     load 6
     app_global_put
 	
-    txn ApplicationArgs 7
+    txn ApplicationArgs 5
     btoi
 	store 7
-	byte "min_subscription_fee"
+	byte "min_subscription_stake"
     load 7
     app_global_put
 
@@ -287,6 +264,103 @@ method_config_dao:
 	concat
 	b branch_log_return
 
+method_subscribe_dao:
+    txna Accounts 0
+    store 0
+    // Checking Transaction group
+    global GroupSize
+    int 2
+    ==
+    assert
+    // Checking the pay txn at index 0 of gtxn
+    gtxn 0 RekeyTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 CloseRemainderTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 AssetCloseTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 TypeEnum
+    int pay
+    ==
+    assert
+    gtxn 0 Fee
+    global MinTxnFee
+    >=
+    assert
+
+    gtxn 0 Amount
+    byte "min_subscription_stake"
+    app_global_get
+    >=
+    assert
+
+    // Checking if the receiver of pay txn is the same as the current application address
+  
+    gtxn 0 Receiver
+    global CurrentApplicationAddress
+    ==
+    assert
+
+    gtxn 0 Amount
+    global MinTxnFee
+    int 2
+    *
+    >=
+    assert
+	
+    load 0
+    txna Assets 0
+    asset_holding_get AssetBalance
+    assert
+    byte "min_subscription_stake"
+    app_global_get
+    >=
+    assert
+
+    load 0
+    balance
+    byte "min_subscription_algo"
+    app_global_get
+    >=
+
+    load 0
+    //dup
+    //log
+    box_get
+    bnz branch_delet_member_box
+    pop
+    load 0
+    byte ""
+    box_put
+    byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+method_unsubscribe_dao:
+    
+    // Process Transaction args
+
+	// Proposal participating memeber address
+    txna Accounts 0
+    store 1
+    load 1
+    //dup
+    //log
+    box_del
+    byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
 method_write_source_box:
 
 	callsub sub_check_owner_auth
@@ -307,6 +381,7 @@ method_write_source_box:
 	load 2
 	box_del
 	pop
+
 branch_write_box_app:
 
 	load 1
@@ -455,7 +530,7 @@ method_proposal_create:
     global CurrentApplicationID
     itob
     itxn_field ApplicationArgs
-    byte "asset_id"
+    byte "dao_asset_id"
     app_global_get
 	itob
     itxn_field ApplicationArgs
@@ -653,7 +728,7 @@ method_proposal_update:
     global CurrentApplicationID
     itob
     itxn_field ApplicationArgs
-    byte "asset_id"
+    byte "dao_asset_id"
     app_global_get
 	itob
     itxn_field ApplicationArgs
@@ -738,7 +813,7 @@ method_proposal_config:
     assert
 	
     gtxn 3 AssetAmount
-    byte "proposal_fee"
+    byte "proposal_fee_stake"
     app_global_get
     >=
     assert
@@ -807,89 +882,7 @@ method_proposal_config:
 	concat
 	b branch_log_return
 
-method_subscribe_dao:
-    txna Accounts 0
-    store 0
-    // Checking Transaction group
-    global GroupSize
-    int 2
-    ==
-    assert
-    // Checking the pay txn at index 0 of gtxn
-    gtxn 0 RekeyTo
-    global ZeroAddress
-    ==
-    assert
-    gtxn 0 CloseRemainderTo
-    global ZeroAddress
-    ==
-    assert
-    gtxn 0 AssetCloseTo
-    global ZeroAddress
-    ==
-    assert
-    gtxn 0 TypeEnum
-    int pay
-    ==
-    assert
-    gtxn 0 Fee
-    global MinTxnFee
-    >=
-    assert
 
-    gtxn 0 Amount
-    byte "min_subscription_fee"
-    app_global_get
-    >=
-    assert
-
-    // Checking if the receiver of pay txn is the same as the current application address
-  
-    gtxn 0 Receiver
-    global CurrentApplicationAddress
-    ==
-    assert
-
-    gtxn 0 Amount
-    global MinTxnFee
-    int 2
-    *
-    >=
-    assert
-	
-    load 0
-    txna Assets 0
-    asset_holding_get AssetBalance
-    assert
-    byte "min_subscription"
-    app_global_get
-    >
-    assert
-
-    load 0
-    balance
-    byte "min_subscription_algo"
-    app_global_get
-    >=
-    
-
-
-
-	
-    load 0
-    //dup
-    //log
-    box_get
-    bnz branch_delet_member_box
-    pop
-    load 0
-    byte ""
-    box_put
-    byte 0x151f7c75
-	global CurrentApplicationID
-	itob
-	concat
-	b branch_log_return
 
 branch_delet_member_box:
     load 0
@@ -906,22 +899,8 @@ branch_delet_member_box:
 	concat
 	b branch_log_return
 
-method_unsubscribe_dao:
-    
-    // Process Transaction args
 
-	// Proposal participating memeber address
-    txna Accounts 0
-    store 1
-    load 1
-    //dup
-    //log
-    box_del
-    byte 0x151f7c75
-	global CurrentApplicationID
-	itob
-	concat
-	b branch_log_return
+
 branch_delete_proposal_box:
     txna Accounts 0
     box_del
@@ -1047,7 +1026,7 @@ method_proposal_participate:
 
     // Checking the asset ref to be DAO asset
     
-    byte "asset_id"
+    byte "dao_asset_id"
     app_global_get
     txna Assets 0
     assert
@@ -1238,7 +1217,7 @@ method_proposal_vote:
     assert
 
     // Checking the asset ref to be DAO asset
-    byte "asset_id"
+    byte "dao_asset_id"
     app_global_get
     txna Assets 0
     assert

@@ -53,6 +53,7 @@ async function goraDAOOperations() {
                 'Deploy GoraDAO Contract',
                 'Update GoraDAO Contracts',
                 'Configure Deployed GoraDAO',
+                'Distribute GoraDAO Asset',
                 'Subscribe to GoraDAO',
                 'Unsubscribe from GoraDAO',
 
@@ -64,6 +65,7 @@ async function goraDAOOperations() {
     switch (answers.goraDAOOperation) {
         case 'Deploy GoraDAO Contract':
             await goraDaoDeployer.deployMainContract();
+            await goraDaoDeployer.writeProposalContractSourceBox();
             await inquirer.prompt([
                 {
                     type: 'input',
@@ -74,6 +76,7 @@ async function goraDAOOperations() {
             break;
         case 'Update GoraDAO Contracts':
             await goraDaoDeployer.updateMainContract();
+            await goraDaoDeployer.writeProposalContractSourceBox();
             await inquirer.prompt([
                 {
                     type: 'input',
@@ -84,6 +87,16 @@ async function goraDAOOperations() {
             break;
         case 'Configure Deployed GoraDAO':
             await goraDaoDeployer.configMainContract();
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
+            break;
+        case 'Distribute GoraDAO Asset':
+            await goraDaoDeployer.sendGoraDaoAssetTransaction();
             await inquirer.prompt([
                 {
                     type: 'input',
@@ -207,6 +220,7 @@ async function mainMenu() {
                 'Tester Accounts Stats',
                 'Create GoraDAO Asset',
                 'Create GoraDAO Proposals Asset',
+
                 'GoraDAO Operations',
                 'Proposals Operations',
                 'Tester Accounts Recreate',
@@ -214,7 +228,7 @@ async function mainMenu() {
             ],
         },
     ]);
-    
+
     switch (answers.action) {
         case 'Create GoraDAO Asset':
             await goraDaoDeployer.createDaoAsset();
@@ -236,6 +250,7 @@ async function mainMenu() {
                 },
             ]);
             break;
+
         case 'Tester Accounts Recreate':
             // Assuming testAccountStats is a method in GoraDaoDeployer
 
