@@ -578,12 +578,14 @@ const GoraDaoDeployer = class {
         }
         catch (err) {
             this.logger.error(err);
+            this.logger.error("No GoraDAO created assets found")
         }
         try {
             await this.printAssetHolding(this.accountObject.addr);
         }
         catch (err) {
             this.logger.error(err);
+            this.logger.error("No GoraDAO Proposal assets found")
         }
     }
     // Deletes GoraDAO applications
