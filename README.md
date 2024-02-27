@@ -188,7 +188,26 @@ graph TB
 - proposal_vote: Optionally Votes to a Proposal! Returns the Proposal contract ID!
 activate_proposal: Activates a Proposal! Returns the Proposal contract ID!
 - close_proposal: Force closes a Proposal contract as last resort. Returns the Proposal contract ID!
+``` Mermaid
+graph TD
+    GoraDAO_Main[GoraDAO Main Contract]
 
+    
+    GoraDAO_Main --> config_dao[config_dao]
+    GoraDAO_Main --> subscribe_dao[subscribe_dao]
+    GoraDAO_Main --> unsubscribe_dao[unsubscribe_dao]
+    GoraDAO_Main --> write_source_box[write_source_box]
+    GoraDAO_Main --> create_proposal[create_proposal]
+    GoraDAO_Main --> update_proposal[update_proposal]
+    GoraDAO_Main --> config_proposal[config_proposal]
+    GoraDAO_Main --> proposal_participate[proposal_participate]
+    GoraDAO_Main --> proposal_withdraw_participate[proposal_withdraw_participate]
+    GoraDAO_Main --> proposal_vote[proposal_vote]
+    GoraDAO_Main --> activate_proposal[activate_proposal]
+    GoraDAO_Main --> close_proposal[close_proposal]
+    
+   
+```
 ## GoraDAO Proposals Contract Methods
 - create_proposal: Creates a new Proposal contract! Returns the Proposal contract ID!
 - optin_proposal_asset: Signal to optin to proposal asset.
@@ -200,3 +219,21 @@ activate_proposal: Activates a Proposal! Returns the Proposal contract ID!
 - proposal_participate: Participates with a member account into a Proposal! Returns the participating member's account address!
 - proposal_withdraw_participate: Withdraws participation of a member account from a Proposal! Returns the withdrawing member's account address!
 - proposal_vote: Votes for a Proposal! Returns the voting member's account address concatenated with vote!
+
+``` Mermaid
+graph TD
+    GoraDAO_Main[GoraDAO Main Contract]
+
+
+    
+    GoraDAO_Proposals --> create_proposal_P[create_proposal]
+    GoraDAO_Proposals --> optin_proposal_asset[optin_proposal_asset]
+    GoraDAO_Proposals --> update_proposal_P[update_proposal]
+    GoraDAO_Proposals --> config_proposal_P[config_proposal]
+    GoraDAO_Proposals --> update_manager_address[update_manager_address]
+    GoraDAO_Proposals --> activate_proposal_P[activate_proposal]
+    GoraDAO_Proposals --> close_proposal_P[close_proposal]
+    GoraDAO_Proposals --> proposal_participate_P[proposal_participate]
+    GoraDAO_Proposals --> proposal_withdraw_participate_P[proposal_withdraw_participate]
+    GoraDAO_Proposals --> proposal_vote_P[proposal_vote]
+```
