@@ -1087,15 +1087,15 @@ const GoraDaoDeployer = class {
         }
     }
     async unsubscribeDaoContract() {
-        let addr = this.accountObject.addr;
+        let addr = this.goraDaoProposalAdminAccount.addr;
         let params = await this.algodClient.getTransactionParams().do();
         const atc = new this.algosdk.AtomicTransactionComposer()
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.accountObject)
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoProposalAdminAccount)
 
         const contractJson = JSON.parse(this.daoContract.toString())
         const contract = new this.algosdk.ABIContract(contractJson)
 
-        let memberPublicKey = this.algosdk.decodeAddress(this.accountObject.addr)
+        let memberPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
 
         const commonParams = {
             appID: Number(this.goraDaoMainApplicationId),
