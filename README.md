@@ -191,8 +191,6 @@ activate_proposal: Activates a Proposal! Returns the Proposal contract ID!
 ``` Mermaid
 graph TD
     GoraDAO_Main[GoraDAO Main Contract]
-
-    
     GoraDAO_Main --> config_dao[config_dao]
     GoraDAO_Main --> subscribe_dao[subscribe_dao]
     GoraDAO_Main --> unsubscribe_dao[unsubscribe_dao]
@@ -205,8 +203,6 @@ graph TD
     GoraDAO_Main --> proposal_vote[proposal_vote]
     GoraDAO_Main --> activate_proposal[activate_proposal]
     GoraDAO_Main --> close_proposal[close_proposal]
-    
-   
 ```
 ## GoraDAO Proposals Contract Methods
 - create_proposal: Creates a new Proposal contract! Returns the Proposal contract ID!
@@ -222,10 +218,7 @@ graph TD
 
 ``` Mermaid
 graph TD
-    GoraDAO_Main[GoraDAO Main Contract]
-
-
-    
+    GoraDAO_Proposals[GoraDAO Proposals Contract]
     GoraDAO_Proposals --> create_proposal_P[create_proposal]
     GoraDAO_Proposals --> optin_proposal_asset[optin_proposal_asset]
     GoraDAO_Proposals --> update_proposal_P[update_proposal]
