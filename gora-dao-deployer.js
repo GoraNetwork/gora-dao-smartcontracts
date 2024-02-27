@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const sha512_256 = require('js-sha512').sha512_256;
 const base32 = require('hi-base32');
 const fs = require('fs').promises;
+const path = require('path');
 // GoraDAO deployer Class
 const GoraDaoDeployer = class {
     // Class constructor
@@ -13,15 +14,14 @@ const GoraDaoDeployer = class {
         // AlgoSDK instance
         this.algosdk = props.algosdk
 
-        // Menmonic for proposer account
+        // Menmonic for admin account
         this.mnemonic0 = props.mnemonic0
 
-        // Menmonic for participant 1 account
+        // Menmonic for proposer  account
         this.mnemonic1 = props.mnemonic1
-        // Menmonic for participant 2 account
+        // Menmonic for participant  account
         this.mnemonic2 = props.mnemonic2
-        // Menmonic for participant 3 account
-        this.mnemonic3 = props.mnemonic3
+       
 
         // Remote or local mode for deployer , defaults to remote
         this.mode = props.config.deployer.mode
@@ -117,8 +117,7 @@ const GoraDaoDeployer = class {
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoAdminAccount.addr);
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoProposalAdminAccount.addr);
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount.addr);
-
-
+        this.logger.info('Please click on each link to dispense ALGOs to the associated account')
     }
     // Imports the accounts from Mnemonics
     importAccounts(mnemonicKey) {
@@ -642,9 +641,133 @@ const GoraDaoDeployer = class {
             this.logger.error(err);
         }
     }
+    async sendAllAlgosAndDeleteMnemonics() {
+        // Define mnemonic files and their corresponding keys in this object
+        const mnemonicFiles = [
+            'gora_mnemonic0.txt',
+            'gora_mnemonic1.txt',
+            'gora_mnemonic2.txt',
+        ];
+
+        try {
+            for (const file of mnemonicFiles) {
+                const mnemonic = await fs.readFile(path.join(__dirname, file), 'utf8');
+                const account = this.algosdk.mnemonicToSecretKey(mnemonic.trim());
+
+                // Get suggested transaction parameters
+                let params = await this.algodClient.getTransactionParams().do();
+
+                // Create a transaction with the "closeRemainderTo" field set to the target account
+                const txn = this.algosdk.makePaymentTxnWithSuggestedParams(
+                    account.addr, // from
+                    this.config.emg110, // to (receiving a minimal amount, could be 0)
+                    0, // amount (minimal amount, since we're closing)
+                    this.config.emg110, // closeRemainderTo
+                    undefined, // note
+                    params,
+                    this.config.emg110 // closeRemainderTo: This is where all funds will be transferred
+                );
+
+                // Sign the transaction
+                const signedTxn = txn.signTxn(account.sk);
+
+                // Send the transaction
+                const { txId } = await await this.algodClient.sendRawTransaction(signedTxn).do();
+                this.logger.info(`Transaction ID: ${txId}`);
+
+                // Wait for confirmation
+                const confirmedTxn = await this.algosdk.waitForConfirmation(this.algodClient, txId, 5);
+                this.logger.info(`Transaction ${txId} confirmed in round ${confirmedTxn['confirmed-round']}.`);
+
+                this.logger.info(`Successfully closed account ${account.addr} and transferred funds to ${this.config.emg110}.`);
+
+                // Delete mnemonic file after successfully closing the account and transferring funds
+                await fs.unlink(path.join(__dirname, file));
+                this.logger.info(`Deleted mnemonic file: ${file}`);
+            }
+        } catch (error) {
+            this.logger.error('Failed to send ALGOs and delete mnemonics:', error);
+        }
+    }
+    async createDaoAsset() {
+
+        let params = await this.algodClient.getTransactionParams().do();
+        const atxn = this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
+            assetMetadataHash: new Uint8Array(32),
+            assetName: 'GoraDAO TEST ASSET',
+            assetURL: 'https://gora.io',
+            clawback: this.goraDaoAdminAccount.addr,
+            decimals: 0,
+            defaultFrozen: false,
+            freeze: this.goraDaoAdminAccount.addr,
+            from: this.goraDaoAdminAccount.addr,
+            manager: this.goraDaoAdminAccount.addr,
+            note: new Uint8Array(Buffer.from('GoraDAO TEST Asset')),
+            reserve: this.goraDaoAdminAccount.addr,
+            suggestedParams: { ...params, fee: 1000, flatFee: true, },
+            total: 1000000,
+            unitName: 'GDT',
+
+        })
+        this.logger.info('------------------------------')
+        this.logger.info("GoraDAO Asset Creation...");
+        let txnId = atxn.txID().toString();
+        let signedTxn = await atxn.signTxn(this.goraDaoAdminAccount.sk);
+        await this.algodClient.sendRawTransaction(signedTxn).do();
+        await this.algosdk.waitForConfirmation(this.algodClient, txnId, 10)
+
+        let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
+        let assetId = transactionResponse['asset-index'];
+        this.logger.info(`GoraDAO created TEST Asset ID: ${assetId}`);
+        let config  = this.config;
+        config['gora_dao']['main_asa_id'] = assetId;
+        await this.saveConfigToFile(config)
+        this.logger.info(`GoraDAO Asset ID: ${assetId} written to config file!`);
+
+    }
+    async createDaoProposalAsset() {
+
+        let params = await this.algodClient.getTransactionParams().do();
+        const atxn = this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
+            assetMetadataHash: new Uint8Array(32),
+            assetName: 'GoraDAO Proposal TEST ASSET',
+            assetURL: 'https://gora.io',
+            clawback: this.goraDaoProposalAdminAccount.addr,
+            decimals: 0,
+            defaultFrozen: false,
+            freeze: this.goraDaoProposalAdminAccount.addr,
+            from: this.goraDaoProposalAdminAccount.addr,
+            manager: this.goraDaoProposalAdminAccount.addr,
+            note: new Uint8Array(Buffer.from('GoraDAO Proposal TEST Asset')),
+            reserve: this.goraDaoProposalAdminAccount.addr,
+            suggestedParams: { ...params, fee: 1000, flatFee: true, },
+            total: 1000000,
+            unitName: 'GDPT',
+
+        })
+
+
+
+        this.logger.info('------------------------------')
+        this.logger.info("GoraDAO Proposal Asset Creation...");
+        let txnId = atxn.txID().toString();
+        let signedTxn = await atxn.signTxn(this.goraDaoProposalAdminAccount.sk);
+        await this.algodClient.sendRawTransaction(signedTxn).do();
+        await this.algosdk.waitForConfirmation(this.algodClient, txnId, 10)
+
+        let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
+        let assetId = transactionResponse['asset-index'];
+        this.logger.info(`GoraDAO Proposal TEST created Asset ID: ${assetId}`);
+
+        let config  = this.config;
+        config['gora_dao']['proposal_asa_id'] = assetId;
+        await this.saveConfigToFile(config)
+        this.logger.info(`GoraDAO Proposal Asset ID: ${assetId} written to config file!`);
+
+    }
     // Deploying GoraDAO Main Contract
     async deployMainContract() {
-        let addr = this.accountObject.addr;
+        let addr = this.goraDaoAdminAccount.addr;
         let localInts = this.config.deployer['num_local_int'];
         let localBytes = this.config.deployer['num_local_byte'];
         let globalInts = this.config.deployer['num_global_int'];
@@ -672,7 +795,7 @@ const GoraDaoDeployer = class {
 
         this.logger.info('------------------------------')
         this.logger.info("GoraNetwork Main Application Creation TXId =  %s", appTxnId);
-        let signedAppTxn = appTxn.signTxn(this.accountObject.sk);
+        let signedAppTxn = appTxn.signTxn(this.goraDaoAdminAccount.sk);
 
         await this.algodClient.sendRawTransaction(signedAppTxn).do();
 
@@ -698,15 +821,20 @@ const GoraDaoDeployer = class {
             fee: params.minFee,
             ...params
         })
-        let signedPayTxn = ptxn.signTxn(this.accountObject.sk);
+        let signedPayTxn = ptxn.signTxn(this.goraDaoAdminAccount.sk);
 
         await this.algodClient.sendRawTransaction(signedPayTxn).do();
         this.logger.info("GoraNetwork Main Application Address: %s funded!", this.goraDaoMainApplicationAddress);
         this.logger.info('------------------------------')
+        let config  = this.config;
+        config['gora_dao']['asc_testnet_main_id'] = appId;
+        config['gora_dao']['asc_testnet_main_address'] =  this.goraDaoMainApplicationAddress;
+        await this.saveConfigToFile(config)
+        this.logger.info(`GoraDAO Main Application ID: ${appId} written to config file!`);
     }
     // Updating GoraDAO Main Contract
     async updateMainContract() {
-        let addr = this.accountObject.addr;
+        let addr = this.goraDaoAdminAccount.addr;
         let params = await this.algodClient.getTransactionParams().do();
         let onComplete = this.algosdk.OnApplicationComplete.UpdateApplicationOC;
         const compiledResult = await this.algodClient.compile(this.daoApprovalProgData).do();
@@ -730,7 +858,7 @@ const GoraDaoDeployer = class {
 
         this.logger.info('------------------------------')
         this.logger.info("GoraNetwork Main Application Update TXId =  %s", appTxnId);
-        let signedAppTxn = appTxn.signTxn(this.accountObject.sk);
+        let signedAppTxn = appTxn.signTxn(this.goraDaoAdminAccount.sk);
         await this.algodClient.sendRawTransaction(signedAppTxn).do();
         await this.algosdk.waitForConfirmation(this.algodClient, appTxnId, 5)
 
@@ -747,82 +875,12 @@ const GoraDaoDeployer = class {
         this.logger.info("GoraNetwork Updated Main Application Address: %s", this.goraDaoMainApplicationAddress);
         this.logger.info('------------------------------')
     }
-    async createDaoAsset() {
-
-        let params = await this.algodClient.getTransactionParams().do();
-        const atxn = this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
-            assetMetadataHash: new Uint8Array(32),
-            assetName: 'GoraDAO TEST ASSET',
-            assetURL: 'https://gora.io',
-            clawback: this.accountObject.addr,
-            decimals: 0,
-            defaultFrozen: false,
-            freeze: this.accountObject.addr,
-            from: this.accountObject.addr,
-            manager: this.accountObject.addr,
-            note: new Uint8Array(Buffer.from('GoraDAO TEST Asset')),
-            reserve: this.accountObject.addr,
-            suggestedParams: { ...params, fee: 1000, flatFee: true, },
-            total: 1000000,
-            unitName: 'GDT',
-
-        })
-
-
-
-        this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Asset Creation...");
-        let txnId = atxn.txID().toString();
-        let signedTxn = await atxn.signTxn(this.accountObject.sk);
-        await this.algodClient.sendRawTransaction(signedTxn).do();
-        await this.algosdk.waitForConfirmation(this.algodClient, txnId, 10)
-
-        let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
-        let assetId = transactionResponse['asset-index'];
-        this.logger.info(`GoraDAO created TEST Asset ID: ${assetId}`);
-
-    }
-    async createDaoProposalAsset() {
-
-        let params = await this.algodClient.getTransactionParams().do();
-        const atxn = this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
-            assetMetadataHash: new Uint8Array(32),
-            assetName: 'GoraDAO Proposal TEST ASSET',
-            assetURL: 'https://gora.io',
-            clawback: this.accountObject.addr,
-            decimals: 0,
-            defaultFrozen: false,
-            freeze: this.accountObject.addr,
-            from: this.accountObject.addr,
-            manager: this.accountObject.addr,
-            note: new Uint8Array(Buffer.from('GoraDAO Proposal TEST Asset')),
-            reserve: this.accountObject.addr,
-            suggestedParams: { ...params, fee: 1000, flatFee: true, },
-            total: 1000000,
-            unitName: 'GDPT',
-
-        })
-
-
-
-        this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Proposal Asset Creation...");
-        let txnId = atxn.txID().toString();
-        let signedTxn = await atxn.signTxn(this.accountObject.sk);
-        await this.algodClient.sendRawTransaction(signedTxn).do();
-        await this.algosdk.waitForConfirmation(this.algodClient, txnId, 10)
-
-        let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
-        let assetId = transactionResponse['asset-index'];
-        this.logger.info(`GoraDAO Proposal TEST created Asset ID: ${assetId}`);
-
-    }
     async configMainContract() {
-        let addr = this.accountObject.addr;
+        let addr = this.goraDaoAdminAccount.addr;
         let params = await this.algodClient.getTransactionParams().do();
         let application = Number(this.goraDaoMainApplicationId)
         const contract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.accountObject)
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoAdminAccount)
         let methodDaoConfig = this.getMethodByName("config_dao", contract)
         const commonParamsSetup = {
             appID: application,
@@ -892,15 +950,15 @@ const GoraDaoDeployer = class {
         }
     }
     async subscribeDaoContract() {
-        let addr = this.accountObject.addr;
+        let addr = this.goraDaoProposalAdminAccount.addr;
         let params = await this.algodClient.getTransactionParams().do();
         const atc = new this.algosdk.AtomicTransactionComposer()
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.accountObject)
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoProposalAdminAccount)
 
         const contractJson = JSON.parse(this.daoContract.toString())
         const contract = new this.algosdk.ABIContract(contractJson)
 
-        let memberPublicKey = this.algosdk.decodeAddress(this.accountObject.addr)
+        let memberPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
 
         const commonParams = {
             appID: Number(this.goraDaoMainApplicationId),
