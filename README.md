@@ -82,7 +82,7 @@ The phases of a proposal lifecycle are:
 - Force Closure
 
 
-Force_Close_Proposal is a multi step process , only designed for extreme emergency cases where something is agreed by almost everyone to go wrong and therefore grants from owner, manager_address and also Gora main contract manager are needed to be effective and close the Proposal and archive it! There are no limitations on creating a new Proposal with identical specifications though!
+Important note: Force_Close_Proposal is a multi step process , only designed for extreme emergency cases where something is agreed by almost everyone to go wrong and therefore grants from owner, manager_address and also Gora main contract manager are needed to be effective and close the Proposal and archive it! There are no limitations on creating a new Proposal with identical specifications though!
 
 The activate_proposal is a manual override in case of min_participation is not met! The voting activation handled in GoraDAO:
 - Time based activation in case that min-participation is met!
