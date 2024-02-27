@@ -320,7 +320,7 @@ method_subscribe_dao:
     assert
     byte "min_subscription_stake"
     app_global_get
-    >
+    >=
     assert
 
     load 0
