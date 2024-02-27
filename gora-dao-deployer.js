@@ -908,18 +908,21 @@ const GoraDaoDeployer = class {
         //(pay,asset,account)string
         const args = [
             tws0,
+            //asset id on assets array for ref
             Number(this.goraDaoAsset),
+            // Manager id in accounts array for ref
             addr,
+            //asset id in ARGS as Uint64
             Number(this.goraDaoAsset),
-            //min_subscription
+            //min_subscription_stake
             2000,
-            //proposal_fee
+            //proposal_fee_stake
             10,
             //proposal_fee_algo
             500000,
             // min_subscription_algo
             1000000,
-            // min_subscription_fee
+            // min_subscription_stake
             142000,
 
         ]
