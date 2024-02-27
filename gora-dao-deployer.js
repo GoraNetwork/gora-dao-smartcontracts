@@ -148,7 +148,6 @@ const GoraDaoDeployer = class {
                         this.logger.info('------------------------------')
                     }
                 }
-
             }
             let resTrx = await fetch(urlTrx, {
                 method: "GET",
@@ -251,7 +250,7 @@ const GoraDaoDeployer = class {
                                                 const buffer = Buffer.from(item, 'base64');
                                                 let uint64Log = this.algosdk.decodeUint64(buffer.slice(4, 12), "mixed")
                                                 this.logger.info(` TXN log [${index}]:uint64:  %s`, uint64Log)
-                                            }else if (Buffer.from(item, 'base64').byteLength === 8) {
+                                            } else if (Buffer.from(item, 'base64').byteLength === 8) {
                                                 const buffer = Buffer.from(item, 'base64');
                                                 let uint64Log = this.algosdk.decodeUint64(buffer, "mixed")
                                                 this.logger.info(` TXN log [${index}]:uint64:  %s`, uint64Log)
@@ -833,7 +832,7 @@ const GoraDaoDeployer = class {
             //this.logger.info("GoraDAO Transaction StateProof %s", sp);
         }
     }
-    async subscribeDaoContract() { 
+    async subscribeDaoContract() {
         let addr = this.accountObject.addr;
         let params = await this.algodClient.getTransactionParams().do();
         const atc = new this.algosdk.AtomicTransactionComposer()
@@ -850,7 +849,7 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-          
+
                 { appIndex: Number(this.goraDaoMainApplicationId), name: memberPublicKey.publicKey },
 
             ],
@@ -897,7 +896,7 @@ const GoraDaoDeployer = class {
 
         }
     }
-    async unsubscribeDaoContract() { 
+    async unsubscribeDaoContract() {
         let addr = this.accountObject.addr;
         let params = await this.algodClient.getTransactionParams().do();
         const atc = new this.algosdk.AtomicTransactionComposer()
@@ -914,20 +913,20 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-          
+
                 { appIndex: Number(this.goraDaoMainApplicationId), name: memberPublicKey.publicKey },
 
             ],
         }
         let method = this.getMethodByName("unsubscribe_dao", contract)
 
-     
+
 
 
         atc.addMethodCall({
             method: method,
             methodArgs: [
-            
+
                 Number(this.goraDaoAsset),
                 addr,// member account 
                 addr,// member account 
@@ -998,7 +997,7 @@ const GoraDaoDeployer = class {
 
         }
     }
-   
+
     // Create GoraDAO Proposal Contract
     async createProposalContract() {
         let addr = this.accountObject.addr;
@@ -1015,11 +1014,11 @@ const GoraDaoDeployer = class {
         let approvalName = new Uint8Array(Buffer.from("proposal_app"))
         let clearName = new Uint8Array(Buffer.from("proposal_clr"))
         let memberPublicKey = this.algosdk.decodeAddress(this.accountObject.addr)
-        this.logger.info(`${Number(this.proposalAsset) } ${Number(this.goraDaoAsset)}`)
+        this.logger.info(`${Number(this.proposalAsset)} ${Number(this.goraDaoAsset)}`)
         const commonParams = {
             appID: Number(this.goraDaoMainApplicationId),
             sender: addr,
-            
+
             suggestedParams: params,
             signer: signer,
             boxes: [
@@ -1045,7 +1044,7 @@ const GoraDaoDeployer = class {
 
         atc.addMethodCall({
             method: method,
-            
+
             methodArgs: [
                 tws0,//pay
                 addr,// member account (Proposal manager)
@@ -1173,28 +1172,28 @@ const GoraDaoDeployer = class {
         let memberPublicKey = this.algosdk.decodeAddress(this.accountObject.addr)
         const commonParamsProposalSetup = {
             appID: proposalApplication,
-         
+
             sender: addr,
             suggestedParams: params,
             signer: signer,
             boxes: [
-                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_threshold"))},
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_threshold")) },
                 { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
-              
+
 
             ],
         }
         const commonParamsDaoSetup = {
             appID: daoApplication,
-          
+
             sender: addr,
             suggestedParams: params,
             signer: signer,
             boxes: [
-               
-                 { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.proposalApplicationId) },
-                 { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
- 
+
+                { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.proposalApplicationId) },
+                { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
+
 
 
             ],
@@ -1237,10 +1236,10 @@ const GoraDaoDeployer = class {
 
 
         ]
- 
-       
-     
-        
+
+
+
+
         //this.goraDaoMainApplicationId,
         const argsProposal = [
             tws1,
@@ -1284,7 +1283,7 @@ const GoraDaoDeployer = class {
 
             //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
             let confirmedRound = proposalConfigResults.confirmedRound
-           
+
 
             let returnedResults = this.algosdk.decodeUint64(proposalConfigResults.methodResults[idx].rawReturnValue, "mixed")
             this.logger.info("GoraDAO Proposal Contract ABI Exec result = %s", returnedResults);
@@ -1293,7 +1292,7 @@ const GoraDaoDeployer = class {
         }
     }
     // participates to a proposal from e member account
-    async participateProposalContract() { 
+    async participateProposalContract() {
         let addr = this.accountObject.addr;
         let params = await this.algodClient.getTransactionParams().do();
         let proposalApplication = Number(this.proposalApplicationId)
@@ -1310,9 +1309,9 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-   
+
                 { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
-           
+
 
             ],
         }
@@ -1322,11 +1321,11 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-                 { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.proposalApplicationId) },
-                 { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
+                { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.proposalApplicationId) },
+                { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
             ],
         }
-        
+
         const ptxnProposal = new this.algosdk.Transaction({
             from: addr,
             to: this.proposalApplicationAddress,
@@ -1359,7 +1358,7 @@ const GoraDaoDeployer = class {
             this.goraDaoAsset,
             addr,
             this.proposalApplicationId
-          
+
         ]
 
         const argsProposal = [
@@ -1383,23 +1382,23 @@ const GoraDaoDeployer = class {
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", methodDaoProposalParticipate);
-       
+
         const proposalParticipateResults = await atcProposalParticipate.execute(this.algodClient, 10);
         for (const idx in proposalParticipateResults.methodResults) {
             let txid = proposalParticipateResults.methodResults[idx].txID
 
             //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
             let confirmedRound = proposalParticipateResults.confirmedRound
-           
+
 
             let returnedResults = this.algosdk.decodeUint64(proposalParticipateResults.methodResults[idx].rawReturnValue, "mixed")
             this.logger.info("GoraDAO Proposal Contract ABI Exec result = %s", returnedResults);
             await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
         }
-       
+
     }
-    async participationWithdrawProposalContract() { 
+    async participationWithdrawProposalContract() {
         let addr = this.accountObject.addr;
         let params = await this.algodClient.getTransactionParams().do();
         let proposalApplication = Number(this.proposalApplicationId)
@@ -1416,9 +1415,9 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-   
+
                 { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
-           
+
 
             ],
         }
@@ -1428,22 +1427,22 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-                 { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.proposalApplicationId) },
-                 { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
+                { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.proposalApplicationId) },
+                { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
             ],
         }
-        
+
 
         const argsDao = [
-      
+
             this.goraDaoAsset,
             addr,
             this.proposalApplicationId
-          
+
         ]
 
         const argsProposal = [
- 
+
             this.goraDaoAsset,
             addr,
             this.goraDaoMainApplicationId,
@@ -1463,24 +1462,24 @@ const GoraDaoDeployer = class {
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", methodDaoProposalParticipate);
-       
+
         const proposalParticipateResults = await atcProposalParticipate.execute(this.algodClient, 10);
         for (const idx in proposalParticipateResults.methodResults) {
             let txid = proposalParticipateResults.methodResults[idx].txID
 
             //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
             let confirmedRound = proposalParticipateResults.confirmedRound
-           
+
 
             let returnedResults = this.algosdk.decodeUint64(proposalParticipateResults.methodResults[idx].rawReturnValue, "mixed")
             this.logger.info("GoraDAO Proposal Contract ABI Exec result = %s", returnedResults);
             await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
         }
-        
+
     }
     async activateProposalContract() { }
-    async voteProposalContract() { 
+    async voteProposalContract() {
         let addr = this.accountObject.addr;
         let params = await this.algodClient.getTransactionParams().do();
         let proposalApplication = Number(this.proposalApplicationId)
@@ -1497,9 +1496,9 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-   
+
                 { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
-           
+
 
             ],
         }
@@ -1509,11 +1508,11 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-                 { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.proposalApplicationId) },
-                 { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
+                { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.proposalApplicationId) },
+                { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
             ],
         }
-        
+
         const ptxnProposal = new this.algosdk.Transaction({
             from: addr,
             to: this.proposalApplicationAddress,
@@ -1547,7 +1546,7 @@ const GoraDaoDeployer = class {
             addr,
             this.proposalApplicationId,
             1
-          
+
         ]
 
         const argsProposal = [
@@ -1572,14 +1571,14 @@ const GoraDaoDeployer = class {
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", methodDaoProposalParticipate);
-       
+
         const proposalParticipateResults = await atcProposalParticipate.execute(this.algodClient, 10);
         for (const idx in proposalParticipateResults.methodResults) {
             let txid = proposalParticipateResults.methodResults[idx].txID
 
             //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
             let confirmedRound = proposalParticipateResults.confirmedRound
-           
+
 
             let returnedResults = this.algosdk.decodeUint64(proposalParticipateResults.methodResults[idx].rawReturnValue, "mixed")
             this.logger.info("GoraDAO Proposal Contract ABI Exec result = %s", returnedResults);
@@ -1587,10 +1586,8 @@ const GoraDaoDeployer = class {
 
         }
     }
- 
-    
 
-    // Running deployer
+    // Running GoraDAO deployer
     async runDeployer() {
         // Running deployer account instantiation
         await this.deployerAccount()
