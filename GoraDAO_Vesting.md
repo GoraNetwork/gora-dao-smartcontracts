@@ -37,7 +37,4 @@ graph TB
       GoraDAO_Vesting[GoraDAO_Vesting_ABI] ---> Vesting_Deposit_Platform_Token
       GoraDAO_Vesting[GoraDAO_Vesting_ABI] ---> Vesting_Transfer_Funds
 
-
- 
-
 ```
