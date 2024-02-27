@@ -5,7 +5,7 @@ const base32 = require('hi-base32');
 // GoraDAO deployer Class
 const GoraDaoDeployer = class {
     // Class constructor
-    constructor(props) {
+    constructor(props, isInteractive) {
         // Configurations instance
         this.config = props.config
         // Logger instance with Winston-Chalk logger module
@@ -1589,33 +1589,34 @@ const GoraDaoDeployer = class {
     }
 
     // Running GoraDAO deployer
-    async runDeployer() {
+    async runDeployer(isInteractive) {
         // Running deployer account instantiation
         await this.deployerAccount()
-        if (this.config.deployer['deployer_report']) await this.deployerReport();
+        if (!isInteractive) {
+            if (this.config.deployer['deployer_report']) await this.deployerReport();
+            // Running deployer DAO main contract operations
+            if (this.config.deployer['create_dao_contracts']) await this.deployMainContract();
+            if (this.config.deployer['update_dao_contracts']) await this.updateMainContract();
+            if (this.config.deployer['create_dao_asset']) await this.createDaoAsset();
+            if (this.config.deployer['create_dao_proposal_asset']) await this.createDaoProposalAsset();
+            if (this.config.deployer['config_dao_contract']) await this.configMainContract();
+            if (this.config.deployer['subscribe_dao_contract']) await this.subscribeDaoContract();
+            if (this.config.deployer['unsubscribe_dao_contract']) await this.unsubscribeDaoContract();
+            if (this.config.deployer['delete_apps']) await this.deleteApps(this.config.deployer.apps_to_delete);
 
-        // Running deployer DAO main contract operations
-        if (this.config.deployer['create_dao_contracts']) await this.deployMainContract();
-        if (this.config.deployer['update_dao_contracts']) await this.updateMainContract();
-        if (this.config.deployer['create_dao_asset']) await this.createDaoAsset();
-        if (this.config.deployer['create_dao_proposal_asset']) await this.createDaoProposalAsset();
-        if (this.config.deployer['config_dao_contract']) await this.configMainContract();
-        if (this.config.deployer['subscribe_dao_contract']) await this.subscribeDaoContract();
-        if (this.config.deployer['unsubscribe_dao_contract']) await this.unsubscribeDaoContract();
-        if (this.config.deployer['delete_apps']) await this.deleteApps(this.config.deployer.apps_to_delete);
+            // Running deployer DAO proposal contract operations
+            if (this.config.deployer['write_proposal_source_box']) await this.writeProposalContractSourceBox();
+            if (this.config.deployer['create_proposal_contracts']) await this.createProposalContract();
+            if (this.config.deployer['update_proposal_contracts']) await this.updateProposalContract();
+            if (this.config.deployer['config_proposal_contracts']) await this.configureProposalContract();
 
-        // Running deployer DAO proposal contract operations
-        if (this.config.deployer['write_proposal_source_box']) await this.writeProposalContractSourceBox();
-        if (this.config.deployer['create_proposal_contracts']) await this.createProposalContract();
-        if (this.config.deployer['update_proposal_contracts']) await this.updateProposalContract();
-        if (this.config.deployer['config_proposal_contracts']) await this.configureProposalContract();
+            if (this.config.deployer['activate_proposal_contracts']) await this.activateProposalContract();
+            if (this.config.deployer['participate_proposal_contracts']) await this.participateProposalContract();
+            if (this.config.deployer['withdraw_participate_proposal_contracts']) await this.participationWithdrawProposalContract();
+            if (this.config.deployer['vote_proposal_contracts']) await this.voteProposalContract();
 
-        if (this.config.deployer['activate_proposal_contracts']) await this.activateProposalContract();
-        if (this.config.deployer['participate_proposal_contracts']) await this.participateProposalContract();
-        if (this.config.deployer['withdraw_participate_proposal_contracts']) await this.participationWithdrawProposalContract();
-        if (this.config.deployer['vote_proposal_contracts']) await this.voteProposalContract();
-
-        process.exit();
+            process.exit();
+        }
     }
 }
 
