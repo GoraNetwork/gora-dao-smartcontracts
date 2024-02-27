@@ -1634,7 +1634,7 @@ const GoraDaoDeployer = class {
     // Running GoraDAO deployer
     async runDeployer(isInteractive) {
         // Running deployer account instantiation
-        await this.deployerAccount(true)
+        await this.deployerAccount()
         if (!isInteractive) {
             if (this.config.deployer['deployer_report']) await this.deployerReport();
             // Running deployer DAO main contract operations
