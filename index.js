@@ -10,7 +10,7 @@ const logger = require('./logger');
 const GoraDaoDeployer = require('./gora-dao-deployer');
 let props = {}
 // Mnemonics
-props.mnemonic0 = fs.readFileSync(path.join(__dirname, 'gora_mnemonic0.txt'), 'utf8')
+//props.mnemonic0 = fs.readFileSync(path.join(__dirname, 'gora_mnemonic0.txt'), 'utf8')
 // props.mnemonic1 = fs.readFileSync(path.join(__dirname, 'gora_mnemonic1.txt'), 'utf8')
 // props.mnemonic2 = fs.readFileSync(path.join(__dirname, 'gora_mnemonic2.txt'), 'utf8')
 // props.mnemonic3 = fs.readFileSync(path.join(__dirname, 'gora_mnemonic3.txt'), 'utf8')
