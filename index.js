@@ -160,28 +160,84 @@ async function proposalsOperations() {
     switch (answers.proposalOperation) {
 
         case 'Deploy New Proposal':
-            await goraDaoDeployer.deployNewProposal();
+            await goraDaoDeployer.createProposalContract();
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
             break;
         case 'Update Deployed Proposal':
-            await goraDaoDeployer.updateDeployedProposal();
+            await goraDaoDeployer.updateProposalContract();
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
             break;
         case 'Configure Proposal':
-            await goraDaoDeployer.configureProposal();
+            await goraDaoDeployer.configureProposalContract();
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
             break;
         case 'Participate into Proposal':
-            await goraDaoDeployer.participateIntoProposal();
+            await goraDaoDeployer.participateProposalContract();
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
             break;
         case 'Withdraw Participation':
-            await goraDaoDeployer.withdrawParticipation();
+            await goraDaoDeployer.participationWithdrawProposalContract();
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
             break;
         case 'Vote on Proposal':
-            await goraDaoDeployer.voteOnProposal();
+            await goraDaoDeployer.voteProposalContract();
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
             break;
         case 'Activate Proposal':
-            await goraDaoDeployer.activateProposal();
+            await goraDaoDeployer.activateProposalContract();
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
             break;
         case 'Close Proposal':
             await goraDaoDeployer.closeProposal();
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
             break;
         case 'Back to Main Menu':
             await mainMenu();
