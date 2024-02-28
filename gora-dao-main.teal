@@ -138,7 +138,7 @@ branch_method_router:
 	==
 	bnz method_unsubscribe_dao
 
-    method "proposal_participate(pay,axfer,asset,account,application)uint64"
+    method "proposal_participate(pay,axfer)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_participate
@@ -930,7 +930,7 @@ method_proposal_participate:
     store 1
 
     txna Applications 1
-    byte "proposal_min_participation"
+    byte "proposal_min_participation_stake"
     app_global_get_ex
     assert
     store 2
@@ -1063,7 +1063,7 @@ method_proposal_withdraw_participate:
     store 1
 
     txna Applications 1
-    byte "proposal_min_participation"
+    byte "proposal_min_participation_stake"
     app_global_get_ex
     assert
     store 2

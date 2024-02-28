@@ -1280,16 +1280,16 @@ const GoraDaoDeployer = class {
     }
     // Only temporary because the actual GoraDao contracts will not be updatable
     async updateProposalContract() {
-        let addr = this.goraDaoAdminAccount.addr;
+        let addr = this.goraDaoProposalAdminAccount.addr;
         let params = await this.algodClient.getTransactionParams().do();
         const atc = new this.algosdk.AtomicTransactionComposer()
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoAdminAccount)
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoProposalAdminAccount)
 
         const contractJson = JSON.parse(this.daoContract.toString())
         const contract = new this.algosdk.ABIContract(contractJson)
         let approvalName = new Uint8Array(Buffer.from("proposal_app"))
         let clearName = new Uint8Array(Buffer.from("proposal_clr"))
-        let memberPublicKey = this.algosdk.decodeAddress(this.goraDaoAdminAccount.addr)
+        let memberPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
 
         const commonParams = {
             appID: Number(this.goraDaoMainApplicationId),
