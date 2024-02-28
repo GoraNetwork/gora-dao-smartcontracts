@@ -1267,7 +1267,7 @@ const GoraDaoDeployer = class {
             config['gora_dao']['asc_proposal_id'] = Number(res);
             config['gora_dao']['asc_proposal_address'] = addr;
             await this.saveConfigToFile(config)
-            this.logger.info(`GoraDAO Main Application ID: ${appId} written to config file!`);
+            this.logger.info(`GoraDAO Main Application ID: ${Number(res)} written to config file!`);
             let txid = result.methodResults[idx].txID
             let confirmedRound = result.confirmedRound
 

@@ -467,7 +467,7 @@ method_config_proposal:
 
 	txn ApplicationArgs 5 //proposal_voting_duration
 	store 5
-	byte "proposal_vote_duration"
+	byte "proposal_voting_duration"
 	load 5
 	btoi
 	app_global_put
