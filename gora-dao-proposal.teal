@@ -99,7 +99,7 @@ branch_method_router:
 	==
 	bnz method_optin_proposal_asset
 
-	method "config_proposal(pay,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,(uint64,uint64,uint64,uint64,uint64,uint64))uint64"
+	method "config_proposal(pay,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,(uint64,uint64,uint64,uint64,uint64,uint64))uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_proposal
@@ -433,91 +433,91 @@ method_config_proposal:
 	==
 	assert
 
-	txn ApplicationArgs 2 //proposal_min_participation_algo
-	store 2
+	txn ApplicationArgs 1 //proposal_min_participation_algo
+	store 1
 	byte "proposal_min_participation_algo"
+	load 1
+	btoi
+	app_global_put
+	//log
+
+	txn ApplicationArgs 2 //proposal_min_participation_stake
+	store 2
+	byte "proposal_min_participation_stake"
 	load 2
 	btoi
 	app_global_put
 	//log
 
-	txn ApplicationArgs 3 //proposal_min_participation_stake
+	txn ApplicationArgs 3 //proposal_duration
 	store 3
-	byte "proposal_min_participation_stake"
+	byte "proposal_duration"
 	load 3
 	btoi
 	app_global_put
 	//log
 
-	txn ApplicationArgs 4 //proposal_duration
+	txn ApplicationArgs 4 //proposal_amount
 	store 4
-	byte "proposal_duration"
+	byte "proposal_amount"
 	load 4
 	btoi
 	app_global_put
 	//log
 
-	txn ApplicationArgs 5 //proposal_amount
+	txn ApplicationArgs 5 //proposal_voting_duration
 	store 5
-	byte "proposal_amount"
+	byte "proposal_vote_duration"
 	load 5
 	btoi
 	app_global_put
 	//log
 
-	txn ApplicationArgs 6 //proposal_voting_duration
+	txn ApplicationArgs 6 //proposal_voting_start
 	store 6
-	byte "proposal_vote_duration"
+	byte "proposal_voting_start"
 	load 6
 	btoi
 	app_global_put
 	//log
 
-	txn ApplicationArgs 7 //proposal_voting_start
+	txn ApplicationArgs 7 //proposal_min_participation_fee
 	store 7
-	byte "proposal_voting_start"
+	byte "proposal_min_participation_fee"
 	load 7
 	btoi
 	app_global_put
 	//log
 
-	txn ApplicationArgs 8 //proposal_min_participation_fee
+	txn ApplicationArgs 8 //proposal_min_participation_fee_algo
 	store 8
-	byte "proposal_min_participation_fee"
 	load 8
-	btoi
-	app_global_put
 	//log
 
-	txn ApplicationArgs 9 //proposal_min_participation_fee_algo
+	txn ApplicationArgs 9 //proposal_min_vote_fee
+	btoi
 	store 9
-	load 9
-	//log
-
-	txn ApplicationArgs 10 //proposal_min_vote_fee
-	btoi
-	store 10
 	byte "proposal_min_vote_fee"
-	load 10
+	load 9
 	app_global_put
 	//log
 
-	txn ApplicationArgs 11 //proposal_min_vote_fee_algo
-	btoi
-	store 11
+	txn ApplicationArgs 10 //proposal_min_vote_fee_algo
+	store 10
 	byte "proposal_min_vote_fee_algo"
-	load 11
+	load 10
+	btoi
 	app_global_put
 	//log
 
-	txn ApplicationArgs 12 // proposal_threshold
-	store 12
-	load 12
+	txn ApplicationArgs 11 // proposal_threshold
+	store 11
+	load 11
 
 
 ////////////
 
-	load 12
+	load 11
 	len
 	int 8
 	/
@@ -531,7 +531,7 @@ method_config_proposal:
 	box_get
 	bnz branch_delete_box
 	byte "proposal_threshold"
-	load 12
+	load 11
 	box_put
 	b extract_all_uint64_from_tuple
 
@@ -541,14 +541,14 @@ branch_delete_box:
 		box_del
 		pop
 	 	byte "proposal_threshold"
-		load 12
+		load 11
 		box_put
 
 	 	b extract_all_uint64_from_tuple
 
 extract_one_uint64_from_tuple:
 	
-	load 12
+	load 11
 	load 14
 	extract_uint64
 	itob
@@ -567,7 +567,7 @@ extract_all_uint64_from_tuple:
 
 	bnz extract_one_uint64_from_tuple
 
-	load 12
+	load 11
 	load 14
 	extract_uint64
 	itob

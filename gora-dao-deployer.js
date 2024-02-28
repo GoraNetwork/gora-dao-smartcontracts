@@ -1372,7 +1372,7 @@ const GoraDaoDeployer = class {
             appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
             appAccounts: [this.goraDaoAdminAccount.addr],
             appForeignApps: [Number(this.goraDaoMainApplicationId)],
-            sender: addr,
+            sender: proposalAdminAddr,
             suggestedParams: params,
             signer: signer,
             boxes: [
@@ -1387,7 +1387,7 @@ const GoraDaoDeployer = class {
             appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
             appForeignApps: [Number(this.proposalApplicationId)],
             appAccounts: [this.goraDaoAdminAccount.addr],
-            sender: addr,
+            sender: proposalAdminAddr,
             suggestedParams: params,
             signer: signer,
             boxes: [
@@ -1400,7 +1400,7 @@ const GoraDaoDeployer = class {
             ],
         }
         const axferProposal = new this.algosdk.Transaction({
-            from: addr,
+            from: proposalAdminAddr,
             to: `${this.goraDaoMainApplicationAddress}`,
             amount: 10,
             assetIndex: Number(this.goraDaoAsset),
@@ -1408,14 +1408,14 @@ const GoraDaoDeployer = class {
             ...params
         })
         const ptxnProposal = new this.algosdk.Transaction({
-            from: addr,
+            from: proposalAdminAddr,
             to: this.proposalApplicationAddress,
             amount: 110000,
             type: 'pay',
             ...params
         })
         const ptxnDao = new this.algosdk.Transaction({
-            from: addr,
+            from: proposalAdminAddr,
             to: this.goraDaoMainApplicationAddress,
             amount: 3000,
             type: 'pay',
@@ -1447,7 +1447,7 @@ const GoraDaoDeployer = class {
             //6 proposal_voting_duration
             24,
             //7 proposal_voting_start
-            0,
+            1,
             //8 proposal_min_participation_fee
             200,
             //9 proposal_min_participation_fee_algo
