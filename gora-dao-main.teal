@@ -467,8 +467,8 @@ method_proposal_create:
     store 4
 
 
-    // Checks on Proposal creat 
-    // Check Proposal manager Dao subscription (using amanger account box ref existing)
+    // Checks on Proposal create
+    // Check Proposal manager Dao subscription (using a manager account box ref existing)
     txna Accounts 0
     box_get
     assert
