@@ -276,36 +276,6 @@
                     "type": "axfer",
                     "name": "dao_asset_transfer_transaction",
                     "description": "Asset transfer transaction to deposit DAO asset (Gora)!"
-                },
-                {
-                    "type": "account",
-                    "name": "member_address",
-                    "description": "GoraDAO Proposal manager account reference"
-                },
-                {
-                    "type": "asset",
-                    "name": "asset_reference",
-                    "description": "GoraDAO Proposal asset Reference"
-                },
-                {
-                    "type": "asset",
-                    "name": "asset_reference",
-                    "description": "GoraDAO asset Reference"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_app_id",
-                    "description": "GoraDAO Proposal application ID"
-                },
-                {
-                    "type": "address",
-                    "name": "proposal_address",
-                    "description": "GoraDAO Proposal application address"
-                },
-                {
-                    "type": "uint64",
-                    "name": "asset_id",
-                    "description": "GoraDAO Proposal asset ID"
                 }
             ],
             "boxes": [

@@ -1356,20 +1356,22 @@ const GoraDaoDeployer = class {
     }
     // Configures and sets parameters of a proposal contract (before proposal activation)
     async configureProposalContract() {
-        let addr = this.goraDaoAdminAccount.addr;
+        let proposalAdminAddr = this.goraDaoProposalAdminAccount.addr;
         let params = await this.algodClient.getTransactionParams().do();
         let proposalApplication = Number(this.proposalApplicationId)
         let daoApplication = Number(this.goraDaoMainApplicationId)
         const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
         const proposalContract = new this.algosdk.ABIContract(JSON.parse(this.proposalContract.toString()))
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoAdminAccount)
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoProposalAdminAccount)
         let methodProposalConfig = this.getMethodByName("config_proposal", proposalContract)
         let methodDaoProposalConfig = this.getMethodByName("config_proposal", daoContract)
 
-        let memberPublicKey = this.algosdk.decodeAddress(this.goraDaoAdminAccount.addr)
+        let memberPublicKey = this.algosdk.decodeAddress(proposalAdminAddr)
         const commonParamsProposalSetup = {
             appID: proposalApplication,
-
+            appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
+            appAccounts: [this.goraDaoAdminAccount.addr],
+            appForeignApps: [Number(this.goraDaoMainApplicationId)],
             sender: addr,
             suggestedParams: params,
             signer: signer,
@@ -1382,7 +1384,9 @@ const GoraDaoDeployer = class {
         }
         const commonParamsDaoSetup = {
             appID: daoApplication,
-
+            appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
+            appForeignApps: [Number(this.proposalApplicationId)],
+            appAccounts: [this.goraDaoAdminAccount.addr],
             sender: addr,
             suggestedParams: params,
             signer: signer,
@@ -1424,14 +1428,6 @@ const GoraDaoDeployer = class {
         const argsDao = [
             tws0,
             tws2,
-            addr,
-            this.proposalAsset,
-            this.goraDaoAsset,
-            this.proposalApplicationId,
-            this.proposalApplicationAddress,
-            this.proposalAsset,
-
-
         ]
 
 
@@ -1440,20 +1436,27 @@ const GoraDaoDeployer = class {
         //this.goraDaoMainApplicationId,
         const argsProposal = [
             tws1,
-            this.proposalAsset,
-            this.proposalAsset,
-            addr,
-            addr,
+            //2 proposal_min_participation_algo
             100000,
+            //3 proposal_min_participation_stake
             100,
+            //4 proposal_duration
             72,
-            10000,
-            this.proposalAsset,
+            //5 proposal_amount
+            100000,
+            //6 proposal_voting_duration
             24,
+            //7 proposal_voting_start
             0,
-            2000,
-            10,
-            145000,
+            //8 proposal_min_participation_fee
+            200,
+            //9 proposal_min_participation_fee_algo
+            100000,
+            //10 proposal_min_vote_fee
+            350,
+            //11 proposal_min_vote_fee_algo
+            1000,
+            //12 proposal_threshold ([%participation, %threshold, %allocation])
             [10001, 100, 52, 80, 80, 60],
         ]
         const atcProposalConfig = new this.algosdk.AtomicTransactionComposer()

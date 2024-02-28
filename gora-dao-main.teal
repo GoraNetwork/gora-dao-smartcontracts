@@ -1041,9 +1041,7 @@ method_proposal_participate:
     box_get
     assert
     pop
-    
 
-	
     byte 0x151f7c75
 	global CurrentApplicationID
 	itob
