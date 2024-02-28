@@ -517,7 +517,7 @@ method_config_proposal:
 
 ////////////
 
-	load 20
+	load 12
 	len
 	int 8
 	/
@@ -531,7 +531,7 @@ method_config_proposal:
 	box_get
 	bnz branch_delete_box
 	byte "proposal_threshold"
-	load 20
+	load 12
 	box_put
 	b extract_all_uint64_from_tuple
 
@@ -541,14 +541,14 @@ branch_delete_box:
 		box_del
 		pop
 	 	byte "proposal_threshold"
-		load 20
+		load 12
 		box_put
 
 	 	b extract_all_uint64_from_tuple
 
 extract_one_uint64_from_tuple:
 	
-	load 20
+	load 12
 	load 14
 	extract_uint64
 	itob
@@ -567,7 +567,7 @@ extract_all_uint64_from_tuple:
 
 	bnz extract_one_uint64_from_tuple
 
-	load 20
+	load 12
 	load 14
 	extract_uint64
 	itob
