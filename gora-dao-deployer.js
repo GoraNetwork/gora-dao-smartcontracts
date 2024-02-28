@@ -1410,14 +1410,14 @@ const GoraDaoDeployer = class {
         const ptxnProposal = new this.algosdk.Transaction({
             from: proposalAdminAddr,
             to: this.proposalApplicationAddress,
-            amount: 110000,
+            amount: 3000,
             type: 'pay',
             ...params
         })
         const ptxnDao = new this.algosdk.Transaction({
             from: proposalAdminAddr,
             to: this.goraDaoMainApplicationAddress,
-            amount: 3000,
+            amount: 500000,
             type: 'pay',
             ...params
         })

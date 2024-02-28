@@ -123,7 +123,7 @@ branch_method_router:
 	==
 	bnz method_proposal_update
 
-	method "config_proposal(pay,axfer,account,asset,asset,uint64,address,uint64)uint64"
+	method "config_proposal(pay,axfer)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_config
@@ -770,30 +770,50 @@ method_proposal_config:
     ==
     assert
     // Checking the pay txn at index 0 of gtxn
+    gtxn 0 RekeyTo
+    global ZeroAddress
+    ==
     gtxn 2 RekeyTo
+    global ZeroAddress
+    ==
+    &&
+    assert
+
+    gtxn 0 CloseRemainderTo
     global ZeroAddress
     ==
     assert
     gtxn 2 CloseRemainderTo
     global ZeroAddress
     ==
+    &&
     assert
-    gtxn 2 AssetCloseTo
+
+  
+    gtxn 3 AssetCloseTo
     global ZeroAddress
     ==
     assert
+
+    gtxn 0 TypeEnum
+    int pay
+    ==
     gtxn 2 TypeEnum
     int pay
     ==
+    &&
     assert
+
+    gtxn 0 Fee
+    global MinTxnFee
+    >=
     gtxn 2 Fee
     global MinTxnFee
     >=
+    &&
     assert
-    gtxn 2 Amount
-    global MinTxnFee
-    >=
-    assert
+
+ 
 
     // Checking if the receiver of pay txn is the same as the current application address
   
@@ -807,8 +827,14 @@ method_proposal_config:
     ==
     assert
 
-    gtxn 2 Amount
+    gtxn 0 Amount
     int 3000
+    >=
+    assert
+
+    gtxn 2 Amount
+    byte "proposal_fee_algo"
+    app_global_get
     >=
     assert
 	
@@ -823,29 +849,29 @@ method_proposal_config:
     load 1
     //log
     // Proposal app id
-    txn ApplicationArgs 1
-	btoi
+    txna Applications 1
+	//btoi
     store 2
     load 2
     //itob
     //log
 
     // Proposal app address
-    txn ApplicationArgs 2
+    txna Applications 1
     store 3
     //load 3
     //log
 
     // Proposal asset id
-    txn ApplicationArgs 3
-    btoi
+    txna Assets 1
+    //btoi
     store 4
     load 4
     //itob
     //log
 
     // Checks on Proposal config 
-    // Check Proposal manager Dao subscription (using amanger account box ref existing)
+    // Check Proposal manager Dao subscription (using a manger account box ref existing)
     txna Accounts 0
     box_get
     assert
@@ -865,7 +891,7 @@ method_proposal_config:
 
 
     // Creating Proposal box, adding proposal id to dao_proposals_list box! Proposal box with proposal id as key
-    // containts 32 byte proposal address followed by 32 bytes proposal manager address
+    // contains 32 byte proposal address followed by 32 bytes proposal manager address
     txna Accounts 0
     box_get
     bnz branch_delete_proposal_box
@@ -873,6 +899,7 @@ method_proposal_config:
     itob
     load 1
     load 3
+    itob
     concat
     box_put
 

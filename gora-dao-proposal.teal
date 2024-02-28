@@ -526,7 +526,6 @@ method_config_proposal:
 	store 14
 	callsub extract_all_uint64_from_tuple
 	
-	
 	byte "proposal_threshold"
 	box_get
 	bnz branch_delete_box
@@ -884,9 +883,7 @@ branch_error:
 
 // Handles logging the last element on the stack then put a 1 on the top and return (log and approve)
 branch_log_return:
-
 	log
-
 	int 1
 	return
 
