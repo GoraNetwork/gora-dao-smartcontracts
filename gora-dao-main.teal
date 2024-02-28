@@ -783,10 +783,11 @@ method_proposal_config:
     global ZeroAddress
     ==
     assert
+
     gtxn 2 CloseRemainderTo
     global ZeroAddress
     ==
-    &&
+
     assert
 
   
@@ -936,6 +937,7 @@ branch_delete_proposal_box:
     txna Accounts 0
     load 1
     load 3
+    itob
     concat
     box_put
 

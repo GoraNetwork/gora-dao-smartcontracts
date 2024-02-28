@@ -424,7 +424,7 @@ method_config_proposal:
 	assert
 
 	gtxn 0 Amount
-	int 110000
+	int 3000
 	>=
 	assert
 
