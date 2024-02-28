@@ -160,33 +160,13 @@
                     "description": "Payment from Proposal manager to GoraDAO for fees and Proposal configuration MBRs!"
                 },
                 {
-                    "type": "asset",
-                    "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) Ref"
-                },
-                {
-                    "type": "uint64",
-                    "name": "asset_id",
-                    "description": "GoraNetwork Main asset (Gora) ID"
-                },
-                {
-                    "type": "account",
-                    "name": "manager_reference",
-                    "description": "GoraDAO member account reference (Proposal Manager)"
-                },
-                {
-                    "type": "account",
-                    "name": "manager_reference",
-                    "description": "GoraDAO manager account ref"
-                },
-                {
                     "type": "uint64",
                     "name": "proposal_min_participation_algo",
                     "description": "GoraDAO Proposal minimum participation staking in microAlgos"
                 },
                 {
                     "type": "uint64",
-                    "name": "proposal_min_participation",
+                    "name": "proposal_min_participation_stake",
                     "description": "GoraDAO Proposal minimum participation staking in DAO asset units"
                 },
                 {
@@ -202,11 +182,6 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "proposal_asset",
-                    "description": "GoraDAO Proposal asset ID, 0 if Algo"
-                },
-                {
-                    "type": "uint64",
                     "name": "proposal_voting_duration",
                     "description": "GoraDAO Proposal voting duration in working hours"
                 },
@@ -218,7 +193,12 @@
                 {
                     "type": "uint64",
                     "name": "proposal_min_participation_fee",
-                    "description": "GoraDAO Proposal minimum participation fee"
+                    "description": "GoraDAO Proposal minimum participation fee in Proposal asset units"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_min_participation_fee_algo",
+                    "description": "GoraDAO Proposal minimum participation fee in algo"
                 },
                 {
                     "type": "uint64",

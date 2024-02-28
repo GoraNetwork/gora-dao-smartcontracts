@@ -99,7 +99,7 @@ branch_method_router:
 	==
 	bnz method_optin_proposal_asset
 
-	method "config_proposal(pay,asset,uint64,account,account,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,(uint64,uint64,uint64,uint64,uint64,uint64))uint64"
+	method "config_proposal(pay,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,(uint64,uint64,uint64,uint64,uint64,uint64))uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_proposal
@@ -424,7 +424,7 @@ method_config_proposal:
 	assert
 
 	gtxn 0 Amount
-	int 110000
+	int 3000
 	>=
 	assert
 
@@ -433,128 +433,91 @@ method_config_proposal:
 	==
 	assert
 
-	txn ApplicationArgs 1
+	txn ApplicationArgs 1 //proposal_min_participation_algo
 	store 1
+	byte "proposal_min_participation_algo"
 	load 1
+	btoi
+	app_global_put
 	//log
 
-	txn ApplicationArgs 2
+	txn ApplicationArgs 2 //proposal_min_participation_stake
 	store 2
+	byte "proposal_min_participation_stake"
 	load 2
+	btoi
+	app_global_put
 	//log
 
-	txn ApplicationArgs 3
+	txn ApplicationArgs 3 //proposal_duration
 	store 3
+	byte "proposal_duration"
 	load 3
+	btoi
+	app_global_put
 	//log
 
-	txn ApplicationArgs 4
+	txn ApplicationArgs 4 //proposal_amount
 	store 4
+	byte "proposal_amount"
 	load 4
+	btoi
+	app_global_put
 	//log
 
-	txn ApplicationArgs 5
+	txn ApplicationArgs 5 //proposal_voting_duration
 	store 5
+	byte "proposal_vote_duration"
 	load 5
+	btoi
+	app_global_put
 	//log
 
-	txn ApplicationArgs 6
+	txn ApplicationArgs 6 //proposal_voting_start
 	store 6
+	byte "proposal_voting_start"
 	load 6
+	btoi
+	app_global_put
 	//log
 
-	txn ApplicationArgs 7
+	txn ApplicationArgs 7 //proposal_min_participation_fee
 	store 7
+	byte "proposal_min_participation_fee"
 	load 7
+	btoi
+	app_global_put
 	//log
 
-	txn ApplicationArgs 8
+	txn ApplicationArgs 8 //proposal_min_participation_fee_algo
 	store 8
 	load 8
 	//log
 
-	txn ApplicationArgs 9
+	txn ApplicationArgs 9 //proposal_min_vote_fee
+	btoi
 	store 9
+	byte "proposal_min_vote_fee"
 	load 9
+	app_global_put
 	//log
 
-	txn ApplicationArgs 10
+	txn ApplicationArgs 10 //proposal_min_vote_fee_algo
 	store 10
+	byte "proposal_min_vote_fee_algo"
 	load 10
+	btoi
+	app_global_put
 	//log
 
-	txn ApplicationArgs 11
+	txn ApplicationArgs 11 // proposal_threshold
 	store 11
 	load 11
-	//log
-
-	// proposal_min_participation_fee
-	txn ApplicationArgs 12
-	store 12
 
 
-	// proposal_min_vote_fee
-	txn ApplicationArgs 13
-	btoi
-	store 13
-	byte "proposal_min_vote_fee"
-	load 13
-	app_global_put
+////////////
 
-
-	// proposal_min_vote_fee_algo
-	txn ApplicationArgs 14
-	btoi
-	store 14
-	byte "proposal_min_vote_fee_algo"
-	load 14
-	app_global_put
-
-
-	txn ApplicationArgs 15
-	store 20
-	load 20
-
-
-	
-	byte "proposal_min_participation_algo"
-	load 5
-	btoi
-	app_global_put
-
-	
-	byte "proposal_min_participation"
-	load 6
-	btoi
-	app_global_put
-
-	byte "proposal_min_participation_fee"
-	load 12
-	btoi
-	app_global_put
-	
-	byte "proposal_duration"
-	load 7
-	btoi
-	app_global_put
-
-	byte "proposal_amount"
-	load 8
-	btoi
-	app_global_put
-
-	
-	byte "proposal_vote_duration"
-	load 10
-	btoi
-	app_global_put
-
-	byte "proposal_vote_start"
 	load 11
-	btoi
-	app_global_put
-
-	load 20
 	len
 	int 8
 	/
@@ -563,12 +526,11 @@ method_config_proposal:
 	store 14
 	callsub extract_all_uint64_from_tuple
 	
-	
 	byte "proposal_threshold"
 	box_get
 	bnz branch_delete_box
 	byte "proposal_threshold"
-	load 20
+	load 11
 	box_put
 	b extract_all_uint64_from_tuple
 
@@ -578,14 +540,14 @@ branch_delete_box:
 		box_del
 		pop
 	 	byte "proposal_threshold"
-		load 20
+		load 11
 		box_put
 
 	 	b extract_all_uint64_from_tuple
 
 extract_one_uint64_from_tuple:
 	
-	load 20
+	load 11
 	load 14
 	extract_uint64
 	itob
@@ -604,7 +566,7 @@ extract_all_uint64_from_tuple:
 
 	bnz extract_one_uint64_from_tuple
 
-	load 20
+	load 11
 	load 14
 	extract_uint64
 	itob
@@ -702,7 +664,7 @@ method_proposal_participate:
     txna Assets 0
     asset_holding_get AssetBalance
     assert
-	byte "proposal_min_participation"
+	byte "proposal_min_participation_stake"
     app_global_get
 	>=
 	assert
@@ -921,9 +883,7 @@ branch_error:
 
 // Handles logging the last element on the stack then put a 1 on the top and return (log and approve)
 branch_log_return:
-
 	log
-
 	int 1
 	return
 
