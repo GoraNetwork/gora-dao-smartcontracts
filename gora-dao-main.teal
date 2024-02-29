@@ -143,12 +143,12 @@ branch_method_router:
 	==
 	bnz method_proposal_participate
 
-    method "proposal_withdraw_participate(asset,account,application)uint64"
+    method "proposal_withdraw_participate()uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_withdraw_participate
 
-    method "proposal_vote(pay,axfer,asset,account,application,uint64)uint64"
+    method "proposal_vote(pay,axfer,uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_vote
@@ -1039,6 +1039,10 @@ method_proposal_participate:
     assert
     pop
 
+    txn Sender
+    byte ""
+    box_put
+
     byte 0x151f7c75
 	global CurrentApplicationID
 	itob
@@ -1051,24 +1055,35 @@ method_proposal_withdraw_participate:
     txna Accounts 0
     store 0
 
-    txna Applications 1
+    txna Accounts 1
+    box_get
+    assert
+    pop
+
+    gtxn 1 ApplicationID
     byte "proposal_min_participation_algo"
     app_global_get_ex
     assert
     store 1
 
-    txna Applications 1
+    gtxn 1 ApplicationID
     byte "proposal_min_participation_stake"
     app_global_get_ex
     assert
     store 2
 
-
-    // Checking account ref to be Sender
-    load 0
-    txn Sender
-    ==
+    gtxn 1 ApplicationID
+    byte "proposal_participation_fee_algo"
+    app_global_get_ex
     assert
+    store 3
+
+    gtxn 1 ApplicationID
+    byte "proposal_participation_fee"
+    app_global_get_ex
+    assert
+    store 4
+
 
     itxn_begin
 	global CurrentApplicationAddress
@@ -1078,6 +1093,8 @@ method_proposal_withdraw_participate:
 	load 0
 	itxn_field Receiver
 	load 1
+    load 3
+    +
 	itxn_field Amount
 	itxn_submit
 	//itxn TxID
@@ -1093,6 +1110,8 @@ method_proposal_withdraw_participate:
 	load 0
 	itxn_field AssetReceiver
 	load 2
+    load 4
+    +
 	itxn_field AssetAmount
 	itxn_submit
 	//itxn TxID

@@ -114,7 +114,7 @@ branch_method_router:
 	==
 	bnz method_proposal_participate
 
-    method "proposal_withdraw_participate(asset,account,application)uint64"
+    method "proposal_withdraw_participate()uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_withdraw_participate
@@ -554,10 +554,12 @@ extract_all_uint64_from_tuple:
 
 
 method_proposal_participate:
-	txna Accounts 0 // GoraDAO Admin account
+	txna Accounts 1 // GoraDAO Admin account
 	store 0
+
 	txn Sender // User
 	store 1
+
     // Checking Transaction group
     global GroupSize
     int 6
@@ -657,7 +659,8 @@ method_proposal_participate:
 
 	load 1
 	box_get
-	bnz branch_delete_participate_box
+	//bnz branch_delete_participate_box
+	bnz branch_error
 	load 1
     byte ""
     box_put

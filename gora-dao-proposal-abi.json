@@ -347,24 +347,7 @@
         {
             "name": "proposal_withdraw_participate",
             "description": "Withdraws participation of a member account from a Proposal! Returns the withdrawing member's account address!",
-            "args": [
-               
-                {
-                    "type": "asset",
-                    "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ref"
-                },
-                {
-                    "type": "account",
-                    "name": "member_reference",
-                    "description": "GoraDAO member account reference"
-                },
-                {
-                    "type": "application",
-                    "name": "dao_reference",
-                    "description": "GoraDAO main app reference"
-                }
-            ],
+            "args": [],
             "boxes": [
                 {
                     "name": "member_reference",

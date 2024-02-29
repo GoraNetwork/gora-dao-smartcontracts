@@ -315,23 +315,7 @@
         {
             "name": "proposal_withdraw_participate",
             "description": "Withdraws a member participation from a  Proposal! Returns the Proposal contract ID! Withdraw is possible only before voting starts",
-            "args": [
-                {
-                    "type": "asset",
-                    "name": "asset_reference",
-                    "description": "GoraDAO Main asset (Gora) ref"
-                },
-                {
-                    "type": "account",
-                    "name": "member_reference",
-                    "description": "GoraDAO member account reference"
-                },
-                {
-                    "type": "application",
-                    "name": "proposal_reference",
-                    "description": "GoraDAO proposal app reference"
-                }
-            ],
+            "args": [],
             "boxes": [
                 {
                     "name": "member_reference",
