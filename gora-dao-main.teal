@@ -333,7 +333,7 @@ method_subscribe_dao:
     //dup
     //log
     box_get
-    bnz branch_delet_member_box
+    bnz branch_delete_member_box
     pop
     load 0
     byte ""
@@ -611,10 +611,10 @@ method_proposal_create:
 	//itxn TxID
     //log
 	itxn LastLog
-	extract 4 0
-    store 11
+	//extract 4 0
+    //store 11
     //load 11
-    //log
+    log
 	
 	byte 0x151f7c75
 	load 9
@@ -910,9 +910,7 @@ method_proposal_config:
 	concat
 	b branch_log_return
 
-
-
-branch_delet_member_box:
+branch_delete_member_box:
     load 0
     box_del
     pop
@@ -926,8 +924,6 @@ branch_delet_member_box:
 	itob
 	concat
 	b branch_log_return
-
-
 
 branch_delete_proposal_box:
     txna Accounts 0
@@ -946,7 +942,6 @@ branch_delete_proposal_box:
 	itob
 	concat
 	b branch_log_return
-
 
 method_proposal_participate:
     txna Accounts 0
@@ -1001,18 +996,15 @@ method_proposal_participate:
     ==
     assert
 
-
     gtxn 0 TypeEnum
     int pay
     ==
     assert
    
-
     gtxn 1 TypeEnum
     int axfer
     ==
     assert
-
 
     gtxn 0 Fee
     global MinTxnFee
@@ -1024,7 +1016,6 @@ method_proposal_participate:
     >=
     assert
 
-
     gtxn 0 Amount
     load 1
     >=
@@ -1035,7 +1026,6 @@ method_proposal_participate:
     ==
     assert
 
-  
     gtxn 0 Receiver
     global CurrentApplicationAddress
     ==
@@ -1047,20 +1037,12 @@ method_proposal_participate:
     assert
 
 
-    // Checking account ref to be Sender
-    load 0
-    txn Sender
-    ==
-    assert
-
     // Checking the asset ref to be DAO asset
-    
     byte "dao_asset_id"
     app_global_get
     txna Assets 0
     assert
   
-    
     load 0
     txna Assets 0
     asset_holding_get AssetBalance

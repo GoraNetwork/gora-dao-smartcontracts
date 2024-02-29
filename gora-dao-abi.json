@@ -305,21 +305,6 @@
                     "type": "axfer",
                     "name": "asset_transfer_transaction",
                     "description": "Asset transfer transaction to deposit Gora!"
-                },
-                {
-                    "type": "asset",
-                    "name": "asset_reference",
-                    "description": "GoraDAO Main asset (Gora) ref"
-                },
-                {
-                    "type": "account",
-                    "name": "member_reference",
-                    "description": "GoraDAO member account reference"
-                },
-                {
-                    "type": "application",
-                    "name": "proposal_reference",
-                    "description": "GoraDAO proposal app reference"
                 }
             ],
             "boxes": [

@@ -187,7 +187,7 @@ method_create_proposal:
 	txn ApplicationArgs 1
 	btoi
 	store 1
-	byte "app_id"
+	byte "dao_app_id"
 	load 1
 	app_global_put
 
@@ -195,7 +195,7 @@ method_create_proposal:
 	txn ApplicationArgs 2
 	btoi
 	store 2
-	byte "asset_id"
+	byte "dao_asset_id"
 	load 2
 	app_global_put
 
@@ -274,14 +274,14 @@ method_update_proposal:
 	txn ApplicationArgs 1
 	btoi
 	store 1
-	byte "app_id"
+	byte "dao_app_id"
 	load 1
 	app_global_put
 
 	txn ApplicationArgs 2
 	btoi
 	store 2
-	byte "asset_id"
+	byte "dao_asset_id"
 	load 2
 	app_global_put
 
@@ -648,7 +648,7 @@ method_proposal_participate:
 
 
     // Checking the asset ref to be DAO asset
-    byte "asset_id"
+    byte "dao_asset_id"
     app_global_get
     txna Assets 0
     ==
@@ -789,7 +789,7 @@ method_proposal_vote:
     assert
 
     // Checking the asset ref to be DAO asset
-    byte "asset_id"
+    byte "dao_asset_id"
     app_global_get
     txna Assets 0
     ==

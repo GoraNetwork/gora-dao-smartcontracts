@@ -869,9 +869,10 @@ const GoraDaoDeployer = class {
         let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
         let assetId = transactionResponse['asset-index'];
         this.logger.info(`GoraDAO created TEST Asset ID: ${assetId}`);
-        let config = this.config;
-        config['gora_dao']['dao_asa_id'] = assetId;
-        await this.saveConfigToFile(config)
+ 
+        this.config['gora_dao']['dao_asa_id'] = assetId;
+        this.goraDaoAsset = assetId;
+        await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Asset ID: ${assetId} written to config file!`);
 
     }
@@ -909,9 +910,10 @@ const GoraDaoDeployer = class {
         let assetId = transactionResponse['asset-index'];
         this.logger.info(`GoraDAO Proposal TEST created Asset ID: ${assetId}`);
 
-        let config = this.config;
-        config['gora_dao']['proposal_asa_id'] = assetId;
-        await this.saveConfigToFile(config)
+
+        this.config['gora_dao']['proposal_asa_id'] = assetId;
+        this.proposalAsset = assetId
+        await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Proposal Asset ID: ${assetId} written to config file!`);
 
     }
@@ -976,10 +978,12 @@ const GoraDaoDeployer = class {
         await this.algodClient.sendRawTransaction(signedPayTxn).do();
         this.logger.info("GoraNetwork Main Application Address: %s funded!", this.goraDaoMainApplicationAddress);
         this.logger.info('------------------------------')
-        let config = this.config;
-        config['gora_dao']['asc_testnet_main_id'] = appId;
-        config['gora_dao']['asc_testnet_main_address'] = this.goraDaoMainApplicationAddress;
-        await this.saveConfigToFile(config)
+        
+        this.config['gora_dao']['asc_testnet_main_id'] = appId;
+        this.config['gora_dao']['asc_testnet_main_address'] = this.goraDaoMainApplicationAddress;
+        this.goraDaoMainApplicationId = appId
+        this.goraDaoMainApplicationAddress = this.algosdk.getApplicationAddress(Number(appId));
+        await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Main Application ID: ${appId} written to config file!`);
     }
     // Updating GoraDAO Main Contract
@@ -1340,11 +1344,13 @@ const GoraDaoDeployer = class {
             let addr = this.algosdk.getApplicationAddress(Number(res))
             this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", addr);
             this.logger.info("GoraDAO Proposal Contract topped up by 0.3 Algo!");
-            let config = this.config;
-            config['gora_dao']['asc_proposal_id'] = Number(res);
-            config['gora_dao']['asc_proposal_address'] = addr;
-            await this.saveConfigToFile(config)
-            this.logger.info(`GoraDAO Main Application ID: ${Number(res)} written to config file!`);
+
+            this.config['gora_dao']['asc_proposal_id'] = Number(res);
+            this.config['gora_dao']['asc_proposal_address'] = addr;
+            this.proposalApplicationId = Number(res)
+            this.proposalApplicationAddress = addr
+            await this.saveConfigToFile(this.config)
+            this.logger.info(`GoraDAO Proposal Application ID: ${Number(res)} written to config file!`);
             let txid = result.methodResults[idx].txID
             let confirmedRound = result.confirmedRound
 
@@ -1582,6 +1588,9 @@ const GoraDaoDeployer = class {
         let memberPublicKey = this.algosdk.decodeAddress(this.goraDaoUserAccount.addr)
         const commonParamsProposalSetup = {
             appID: proposalApplication,
+            appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
+            appAccounts: [this.goraDaoAdminAccount.addr],
+            appForeignApps: [Number(this.goraDaoMainApplicationId)],
             sender: addr,
             suggestedParams: params,
             signer: signer,
@@ -1594,6 +1603,9 @@ const GoraDaoDeployer = class {
         }
         const commonParamsDaoSetup = {
             appID: daoApplication,
+            appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
+            appAccounts: [this.goraDaoProposalAdminAccount.addr],
+            appForeignApps: [Number(this.proposalApplicationId)],
             sender: addr,
             suggestedParams: params,
             signer: signer,
@@ -1632,10 +1644,9 @@ const GoraDaoDeployer = class {
         const argsDao = [
             tws0,
             tws1,
-            this.goraDaoAsset,
-            addr,
-            this.proposalApplicationId
-
+            // this.goraDaoAsset,
+            // addr,
+            // this.proposalApplicationId
         ]
 
         const argsProposal = [
