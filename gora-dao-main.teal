@@ -1007,10 +1007,10 @@ method_proposal_participate:
     &&
     assert
 
-    gtxn 2 Asset
-    gtxn 4 Asset
+    gtxn 2 XferAsset
+    gtxn 4 XferAsset
     ==
-    gtxn 2 Asset
+    gtxn 2 XferAsset
     byte "proposal_asset_id"
     app_global_get
     ==
@@ -1021,8 +1021,14 @@ method_proposal_participate:
     byte "dao_asset_id"
     app_global_get
     txna Assets 0
+    ==
     assert
   
+    byte "proposal_asset_id"
+    app_global_get
+    txna Assets 1
+    ==
+    assert
 
     load 0
     box_get
