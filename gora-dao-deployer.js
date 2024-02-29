@@ -1534,7 +1534,7 @@ const GoraDaoDeployer = class {
             //8 proposal_participation_fee
             20,
             //9 proposal_participation_fee_algo
-            100000,
+            110000,
             //10 proposal_vote_fee
             350,
             //11 proposal_vote_fee_algo
@@ -1585,6 +1585,7 @@ const GoraDaoDeployer = class {
         const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoUserAccount)
         let methodProposalParticipate = this.getMethodByName("proposal_participate", proposalContract)
         let methodDaoProposalParticipate = this.getMethodByName("proposal_participate", daoContract)
+        let proposerPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
         let memberPublicKey = this.algosdk.decodeAddress(this.goraDaoUserAccount.addr)
         const commonParamsProposalSetup = {
             appID: proposalApplication,
@@ -1597,6 +1598,7 @@ const GoraDaoDeployer = class {
             boxes: [
 
                 { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
+                { appIndex: Number(proposalApplication), name: proposerPublicKey.publicKey },
 
 
             ],
@@ -1612,13 +1614,14 @@ const GoraDaoDeployer = class {
             boxes: [
                 { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.proposalApplicationId) },
                 { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
+                { appIndex: Number(daoApplication), name: proposerPublicKey.publicKey },
             ],
         }
 
         const ptxnFeeDao = new this.algosdk.Transaction({
             from: addr,
             to: this.goraDaoMainApplicationAddress,
-            amount: 100000,
+            amount: 110000,
             type: 'pay',
             ...params
         })
@@ -1640,7 +1643,7 @@ const GoraDaoDeployer = class {
         const axferMinDao = new this.algosdk.Transaction({
             from: addr,
             to: `${this.goraDaoMainApplicationAddress}`,
-            amount: 20,
+            amount: 100,
             assetIndex: Number(this.proposalAsset),
             type: 'axfer',
             ...params

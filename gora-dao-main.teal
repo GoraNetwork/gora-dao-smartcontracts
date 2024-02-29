@@ -957,7 +957,7 @@ branch_delete_proposal_box:
 	b branch_log_return
 
 method_proposal_participate:
-    txna Accounts 0 // Proposer account
+    txna Accounts 1 // Proposal admin account
     store 0
 
     // Checking Transaction group
@@ -969,6 +969,7 @@ method_proposal_participate:
     gtxn 5 ApplicationID
     byte "dao_app_id"
     app_global_get_ex
+    pop
     global CurrentApplicationID
     ==
     assert
@@ -1007,10 +1008,10 @@ method_proposal_participate:
     &&
     assert
 
-    gtxn 2 XferAsset
-    gtxn 4 XferAsset
+    gtxn 1 XferAsset
+    gtxn 3 XferAsset
     ==
-    gtxn 2 XferAsset
+    gtxn 1 XferAsset
     byte "proposal_asset_id"
     app_global_get
     ==
@@ -1024,8 +1025,11 @@ method_proposal_participate:
     ==
     assert
   
+
+    gtxn 5 ApplicationID
     byte "proposal_asset_id"
-    app_global_get
+    app_global_get_ex
+    pop
     txna Assets 1
     ==
     assert

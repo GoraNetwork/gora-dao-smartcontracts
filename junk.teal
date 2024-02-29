@@ -10,56 +10,22 @@
     assert
     store 2
 
-    // Checking the pay and axfer txns at index 0 and 1 of gtxn
-    gtxn 0 RekeyTo
-    global ZeroAddress
-    ==
-    assert
 
-    gtxn 1 RekeyTo
-    global ZeroAddress
-    ==
+     load 0
+    txna Assets 0
+    asset_holding_get AssetBalance
     assert
+	byte "proposal_min_participation_stake"
+    app_global_get
+	>=
+	assert
 
-    gtxn 0 CloseRemainderTo
-    global ZeroAddress
-    ==
-    assert
-
-    gtxn 1 CloseRemainderTo
-    global ZeroAddress
-    ==
-    assert
-
-    gtxn 0 AssetCloseTo
-    global ZeroAddress
-    ==
-    assert
-
-    gtxn 1 AssetCloseTo
-    global ZeroAddress
-    ==
-    assert
-
-     gtxn 0 Fee
-    global MinTxnFee
-    >=
-    assert
-
-    gtxn 1 Fee
-    global MinTxnFee
-    >=
-    assert
-
-    gtxn 0 Amount
-    load 1
-    >=
-    assert
-
-    gtxn 1 AssetAmount
-    load 2
-    ==
-    assert
+    load 0
+	balance
+	byte "proposal_min_participation_algo"
+	app_global_get
+	>=
+	assert
 
 
     load 0

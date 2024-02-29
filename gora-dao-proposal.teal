@@ -554,104 +554,111 @@ extract_all_uint64_from_tuple:
 
 
 method_proposal_participate:
-	txna Accounts 0
+	txna Accounts 0 // GoraDAO Admin account
 	store 0
+	txn Sender // User
+	store 1
     // Checking Transaction group
     global GroupSize
-    int 5
+    int 6
     ==
     assert
 
-    // Checking the pay and axfer txns at index 0 and 1 of gtxn
-    gtxn 3 RekeyTo
+    // Checking the pay and axfer txns 
+
+
+	gtxn 1 RekeyTo
     global ZeroAddress
     ==
-    assert
-
-    gtxn 3 RekeyTo
+    gtxn 2 RekeyTo
     global ZeroAddress
     ==
-    assert
-
-    gtxn 3 CloseRemainderTo
+	gtxn 3 RekeyTo
     global ZeroAddress
     ==
-    assert
-
-    gtxn 3 CloseRemainderTo
+	gtxn 4 RekeyTo
     global ZeroAddress
     ==
+	&&
+	&&
     assert
 
-    gtxn 3 AssetCloseTo
+    gtxn 1 CloseRemainderTo
     global ZeroAddress
     ==
-    assert
-
-    gtxn 3 AssetCloseTo
+	gtxn 3 CloseRemainderTo
     global ZeroAddress
     ==
+	&&
     assert
 
-
-    gtxn 3 TypeEnum
-    int pay
+    gtxn 2 AssetCloseTo
+    global ZeroAddress
     ==
+	gtxn 4 AssetCloseTo
+    global ZeroAddress
+    ==
+	&&
     assert
-   
 
-    gtxn 3 Fee
+
+    gtxn 1 Fee
     global MinTxnFee
     >=
+    gtxn 2 Fee
+    global MinTxnFee
+    >=
+	gtxn 3 Fee
+    global MinTxnFee
+    >=
+    gtxn 4 Fee
+    global MinTxnFee
+    >=
+	&&
+	&&
     assert
 
-    gtxn 3 Amount
-    byte "proposal_participation_fee"
-    app_global_get
+    gtxn 1 Amount
+    byte "proposal_participation_fee_algo"
+	app_global_get
     >=
     assert
-	
 
-    gtxn 3 Receiver
-    global CurrentApplicationAddress
-    ==
-    assert
-	
-
-    // Checking account ref to be Sender
-    load 0
-    txn Sender
+    gtxn 2 AssetAmount
+    byte "proposal_participation_fee"
+	app_global_get
     ==
     assert
 
-    // Checking the asset ref to be DAO asset
+	gtxn 3 Amount
+    byte "proposal_min_participation_algo"
+	app_global_get
+    >=
+    assert
+
+    gtxn 4 AssetAmount
+    byte "proposal_min_participation_stake"
+	app_global_get
+    ==
+    assert
+
+
     byte "proposal_asset_id"
     app_global_get
+    txna Assets 1
+    ==
+    assert
+
+	byte "dao_asset_id"
+    app_global_get
     txna Assets 0
     ==
     assert
 
-
-    load 0
-    txna Assets 0
-    asset_holding_get AssetBalance
-    assert
-	byte "proposal_min_participation_stake"
-    app_global_get
-	>=
-	assert
-
-	load 0
-	balance
-	byte "proposal_min_participation_algo"
-	app_global_get
-	>=
-	assert
-
-	load 0
+	load 1
 	box_get
 	bnz branch_delete_participate_box
-	load 0
+	load 1
     byte ""
     box_put
 	
