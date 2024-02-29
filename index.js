@@ -147,6 +147,7 @@ async function proposalsOperations() {
                 'Deploy New Proposal',
                 'Update Deployed Proposal',
                 'Configure Proposal',
+                'Distribute Proposal Asset',
                 'Participate into Proposal',
                 'Withdraw Participation',
                 'Vote on Proposal',
@@ -181,6 +182,16 @@ async function proposalsOperations() {
             break;
         case 'Configure Proposal':
             await goraDaoDeployer.configureProposalContract();
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
+            break;
+        case 'Distribute Proposal Asset':
+            await goraDaoDeployer.sendProposalAssetTransaction();
             await inquirer.prompt([
                 {
                     type: 'input',

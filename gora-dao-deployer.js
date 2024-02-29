@@ -714,6 +714,83 @@ const GoraDaoDeployer = class {
         this.logger.info(`Transaction ${signedSendToAppTxnResponse.txId} confirmed in round ${confirmedSignedSendToAppTxn['confirmed-round']}.`);
         this.logger.info('GoraDAO Asset has been sent to The GoraDAO App successfully')
     }
+    async sendProposalAssetTransaction() {
+        let addrFrom = this.goraDaoAdminAccount.addr;
+        let addrFromProposer = this.goraDaoProposalAdminAccount.addr;
+        let addrTo = this.goraDaoUserAccount.addr;
+        let appAddrTo = this.proposalApplicationAddress;
+        let amount = 2000;
+        let params = await this.algodClient.getTransactionParams().do();
+        // Optin transaction to user account
+        const txnOptinUser = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrTo, // from
+            addrTo, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            0, // amount 
+            undefined,// Note
+            this.proposalAsset, // assetID
+            params,
+            undefined
+        );
+        // Axfer transactions to 
+        const txnSendToUser = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrFromProposer, // from
+            addrTo, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            amount, // amount 
+            undefined,// Note
+            this.proposalAsset, // assetID
+            params,
+            undefined
+        );
+        // Axfer transaction to send proposal asset to proposal contract
+        const txnSendToApp = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrFromProposer, // from
+            appAddrTo, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            amount, // amount 
+            undefined,// Note
+            this.proposalAsset, // assetID
+            params,
+            undefined
+        );
+
+        // Sign the transaction
+        const signedOptinUserTxn = txnOptinUser.signTxn(this.goraDaoUserAccount.sk);
+        const signedSendToUserTxn = txnSendToUser.signTxn(this.goraDaoProposalAdminAccount.sk);
+        const signedSendToAppTxn = txnSendToApp.signTxn(this.goraDaoProposalAdminAccount.sk);
+
+        const signedOptinUserTxnResponse = await await this.algodClient.sendRawTransaction(signedOptinUserTxn).do();
+
+        this.logger.info(`Transaction ID: ${signedOptinUserTxnResponse.txId}`);
+
+        // Wait for confirmation
+        const confirmedSignedOptinUserTxnResponse = await this.algosdk.waitForConfirmation(this.algodClient, signedOptinUserTxnResponse.txId, 5);
+        this.logger.info(`Transaction ${signedOptinUserTxnResponse.txId} confirmed in round ${confirmedSignedOptinUserTxnResponse['confirmed-round']}.`);
+        this.logger.info('The User account has opted in to the Proposal Asset')
+
+
+        // Send the transaction
+        const signedSendToUserTxnResponse = await await this.algodClient.sendRawTransaction(signedSendToUserTxn).do();
+
+        this.logger.info(`Transaction ID: ${signedSendToUserTxnResponse.txId}`);
+
+        // Wait for confirmation
+        const confirmedSignedSendToUserTxn = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToUserTxnResponse.txId, 5);
+        this.logger.info(`Transaction ${signedSendToUserTxnResponse.txId} confirmed in round ${confirmedSignedSendToUserTxn['confirmed-round']}.`);
+        this.logger.info('GoraDAO Asset has been sent to The proposer account successfully')
+        const signedSendToAppTxnResponse = await await this.algodClient.sendRawTransaction(signedSendToAppTxn).do();
+
+        this.logger.info(`Transaction ID: ${signedSendToAppTxnResponse.txId}`);
+
+        // Wait for confirmation
+        const confirmedSignedSendToAppTxn = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToAppTxnResponse.txId, 5);
+        this.logger.info(`Transaction ${signedSendToAppTxnResponse.txId} confirmed in round ${confirmedSignedSendToAppTxn['confirmed-round']}.`);
+        this.logger.info('GoraDAO Asset has been sent to The GoraDAO App successfully')
+    }
     async sendAllAlgosAndDeleteMnemonics() {
         // Define mnemonic files and their corresponding keys in this object
         const mnemonicFiles = [
@@ -1267,7 +1344,7 @@ const GoraDaoDeployer = class {
             config['gora_dao']['asc_proposal_id'] = Number(res);
             config['gora_dao']['asc_proposal_address'] = addr;
             await this.saveConfigToFile(config)
-            this.logger.info(`GoraDAO Main Application ID: ${appId} written to config file!`);
+            this.logger.info(`GoraDAO Main Application ID: ${Number(res)} written to config file!`);
             let txid = result.methodResults[idx].txID
             let confirmedRound = result.confirmedRound
 
@@ -1448,16 +1525,16 @@ const GoraDaoDeployer = class {
             24,
             //7 proposal_voting_start
             1,
-            //8 proposal_min_participation_fee
-            200,
-            //9 proposal_min_participation_fee_algo
+            //8 proposal_participation_fee
+            20,
+            //9 proposal_participation_fee_algo
             100000,
-            //10 proposal_min_vote_fee
+            //10 proposal_vote_fee
             350,
-            //11 proposal_min_vote_fee_algo
+            //11 proposal_vote_fee_algo
             1000,
             //12 proposal_threshold ([%participation, %threshold, %allocation])
-            [10001, 100, 52, 80, 80, 60],
+            [100, 70, 100, 60, 60, 50],
         ]
         const atcProposalConfig = new this.algosdk.AtomicTransactionComposer()
 
@@ -1529,15 +1606,15 @@ const GoraDaoDeployer = class {
         const ptxnProposal = new this.algosdk.Transaction({
             from: addr,
             to: this.proposalApplicationAddress,
-            amount: 2000,
+            amount: 100000,
             type: 'pay',
             ...params
         })
         const axferDao = new this.algosdk.Transaction({
             from: addr,
-            to: `${this.goraDaoMainApplicationAddress}`,
-            amount: 100,
-            assetIndex: Number(this.goraDaoAsset),
+            to: `${this.proposalApplicationAddress}`,
+            amount: 200,
+            assetIndex: Number(this.proposalAsset),
             type: 'axfer',
             ...params
         })

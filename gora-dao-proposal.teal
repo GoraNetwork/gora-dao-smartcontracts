@@ -94,11 +94,6 @@ branch_method_router:
 	==
 	bnz method_update_proposal
 
-	method "optin_proposal_asset(asset,uint64)uint64"
-	txn ApplicationArgs 0
-	==
-	bnz method_optin_proposal_asset
-
 	method "config_proposal(pay,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,(uint64,uint64,uint64,uint64,uint64,uint64))uint64"
 	txn ApplicationArgs 0
 	==
@@ -347,8 +342,8 @@ method_update_proposal:
 	concat
 	b branch_log_return
 
-method_optin_proposal_asset:
-	callsub sub_check_owner_auth
+branch_optin_proposal_asset:
+	//callsub sub_check_owner_auth
 	txna Assets 0
 	store 0
 
@@ -383,7 +378,7 @@ method_optin_proposal_asset:
     log
 
 	byte 0x151f7c75
-	load 0
+	global CurrentApplicationID
 	itob
 	concat
 	b branch_log_return
@@ -467,7 +462,7 @@ method_config_proposal:
 
 	txn ApplicationArgs 5 //proposal_voting_duration
 	store 5
-	byte "proposal_vote_duration"
+	byte "proposal_voting_duration"
 	load 5
 	btoi
 	app_global_put
@@ -481,30 +476,33 @@ method_config_proposal:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 7 //proposal_min_participation_fee
+	txn ApplicationArgs 7 //proposal_participation_fee
 	store 7
-	byte "proposal_min_participation_fee"
+	byte "proposal_participation_fee"
 	load 7
 	btoi
 	app_global_put
 	//log
 
-	txn ApplicationArgs 8 //proposal_min_participation_fee_algo
+	txn ApplicationArgs 8 //proposal_participation_fee_algo
 	store 8
+	byte "proposal_participation_fee_algo"
 	load 8
+	btoi
+	app_global_put
 	//log
 
-	txn ApplicationArgs 9 //proposal_min_vote_fee
+	txn ApplicationArgs 9 //proposal_vote_fee
 	btoi
 	store 9
-	byte "proposal_min_vote_fee"
+	byte "proposal_vote_fee"
 	load 9
 	app_global_put
 	//log
 
-	txn ApplicationArgs 10 //proposal_min_vote_fee_algo
+	txn ApplicationArgs 10 //proposal_vote_fee_algo
 	store 10
-	byte "proposal_min_vote_fee_algo"
+	byte "proposal_vote_fee_algo"
 	load 10
 	btoi
 	app_global_put
@@ -512,10 +510,6 @@ method_config_proposal:
 
 	txn ApplicationArgs 11 // proposal_threshold
 	store 11
-	load 11
-
-
-////////////
 
 	load 11
 	len
@@ -571,7 +565,8 @@ extract_all_uint64_from_tuple:
 	extract_uint64
 	itob
 	log
-	
+	b branch_optin_proposal_asset
+
 	byte 0x151f7c75
 	global CurrentApplicationID
 	itob
@@ -632,7 +627,7 @@ method_proposal_participate:
     assert
 
     gtxn 3 Amount
-    byte "proposal_min_participation_fee"
+    byte "proposal_participation_fee"
     app_global_get
     >=
     assert
@@ -886,4 +881,5 @@ branch_log_return:
 	log
 	int 1
 	return
+
 
