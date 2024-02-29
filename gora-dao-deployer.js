@@ -1530,7 +1530,7 @@ const GoraDaoDeployer = class {
             //6 proposal_voting_duration
             24,
             //7 proposal_voting_start
-            1,
+            0,
             //8 proposal_participation_fee
             20,
             //9 proposal_participation_fee_algo
@@ -1625,7 +1625,7 @@ const GoraDaoDeployer = class {
         const axferDao = new this.algosdk.Transaction({
             from: addr,
             to: `${this.proposalApplicationAddress}`,
-            amount: 200,
+            amount: 20,
             assetIndex: Number(this.proposalAsset),
             type: 'axfer',
             ...params
@@ -1635,6 +1635,14 @@ const GoraDaoDeployer = class {
             to: this.goraDaoMainApplicationAddress,
             amount: 120000,
             type: 'pay',
+            ...params
+        })
+        const axferProposal = new this.algosdk.Transaction({
+            from: addr,
+            to: `${this.proposalApplicationAddress}`,
+            amount: 20,
+            assetIndex: Number(this.proposalAsset),
+            type: 'axfer',
             ...params
         })
 

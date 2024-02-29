@@ -342,46 +342,9 @@ method_update_proposal:
 	concat
 	b branch_log_return
 
-branch_optin_proposal_asset:
-	//callsub sub_check_owner_auth
-	txna Assets 0
-	store 0
 
-	itxn_begin
-	global CurrentApplicationAddress
-	itxn_field Sender
-	int axfer
-	itxn_field TypeEnum
-	global CurrentApplicationAddress
-	itxn_field AssetReceiver
-	int 0
-	itxn_field AssetAmount
-	txna Assets 0
-	itxn_field XferAsset
-	itxn_submit
-	itxn TxID
-    log
 	
-	itxn_begin
-	global CurrentApplicationAddress
-	itxn_field Sender
-	int axfer
-	itxn_field TypeEnum
-	global CurrentApplicationAddress
-	itxn_field AssetReceiver
-	int 0
-	itxn_field AssetAmount
-	txna Assets 1
-	itxn_field XferAsset
-	itxn_submit
-	itxn TxID
-    log
-
-	byte 0x151f7c75
-	global CurrentApplicationID
-	itob
-	concat
-	b branch_log_return
+	
 
 
 method_update_manager_address:
@@ -565,13 +528,29 @@ extract_all_uint64_from_tuple:
 	extract_uint64
 	itob
 	log
-	b branch_optin_proposal_asset
+	
+	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int axfer
+	itxn_field TypeEnum
+	global CurrentApplicationAddress
+	itxn_field AssetReceiver
+	int 0
+	itxn_field AssetAmount
+	txna Assets 1
+	itxn_field XferAsset
+	itxn_submit
+	itxn TxID
+    log
 
 	byte 0x151f7c75
 	global CurrentApplicationID
 	itob
 	concat
 	b branch_log_return
+
+	
 
 
 method_proposal_participate:
