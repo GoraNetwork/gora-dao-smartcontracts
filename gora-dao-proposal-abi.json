@@ -70,27 +70,6 @@
             }
         },
         {
-            "name":"optin_proposal_asset",
-            "description": "Signal to optin to proposal asset",
-            "args":[
-                {
-                    "type": "asset",
-                    "name": "proposal_asset_ref"
-                    
-                },
-                {
-                    "type": "uint64",
-                    "name": "proposal_asset_id"
-                    
-                }
-
-            ],
-            "returns": {
-                "type": "uint64"
-            }
-
-        },
-        {
             "name": "update_proposal",
             "description": "Updates an existing Proposal contract! Returns the Proposal contract ID!",
             "args": [
@@ -192,22 +171,22 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "proposal_min_participation_fee",
+                    "name": "proposal_min_participation_stake",
                     "description": "GoraDAO Proposal minimum participation fee in Proposal asset units"
                 },
                 {
                     "type": "uint64",
-                    "name": "proposal_min_participation_fee_algo",
+                    "name": "proposal_min_participation_algo",
                     "description": "GoraDAO Proposal minimum participation fee in algo"
                 },
                 {
                     "type": "uint64",
-                    "name": "proposal_min_vote_fee",
+                    "name": "proposal_vote_fee",
                     "description": "GoraDAO Proposal voting fee in DAO asset units"
                 },
                 {
                     "type": "uint64",
-                    "name": "proposal_min_vote_fee_algo",
+                    "name": "proposal_vote_fee_algo",
                     "description": "GoraDAO Proposal voting fee in Algos"
                 },
                 {

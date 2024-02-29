@@ -586,27 +586,27 @@ method_proposal_create:
 	//itxn TxID
     //log
 
-    itxn_begin
-    method "optin_proposal_asset(asset,uint64)uint64"
-    itxn_field ApplicationArgs
-    int appl
-	itxn_field TypeEnum
-    int NoOp
-    itxn_field OnCompletion
-    load 9
-	itxn_field ApplicationID
-    global CurrentApplicationAddress
-	itxn_field Sender
-    txna Assets 0
-    itxn_field Assets
-    txna Assets 1
-    itxn_field Assets
-    load 2
-    itob
-    dup
-    itxn_field ApplicationArgs
-    itxn_field ApplicationArgs
-	itxn_submit
+    //itxn_begin
+    //method "optin_proposal_asset(asset,uint64)uint64"
+    //itxn_field ApplicationArgs
+    //int appl
+	//itxn_field TypeEnum
+    //int NoOp
+    //itxn_field OnCompletion
+    //load 9
+	//itxn_field ApplicationID
+    //global CurrentApplicationAddress
+	//itxn_field Sender
+    //txna Assets 0
+    //itxn_field Assets
+    //txna Assets 1
+    //itxn_field Assets
+    //load 2
+    //itob
+    //dup
+    //itxn_field ApplicationArgs
+    //itxn_field ApplicationArgs
+	//itxn_submit
 
 	//itxn TxID
     //log
