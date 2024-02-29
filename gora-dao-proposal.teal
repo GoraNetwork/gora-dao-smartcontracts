@@ -528,7 +528,7 @@ extract_all_uint64_from_tuple:
 	extract_uint64
 	itob
 	log
-	
+
 	itxn_begin
 	global CurrentApplicationAddress
 	itxn_field Sender
@@ -624,10 +624,8 @@ method_proposal_participate:
     ==
     assert
 
-
-
     // Checking the asset ref to be DAO asset
-    byte "dao_asset_id"
+    byte "proposal_asset_id"
     app_global_get
     txna Assets 0
     ==

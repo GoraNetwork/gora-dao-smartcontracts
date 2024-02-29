@@ -890,7 +890,20 @@ method_proposal_config:
     assert
     pop
 
-
+    itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int axfer
+	itxn_field TypeEnum
+	global CurrentApplicationAddress
+	itxn_field AssetReceiver
+	int 0
+	itxn_field AssetAmount
+	txna Assets 1
+	itxn_field XferAsset
+	itxn_submit
+	itxn TxID
+    log
     // Creating Proposal box, adding proposal id to dao_proposals_list box! Proposal box with proposal id as key
     // contains 32 byte proposal address followed by 32 bytes proposal manager address
     txna Accounts 0

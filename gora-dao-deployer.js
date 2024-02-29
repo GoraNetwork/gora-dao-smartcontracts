@@ -1615,22 +1615,22 @@ const GoraDaoDeployer = class {
             ],
         }
 
-        const ptxnProposal = new this.algosdk.Transaction({
+        const ptxnFee = new this.algosdk.Transaction({
             from: addr,
-            to: this.proposalApplicationAddress,
+            to: this.goraDaoMainApplicationAddress,
             amount: 100000,
             type: 'pay',
             ...params
         })
-        const axferDao = new this.algosdk.Transaction({
-            from: addr,
-            to: `${this.proposalApplicationAddress}`,
-            amount: 20,
-            assetIndex: Number(this.proposalAsset),
-            type: 'axfer',
-            ...params
-        })
-        const ptxnDao = new this.algosdk.Transaction({
+        // const axferDao = new this.algosdk.Transaction({
+        //     from: addr,
+        //     to: `${this.proposalApplicationAddress}`,
+        //     amount: 20,
+        //     assetIndex: Number(this.proposalAsset),
+        //     type: 'axfer',
+        //     ...params
+        // })
+        const ptxnMinAlgo = new this.algosdk.Transaction({
             from: addr,
             to: this.goraDaoMainApplicationAddress,
             amount: 120000,
@@ -1646,12 +1646,13 @@ const GoraDaoDeployer = class {
             ...params
         })
 
-        const tws0 = { txn: ptxnDao, signer: signer }
-        const tws1 = { txn: axferDao, signer: signer }
-        const tws2 = { txn: ptxnProposal, signer: signer }
+        const tws0 = { txn: ptxnFee, signer: signer }
+        const tws1 = { txn: ptxnMinAlgo, signer: signer }
+        const tws2 = { txn: axferProposal, signer: signer }
         const argsDao = [
             tws0,
             tws1,
+           
             // this.goraDaoAsset,
             // addr,
             // this.proposalApplicationId
@@ -1659,9 +1660,7 @@ const GoraDaoDeployer = class {
 
         const argsProposal = [
             tws2,
-            this.goraDaoAsset,
-            addr,
-            this.goraDaoMainApplicationId,
+          
         ]
         const atcProposalParticipate = new this.algosdk.AtomicTransactionComposer()
         atcProposalParticipate.addMethodCall({
