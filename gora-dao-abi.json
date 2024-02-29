@@ -296,16 +296,7 @@
             "name": "proposal_participate",
             "description": "Participates a member to a Proposal! Returns the Proposal contract ID!",
             "args": [
-                {
-                    "type": "pay",
-                    "name": "payment_transaction",
-                    "description": "Payment from participants to GoraDAO for fees and participation MBRs!"
-                },
-                {
-                    "type": "axfer",
-                    "name": "asset_transfer_transaction",
-                    "description": "Asset transfer transaction to deposit Gora!"
-                }
+                
             ],
             "boxes": [
                 {

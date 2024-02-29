@@ -1615,52 +1615,48 @@ const GoraDaoDeployer = class {
             ],
         }
 
-        const ptxnFee = new this.algosdk.Transaction({
+        const ptxnFeeDao = new this.algosdk.Transaction({
             from: addr,
             to: this.goraDaoMainApplicationAddress,
             amount: 100000,
             type: 'pay',
             ...params
         })
-        // const axferDao = new this.algosdk.Transaction({
-        //     from: addr,
-        //     to: `${this.proposalApplicationAddress}`,
-        //     amount: 20,
-        //     assetIndex: Number(this.proposalAsset),
-        //     type: 'axfer',
-        //     ...params
-        // })
+        const axferFeeDao = new this.algosdk.Transaction({
+            from: addr,
+            to: `${this.goraDaoMainApplicationAddress}`,
+            amount: 20,
+            assetIndex: Number(this.proposalAsset),
+            type: 'axfer',
+            ...params
+        })
         const ptxnMinAlgo = new this.algosdk.Transaction({
             from: addr,
             to: this.goraDaoMainApplicationAddress,
-            amount: 120000,
+            amount: 100000,
             type: 'pay',
             ...params
         })
-        const axferProposal = new this.algosdk.Transaction({
+        const axferMinDao = new this.algosdk.Transaction({
             from: addr,
-            to: `${this.proposalApplicationAddress}`,
+            to: `${this.goraDaoMainApplicationAddress}`,
             amount: 20,
             assetIndex: Number(this.proposalAsset),
             type: 'axfer',
             ...params
         })
 
-        const tws0 = { txn: ptxnFee, signer: signer }
-        const tws1 = { txn: ptxnMinAlgo, signer: signer }
-        const tws2 = { txn: axferProposal, signer: signer }
-        const argsDao = [
-            tws0,
-            tws1,
-           
-            // this.goraDaoAsset,
-            // addr,
-            // this.proposalApplicationId
-        ]
+        const tws0 = { txn: ptxnFeeDao, signer: signer }
+        const tws1 = { txn: axferFeeDao, signer: signer }
+        const tws2 = { txn: ptxnMinAlgo, signer: signer }
+        const tws3 = { txn: axferMinDao, signer: signer }
+        const argsDao = [ ]
 
         const argsProposal = [
+            tws0,
+            tws1,
             tws2,
-          
+            tws3,
         ]
         const atcProposalParticipate = new this.algosdk.AtomicTransactionComposer()
         atcProposalParticipate.addMethodCall({

@@ -109,7 +109,7 @@ branch_method_router:
 	==
 	bnz method_activate_proposal
 
-	    method "proposal_participate(pay,asset,account,application)uint64"
+	method "proposal_participate(pay,axfer,pay,axfer)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_participate
