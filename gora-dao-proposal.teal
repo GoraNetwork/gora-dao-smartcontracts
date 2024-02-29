@@ -109,7 +109,7 @@ branch_method_router:
 	==
 	bnz method_activate_proposal
 
-	    method "proposal_participate(pay,asset,account,application)uint64"
+	method "proposal_participate(pay,axfer,pay,axfer)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_participate
@@ -187,7 +187,7 @@ method_create_proposal:
 	txn ApplicationArgs 1
 	btoi
 	store 1
-	byte "app_id"
+	byte "dao_app_id"
 	load 1
 	app_global_put
 
@@ -195,7 +195,7 @@ method_create_proposal:
 	txn ApplicationArgs 2
 	btoi
 	store 2
-	byte "asset_id"
+	byte "dao_asset_id"
 	load 2
 	app_global_put
 
@@ -274,14 +274,14 @@ method_update_proposal:
 	txn ApplicationArgs 1
 	btoi
 	store 1
-	byte "app_id"
+	byte "dao_app_id"
 	load 1
 	app_global_put
 
 	txn ApplicationArgs 2
 	btoi
 	store 2
-	byte "asset_id"
+	byte "dao_asset_id"
 	load 2
 	app_global_put
 
@@ -342,46 +342,9 @@ method_update_proposal:
 	concat
 	b branch_log_return
 
-branch_optin_proposal_asset:
-	//callsub sub_check_owner_auth
-	txna Assets 0
-	store 0
 
-	itxn_begin
-	global CurrentApplicationAddress
-	itxn_field Sender
-	int axfer
-	itxn_field TypeEnum
-	global CurrentApplicationAddress
-	itxn_field AssetReceiver
-	int 0
-	itxn_field AssetAmount
-	txna Assets 0
-	itxn_field XferAsset
-	itxn_submit
-	itxn TxID
-    log
 	
-	itxn_begin
-	global CurrentApplicationAddress
-	itxn_field Sender
-	int axfer
-	itxn_field TypeEnum
-	global CurrentApplicationAddress
-	itxn_field AssetReceiver
-	int 0
-	itxn_field AssetAmount
-	txna Assets 1
-	itxn_field XferAsset
-	itxn_submit
-	itxn TxID
-    log
-
-	byte 0x151f7c75
-	global CurrentApplicationID
-	itob
-	concat
-	b branch_log_return
+	
 
 
 method_update_manager_address:
@@ -565,7 +528,21 @@ extract_all_uint64_from_tuple:
 	extract_uint64
 	itob
 	log
-	b branch_optin_proposal_asset
+
+	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int axfer
+	itxn_field TypeEnum
+	global CurrentApplicationAddress
+	itxn_field AssetReceiver
+	int 0
+	itxn_field AssetAmount
+	txna Assets 1
+	itxn_field XferAsset
+	itxn_submit
+	itxn TxID
+    log
 
 	byte 0x151f7c75
 	global CurrentApplicationID
@@ -573,108 +550,115 @@ extract_all_uint64_from_tuple:
 	concat
 	b branch_log_return
 
+	
+
 
 method_proposal_participate:
-	txna Accounts 0
+	txna Accounts 0 // GoraDAO Admin account
 	store 0
+	txn Sender // User
+	store 1
     // Checking Transaction group
     global GroupSize
-    int 5
+    int 6
     ==
     assert
 
-    // Checking the pay and axfer txns at index 0 and 1 of gtxn
-    gtxn 3 RekeyTo
+    // Checking the pay and axfer txns 
+
+
+	gtxn 1 RekeyTo
     global ZeroAddress
     ==
-    assert
-
-    gtxn 3 RekeyTo
+    gtxn 2 RekeyTo
     global ZeroAddress
     ==
-    assert
-
-    gtxn 3 CloseRemainderTo
+	gtxn 3 RekeyTo
     global ZeroAddress
     ==
-    assert
-
-    gtxn 3 CloseRemainderTo
+	gtxn 4 RekeyTo
     global ZeroAddress
     ==
+	&&
+	&&
     assert
 
-    gtxn 3 AssetCloseTo
+    gtxn 1 CloseRemainderTo
     global ZeroAddress
     ==
-    assert
-
-    gtxn 3 AssetCloseTo
+	gtxn 3 CloseRemainderTo
     global ZeroAddress
     ==
+	&&
     assert
 
-
-    gtxn 3 TypeEnum
-    int pay
+    gtxn 2 AssetCloseTo
+    global ZeroAddress
     ==
+	gtxn 4 AssetCloseTo
+    global ZeroAddress
+    ==
+	&&
     assert
-   
 
-    gtxn 3 Fee
+
+    gtxn 1 Fee
     global MinTxnFee
     >=
+    gtxn 2 Fee
+    global MinTxnFee
+    >=
+	gtxn 3 Fee
+    global MinTxnFee
+    >=
+    gtxn 4 Fee
+    global MinTxnFee
+    >=
+	&&
+	&&
     assert
 
-    gtxn 3 Amount
-    byte "proposal_participation_fee"
-    app_global_get
+    gtxn 1 Amount
+    byte "proposal_participation_fee_algo"
+	app_global_get
     >=
     assert
-	
 
-    gtxn 3 Receiver
-    global CurrentApplicationAddress
-    ==
-    assert
-	
-
-    // Checking account ref to be Sender
-    load 0
-    txn Sender
-    ==
-    assert
-
-
-
-    // Checking the asset ref to be DAO asset
-    byte "asset_id"
-    app_global_get
-    txna Assets 0
-    ==
-    assert
-
-
-    load 0
-    txna Assets 0
-    asset_holding_get AssetBalance
-    assert
-	byte "proposal_min_participation_stake"
-    app_global_get
-	>=
-	assert
-
-	load 0
-	balance
-	byte "proposal_min_participation_algo"
+    gtxn 2 AssetAmount
+    byte "proposal_participation_fee"
 	app_global_get
-	>=
-	assert
+    ==
+    assert
 
-	load 0
+	gtxn 3 Amount
+    byte "proposal_min_participation_algo"
+	app_global_get
+    >=
+    assert
+
+    gtxn 4 AssetAmount
+    byte "proposal_min_participation_stake"
+	app_global_get
+    ==
+    assert
+
+
+    byte "proposal_asset_id"
+    app_global_get
+    txna Assets 1
+    ==
+    assert
+
+	byte "dao_asset_id"
+    app_global_get
+    txna Assets 0
+    ==
+    assert
+
+	load 1
 	box_get
 	bnz branch_delete_participate_box
-	load 0
+	load 1
     byte ""
     box_put
 	
@@ -789,7 +773,7 @@ method_proposal_vote:
     assert
 
     // Checking the asset ref to be DAO asset
-    byte "asset_id"
+    byte "dao_asset_id"
     app_global_get
     txna Assets 0
     ==

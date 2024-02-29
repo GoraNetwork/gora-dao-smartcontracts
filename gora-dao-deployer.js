@@ -869,9 +869,10 @@ const GoraDaoDeployer = class {
         let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
         let assetId = transactionResponse['asset-index'];
         this.logger.info(`GoraDAO created TEST Asset ID: ${assetId}`);
-        let config = this.config;
-        config['gora_dao']['dao_asa_id'] = assetId;
-        await this.saveConfigToFile(config)
+ 
+        this.config['gora_dao']['dao_asa_id'] = assetId;
+        this.goraDaoAsset = assetId;
+        await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Asset ID: ${assetId} written to config file!`);
 
     }
@@ -909,9 +910,10 @@ const GoraDaoDeployer = class {
         let assetId = transactionResponse['asset-index'];
         this.logger.info(`GoraDAO Proposal TEST created Asset ID: ${assetId}`);
 
-        let config = this.config;
-        config['gora_dao']['proposal_asa_id'] = assetId;
-        await this.saveConfigToFile(config)
+
+        this.config['gora_dao']['proposal_asa_id'] = assetId;
+        this.proposalAsset = assetId
+        await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Proposal Asset ID: ${assetId} written to config file!`);
 
     }
@@ -976,10 +978,12 @@ const GoraDaoDeployer = class {
         await this.algodClient.sendRawTransaction(signedPayTxn).do();
         this.logger.info("GoraNetwork Main Application Address: %s funded!", this.goraDaoMainApplicationAddress);
         this.logger.info('------------------------------')
-        let config = this.config;
-        config['gora_dao']['asc_testnet_main_id'] = appId;
-        config['gora_dao']['asc_testnet_main_address'] = this.goraDaoMainApplicationAddress;
-        await this.saveConfigToFile(config)
+        
+        this.config['gora_dao']['asc_testnet_main_id'] = appId;
+        this.config['gora_dao']['asc_testnet_main_address'] = this.goraDaoMainApplicationAddress;
+        this.goraDaoMainApplicationId = appId
+        this.goraDaoMainApplicationAddress = this.algosdk.getApplicationAddress(Number(appId));
+        await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Main Application ID: ${appId} written to config file!`);
     }
     // Updating GoraDAO Main Contract
@@ -1340,11 +1344,13 @@ const GoraDaoDeployer = class {
             let addr = this.algosdk.getApplicationAddress(Number(res))
             this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", addr);
             this.logger.info("GoraDAO Proposal Contract topped up by 0.3 Algo!");
-            let config = this.config;
-            config['gora_dao']['asc_proposal_id'] = Number(res);
-            config['gora_dao']['asc_proposal_address'] = addr;
-            await this.saveConfigToFile(config)
-            this.logger.info(`GoraDAO Main Application ID: ${Number(res)} written to config file!`);
+
+            this.config['gora_dao']['asc_proposal_id'] = Number(res);
+            this.config['gora_dao']['asc_proposal_address'] = addr;
+            this.proposalApplicationId = Number(res)
+            this.proposalApplicationAddress = addr
+            await this.saveConfigToFile(this.config)
+            this.logger.info(`GoraDAO Proposal Application ID: ${Number(res)} written to config file!`);
             let txid = result.methodResults[idx].txID
             let confirmedRound = result.confirmedRound
 
@@ -1524,11 +1530,11 @@ const GoraDaoDeployer = class {
             //6 proposal_voting_duration
             24,
             //7 proposal_voting_start
-            1,
+            0,
             //8 proposal_participation_fee
             20,
             //9 proposal_participation_fee_algo
-            100000,
+            110000,
             //10 proposal_vote_fee
             350,
             //11 proposal_vote_fee_algo
@@ -1579,70 +1585,81 @@ const GoraDaoDeployer = class {
         const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoUserAccount)
         let methodProposalParticipate = this.getMethodByName("proposal_participate", proposalContract)
         let methodDaoProposalParticipate = this.getMethodByName("proposal_participate", daoContract)
+        let proposerPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
         let memberPublicKey = this.algosdk.decodeAddress(this.goraDaoUserAccount.addr)
         const commonParamsProposalSetup = {
             appID: proposalApplication,
+            appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
+            appAccounts: [this.goraDaoAdminAccount.addr],
+            appForeignApps: [Number(this.goraDaoMainApplicationId)],
             sender: addr,
             suggestedParams: params,
             signer: signer,
             boxes: [
 
                 { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
+                { appIndex: Number(proposalApplication), name: proposerPublicKey.publicKey },
 
 
             ],
         }
         const commonParamsDaoSetup = {
             appID: daoApplication,
+            appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
+            appAccounts: [this.goraDaoProposalAdminAccount.addr],
+            appForeignApps: [Number(this.proposalApplicationId)],
             sender: addr,
             suggestedParams: params,
             signer: signer,
             boxes: [
                 { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.proposalApplicationId) },
                 { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
+                { appIndex: Number(daoApplication), name: proposerPublicKey.publicKey },
             ],
         }
 
-        const ptxnProposal = new this.algosdk.Transaction({
+        const ptxnFeeDao = new this.algosdk.Transaction({
             from: addr,
-            to: this.proposalApplicationAddress,
-            amount: 100000,
+            to: this.goraDaoMainApplicationAddress,
+            amount: 110000,
             type: 'pay',
             ...params
         })
-        const axferDao = new this.algosdk.Transaction({
+        const axferFeeDao = new this.algosdk.Transaction({
             from: addr,
-            to: `${this.proposalApplicationAddress}`,
-            amount: 200,
+            to: `${this.goraDaoMainApplicationAddress}`,
+            amount: 20,
             assetIndex: Number(this.proposalAsset),
             type: 'axfer',
             ...params
         })
-        const ptxnDao = new this.algosdk.Transaction({
+        const ptxnMinAlgo = new this.algosdk.Transaction({
             from: addr,
             to: this.goraDaoMainApplicationAddress,
-            amount: 120000,
+            amount: 100000,
             type: 'pay',
             ...params
         })
+        const axferMinDao = new this.algosdk.Transaction({
+            from: addr,
+            to: `${this.goraDaoMainApplicationAddress}`,
+            amount: 100,
+            assetIndex: Number(this.proposalAsset),
+            type: 'axfer',
+            ...params
+        })
 
-        const tws0 = { txn: ptxnDao, signer: signer }
-        const tws1 = { txn: axferDao, signer: signer }
-        const tws2 = { txn: ptxnProposal, signer: signer }
-        const argsDao = [
-            tws0,
-            tws1,
-            this.goraDaoAsset,
-            addr,
-            this.proposalApplicationId
-
-        ]
+        const tws0 = { txn: ptxnFeeDao, signer: signer }
+        const tws1 = { txn: axferFeeDao, signer: signer }
+        const tws2 = { txn: ptxnMinAlgo, signer: signer }
+        const tws3 = { txn: axferMinDao, signer: signer }
+        const argsDao = [ ]
 
         const argsProposal = [
+            tws0,
+            tws1,
             tws2,
-            this.goraDaoAsset,
-            addr,
-            this.goraDaoMainApplicationId,
+            tws3,
         ]
         const atcProposalParticipate = new this.algosdk.AtomicTransactionComposer()
         atcProposalParticipate.addMethodCall({

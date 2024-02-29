@@ -1,0 +1,34 @@
+    txna Applications 1
+    byte "proposal_min_participation_algo"
+    app_global_get_ex
+    assert
+    store 1
+
+    txna Applications 1
+    byte "proposal_min_participation_stake"
+    app_global_get_ex
+    assert
+    store 2
+
+
+     load 0
+    txna Assets 0
+    asset_holding_get AssetBalance
+    assert
+	byte "proposal_min_participation_stake"
+    app_global_get
+	>=
+	assert
+
+    load 0
+	balance
+	byte "proposal_min_participation_algo"
+	app_global_get
+	>=
+	assert
+
+
+    load 0
+    txna Assets 0
+    asset_holding_get AssetBalance
+    assert

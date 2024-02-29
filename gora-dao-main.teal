@@ -138,7 +138,7 @@ branch_method_router:
 	==
 	bnz method_unsubscribe_dao
 
-    method "proposal_participate(pay,axfer)uint64"
+    method "proposal_participate()uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_participate
@@ -333,7 +333,7 @@ method_subscribe_dao:
     //dup
     //log
     box_get
-    bnz branch_delet_member_box
+    bnz branch_delete_member_box
     pop
     load 0
     byte ""
@@ -611,10 +611,10 @@ method_proposal_create:
 	//itxn TxID
     //log
 	itxn LastLog
-	extract 4 0
-    store 11
+	//extract 4 0
+    //store 11
     //load 11
-    //log
+    log
 	
 	byte 0x151f7c75
 	load 9
@@ -890,7 +890,20 @@ method_proposal_config:
     assert
     pop
 
-
+    itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int axfer
+	itxn_field TypeEnum
+	global CurrentApplicationAddress
+	itxn_field AssetReceiver
+	int 0
+	itxn_field AssetAmount
+	txna Assets 1
+	itxn_field XferAsset
+	itxn_submit
+	itxn TxID
+    log
     // Creating Proposal box, adding proposal id to dao_proposals_list box! Proposal box with proposal id as key
     // contains 32 byte proposal address followed by 32 bytes proposal manager address
     txna Accounts 0
@@ -910,9 +923,7 @@ method_proposal_config:
 	concat
 	b branch_log_return
 
-
-
-branch_delet_member_box:
+branch_delete_member_box:
     load 0
     box_del
     pop
@@ -926,8 +937,6 @@ branch_delet_member_box:
 	itob
 	concat
 	b branch_log_return
-
-
 
 branch_delete_proposal_box:
     txna Accounts 0
@@ -947,123 +956,82 @@ branch_delete_proposal_box:
 	concat
 	b branch_log_return
 
-
 method_proposal_participate:
-    txna Accounts 0
+    txna Accounts 1 // Proposal admin account
     store 0
-
-    txna Applications 1
-    byte "proposal_min_participation_algo"
-    app_global_get_ex
-    assert
-    store 1
-
-    txna Applications 1
-    byte "proposal_min_participation_stake"
-    app_global_get_ex
-    assert
-    store 2
 
     // Checking Transaction group
     global GroupSize
-    int 5
+    int 6
     ==
     assert
 
-    // Checking the pay and axfer txns at index 0 and 1 of gtxn
-    gtxn 0 RekeyTo
-    global ZeroAddress
+    gtxn 5 ApplicationID
+    byte "dao_app_id"
+    app_global_get_ex
+    pop
+    global CurrentApplicationID
     ==
     assert
-
-    gtxn 1 RekeyTo
-    global ZeroAddress
-    ==
-    assert
-
-    gtxn 0 CloseRemainderTo
-    global ZeroAddress
-    ==
-    assert
-
-    gtxn 1 CloseRemainderTo
-    global ZeroAddress
-    ==
-    assert
-
-    gtxn 0 AssetCloseTo
-    global ZeroAddress
-    ==
-    assert
-
-    gtxn 1 AssetCloseTo
-    global ZeroAddress
-    ==
-    assert
-
-
-    gtxn 0 TypeEnum
-    int pay
-    ==
-    assert
-   
 
     gtxn 1 TypeEnum
+    int pay
+    ==
+    gtxn 3 TypeEnum
+    int pay
+    ==
+    &&
+    assert
+   
+    gtxn 2 TypeEnum
     int axfer
     ==
-    assert
-
-
-    gtxn 0 Fee
-    global MinTxnFee
-    >=
-    assert
-
-    gtxn 1 Fee
-    global MinTxnFee
-    >=
-    assert
-
-
-    gtxn 0 Amount
-    load 1
-    >=
-    assert
-
-    gtxn 1 AssetAmount
-    load 2
+    gtxn 4 TypeEnum
+    int axfer
     ==
+    &&
     assert
 
-  
-    gtxn 0 Receiver
+    gtxn 1 Receiver
     global CurrentApplicationAddress
     ==
-    assert
-
-    gtxn 1 AssetReceiver
+    gtxn 2 AssetReceiver
     global CurrentApplicationAddress
     ==
+    gtxn 3 Receiver
+    global CurrentApplicationAddress
+    ==
+    gtxn 4 AssetReceiver
+    global CurrentApplicationAddress
+    ==
+    &&
+    &&
     assert
 
-
-    // Checking account ref to be Sender
-    load 0
-    txn Sender
+    gtxn 1 XferAsset
+    gtxn 3 XferAsset
     ==
+    gtxn 1 XferAsset
+    byte "proposal_asset_id"
+    app_global_get
+    ==
+    && 
     assert
 
     // Checking the asset ref to be DAO asset
-    
     byte "dao_asset_id"
     app_global_get
     txna Assets 0
+    ==
     assert
   
-    
-    load 0
-    txna Assets 0
-    asset_holding_get AssetBalance
+
+    gtxn 5 ApplicationID
+    byte "proposal_asset_id"
+    app_global_get_ex
+    pop
+    txna Assets 1
+    ==
     assert
 
     load 0

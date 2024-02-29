@@ -311,23 +311,23 @@
             "args": [
                 {
                     "type": "pay",
-                    "name": "payment_transaction",
-                    "description": "Payment from Proposal participant to GoraDAO for fees and Proposal participation MBRs!"
+                    "name": "fee_payment_transaction",
+                    "description": "Payment from Proposal participant to GoraDAO for fees!"
                 },
                 {
-                    "type": "asset",
-                    "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ref"
+                    "type": "axfer",
+                    "name": "token_payment_transaction",
+                    "description": "Axfer from Proposal participant to GoraDAO for fees!"
                 },
                 {
-                    "type": "account",
-                    "name": "member_reference",
-                    "description": "GoraDAO member account reference"
+                    "type": "pay",
+                    "name": "stake_payment_transaction",
+                    "description": "Payment from Proposal participant to GoraDAO for  Proposal participation MBRs!"
                 },
                 {
-                    "type": "application",
-                    "name": "dao_reference",
-                    "description": "GoraDAO main app reference"
+                    "type": "axfer",
+                    "name": "stake_axfer_transaction",
+                    "description": "Axfer from Proposal participant to GoraDAO for  Proposal participation MBRs!"
                 }
             ],
             "boxes": [
