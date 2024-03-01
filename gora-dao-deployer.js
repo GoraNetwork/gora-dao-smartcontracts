@@ -1542,11 +1542,11 @@ const GoraDaoDeployer = class {
             //11 proposal_vote_fee_algo
             1000,
             //12 participation_threshold (uint64,uint64,uint64)
-            [100, 70, 100],
+            [100, 70, 100000],
             //13 vote_threshold (uint64,uint64,uint64)
-            [ 70, 60, 50],
+            [ 70, 60, 50000],
             //14 proposal_allocation (uint64,uint64,uint64)
-            [ 50, 51, 40],
+            [ 50, 51, 40000],
         ]
         const atcProposalConfig = new this.algosdk.AtomicTransactionComposer()
 
