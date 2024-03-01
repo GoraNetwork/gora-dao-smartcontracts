@@ -1459,7 +1459,9 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_threshold")) },
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("participation_threshold")) },
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("vote_threshold")) },
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_allocation")) },
                 { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
 
 
@@ -1539,9 +1541,11 @@ const GoraDaoDeployer = class {
             350,
             //11 proposal_vote_fee_algo
             1000,
-            //12 proposal_threshold ([%participation, %threshold, %allocation])
+            //12 participation_threshold (uint64,uint64,uint64)
             [100, 70, 100],
+            //13 vote_threshold (uint64,uint64,uint64)
             [ 60, 60, 50],
+            //14 proposal_allocation (uint64,uint64,uint64)
             [ 50, 51, 40],
         ]
         const atcProposalConfig = new this.algosdk.AtomicTransactionComposer()
