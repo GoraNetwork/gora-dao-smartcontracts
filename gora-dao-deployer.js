@@ -1544,7 +1544,7 @@ const GoraDaoDeployer = class {
             //12 participation_threshold (uint64,uint64,uint64)
             [100, 70, 100],
             //13 vote_threshold (uint64,uint64,uint64)
-            [ 60, 60, 50],
+            [ 70, 60, 50],
             //14 proposal_allocation (uint64,uint64,uint64)
             [ 50, 51, 40],
         ]
@@ -1605,6 +1605,8 @@ const GoraDaoDeployer = class {
 
                 { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
                 { appIndex: Number(proposalApplication), name: proposerPublicKey.publicKey },
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("participation_threshold")) },
+           
 
 
             ],
