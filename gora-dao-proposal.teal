@@ -505,75 +505,18 @@ method_config_proposal:
 	txn ApplicationArgs 13 // proposal_allocations
 	store 13
 
-	load 11
-	len
-	int 8
-	/
-	store 15
-
-	int 0
-	store 14
-	
-
-	b extract_all_uint64_from_tuple
-
-
-
-extract_one_uint64_from_tuples:
-	
-	load 11
-	load 14
-	extract_uint64
-	itob
 	byte "participation_threshold"
-	app_global_get
-	concat
-	byte "participation_threshold"
-	swap
-	app_global_put
+	load 11
+	box_put
 
+	byte "vote_threshold"
 	load 12
-	load 14
-	extract_uint64
-	itob
-	byte "vote_threshold"
-	app_global_get
-	concat
-	byte "vote_threshold"
-	swap
-	app_global_put
+	box_put
 
+	byte "proposal_allocation"
 	load 13
-	load 14
-	extract_uint64
-	itob
-	byte "proposal_allocation"
-	app_global_get
-	concat
-	byte "proposal_allocation"
-	swap
-	app_global_put
+	box_put
 
-
-	load 14
-	int 8
-	+
-	store 14
-	
-extract_all_uint64_from_tuple:
-	load 15
-	int 1
-	-
-	store 15
-	load 15
-
-	bnz extract_one_uint64_from_tuples
-
-	load 11
-	load 14
-	extract_uint64
-	itob
-	log
 
 	itxn_begin
 	global CurrentApplicationAddress
@@ -595,6 +538,18 @@ extract_all_uint64_from_tuple:
 	itob
 	concat
 	b branch_log_return
+
+
+
+
+	
+
+
+
+
+	
+
+
 
 	
 
