@@ -538,6 +538,14 @@ method_config_proposal:
 method_proposal_participate:
 	txna Accounts 1 // GoraDAO Admin account
 	store 0
+
+	// Participations are closed after proposal is activated for voting
+	byte "proposal_is_activated"
+	app_global_get
+	int 0
+	==
+	assert
+
 	byte "participation_count"
 	app_global_get
 	int 1
@@ -698,6 +706,13 @@ branch_delete_participate_box:
 method_proposal_withdraw_participate:
  	txna Accounts 0
     store 0
+
+	// Participation Withdrawals are closed after proposal is activated for voting
+	byte "proposal_is_activated"
+	app_global_get
+	int 0
+	==
+	assert
 
 	byte "participation_count"
 	app_global_get
