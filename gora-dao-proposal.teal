@@ -94,7 +94,7 @@ branch_method_router:
 	==
 	bnz method_update_proposal
 
-	method "config_proposal(pay,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,(uint64,uint64,uint64,uint64,uint64,uint64))uint64"
+	method "config_proposal(pay,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,(uint64,uint64,uint64),(uint64,uint64,uint64),(uint64,uint64,uint64))uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_proposal
@@ -255,6 +255,19 @@ method_create_proposal:
 	int 0
 	app_global_put
 
+	byte "participation_threshold"
+	byte ""
+	app_global_put
+
+	byte "vote_threshold"
+	byte ""
+	app_global_put
+
+	byte "proposal_allocation"
+	byte ""
+	app_global_put
+	
+
 
 	byte 0x151f7c75
 	global CurrentApplicationAddress
@@ -336,6 +349,18 @@ method_update_proposal:
 	int 0
 	app_global_put
 
+	byte "participation_threshold"
+	byte ""
+	app_global_put
+
+	byte "vote_threshold"
+	byte ""
+	app_global_put
+
+	byte "proposal_allocation"
+	byte ""
+	app_global_put
+	
 
 	byte 0x151f7c75
 	global CurrentApplicationAddress
@@ -471,57 +496,78 @@ method_config_proposal:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 11 // proposal_threshold
+	txn ApplicationArgs 11 // proposal_participation
 	store 11
+
+	txn ApplicationArgs 12 // proposal_threshold
+	store 12
+
+	txn ApplicationArgs 13 // proposal_allocations
+	store 13
 
 	load 11
 	len
 	int 8
 	/
-	store 13
+	store 15
+
 	int 0
 	store 14
-	callsub extract_all_uint64_from_tuple
 	
-	byte "proposal_threshold"
-	box_get
-	bnz branch_delete_box
-	byte "proposal_threshold"
-	load 11
-	box_put
+
 	b extract_all_uint64_from_tuple
 
-branch_delete_box:
-		pop
-		byte "proposal_threshold"
-		box_del
-		pop
-	 	byte "proposal_threshold"
-		load 11
-		box_put
 
-	 	b extract_all_uint64_from_tuple
 
-extract_one_uint64_from_tuple:
+extract_one_uint64_from_tuples:
 	
 	load 11
 	load 14
 	extract_uint64
 	itob
-	log
+	byte "participation_threshold"
+	app_global_get
+	concat
+	byte "participation_threshold"
+	swap
+	app_global_put
+
+	load 12
+	load 14
+	extract_uint64
+	itob
+	byte "vote_threshold"
+	app_global_get
+	concat
+	byte "vote_threshold"
+	swap
+	app_global_put
+
+	load 13
+	load 14
+	extract_uint64
+	itob
+	byte "proposal_allocation"
+	app_global_get
+	concat
+	byte "proposal_allocation"
+	swap
+	app_global_put
+
+
 	load 14
 	int 8
 	+
 	store 14
 	
 extract_all_uint64_from_tuple:
-	load 13
+	load 15
 	int 1
 	-
-	store 13
-	load 13
+	store 15
+	load 15
 
-	bnz extract_one_uint64_from_tuple
+	bnz extract_one_uint64_from_tuples
 
 	load 11
 	load 14
@@ -689,6 +735,10 @@ method_proposal_withdraw_participate:
  	txna Accounts 0
     store 0
 
+	load 0
+	box_get
+	assert
+	pop
 	load 0
     box_del
     pop
