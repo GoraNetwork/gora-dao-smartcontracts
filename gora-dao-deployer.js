@@ -661,7 +661,7 @@ const GoraDaoDeployer = class {
         let addrFrom = this.goraDaoAdminAccount.addr;
         let addrTo = this.goraDaoProposalAdminAccount.addr;
         let appAddrTo = this.config.gora_dao.asc_testnet_main_address;
-        let amount = 2000;
+        let amount = 10000;
         let params = await this.algodClient.getTransactionParams().do();
         const txnOptinProposer = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
             addrTo, // from
@@ -1768,13 +1768,13 @@ const GoraDaoDeployer = class {
         const argsProposal = [
             tws1,
             //2 proposal_min_participation_algo
-            100000,
+            10000,
             //3 proposal_min_participation_stake
-            100,
+            5,
             //4 proposal_duration
             72,
             //5 proposal_amount
-            100000,
+            550,
             //6 proposal_voting_duration
             24,
             //7 proposal_voting_start
@@ -1782,9 +1782,9 @@ const GoraDaoDeployer = class {
             //8 proposal_participation_fee
             20,
             //9 proposal_participation_fee_algo
-            110000,
+            11000,
             //10 proposal_vote_fee
-            350,
+            3,
             //11 proposal_vote_fee_algo
             1000,
             //12 participation_threshold (uint64,uint64,uint64)
