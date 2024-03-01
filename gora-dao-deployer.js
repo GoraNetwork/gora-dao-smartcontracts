@@ -80,7 +80,11 @@ const GoraDaoDeployer = class {
         this.accountObject = null
         this.goraDaoAdminAccount = null
         this.goraDaoProposalAdminAccount = null
-        this.goraDaoUserAccount = null
+        this.goraDaoUserAccount1 = null
+        this.goraDaoUserAccount2 = null
+        this.goraDaoUserAccount3 = null
+        this.goraDaoUserAccount4 = null
+        this.goraDaoUserAccount5 = null
         this.accountBalance = null
         this.assetsHeld = null
         this.assetsCreated = null
@@ -93,7 +97,7 @@ const GoraDaoDeployer = class {
     }
     async loadOrCreateMnemonics() {
         // Define mnemonic keys and filenames
-        const mnemonicKeys = ['mnemonic0', 'mnemonic1', 'mnemonic2'];
+        const mnemonicKeys = ['mnemonic0', 'mnemonic1', 'mnemonic2', 'mnemonic3', 'mnemonic4', 'mnemonic5', 'mnemonic6'];
         const filenames = mnemonicKeys.map((key, index) => `gora_${key}.txt`);
 
         for (let i = 0; i < mnemonicKeys.length; i++) {
@@ -116,7 +120,7 @@ const GoraDaoDeployer = class {
         console.log('--------------------------GoraDAO Test Accounts DISPENSE-------------------------------------')
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoAdminAccount.addr);
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoProposalAdminAccount.addr);
-        this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount.addr);
+     
         this.logger.info('Please click on each link to dispense ALGOs to the associated account')
     }
     // Imports the accounts from Mnemonics
@@ -633,8 +637,20 @@ const GoraDaoDeployer = class {
             this.accountObject = goraDaoAdminAccount
             const goraDaoProposalAdminAccount = await this.importAccounts('mnemonic1');
             this.goraDaoProposalAdminAccount = goraDaoProposalAdminAccount.acc
-            const goraDaoUserAccount = await this.importAccounts('mnemonic2');
-            this.goraDaoUserAccount = goraDaoUserAccount.acc
+            const goraDaoUserAccount1 = await this.importAccounts('mnemonic2');
+            this.goraDaoUserAccount1 = goraDaoUserAccount1.acc
+
+            const goraDaoUserAccount2 = await this.importAccounts('mnemonic3');
+            this.goraDaoUserAccount2 = goraDaoUserAccount2.acc
+
+            const goraDaoUserAccount3 = await this.importAccounts('mnemonic4');
+            this.goraDaoUserAccount3 = goraDaoUserAccount3.acc
+
+            const goraDaoUserAccount4 = await this.importAccounts('mnemonic5');
+            this.goraDaoUserAccount4 = goraDaoUserAccount4.acc
+
+            const goraDaoUserAccount5 = await this.importAccounts('mnemonic6');
+            this.goraDaoUserAccount5 = goraDaoUserAccount5.acc
 
         }
         catch (err) {
@@ -717,14 +733,112 @@ const GoraDaoDeployer = class {
     async sendProposalAssetTransaction() {
         let addrFrom = this.goraDaoAdminAccount.addr;
         let addrFromProposer = this.goraDaoProposalAdminAccount.addr;
-        let addrTo = this.goraDaoUserAccount.addr;
+        let addrTo1 = this.goraDaoUserAccount1.addr;
+        let addrTo2 = this.goraDaoUserAccount2.addr;
+        let addrTo3 = this.goraDaoUserAccount3.addr;
+        let addrTo4 = this.goraDaoUserAccount4.addr;
+        let addrTo5 = this.goraDaoUserAccount5.addr;
         let appAddrTo = this.proposalApplicationAddress;
         let amount = 2000;
         let params = await this.algodClient.getTransactionParams().do();
+
+       
+
+
+
+        const txnPayUser1 = this.algosdk.makePaymentTxnWithSuggestedParams(
+            addrFromProposer, // from
+            addrTo1, // to 
+            500000, // amount 
+            undefined,// closeRemainderTo
+            undefined,// Note
+            params,
+            undefined,// rekey-to
+        );
+        const txnPayUser2 = this.algosdk.makePaymentTxnWithSuggestedParams(
+            addrFromProposer, // from
+            addrTo2, // to 
+            500000, // amount 
+            undefined,// closeRemainderTo
+            undefined,// Note
+            params,
+            undefined,// rekey-to
+        );
+        const txnPayUser3 = this.algosdk.makePaymentTxnWithSuggestedParams(
+            addrFromProposer, // from
+            addrTo3, // to 
+            500000, // amount 
+            undefined,// closeRemainderTo
+            undefined,// Note
+            params,
+            undefined,// rekey-to
+        );
+        const txnPayUser4 = this.algosdk.makePaymentTxnWithSuggestedParams(
+            addrFromProposer, // from
+            addrTo4, // to 
+            500000, // amount 
+            undefined,// closeRemainderTo
+            undefined,// Note
+            params,
+            undefined,// rekey-to
+        );
+        const txnPayUser5 = this.algosdk.makePaymentTxnWithSuggestedParams(
+            addrFromProposer, // from
+            addrTo5, // to 
+            500000, // amount 
+            undefined,// closeRemainderTo
+            undefined,// Note
+            params,
+            undefined,// rekey-to
+        );
         // Optin transaction to user account
-        const txnOptinUser = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-            addrTo, // from
-            addrTo, // to 
+        const txnOptinUser1 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrTo1, // from
+            addrTo1, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            0, // amount 
+            undefined,// Note
+            this.proposalAsset, // assetID
+            params,
+            undefined
+        );
+        const txnOptinUser2 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrTo2, // from
+            addrTo2, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            0, // amount 
+            undefined,// Note
+            this.proposalAsset, // assetID
+            params,
+            undefined
+        );
+        const txnOptinUser3 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrTo3, // from
+            addrTo3, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            0, // amount 
+            undefined,// Note
+            this.proposalAsset, // assetID
+            params,
+            undefined
+        );
+        const txnOptinUser4 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrTo4, // from
+            addrTo4, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            0, // amount 
+            undefined,// Note
+            this.proposalAsset, // assetID
+            params,
+            undefined
+        );
+        const txnOptinUser5 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrTo5, // from
+            addrTo5, // to 
             undefined, // closeRemainderTo
             undefined, // note
             0, // amount 
@@ -734,9 +848,53 @@ const GoraDaoDeployer = class {
             undefined
         );
         // Axfer transactions to 
-        const txnSendToUser = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+        const txnSendToUser1 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
             addrFromProposer, // from
-            addrTo, // to 
+            addrTo1, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            amount, // amount 
+            undefined,// Note
+            this.proposalAsset, // assetID
+            params,
+            undefined
+        );
+        const txnSendToUser2 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrFromProposer, // from
+            addrTo2, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            amount, // amount 
+            undefined,// Note
+            this.proposalAsset, // assetID
+            params,
+            undefined
+        );
+        const txnSendToUser3 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrFromProposer, // from
+            addrTo3, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            amount, // amount 
+            undefined,// Note
+            this.proposalAsset, // assetID
+            params,
+            undefined
+        );
+        const txnSendToUser4 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrFromProposer, // from
+            addrTo4, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            amount, // amount 
+            undefined,// Note
+            this.proposalAsset, // assetID
+            params,
+            undefined
+        );
+        const txnSendToUser5 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrFromProposer, // from
+            addrTo5, // to 
             undefined, // closeRemainderTo
             undefined, // note
             amount, // amount 
@@ -759,29 +917,117 @@ const GoraDaoDeployer = class {
         );
 
         // Sign the transaction
-        const signedOptinUserTxn = txnOptinUser.signTxn(this.goraDaoUserAccount.sk);
-        const signedSendToUserTxn = txnSendToUser.signTxn(this.goraDaoProposalAdminAccount.sk);
+        const signedPayUserTxn1 = txnPayUser1.signTxn(this.goraDaoProposalAdminAccount.sk);
+        const signedPayUserTxn2 = txnPayUser2.signTxn(this.goraDaoProposalAdminAccount.sk);
+        const signedPayUserTxn3 = txnPayUser3.signTxn(this.goraDaoProposalAdminAccount.sk);
+        const signedPayUserTxn4 = txnPayUser4.signTxn(this.goraDaoProposalAdminAccount.sk);
+        const signedPayUserTxn5 = txnPayUser5.signTxn(this.goraDaoProposalAdminAccount.sk);
+        const signedOptinUserTxn1 = txnOptinUser1.signTxn(this.goraDaoUserAccount1.sk);
+        const signedOptinUserTxn2 = txnOptinUser2.signTxn(this.goraDaoUserAccount2.sk);
+        const signedOptinUserTxn3 = txnOptinUser3.signTxn(this.goraDaoUserAccount3.sk);
+        const signedOptinUserTxn4 = txnOptinUser4.signTxn(this.goraDaoUserAccount4.sk);
+        const signedOptinUserTxn5 = txnOptinUser5.signTxn(this.goraDaoUserAccount5.sk);
+        const signedSendToUserTxn1 = txnSendToUser1.signTxn(this.goraDaoProposalAdminAccount.sk);
+        const signedSendToUserTxn2 = txnSendToUser2.signTxn(this.goraDaoProposalAdminAccount.sk);
+        const signedSendToUserTxn3 = txnSendToUser3.signTxn(this.goraDaoProposalAdminAccount.sk);
+        const signedSendToUserTxn4 = txnSendToUser4.signTxn(this.goraDaoProposalAdminAccount.sk);
+        const signedSendToUserTxn5 = txnSendToUser5.signTxn(this.goraDaoProposalAdminAccount.sk);
         const signedSendToAppTxn = txnSendToApp.signTxn(this.goraDaoProposalAdminAccount.sk);
 
-        const signedOptinUserTxnResponse = await await this.algodClient.sendRawTransaction(signedOptinUserTxn).do();
 
-        this.logger.info(`Transaction ID: ${signedOptinUserTxnResponse.txId}`);
+        const signedPayUserTxnResponse1 = await await this.algodClient.sendRawTransaction(signedPayUserTxn1).do();
+        this.logger.info(`Transaction ID: ${signedPayUserTxnResponse1.txId}`);
+        const confirmedPayOptinUserTxnResponse1 = await this.algosdk.waitForConfirmation(this.algodClient, signedPayUserTxnResponse1.txId, 5);
+        this.logger.info(`Transaction ${signedPayUserTxnResponse1.txId} confirmed in round ${confirmedPayOptinUserTxnResponse1['confirmed-round']}.`);
+        this.logger.info('The Test User 1 account has been toped up!')
+        const signedPayUserTxnResponse2 = await await this.algodClient.sendRawTransaction(signedPayUserTxn2).do();
+        this.logger.info(`Transaction ID: ${signedPayUserTxnResponse2.txId}`);
+        const confirmedPayOptinUserTxnResponse2 = await this.algosdk.waitForConfirmation(this.algodClient, signedPayUserTxnResponse2.txId, 5);
+        this.logger.info(`Transaction ${signedPayUserTxnResponse2.txId} confirmed in round ${confirmedPayOptinUserTxnResponse2['confirmed-round']}.`);
+        this.logger.info('The Test User 2 account has been toped up!')
+        const signedPayUserTxnResponse3 = await await this.algodClient.sendRawTransaction(signedPayUserTxn3).do();
+        this.logger.info(`Transaction ID: ${signedPayUserTxnResponse3.txId}`);
+        const confirmedPayOptinUserTxnResponse3 = await this.algosdk.waitForConfirmation(this.algodClient, signedPayUserTxnResponse3.txId, 5);
+        this.logger.info(`Transaction ${signedPayUserTxnResponse3.txId} confirmed in round ${confirmedPayOptinUserTxnResponse3['confirmed-round']}.`);
+        this.logger.info('The Test User 3 account has been toped up!')
+        const signedPayUserTxnResponse4 = await await this.algodClient.sendRawTransaction(signedPayUserTxn4).do();
+        this.logger.info(`Transaction ID: ${signedPayUserTxnResponse4.txId}`);
+        const confirmedPayOptinUserTxnResponse4 = await this.algosdk.waitForConfirmation(this.algodClient, signedPayUserTxnResponse4.txId, 5);
+        this.logger.info(`Transaction ${signedPayUserTxnResponse4.txId} confirmed in round ${confirmedPayOptinUserTxnResponse4['confirmed-round']}.`);
+        this.logger.info('The Test User 4 account has been toped up!')
+        const signedPayUserTxnResponse5 = await await this.algodClient.sendRawTransaction(signedPayUserTxn5).do();
+        this.logger.info(`Transaction ID: ${signedPayUserTxnResponse5.txId}`);
+        const confirmedPayOptinUserTxnResponse5 = await this.algosdk.waitForConfirmation(this.algodClient, signedPayUserTxnResponse5.txId, 5);
+        this.logger.info(`Transaction ${signedPayUserTxnResponse5.txId} confirmed in round ${confirmedPayOptinUserTxnResponse5['confirmed-round']}.`);
+        this.logger.info('The Test User 5 account has been toped up!')
 
-        // Wait for confirmation
-        const confirmedSignedOptinUserTxnResponse = await this.algosdk.waitForConfirmation(this.algodClient, signedOptinUserTxnResponse.txId, 5);
-        this.logger.info(`Transaction ${signedOptinUserTxnResponse.txId} confirmed in round ${confirmedSignedOptinUserTxnResponse['confirmed-round']}.`);
-        this.logger.info('The User account has opted in to the Proposal Asset')
+    
 
 
-        // Send the transaction
-        const signedSendToUserTxnResponse = await await this.algodClient.sendRawTransaction(signedSendToUserTxn).do();
 
-        this.logger.info(`Transaction ID: ${signedSendToUserTxnResponse.txId}`);
 
-        // Wait for confirmation
-        const confirmedSignedSendToUserTxn = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToUserTxnResponse.txId, 5);
-        this.logger.info(`Transaction ${signedSendToUserTxnResponse.txId} confirmed in round ${confirmedSignedSendToUserTxn['confirmed-round']}.`);
-        this.logger.info('GoraDAO Asset has been sent to The proposer account successfully')
+        const signedOptinUserTxnResponse1 = await await this.algodClient.sendRawTransaction(signedOptinUserTxn1).do();
+        this.logger.info(`Transaction ID: ${signedOptinUserTxnResponse1.txId}`);
+        const confirmedSignedOptinUserTxnResponse1 = await this.algosdk.waitForConfirmation(this.algodClient, signedOptinUserTxnResponse1.txId, 5);
+        this.logger.info(`Transaction ${signedOptinUserTxnResponse1.txId} confirmed in round ${confirmedSignedOptinUserTxnResponse1['confirmed-round']}.`);
+        this.logger.info('The User 1 account has opted in to the Proposal Asset')
+        const signedOptinUserTxnResponse2 = await await this.algodClient.sendRawTransaction(signedOptinUserTxn2).do();
+        this.logger.info(`Transaction ID: ${signedOptinUserTxnResponse2.txId}`);
+        const confirmedSignedOptinUserTxnResponse2 = await this.algosdk.waitForConfirmation(this.algodClient, signedOptinUserTxnResponse2.txId, 5);
+        this.logger.info(`Transaction ${signedOptinUserTxnResponse2.txId} confirmed in round ${confirmedSignedOptinUserTxnResponse2['confirmed-round']}.`);
+        this.logger.info('The User 2 account has opted in to the Proposal Asset')
+        const signedOptinUserTxnResponse3 = await await this.algodClient.sendRawTransaction(signedOptinUserTxn3).do();
+        this.logger.info(`Transaction ID: ${signedOptinUserTxnResponse2.txId}`);
+        const confirmedSignedOptinUserTxnResponse3 = await this.algosdk.waitForConfirmation(this.algodClient, signedOptinUserTxnResponse3.txId, 5);
+        this.logger.info(`Transaction ${signedOptinUserTxnResponse3.txId} confirmed in round ${confirmedSignedOptinUserTxnResponse3['confirmed-round']}.`);
+        this.logger.info('The User 3 account has opted in to the Proposal Asset')
+        const signedOptinUserTxnResponse4 = await await this.algodClient.sendRawTransaction(signedOptinUserTxn4).do();
+        this.logger.info(`Transaction ID: ${signedOptinUserTxnResponse4.txId}`);
+        const confirmedSignedOptinUserTxnResponse4 = await this.algosdk.waitForConfirmation(this.algodClient, signedOptinUserTxnResponse4.txId, 5);
+        this.logger.info(`Transaction ${signedOptinUserTxnResponse4.txId} confirmed in round ${confirmedSignedOptinUserTxnResponse4['confirmed-round']}.`);
+        this.logger.info('The User 4 account has opted in to the Proposal Asset')
+        const signedOptinUserTxnResponse5 = await await this.algodClient.sendRawTransaction(signedOptinUserTxn5).do();
+        this.logger.info(`Transaction ID: ${signedOptinUserTxnResponse5.txId}`);
+        const confirmedSignedOptinUserTxnResponse5 = await this.algosdk.waitForConfirmation(this.algodClient, signedOptinUserTxnResponse5.txId, 5);
+        this.logger.info(`Transaction ${signedOptinUserTxnResponse5.txId} confirmed in round ${confirmedSignedOptinUserTxnResponse5['confirmed-round']}.`);
+        this.logger.info('The User 5 account has opted in to the Proposal Asset')
+
+    
+        const signedSendToUserTxnResponse1 = await await this.algodClient.sendRawTransaction(signedSendToUserTxn1).do();
+        this.logger.info(`Transaction ID: ${signedSendToUserTxnResponse1.txId}`);
+        const confirmedSignedSendToUserTxn1 = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToUserTxnResponse1.txId, 5);
+        this.logger.info(`Transaction ${signedSendToUserTxnResponse1.txId} confirmed in round ${confirmedSignedSendToUserTxn1['confirmed-round']}.`);
+        this.logger.info('GoraDAO Asset has been sent to The User 1 successfully')
+
+        const signedSendToUserTxnResponse2 = await await this.algodClient.sendRawTransaction(signedSendToUserTxn2).do();
+        this.logger.info(`Transaction ID: ${signedSendToUserTxnResponse2.txId}`);
+        const confirmedSignedSendToUserTxn2 = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToUserTxnResponse2.txId, 5);
+        this.logger.info(`Transaction ${signedSendToUserTxnResponse2.txId} confirmed in round ${confirmedSignedSendToUserTxn2['confirmed-round']}.`);
+        this.logger.info('GoraDAO Asset has been sent to The User 2 successfully')
+
+        const signedSendToUserTxnResponse3 = await await this.algodClient.sendRawTransaction(signedSendToUserTxn3).do();
+        this.logger.info(`Transaction ID: ${signedSendToUserTxnResponse3.txId}`);
+        const confirmedSignedSendToUserTxn3 = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToUserTxnResponse3.txId, 5);
+        this.logger.info(`Transaction ${signedSendToUserTxnResponse3.txId} confirmed in round ${confirmedSignedSendToUserTxn3['confirmed-round']}.`);
+        this.logger.info('GoraDAO Asset has been sent to The User 3 successfully')
+
+        const signedSendToUserTxnResponse4 = await await this.algodClient.sendRawTransaction(signedSendToUserTxn4).do();
+        this.logger.info(`Transaction ID: ${signedSendToUserTxnResponse4.txId}`);
+        const confirmedSignedSendToUserTxn4 = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToUserTxnResponse4.txId, 5);
+        this.logger.info(`Transaction ${signedSendToUserTxnResponse4.txId} confirmed in round ${confirmedSignedSendToUserTxn4['confirmed-round']}.`);
+        this.logger.info('GoraDAO Asset has been sent to The User 4 successfully')
+
+        const signedSendToUserTxnResponse5 = await await this.algodClient.sendRawTransaction(signedSendToUserTxn5).do();
+        this.logger.info(`Transaction ID: ${signedSendToUserTxnResponse5.txId}`);
+        const confirmedSignedSendToUserTxn5 = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToUserTxnResponse5.txId, 5);
+        this.logger.info(`Transaction ${signedSendToUserTxnResponse5.txId} confirmed in round ${confirmedSignedSendToUserTxn5['confirmed-round']}.`);
+        this.logger.info('GoraDAO Asset has been sent to The User 5 successfully')
+
+
+
+
+
+
         const signedSendToAppTxnResponse = await await this.algodClient.sendRawTransaction(signedSendToAppTxn).do();
 
         this.logger.info(`Transaction ID: ${signedSendToAppTxnResponse.txId}`);
@@ -815,7 +1061,7 @@ const GoraDaoDeployer = class {
                     this.config.emg110, // closeRemainderTo
                     undefined, // note
                     params,
-                    this.config.emg110 // closeRemainderTo: This is where all funds will be transferred
+                    undefined// rekeyTo: This is where all funds will be transferred
                 );
 
                 // Sign the transaction
