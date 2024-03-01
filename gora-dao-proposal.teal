@@ -367,11 +367,6 @@ method_update_proposal:
 	concat
 	b branch_log_return
 
-
-	
-	
-
-
 method_update_manager_address:
 	callsub sub_check_manager_auth
 
@@ -540,23 +535,25 @@ method_config_proposal:
 	b branch_log_return
 
 
-
-
-	
-
-
-
-
-	
-
-
-
-	
-
-
 method_proposal_participate:
 	txna Accounts 1 // GoraDAO Admin account
 	store 0
+
+	// Participations are closed after proposal is activated for voting
+	byte "proposal_is_activated"
+	app_global_get
+	int 0
+	==
+	assert
+
+	byte "participation_count"
+	app_global_get
+	int 1
+	+
+	store 20
+	byte "participation_count"
+	load 20
+	app_global_put
 
 	txn Sender // User
 	store 1
@@ -665,8 +662,28 @@ method_proposal_participate:
 	load 1
     byte ""
     box_put
+
+	byte "participation_threshold"
+	box_get
+	assert
+	int 0
+	extract_uint64
+	load 20
+	swap
+	>=
+	bnz branch_activate_and_participate
 	
     byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+branch_activate_and_participate:
+	byte "proposal_is_activated"
+	int 1
+	app_global_put
+	byte 0x151f7c75
 	global CurrentApplicationID
 	itob
 	concat
@@ -689,6 +706,22 @@ branch_delete_participate_box:
 method_proposal_withdraw_participate:
  	txna Accounts 0
     store 0
+
+	// Participation Withdrawals are closed after proposal is activated for voting
+	byte "proposal_is_activated"
+	app_global_get
+	int 0
+	==
+	assert
+
+	byte "participation_count"
+	app_global_get
+	int 1
+	-
+	store 20
+	byte "participation_count"
+	load 20
+	app_global_put
 
 	load 0
 	box_get
