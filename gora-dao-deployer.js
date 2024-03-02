@@ -1705,12 +1705,11 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("participation_threshold")) },
-                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("vote_threshold")) },
-                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_allocation")) },
-                { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
-
-
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("participation_threshold"))},
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("vote_threshold"))},
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_allocation"))},
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_vote_values"))},
+                // { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
             ],
         }
         const commonParamsDaoSetup = {
@@ -1722,12 +1721,8 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-
                 { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.proposalApplicationId) },
                 { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
-
-
-
             ],
         }
         const axferProposal = new this.algosdk.Transaction({
@@ -1770,7 +1765,7 @@ const GoraDaoDeployer = class {
             //2 proposal_min_participation_algo
             10000,
             //3 proposal_min_participation_stake
-            5,
+            25,
             //4 proposal_duration
             72,
             //5 proposal_amount
@@ -1788,11 +1783,13 @@ const GoraDaoDeployer = class {
             //11 proposal_vote_fee_algo
             1000,
             //12 participation_threshold (uint64,uint64,uint64)
-            [100, 70, 100000],
+            [5, 70, 100000],
             //13 vote_threshold (uint64,uint64,uint64)
-            [ 70, 60, 50000],
+            [ 4, 60, 50000],
             //14 proposal_allocation (uint64,uint64,uint64)
-            [ 50, 51, 40000],
+            [ 3, 51, 40000],
+             //15 proposal_vote_values uint64
+            3,
         ]
         const atcProposalConfig = new this.algosdk.AtomicTransactionComposer()
 
@@ -1827,18 +1824,19 @@ const GoraDaoDeployer = class {
         }
     }
     // participates to a proposal from e member account
-    async participateProposalContract() {
-        let addr = this.goraDaoUserAccount.addr;
+    async participateProposalContract(acct) {
+        let account = acct || this.goraDaoUserAccount1;
+        let addr = account.addr;
         let params = await this.algodClient.getTransactionParams().do();
         let proposalApplication = Number(this.proposalApplicationId)
         let daoApplication = Number(this.goraDaoMainApplicationId)
         const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
         const proposalContract = new this.algosdk.ABIContract(JSON.parse(this.proposalContract.toString()))
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoUserAccount)
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(account)
         let methodProposalParticipate = this.getMethodByName("proposal_participate", proposalContract)
         let methodDaoProposalParticipate = this.getMethodByName("proposal_participate", daoContract)
         let proposerPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
-        let memberPublicKey = this.algosdk.decodeAddress(this.goraDaoUserAccount.addr)
+        let memberPublicKey = this.algosdk.decodeAddress(addr)
         const commonParamsProposalSetup = {
             appID: proposalApplication,
             appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
@@ -1875,7 +1873,7 @@ const GoraDaoDeployer = class {
         const ptxnFeeDao = new this.algosdk.Transaction({
             from: addr,
             to: this.goraDaoMainApplicationAddress,
-            amount: 110000,
+            amount: 11000,
             type: 'pay',
             ...params
         })
@@ -1890,14 +1888,14 @@ const GoraDaoDeployer = class {
         const ptxnMinAlgo = new this.algosdk.Transaction({
             from: addr,
             to: this.goraDaoMainApplicationAddress,
-            amount: 100000,
+            amount: 10000,
             type: 'pay',
             ...params
         })
         const axferMinDao = new this.algosdk.Transaction({
             from: addr,
             to: `${this.goraDaoMainApplicationAddress}`,
-            amount: 100,
+            amount: 25,
             assetIndex: Number(this.proposalAsset),
             type: 'axfer',
             ...params
@@ -1946,17 +1944,18 @@ const GoraDaoDeployer = class {
         }
 
     }
-    async participationWithdrawProposalContract() {
-        let addr = this.goraDaoUserAccount.addr;
+    async participationWithdrawProposalContract(acct) {
+        let account = acct || this.goraDaoUserAccount1;
+        let addr = account.addr;
         let params = await this.algodClient.getTransactionParams().do();
         let proposalApplication = Number(this.proposalApplicationId)
         let daoApplication = Number(this.goraDaoMainApplicationId)
         const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
         const proposalContract = new this.algosdk.ABIContract(JSON.parse(this.proposalContract.toString()))
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoUserAccount)
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(account)
         let methodProposalParticipate = this.getMethodByName("proposal_withdraw_participate", proposalContract)
         let methodDaoProposalParticipate = this.getMethodByName("proposal_withdraw_participate", daoContract)
-        let memberPublicKey = this.algosdk.decodeAddress(this.goraDaoUserAccount.addr)
+        let memberPublicKey = this.algosdk.decodeAddress(addr)
         let proposerPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
         const commonParamsProposalSetup = {
             appID: proposalApplication,
@@ -2023,83 +2022,104 @@ const GoraDaoDeployer = class {
         }
 
     }
+    async participateProposalContractAll() {
+        let accoutsArray = [this.goraDaoUserAccount1, this.goraDaoUserAccount2, this.goraDaoUserAccount3, this.goraDaoUserAccount4, this.goraDaoUserAccount5]
+        for (let i = 0; i < accoutsArray.length; i++) {
+         
+            await this.participateProposalContract(accoutsArray[i])
+        }
+        this.logger.info("All 5 GoraDAO members have participated in the proposal!");
+    }
+    async participationWithdrawProposalContractAll() {
+        let accoutsArray = [this.goraDaoUserAccount1, this.goraDaoUserAccount2, this.goraDaoUserAccount3, this.goraDaoUserAccount4, this.goraDaoUserAccount5]
+        for (let i = 0; i < accoutsArray.length; i++) {
+         
+            await this.participationWithdrawProposalContract(accoutsArray[i])
+        }
+        this.logger.info("All 5 GoraDAO members have withdrawn participation from the proposal!");
+    }
     async activateProposalContract() { }
-    async voteProposalContract() {
-        let addr = this.accountObject.addr;
+    async voteProposalContract(userIndex, vote) {
+        let addr = this[`goraDaoUserAccount${userIndex}`].addr;
+        let account = this[`goraDaoUserAccount${userIndex}`]
+        let proposerAdminAddr = this.goraDaoProposalAdminAccount.addr;
+        let proposerPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
         let params = await this.algodClient.getTransactionParams().do();
         let proposalApplication = Number(this.proposalApplicationId)
         let daoApplication = Number(this.goraDaoMainApplicationId)
         const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
         const proposalContract = new this.algosdk.ABIContract(JSON.parse(this.proposalContract.toString()))
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.accountObject)
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(account)
         let methodProposalParticipate = this.getMethodByName("proposal_vote", proposalContract)
         let methodDaoProposalParticipate = this.getMethodByName("proposal_vote", daoContract)
-        let memberPublicKey = this.algosdk.decodeAddress(this.accountObject.addr)
+        let memberPublicKey = this.algosdk.decodeAddress(addr)
         const commonParamsProposalSetup = {
             appID: proposalApplication,
+            appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
+            appAccounts: [this.goraDaoProposalAdminAccount.addr, this.goraDaoMainApplicationAddress],
+            appForeignApps: [Number(this.goraDaoMainApplicationId)],
             sender: addr,
             suggestedParams: params,
             signer: signer,
             boxes: [
 
                 { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
+                { appIndex: Number(proposalApplication), name: proposerPublicKey.publicKey },
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("participation_threshold")) },
 
 
             ],
         }
         const commonParamsDaoSetup = {
             appID: daoApplication,
+            appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
+            appAccounts: [this.goraDaoProposalAdminAccount.addr, this.proposalApplicationAddress],
+            appForeignApps: [Number(this.proposalApplicationId)],
             sender: addr,
             suggestedParams: params,
             signer: signer,
             boxes: [
                 { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.proposalApplicationId) },
-                { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
+                { appIndex: Number(proposalApplication), name: proposerPublicKey.publicKey },
+                { appIndex: Number(daoApplication), name: proposerPublicKey.publicKey },
             ],
         }
 
-        const ptxnProposal = new this.algosdk.Transaction({
-            from: addr,
-            to: this.proposalApplicationAddress,
-            amount: 3000,
-            type: 'pay',
-            ...params
-        })
+        // const ptxnProposal = new this.algosdk.Transaction({
+        //     from: addr,
+        //     to: this.proposalApplicationAddress,
+        //     amount: 1000,
+        //     type: 'pay',
+        //     ...params
+        // })
         const axferDao = new this.algosdk.Transaction({
             from: addr,
             to: `${this.goraDaoMainApplicationAddress}`,
-            amount: 10,
-            assetIndex: Number(this.goraDaoAsset),
+            amount: 3,
+            assetIndex: Number(this.proposalAsset),
             type: 'axfer',
             ...params
         })
         const ptxnDao = new this.algosdk.Transaction({
             from: addr,
             to: this.goraDaoMainApplicationAddress,
-            amount: 145000,
+            amount: 1000,
             type: 'pay',
             ...params
         })
 
         const tws0 = { txn: ptxnDao, signer: signer }
         const tws1 = { txn: axferDao, signer: signer }
-        const tws2 = { txn: ptxnProposal, signer: signer }
+        // const tws2 = { txn: ptxnProposal, signer: signer }
         const argsDao = [
             tws0,
             tws1,
-            this.goraDaoAsset,
-            addr,
-            this.proposalApplicationId,
             1
 
         ]
 
         const argsProposal = [
-            tws2,
-            this.goraDaoAsset,
-            addr,
-            this.goraDaoMainApplicationId,
-            1
+            Number(vote)
         ]
         const atcProposalParticipate = new this.algosdk.AtomicTransactionComposer()
         atcProposalParticipate.addMethodCall({

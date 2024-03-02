@@ -203,6 +203,11 @@
                     "type": "(uint64,uint64,uint64)",
                     "name": "proposal_allocation",
                     "description": "GoraDAO Proposal allocation program! "
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_vote_values",
+                    "description": "GoraDAO Proposal number of vote subjects! "
                 }
              
             ],
@@ -372,26 +377,7 @@
             "name": "proposal_vote",
             "description": "Votes for a Proposal! Returns the voting member's account address concatenated with vote!",
             "args": [
-                {
-                    "type": "pay",
-                    "name": "payment_transaction",
-                    "description": "Payment from Proposal participant to GoraDAO for fees!"
-                },
-                {
-                    "type": "asset",
-                    "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
-                },
-                {
-                    "type": "account",
-                    "name": "member_reference",
-                    "description": "GoraDAO member account reference"
-                },
-                {
-                    "type": "application",
-                    "name": "app_reference",
-                    "description": "GoraDAO main app reference"
-                },
+                
                 {
                     "type": "uint64",
                     "name": "vote",

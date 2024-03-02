@@ -1024,15 +1024,6 @@ method_proposal_participate:
     txna Assets 0
     ==
     assert
-  
-
-    gtxn 5 ApplicationID
-    byte "proposal_asset_id"
-    app_global_get_ex
-    pop
-    txna Assets 1
-    ==
-    assert
 
     load 0
     box_get
@@ -1127,23 +1118,31 @@ method_proposal_withdraw_participate:
 method_proposal_vote:
     txna Accounts 0
     store 0
-
-    txna Applications 1
-    byte "proposal_min_vote_fee"
-    app_global_get_ex
-    assert
+    txna Accounts 1
     store 1
 
     txna Applications 1
-    byte "proposal_min_vote_fee_algo"
+    byte "proposal_vote_fee_algo"
     app_global_get_ex
     assert
     store 2
 
+    txna Applications 1
+    byte "proposal_vote_fee"
+    app_global_get_ex
+    assert
+    store 3
+
+    txna Applications 1
+    byte "proposal_asset_id"
+    app_global_get_ex
+    assert
+    store 4
+
 
     // Checking Transaction group
     global GroupSize
-    int 5
+    int 4
     ==
     assert
 
@@ -1168,10 +1167,6 @@ method_proposal_vote:
     ==
     assert
 
-    gtxn 0 AssetCloseTo
-    global ZeroAddress
-    ==
-    assert
 
     gtxn 1 AssetCloseTo
     global ZeroAddress
@@ -1204,11 +1199,16 @@ method_proposal_vote:
 
     gtxn 0 Amount
     load 2
-    >=
+    ==
     assert
 
     gtxn 1 AssetAmount
-    load 1
+    load 3
+    ==
+    assert
+
+    gtxn 1 XferAsset
+    load 4
     ==
     assert
 
@@ -1224,32 +1224,24 @@ method_proposal_vote:
     assert
 
 
-    // Checking account ref to be Sender
-    load 0
-    txn Sender
-    ==
-    assert
-
-    // Checking the asset ref to be DAO asset
     byte "dao_asset_id"
     app_global_get
     txna Assets 0
     assert
   
-    // Check DAO asset holdings
-    load 0
-    txna Assets 0
-    asset_holding_get AssetBalance
-    assert
-    pop
+    // Check Proposal asset holdings
+    //load 0
+    //txna Assets 0
+    //asset_holding_get AssetBalance
+    //assert
+    //pop
 
-    // Check subscription
-    load 0
+    // Check proposer subscription
+    load 1
     box_get
     assert
     pop
     
-
 	
     byte 0x151f7c75
 	global CurrentApplicationID

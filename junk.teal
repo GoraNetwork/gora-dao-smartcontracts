@@ -32,3 +32,27 @@
     txna Assets 0
     asset_holding_get AssetBalance
     assert
+
+
+
+
+
+
+
+
+
+    	byte "participation_threshold"
+	byte ""
+	app_global_put
+
+	byte "vote_threshold"
+	byte ""
+	app_global_put
+
+	byte "proposal_allocation"
+	byte ""
+	app_global_put
+
+	byte "proposal_vote_values"
+	byte ""
+	app_global_put
