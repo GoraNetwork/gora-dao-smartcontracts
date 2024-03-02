@@ -255,19 +255,6 @@ method_create_proposal:
 	int 0
 	app_global_put
 
-	byte "participation_threshold"
-	byte ""
-	app_global_put
-
-	byte "vote_threshold"
-	byte ""
-	app_global_put
-
-	byte "proposal_allocation"
-	byte ""
-	app_global_put
-	
-
 
 	byte 0x151f7c75
 	global CurrentApplicationAddress
@@ -349,17 +336,6 @@ method_update_proposal:
 	int 0
 	app_global_put
 
-	byte "participation_threshold"
-	byte ""
-	app_global_put
-
-	byte "vote_threshold"
-	byte ""
-	app_global_put
-
-	byte "proposal_allocation"
-	byte ""
-	app_global_put
 	
 
 	byte 0x151f7c75
@@ -500,6 +476,9 @@ method_config_proposal:
 	txn ApplicationArgs 13 // proposal_allocations
 	store 13
 
+	txn ApplicationArgs 14 // proposal_vote_values
+	store 14
+
 	byte "participation_threshold"
 	load 11
 	box_put
@@ -510,6 +489,10 @@ method_config_proposal:
 
 	byte "proposal_allocation"
 	load 13
+	box_put
+
+	byte "proposal_vote_values"
+	load 14
 	box_put
 
 
@@ -539,7 +522,10 @@ method_proposal_participate:
 	txna Accounts 1 // GoraDAO Admin account
 	store 0
 
-	// Participations are closed after proposal is activated for voting
+	txn Sender // User
+	store 1
+
+	// Participation are closed after proposal is activated for voting
 	byte "proposal_is_activated"
 	app_global_get
 	int 0
@@ -555,18 +541,13 @@ method_proposal_participate:
 	load 20
 	app_global_put
 
-	txn Sender // User
-	store 1
-
     // Checking Transaction group
     global GroupSize
     int 6
     ==
     assert
-
-    // Checking the pay and axfer txns 
-
-
+    
+	// Checking the pay and axfer txns
 	gtxn 1 RekeyTo
     global ZeroAddress
     ==

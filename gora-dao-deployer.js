@@ -1793,6 +1793,8 @@ const GoraDaoDeployer = class {
             [ 70, 60, 50000],
             //14 proposal_allocation (uint64,uint64,uint64)
             [ 50, 51, 40000],
+             //15 proposal_vote_values uint64
+            3,
         ]
         const atcProposalConfig = new this.algosdk.AtomicTransactionComposer()
 

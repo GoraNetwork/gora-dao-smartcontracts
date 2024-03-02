@@ -64,66 +64,135 @@ async function goraDAOOperations() {
 
     switch (answers.goraDAOOperation) {
         case 'Deploy GoraDAO Contract':
-            await goraDaoDeployer.deployMainContract();
-            await goraDaoDeployer.writeProposalContractSourceBox();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.deployMainContract();
+                await goraDaoDeployer.writeProposalContractSourceBox();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+
+
             break;
         case 'Update GoraDAO Contracts':
-            await goraDaoDeployer.updateMainContract();
-            await goraDaoDeployer.writeProposalContractSourceBox();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.updateMainContract();
+                await goraDaoDeployer.writeProposalContractSourceBox();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+
             break;
         case 'Configure Deployed GoraDAO':
-            await goraDaoDeployer.configMainContract();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.configMainContract();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
         case 'Distribute GoraDAO Asset':
-            await goraDaoDeployer.sendGoraDaoAssetTransaction();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.sendGoraDaoAssetTransaction();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
         case 'Subscribe to GoraDAO':
-            await goraDaoDeployer.subscribeDaoContract();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.subscribeDaoContract();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
         case 'Unsubscribe from GoraDAO':
-            await goraDaoDeployer.unsubscribeDaoContract();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.unsubscribeDaoContract();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
 
         case 'Back to Main Menu':
@@ -161,56 +230,112 @@ async function proposalsOperations() {
     switch (answers.proposalOperation) {
 
         case 'Deploy New Proposal':
-            await goraDaoDeployer.createProposalContract();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.createProposalContract();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
         case 'Update Deployed Proposal':
-            await goraDaoDeployer.updateProposalContract();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.updateProposalContract();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
         case 'Configure Proposal':
-            await goraDaoDeployer.configureProposalContract();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.configureProposalContract();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
         case 'Distribute Proposal Asset':
-            await goraDaoDeployer.sendProposalAssetTransaction();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.sendProposalAssetTransaction();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
         case 'Participate into Proposal':
-            await goraDaoDeployer.participateProposalContract();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.participateProposalContract();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
         case 'Withdraw Participation':
+           try {
             await goraDaoDeployer.participationWithdrawProposalContract();
             await inquirer.prompt([
                 {
@@ -219,36 +344,80 @@ async function proposalsOperations() {
                     message: 'Press Enter to go back to menu...',
                 },
             ]);
+            
+           } catch (error) {
+            console.error('An error occurred:', error);
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
+           }
             break;
         case 'Vote on Proposal':
-            await goraDaoDeployer.voteProposalContract();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.voteProposalContract();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
         case 'Activate Proposal':
-            await goraDaoDeployer.activateProposalContract();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.activateProposalContract();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
         case 'Close Proposal':
-            await goraDaoDeployer.closeProposal();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.closeProposal();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
         case 'Back to Main Menu':
             await mainMenu();
@@ -298,61 +467,116 @@ async function mainMenu() {
 
     switch (answers.action) {
         case 'Create GoraDAO Asset':
-            await goraDaoDeployer.createDaoAsset();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.createDaoAsset();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
         case 'Create GoraDAO Proposals Asset':
-            await goraDaoDeployer.createDaoProposalAsset();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.createDaoProposalAsset();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
 
         case 'Tester Accounts Recreate':
             // Assuming testAccountStats is a method in GoraDaoDeployer
 
-            await goraDaoDeployer.sendAllAlgosAndDeleteMnemonics();
-            await goraDaoDeployer.deployerReport();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.sendAllAlgosAndDeleteMnemonics();
+                await goraDaoDeployer.deployerReport();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
         case 'Tester Accounts Stats':
             // Assuming testAccountStats is a method in GoraDaoDeployer
 
-            await goraDaoDeployer.deployerReport();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.deployerReport();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
         case 'Tester Accounts Dispense':
             // Assuming testAccountDispense is a method in GoraDaoDeployer
-            await goraDaoDeployer.testAccountDispense();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
+            try {
+                await goraDaoDeployer.testAccountDispense();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
         case 'GoraDAO Operations':
             await goraDAOOperations();
