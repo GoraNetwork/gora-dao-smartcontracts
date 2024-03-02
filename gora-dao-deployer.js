@@ -1705,13 +1705,11 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("participation_threshold")) },
-                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("vote_threshold")) },
-                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_allocation")) },
-                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_vote_values")) },
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("participation_threshold"))},
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("vote_threshold"))},
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_allocation"))},
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_vote_values"))},
                 // { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
-
-
             ],
         }
         const commonParamsDaoSetup = {
@@ -1723,12 +1721,8 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-
                 { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.proposalApplicationId) },
                 { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
-
-
-
             ],
         }
         const axferProposal = new this.algosdk.Transaction({

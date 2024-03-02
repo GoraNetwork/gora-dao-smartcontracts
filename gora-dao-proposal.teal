@@ -493,7 +493,7 @@ method_config_proposal:
 
 	byte "proposal_vote_values"
 	load 14
-	box_put
+	app_global_put
 
 
 	itxn_begin
