@@ -315,7 +315,8 @@ async function proposalsOperations() {
             break;
         case 'Participate into Proposal':
             try {
-                await goraDaoDeployer.participateProposalContract();
+                await goraDaoDeployer.participateProposalContractAll();
+
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -336,7 +337,7 @@ async function proposalsOperations() {
             break;
         case 'Withdraw Participation':
            try {
-            await goraDaoDeployer.participationWithdrawProposalContract();
+            await goraDaoDeployer.participationWithdrawProposalContractAll();
             await inquirer.prompt([
                 {
                     type: 'input',
@@ -358,7 +359,21 @@ async function proposalsOperations() {
             break;
         case 'Vote on Proposal':
             try {
-                await goraDaoDeployer.voteProposalContract();
+                let {userIndex} =  await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'userIndex',
+                        message: 'Which user to vote for? (1-5):',
+                    },
+                ]);
+                let {vote} =  await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'vote',
+                        message: 'What is the vote? (0: NO, 1:YES, 2: Abstain ):',
+                    },
+                ]);
+                await goraDaoDeployer.voteProposalContract(Number(userIndex), Number(vote));
                 await inquirer.prompt([
                     {
                         type: 'input',

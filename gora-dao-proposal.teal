@@ -151,7 +151,7 @@ sub_check_txn:
 	txn TypeEnum
 	int appl
 	==
-	assert
+	bz branch_error
 
 	// Checking transaction fee
 	txn Fee
@@ -262,11 +262,11 @@ method_create_proposal:
 	b branch_log_return
 
 method_update_proposal:
-	byte "proposal_is_activated"
-	app_global_get
-	int 1
-	!=
-	assert
+	//byte "proposal_is_activated"
+	//app_global_get
+	//int 1
+	//!=
+	//assert
 
 	global CurrentApplicationID
 	store 0
@@ -360,9 +360,7 @@ method_activate_proposal:
 	
 	byte "proposal_activation_allowed"
 	app_global_get
-	int 1
-	==
-	assert
+	bz branch_error_activation
 
 	byte 0x151f7c75
 	byte "Proposal is activated!"
@@ -375,7 +373,7 @@ method_config_proposal:
 	gtxn 0 TypeEnum
 	int pay
 	==
-	assert
+	bz branch_error
 
 	gtxn 0 Amount
 	int 3000
@@ -529,9 +527,7 @@ method_proposal_participate:
 	// Participation are closed after proposal is activated for voting
 	byte "proposal_is_activated"
 	app_global_get
-	int 0
-	==
-	assert
+	bnz branch_error
 
 	byte "participation_count"
 	app_global_get
@@ -598,6 +594,18 @@ method_proposal_participate:
     >=
 	&&
 	&&
+    assert
+
+    byte "proposal_asset_id"
+    app_global_get
+    gtxn 2 XferAsset
+    ==
+    assert
+
+	byte "proposal_asset_id"
+    app_global_get
+    gtxn 4 XferAsset
+    ==
     assert
 
     gtxn 1 Amount
@@ -692,9 +700,7 @@ method_proposal_withdraw_participate:
 	// Participation Withdrawals are closed after proposal is activated for voting
 	byte "proposal_is_activated"
 	app_global_get
-	int 0
-	==
-	assert
+	bnz branch_error
 
 	byte "participation_count"
 	app_global_get
@@ -723,75 +729,19 @@ method_proposal_vote:
 	txna Accounts 0
 	store 0
 
+	byte "proposal_is_activated"
+	app_global_get
+	bz branch_error_activation
+
 	// The vote value
 	txn ApplicationArgs 1
 	btoi
 	store 1
 
+
     // Checking Transaction group
     global GroupSize
-    int 5
-    ==
-    assert
-
-    // Checking the pay and axfer txns at index 0 and 1 of gtxn
-    gtxn 3 RekeyTo
-    global ZeroAddress
-    ==
-    assert
-
-    gtxn 3 RekeyTo
-    global ZeroAddress
-    ==
-    assert
-
-    gtxn 3 CloseRemainderTo
-    global ZeroAddress
-    ==
-    assert
-
-    gtxn 3 CloseRemainderTo
-    global ZeroAddress
-    ==
-    assert
-
-    gtxn 3 AssetCloseTo
-    global ZeroAddress
-    ==
-    assert
-
-    gtxn 3 AssetCloseTo
-    global ZeroAddress
-    ==
-    assert
-
-
-    gtxn 3 TypeEnum
-    int pay
-    ==
-    assert
-   
-
-    gtxn 3 Fee
-    global MinTxnFee
-    >=
-    assert
-
-    gtxn 3 Amount
-    int 3000
-    >=
-    assert
-	
-
-    gtxn 3 Receiver
-    global CurrentApplicationAddress
-    ==
-    assert
-	
-
-    // Checking account ref to be Sender
-    load 0
-    txn Sender
+    int 4
     ==
     assert
 
@@ -803,11 +753,11 @@ method_proposal_vote:
     assert
 
 	// Check DAO asset holding
-    load 0
-    txna Assets 0
-    asset_holding_get AssetBalance
-    assert
-	pop
+    //load 0
+    //txna Assets 0
+    //asset_holding_get AssetBalance
+    //assert
+	//pop
 
 	// Check participation
 	load 0
@@ -818,15 +768,7 @@ method_proposal_vote:
 	box_del
 	pop
 
-	// Checking Proposal Activation status
-	byte "proposal_is_activated"
-	app_global_get
-	int 1
-	==
-	itob
-	log
-	//assert
-
+	
 
 	// Casting vote to proposal
 	load 0
@@ -877,11 +819,7 @@ branch_vote_abs:
 	concat
 	b branch_log_return
 
-	
-    
 
-branch_error:
-	err
 
 // Handles logging the last element on the stack then put a 1 on the top and return (log and approve)
 branch_log_return:
@@ -889,4 +827,8 @@ branch_log_return:
 	int 1
 	return
 
+branch_error:
+	err
+branch_error_activation:
+	err
 
