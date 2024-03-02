@@ -203,8 +203,7 @@
                     "type": "(uint64,uint64,uint64)",
                     "name": "proposal_allocation",
                     "description": "GoraDAO Proposal allocation program! "
-                }
-                ,
+                },
                 {
                     "type": "uint64",
                     "name": "proposal_vote_values",

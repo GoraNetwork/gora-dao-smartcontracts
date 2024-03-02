@@ -1708,7 +1708,8 @@ const GoraDaoDeployer = class {
                 { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("participation_threshold")) },
                 { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("vote_threshold")) },
                 { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_allocation")) },
-                { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_vote_values")) },
+                // { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
 
 
             ],
