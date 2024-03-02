@@ -119,7 +119,7 @@ branch_method_router:
 	==
 	bnz method_proposal_withdraw_participate
 
-	method "proposal_vote(pay,asset,account,application,uint64)uint64"
+	method "proposal_vote(uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_vote
