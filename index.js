@@ -578,7 +578,6 @@ async function proposalsOperations() {
             logger.info('Deploy New Proposal: Deploy the new Proposal contract');
             logger.info('Update Deployed Proposal: Update the deployed Proposal contract');
             logger.info('Configure Proposal: Configure the Proposal contract');
-
             logger.info('Participate into Proposal: Participate into the Proposal');
             logger.info('Withdraw Participation: Withdraw participation from the Proposal');
             logger.info('Vote on Proposal: Vote on the Proposal');
