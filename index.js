@@ -44,21 +44,33 @@ const goraDaoDeployer = new GoraDaoDeployer(props)
 
 
 async function goraDAOOperations() {
+    let choices = []
+    if(config['gora_dao']['dao_dao_deployed']===true){
+        choices.push('Update GoraDAO Contract')
+    }else{
+        choices.push('Deploy GoraDAO Contract')
+    }
+    if(config['gora_dao']['dao_dao_deployed']===true){
+        choices.push( 'Configure Deployed GoraDAO')
+    }
+    
+    if(config['gora_dao']['subscribed_to_dao']===true){
+        choices.push('Unsubscribe from GoraDAO')
+    }else{
+        choices.push('Subscribe to GoraDAO')
+    }
+    if(config['gora_dao']['dao_asa_distributed']===false){
+        choices.push( 'Distribute GoraDAO Asset')
+    }
+    choices.push( 'Back to Main Menu')
+   
+
     const answers = await inquirer.prompt([
         {
             type: 'list',
             name: 'goraDAOOperation',
             message: 'Select a GoraDAO operation:',
-            choices: [
-                'Deploy GoraDAO Contract',
-                'Update GoraDAO Contracts',
-                'Configure Deployed GoraDAO',
-                'Distribute GoraDAO Asset',
-                'Subscribe to GoraDAO',
-                'Unsubscribe from GoraDAO',
-
-                'Back to Main Menu'
-            ],
+            choices: choices,
         },
     ]);
 
@@ -87,7 +99,7 @@ async function goraDAOOperations() {
 
 
             break;
-        case 'Update GoraDAO Contracts':
+        case 'Update GoraDAO Contract':
             try {
                 await goraDaoDeployer.updateMainContract();
                 await goraDaoDeployer.writeProposalContractSourceBox();
@@ -206,24 +218,31 @@ async function goraDAOOperations() {
     }
 }
 async function proposalsOperations() {
+    let choices = [];
+    if(config['gora_dao']['dao_proposal_deployed']===false){
+        choices.push('Deploy New Proposal')
+    }else{
+        choices.push('Update Deployed Proposal')
+    }
+    if(config['gora_dao']['dao_proposal_deployed']===true){
+        choices.push( 'Configure Proposal')
+    }
+    if(config['gora_dao']['participated_to_proposal']===true){
+        choices.push(  'Withdraw Participation')
+    }else{
+        choices.push('Participate into Proposal')
+    }
+    if(config['gora_dao']['participated_to_proposal']===true){
+        choices.push('Vote on Proposal')
+    }
+    choices.push( 'Back to Main Menu')
+
     const answers = await inquirer.prompt([
         {
             type: 'list',
             name: 'proposalOperation',
             message: 'Select a proposal operation:',
-            choices: [
-
-                'Deploy New Proposal',
-                'Update Deployed Proposal',
-                'Configure Proposal',
-                'Distribute Proposal Asset',
-                'Participate into Proposal',
-                'Withdraw Participation',
-                'Vote on Proposal',
-                'Activate Proposal',
-                'Close Proposal',
-                'Back to Main Menu'
-            ],
+            choices: choices,
         },
     ]);
 
@@ -465,7 +484,15 @@ async function mainMenu() {
             type: 'list',
             name: 'action',
             message: 'Select the operation you would like to perform:',
-            choices: [
+            choices: Number(config['gora_dao']['proposal_asa_id'])>0 ? [
+
+                'Tester Accounts Dispense',
+                'Tester Accounts Stats',
+                'GoraDAO Operations',
+                'Proposals Operations',
+                'Tester Accounts Recreate',
+                'Exit'
+            ]:[
 
                 'Tester Accounts Dispense',
                 'Tester Accounts Stats',
@@ -528,8 +555,19 @@ async function mainMenu() {
             // Assuming testAccountStats is a method in GoraDaoDeployer
 
             try {
-                await goraDaoDeployer.sendAllAlgosAndDeleteMnemonics();
-                await goraDaoDeployer.deployerReport();
+                let {recreate} = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'recreate',
+                        message: 'Are you sure you want to re-create the tester accounts? (y/n)',
+                    },
+                ]);
+                if(recreate === 'y'){
+                    await goraDaoDeployer.sendAllAlgosAndDeleteMnemonics();
+                    await goraDaoDeployer.deployerReport();
+                }else{
+                    logger.info('Tester accounts recreation cancelled')
+                }
                 await inquirer.prompt([
                     {
                         type: 'input',
