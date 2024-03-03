@@ -45,25 +45,31 @@ const goraDaoDeployer = new GoraDaoDeployer(props)
 
 async function goraDAOOperations() {
     let choices = []
-    if(config['gora_dao']['dao_dao_deployed']===true){
+    if (config['gora_dao']['dao_asa_id'] > 0) {
+        choices.push('Create GoraDAO Asset')
+    }
+    if (config['gora_dao']['dao_dao_deployed'] === true) {
         choices.push('Update GoraDAO Contract')
-    }else{
+    } else {
         choices.push('Deploy GoraDAO Contract')
     }
-    if(config['gora_dao']['dao_dao_deployed']===true){
-        choices.push( 'Configure Deployed GoraDAO')
+    if (config['gora_dao']['dao_dao_deployed'] === true) {
+        choices.push('Configure Deployed GoraDAO')
     }
-    
-    if(config['gora_dao']['subscribed_to_dao']===true){
+
+    if (config['gora_dao']['subscribed_to_dao'] === true) {
         choices.push('Unsubscribe from GoraDAO')
-    }else{
+    } else {
         choices.push('Subscribe to GoraDAO')
     }
-    if(config['gora_dao']['dao_asa_distributed']===false){
-        choices.push( 'Distribute GoraDAO Asset')
+    if (config['gora_dao']['dao_asa_distributed'] === false) {
+        choices.push('Distribute GoraDAO Asset')
     }
-    choices.push( 'Back to Main Menu')
-   
+
+
+    choices.push('Help')
+    choices.push('Back to Main Menu')
+
 
     const answers = await inquirer.prompt([
         {
@@ -206,7 +212,65 @@ async function goraDAOOperations() {
                 ]);
             }
             break;
+        case 'Create GoraDAO Asset':
+            try {
+                await goraDaoDeployer.createDaoAsset();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Help':
+            logger.info('GoraDAO Help | DAO Operations Menu');
+            logger.info('------------------------------------');
+            //logger.info('Test flow: Create DAO Asset ---> Deploy/Update new DAO contract ---> Configure DAO ---> Subscribe/Unsubscribe testing proposer account to/from DAO ---> Go to Proposals Operations to continue!');
+            logger.info(`
+            +-------------------+       +--------------------------------+       +-------------------+
+            |                   |       |                                |       |                   |
+            |  Create DAO Asset +------->  Deploy/Update new DAO         +------->  Configure DAO    |
+            |                   |       |  contract                      |       |                   |
+            +-------------------+       +--------------------------------+       +-------------------+
+                                                                                        |
+                                                                                        |
+                                                                                        v
+                                              +-------------------------------------------+       +--------------------------------+
+                                              |                                           |       |                                |
+                                              |  Subscribe/Unsubscribe testing proposer  +------->  Go to Proposals Operations  |
+                                              |  account to/from DAO                     |       |  to continue!                 |
+                                              |                                           |       |                                |
+                                              +-------------------------------------------+       +--------------------------------+
 
+            
+            `);
+            logger.info('Create GoraDAO Asset: Create the GoraDAO asset');
+            logger.info('Deploy GoraDAO Contract: Deploy the GoraDAO contract');
+            logger.info('Update GoraDAO Contract: Update the GoraDAO contract');
+            logger.info('Configure Deployed GoraDAO: Configure the deployed GoraDAO contract');
+            logger.info('Distribute GoraDAO Asset: Distribute the GoraDAO asset');
+            logger.info('Subscribe to GoraDAO: Subscribe to the GoraDAO');
+            logger.info('Unsubscribe from GoraDAO: Unsubscribe from the GoraDAO');
+
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
+            break;
         case 'Back to Main Menu':
             await mainMenu();
             break;
@@ -219,23 +283,28 @@ async function goraDAOOperations() {
 }
 async function proposalsOperations() {
     let choices = [];
-    if(config['gora_dao']['dao_proposal_deployed']===false){
+    if (!(Number(config['gora_dao']['proposal_asa_id']) > 0)) {
+        choices.push('Create GoraDAO Proposals Asset',)
+    }
+    if (config['gora_dao']['dao_proposal_deployed'] === false) {
         choices.push('Deploy New Proposal')
-    }else{
+    } else {
         choices.push('Update Deployed Proposal')
     }
-    if(config['gora_dao']['dao_proposal_deployed']===true){
-        choices.push( 'Configure Proposal')
+    if (config['gora_dao']['dao_proposal_deployed'] === true) {
+        choices.push('Configure Proposal')
     }
-    if(config['gora_dao']['participated_to_proposal']===true){
-        choices.push(  'Withdraw Participation')
-    }else{
+    if (config['gora_dao']['participated_to_proposal'] === true) {
+        choices.push('Withdraw Participation')
+    } else {
         choices.push('Participate into Proposal')
     }
-    if(config['gora_dao']['participated_to_proposal']===true){
+    if (config['gora_dao']['participated_to_proposal'] === true) {
         choices.push('Vote on Proposal')
     }
-    choices.push( 'Back to Main Menu')
+
+    choices.push('Help')
+    choices.push('Back to Main Menu')
 
     const answers = await inquirer.prompt([
         {
@@ -247,7 +316,27 @@ async function proposalsOperations() {
     ]);
 
     switch (answers.proposalOperation) {
-
+        case 'Create GoraDAO Proposals Asset':
+            try {
+                await goraDaoDeployer.createDaoProposalAsset();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
         case 'Deploy New Proposal':
             try {
                 await goraDaoDeployer.createProposalContract();
@@ -355,37 +444,37 @@ async function proposalsOperations() {
             }
             break;
         case 'Withdraw Participation':
-           try {
-            await goraDaoDeployer.participationWithdrawProposalContractAll();
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
-            
-           } catch (error) {
-            console.error('An error occurred:', error);
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
-           }
+            try {
+                await goraDaoDeployer.participationWithdrawProposalContractAll();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
             break;
         case 'Vote on Proposal':
             try {
-                let {userIndex} =  await inquirer.prompt([
+                let { userIndex } = await inquirer.prompt([
                     {
                         type: 'input',
                         name: 'userIndex',
                         message: 'Which user to vote for? (1-5):',
                     },
                 ]);
-                let {vote} =  await inquirer.prompt([
+                let { vote } = await inquirer.prompt([
                     {
                         type: 'input',
                         name: 'vote',
@@ -453,6 +542,55 @@ async function proposalsOperations() {
                 ]);
             }
             break;
+        case 'Help':
+            logger.info('GoraDAO Help | Proposals Operations Menu');
+            logger.info('------------------------------------');
+            //logger.info('Test flow: Create Proposal Asset ---> Distribute Proposal Asset to 5 test users ---> Deploy/Update new Proposal contract ---> Configure Proposal ---> Participate/Withdraw participation to/from Proposal ---> Vote on Proposal');
+            logger.info(`
+            +-----------------------+       +-----------------------------------+       +-----------------------------------+
+|                       |       |                                   |       |                                   |
+|  Create Proposal      +------->  Distribute Proposal Asset       +------->  Deploy/Update new Proposal       |
+|  Asset                |       |  to 5 test users                  |       |  contract                         |
+|                       |       |                                   |       |                                   |
++-----------------------+       +-----------------------------------+       +-----------------------------------+
+                                                                                   |
+                                                                                   |
+                                                                                   v
+                                                                          +------------------------+       +---------------------------+
+                                                                          |                        |       |                           |
+                                                                          |  Configure Proposal    +------->  Participate/Withdraw     |
+                                                                          |                        |       |  participation to/from    |
+                                                                          +------------------------+       |  Proposal                |
+                                                                                                           |                           |
+                                                                                                           +---------------------------+
+                                                                                                                       |
+                                                                                                                       |
+                                                                                                                       v
+                                                                                                           +---------------------------+
+                                                                                                           |                           |
+                                                                                                           |  Vote on Proposal         |
+                                                                                                           |                           |
+                                                                                                           +---------------------------+
+
+            `);
+            logger.info('Create GoraDAO Proposals Asset: Create the GoraDAO proposal asset');
+            logger.info('Distribute Proposal Asset: Distribute the Proposal asset! System will automatically opts generated 5 test user accounts into proposal asset and tops them with Algos enough to pay for configured requirements for both participation and voting ');
+            logger.info('Deploy New Proposal: Deploy the new Proposal contract');
+            logger.info('Update Deployed Proposal: Update the deployed Proposal contract');
+            logger.info('Configure Proposal: Configure the Proposal contract');
+
+            logger.info('Participate into Proposal: Participate into the Proposal');
+            logger.info('Withdraw Participation: Withdraw participation from the Proposal');
+            logger.info('Vote on Proposal: Vote on the Proposal');
+
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
+            break;
         case 'Back to Main Menu':
             await mainMenu();
             break;
@@ -484,88 +622,47 @@ async function mainMenu() {
             type: 'list',
             name: 'action',
             message: 'Select the operation you would like to perform:',
-            choices: Number(config['gora_dao']['proposal_asa_id'])>0 ? [
+            choices: Number(config['gora_dao']['proposal_asa_id']) > 0 ? [
 
                 'Tester Accounts Dispense',
                 'Tester Accounts Stats',
                 'GoraDAO Operations',
                 'Proposals Operations',
                 'Tester Accounts Recreate',
+                'Help',
                 'Exit'
-            ]:[
+            ] : [
 
                 'Tester Accounts Dispense',
                 'Tester Accounts Stats',
-                'Create GoraDAO Asset',
-                'Create GoraDAO Proposals Asset',
+
+
 
                 'GoraDAO Operations',
                 'Proposals Operations',
                 'Tester Accounts Recreate',
+                'Help',
                 'Exit'
             ],
         },
     ]);
 
     switch (answers.action) {
-        case 'Create GoraDAO Asset':
-            try {
-                await goraDaoDeployer.createDaoAsset();
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            } catch (error) {
-                console.error('An error occurred:', error);
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            }
-            break;
-        case 'Create GoraDAO Proposals Asset':
-            try {
-                await goraDaoDeployer.createDaoProposalAsset();
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            } catch (error) {
-                console.error('An error occurred:', error);
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            }
-            break;
-
         case 'Tester Accounts Recreate':
             // Assuming testAccountStats is a method in GoraDaoDeployer
 
             try {
-                let {recreate} = await inquirer.prompt([
+                let { recreate } = await inquirer.prompt([
                     {
                         type: 'input',
                         name: 'recreate',
                         message: 'Are you sure you want to re-create the tester accounts? (y/n)',
                     },
                 ]);
-                if(recreate === 'y'){
+                if (recreate === 'y') {
                     await goraDaoDeployer.sendAllAlgosAndDeleteMnemonics();
                     await goraDaoDeployer.deployerReport();
-                }else{
+                } else {
                     logger.info('Tester accounts recreation cancelled')
                 }
                 await inquirer.prompt([
@@ -587,7 +684,7 @@ async function mainMenu() {
             }
             break;
         case 'Tester Accounts Stats':
-             try {
+            try {
                 await goraDaoDeployer.deployerReport();
                 await inquirer.prompt([
                     {
@@ -635,6 +732,33 @@ async function mainMenu() {
         case 'Proposals Operations':
             await proposalsOperations();
             break;
+        case 'Help':
+            logger.info('GoraDAO Help | Main Operations Menu');
+            logger.info('------------------------------------');
+            //logger.info('Test flow: Dispense ino Tester accounts---> Go to GoraDAO Operations to continue!');
+            logger.info(`
+            +-------------------------------------------+       +--------------------------------+
+            |                                           |       |                                |
+            |  Dispense ino Tester accounts             |------>|  Go to GoraDAO Operations      |
+            |                                           |       |         to continue!           |
+            +-------------------------------------------+       +--------------------------------+
+            
+            `);
+            logger.info('Tester Accounts Dispense: Dispense algos to tester accounts');
+            logger.info('Tester Accounts Stats: Show tester accounts stats');
+
+            logger.info('GoraDAO Operations: Perform GoraDAO operations');
+            logger.info('Proposals Operations: Perform Proposals operations');
+            logger.info('Tester Accounts Recreate: Recreate tester accounts');
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
+            break;
+
         case 'Exit':
             console.log('Exiting...');
             process.exit(0);
