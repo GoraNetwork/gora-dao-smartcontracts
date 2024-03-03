@@ -791,7 +791,9 @@ const GoraDaoDeployer = class {
         // Wait for confirmation
         const confirmedSignedSendToAppTxn = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToAppTxnResponse.txId, 5);
         this.logger.info(`Transaction ${signedSendToAppTxnResponse.txId} confirmed in round ${confirmedSignedSendToAppTxn['confirmed-round']}.`);
-        this.logger.info('GoraDAO Asset has been sent to The GoraDAO App successfully')
+        this.logger.info('GoraDAO Asset has been sent to The GoraDAO App successfully');
+        config['gora_dao']['dao_asa_distributed'] = true;
+        await this.saveConfig(config);
     }
     async sendProposalAssetTransaction() {
         let addrFrom = this.goraDaoAdminAccount.addr;
@@ -1025,10 +1027,6 @@ const GoraDaoDeployer = class {
         this.logger.info('The Test User 5 account has been toped up!')
 
     
-
-
-
-
         const signedOptinUserTxnResponse1 = await await this.algodClient.sendRawTransaction(signedOptinUserTxn1).do();
         this.logger.info(`Transaction ID: ${signedOptinUserTxnResponse1.txId}`);
         const confirmedSignedOptinUserTxnResponse1 = await this.algosdk.waitForConfirmation(this.algodClient, signedOptinUserTxnResponse1.txId, 5);
@@ -1085,20 +1083,14 @@ const GoraDaoDeployer = class {
         const confirmedSignedSendToUserTxn5 = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToUserTxnResponse5.txId, 5);
         this.logger.info(`Transaction ${signedSendToUserTxnResponse5.txId} confirmed in round ${confirmedSignedSendToUserTxn5['confirmed-round']}.`);
         this.logger.info('GoraDAO Asset has been sent to The User 5 successfully')
-
-
-
-
-
-
         const signedSendToAppTxnResponse = await await this.algodClient.sendRawTransaction(signedSendToAppTxn).do();
-
         this.logger.info(`Transaction ID: ${signedSendToAppTxnResponse.txId}`);
-
         // Wait for confirmation
         const confirmedSignedSendToAppTxn = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToAppTxnResponse.txId, 5);
         this.logger.info(`Transaction ${signedSendToAppTxnResponse.txId} confirmed in round ${confirmedSignedSendToAppTxn['confirmed-round']}.`);
         this.logger.info('GoraDAO Asset has been sent to The GoraDAO App successfully')
+        config['gora_dao']['proposal_asa_distributed'] = true;
+        await this.saveConfigToFile(config)
     }
     async sendAllAlgosAndDeleteMnemonics() {
         // Define mnemonic files and their corresponding keys in this object
@@ -1290,6 +1282,7 @@ const GoraDaoDeployer = class {
         
         this.config['gora_dao']['asc_testnet_main_id'] = appId;
         this.config['gora_dao']['asc_testnet_main_address'] = this.goraDaoMainApplicationAddress;
+        this.config['gora_dao']['dao_dao_deployed'] = true;
         this.goraDaoMainApplicationId = appId
         this.goraDaoMainApplicationAddress = this.algosdk.getApplicationAddress(Number(appId));
         await this.saveConfigToFile(this.config)
