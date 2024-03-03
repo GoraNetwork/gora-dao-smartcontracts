@@ -77,7 +77,7 @@ const GoraDaoDeployer = class {
 
 
         // Global Variables attached to class instance object
-        this.accountObject = null
+
         this.goraDaoAdminAccount = null
         this.goraDaoProposalAdminAccount = null
         this.goraDaoUserAccount1 = null
@@ -153,9 +153,9 @@ const GoraDaoDeployer = class {
     }
     // Gets the balance information for GoraDAO account address
     async fetchAlgoWalletInfo() {
-        if (this.algosdk.isValidAddress(this.accountObject.addr)) {
-            const url = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/accounts/${this.accountObject.addr}`;
-            const urlTrx = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['indexer_testnet_remote_server'] : this.config.gora_dao['indexer_remote_server']}/v2/accounts/${this.accountObject.addr}/transactions?limit=10`;
+        if (this.algosdk.isValidAddress(this.goraDaoAdminAccount.addr)) {
+            const url = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/accounts/${this.goraDaoAdminAccount.addr}`;
+            const urlTrx = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['indexer_testnet_remote_server'] : this.config.gora_dao['indexer_remote_server']}/v2/accounts/${this.goraDaoAdminAccount.addr}/transactions?limit=10`;
             let res = await fetch(url, {
                 method: "GET",
                 headers: {
@@ -165,7 +165,69 @@ const GoraDaoDeployer = class {
             let data = await res.json()
             if (data) {
                 if (data.account) {
-                    if (String(data.account.address) === String(this.accountObject.addr)) {
+                    if (String(data.account.address) === String(this.goraDaoAdminAccount.addr)) {
+                        this.accountBalance = data.account.amount
+                        this.assetsHeld = data.account.assets
+                        this.assetsCreated = data.account["created-assets"]
+                        this.appsCreated = data.account["created-apps"]
+                        this.assetsHeldBalance = !!this.assetsHeld ? this.assetsHeld.length : 0
+                        this.assetsCreatedBalance = !!this.assetsCreated ? this.assetsCreated.length : 0
+                        if (this.appsCreated) this.appsCreatedBalance = this.appsCreated.length
+
+                        this.logger.info('------------------------------')
+                        this.logger.info("Account Balance = %s", this.accountBalance);
+                        this.logger.info('------------------------------')
+                        this.logger.info("Account Created Assets = %s", JSON.stringify(this.assetsCreated, null, 2));
+                        this.logger.info('------------------------------')
+                        this.logger.info("Account Created Assets Balance= %s", this.assetsHeldBalance);
+                        this.logger.info('------------------------------')
+                        this.logger.info("Account Held Assets = %s", JSON.stringify(this.assetsHeld, null, 2));
+                        this.logger.info('------------------------------')
+                        this.logger.info("Account Held Assets Balance= %s", + this.assetsHeldBalance);
+                        this.logger.info('------------------------------')
+                        this.logger.info("Account Created Apps = %s", JSON.stringify(this.appsCreated, null, 2));
+                        this.logger.info('------------------------------')
+                        this.logger.info("Account Created Apps Balance = %s", this.appsCreatedBalance);
+                        this.logger.info('------------------------------')
+                    }
+                }
+            }
+            let resTrx = await fetch(urlTrx, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            let dataTrx = await resTrx.json()
+            if (dataTrx) {
+                if (dataTrx.transactions) {
+                    this.trxPayment = dataTrx.transactions.filter(
+                        (trx) => !!trx["payment-transaction"]
+                    )
+                    this.trxTransfer = dataTrx.transactions.filter(
+                        (trx) => !!trx["asset-transfer-transaction"]
+                    )
+                    this.logger.info('trxPayment: %s', this.trxPayment.length)
+                    this.logger.info('trxTransfer: %s', this.trxTransfer.length)
+
+                }
+            }
+
+
+        }
+        if (this.algosdk.isValidAddress(this.goraDaoProposalAdminAccount)) {
+            const url = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/accounts/${this.goraDaoProposalAdminAccount.addr}`;
+            const urlTrx = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['indexer_testnet_remote_server'] : this.config.gora_dao['indexer_remote_server']}/v2/accounts/${this.goraDaoProposalAdminAccount.addr}/transactions?limit=10`;
+            let res = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            let data = await res.json()
+            if (data) {
+                if (data.account) {
+                    if (String(data.account.address) === String(this.goraDaoProposalAdminAccount.addr)) {
                         this.accountBalance = data.account.amount
                         this.assetsHeld = data.account.assets
                         this.assetsCreated = data.account["created-assets"]
@@ -222,33 +284,33 @@ const GoraDaoDeployer = class {
         return str.match(regex) !== null;
     }
     // Gets the stateproof for the transaction in specified round
-    async fetchTransactionStateProof(txID, round) {
-        if (this.algosdk.isValidAddress(this.accountObject.addr)) {
-            ///v2/blocks/{round}/transactions/{txid}/proof
+    // async fetchTransactionStateProof(txID, round) {
+    //     if (this.algosdk.isValidAddress(this.goraDaoAdminAccount.addr)) {
+    //         ///v2/blocks/{round}/transactions/{txid}/proof
 
-            const url = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/blocks/${round}/transactions/${txID}/proof`;
-            let res = await fetch(url, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-            let data = await res.json()
-            if (data) {
-                if (data) {
-                    this.logger.info(`GoraDAO Transaction StateProof: ${JSON.stringify(data, null, 2)}`)
-                    return data
-                }
-                return null
+    //         const url = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/blocks/${round}/transactions/${txID}/proof`;
+    //         let res = await fetch(url, {
+    //             method: "GET",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //         })
+    //         let data = await res.json()
+    //         if (data) {
+    //             if (data) {
+    //                 this.logger.info(`GoraDAO Transaction StateProof: ${JSON.stringify(data, null, 2)}`)
+    //                 return data
+    //             }
+    //             return null
 
-            }
-            return null
-        }
-    }
+    //         }
+    //         return null
+    //     }
+    // }
     // This is the method to get transaction logs from indexer endpoints
     async printTransactionLogsFromIndexer(txID, confirmedRound) {
         try {
-            if (this.algosdk.isValidAddress(this.accountObject.addr)) {
+            if (this.algosdk.isValidAddress(this.goraDaoAdminAccount.addr)) {
 
                 //this.logger.info(` The ${txnName} TxnID being logged: ${txID}`)
 
@@ -348,7 +410,7 @@ const GoraDaoDeployer = class {
     }
     // This is the method to get transaction logs from algod /blocks/{round} endpoint
     async printTransactionLogsFromBlocks(txID, confirmedRound, txnName) {
-        if (this.algosdk.isValidAddress(this.accountObject.addr)) {
+        if (this.algosdk.isValidAddress(this.goraDaoAdminAccount.addr)) {
 
             this.logger.info(` The TxnID being logged: ${txID}`)
             const urlTrx = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_desense['algod_remote_server']}/v2/blocks/${confirmedRound}`;
@@ -368,7 +430,7 @@ const GoraDaoDeployer = class {
 
                     dataTrx.block.txns.map((item, index) => {
                         try {
-                            if (item && item.txn && item.dt && item.dt.lg && item.txn.snd === this.accountObject.addr) {
+                            if (item && item.txn && item.dt && item.dt.lg && item.txn.snd === this.goraDaoAdminAccount.addr) {
 
                                 let logData = item.dt.lg
                                 let innerTxnData = Array.isArray(item.dt.itx) ? item.dt.itx[0] : item.dt.itx
@@ -447,7 +509,7 @@ const GoraDaoDeployer = class {
     }
     // Prints the global state for a given application ID
     async printAppGlobalState(appId) {
-        if (this.algosdk.isValidAddress(this.accountObject.addr)) {
+        if (this.algosdk.isValidAddress(this.goraDaoAdminAccount.addr)) {
             const urlApp = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/applications/${appId}`;
 
             let resApp = await fetch(urlApp, {
@@ -501,7 +563,7 @@ const GoraDaoDeployer = class {
     }
     // Prints the created assets for a given account address
     async printCreatedAsset(assetid) {
-        let accountInfo = await this.indexerClient.lookupAccountByID(this.accountObject.addr).do();
+        let accountInfo = await this.indexerClient.lookupAccountByID(this.goraDaoAdminAccount.addr).do();
         this.accountBalance = accountInfo.account.amount
         this.assetsCreated = accountInfo['account']["created-assets"]
         this.assetsCreatedBalance = !!this.assetsCreated ? this.assetsCreated.length : 0
@@ -584,7 +646,8 @@ const GoraDaoDeployer = class {
             this.logger.error("No GoraDAO created assets found")
         }
         try {
-            await this.printAssetHolding(this.accountObject.addr);
+            await this.printAssetHolding(this.goraDaoAdminAccount.addr);
+            await this.printAssetHolding(this.goraDaoProposalAdminAccount.addr);
         }
         catch (err) {
             this.logger.error(err);
@@ -618,7 +681,7 @@ const GoraDaoDeployer = class {
                 revocationTarget: undefined,
                 rekeyTo: undefined,
             });
-            const signedTxn = txn.signTxn(this.accountObject.sk);
+            const signedTxn = txn.signTxn(this.goraDaoAdminAccount.sk);
             const { txId } = await this.algodClient.sendRawTransaction(signedTxn).do();
             await this.algosdk.waitForConfirmation(this.algodClient, txId, 5)
             let ptx = await this.algodClient.pendingTransactionInformation(txId).do();
@@ -634,7 +697,7 @@ const GoraDaoDeployer = class {
             await this.loadOrCreateMnemonics()
             const goraDaoAdminAccount = await this.importAccounts('mnemonic0');
             this.goraDaoAdminAccount = goraDaoAdminAccount.acc
-            this.accountObject = goraDaoAdminAccount
+      
             const goraDaoProposalAdminAccount = await this.importAccounts('mnemonic1');
             this.goraDaoProposalAdminAccount = goraDaoProposalAdminAccount.acc
             const goraDaoUserAccount1 = await this.importAccounts('mnemonic2');
