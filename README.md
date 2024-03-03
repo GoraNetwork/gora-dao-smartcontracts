@@ -1,7 +1,15 @@
 # GoraDAO
-#### gora-dao-smartcontracts
-### A non-opinionated, dynamic approach to DAO
+### A new non-opinionated, dynamic approach to DAO
 
+
+    .d8888b.                           8888888b.        d8888  .d88888b.  
+    d88P  Y88b                          888  "Y88b      d88888 d88P" "Y88b 
+    888    888                          888    888     d88P888 888     888 
+    888         .d88b.  888d888 8888b.  888    888    d88P 888 888     888 
+    888  88888 d88""88b 888P"      "88b 888    888   d88P  888 888     888 
+    888    888 888  888 888    .d888888 888    888  d88P   888 888     888 
+    Y88b  d88P Y88..88P 888    888  888 888  .d88P d8888888888 Y88b. .d88P 
+     "Y8888P88  "Y88P"  888    "Y888888 8888888P" d88P     888  "Y88888P"  
 
 #### GoraDAO is Gora Network's DAO system!
 
