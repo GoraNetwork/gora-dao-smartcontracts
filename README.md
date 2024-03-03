@@ -1,38 +1,76 @@
-# gora-dao-smartcontracts
+# GoraDAO
+### A new non-opinionated, dynamic approach to DAO
 
-#### GoraDAO is Gora Network's DAO system!
 
-(WIP!) This repository contains Algorand AVM smart contracts of GoraDAO!
+    .d8888b.                           8888888b.        d8888  .d88888b.  
+    d88P  Y88b                          888  "Y88b      d88888 d88P" "Y88b 
+    888    888                          888    888     d88P888 888     888 
+    888         .d88b.  888d888 8888b.  888    888    d88P 888 888     888 
+    888  88888 d88""88b 888P"      "88b 888    888   d88P  888 888     888 
+    888    888 888  888 888    .d888888 888    888  d88P   888 888     888 
+    Y88b  d88P Y88..88P 888    888  888 888  .d88P d8888888888 Y88b. .d88P 
+     "Y8888P88  "Y88P"  888    "Y888888 8888888P" d88P     888  "Y88888P"  
 
-GoraDAO uses dynamic generation of Proposals and Vesting (optional ) contracts via C2C calls and brings unique features onto the DAO technology:
 
-- Optional Vesting (future phase)
-- Optional Staking
+| <img src="https://avatars.githubusercontent.com/u/96357480?s=400&u=f54a2fab0e5faaf6bccf57b993e0a28ca2102001&v=4" width="100"> <br>GoraDAO is developed, maintained, and implemented as GoraDAO service by [Gora](https://gora.io)!| <img src="https://uploads-ssl.webflow.com/646efe133ad1fe199a53f269/64e8a304831329ff7513f00b_poseNewWebsite01_2-p-800.png" width="170">|  
+| -------- | ------- | 
+
+This repository is a work in progress and contains Algorand TEAL smart contracts of GoraDAO, plus interactive CLI to test and operate it!
+
+GoraDAO provides dynamic generation of Proposals and Vesting (optional for future development phase ) contracts via C2C calls and offers unique DAO features:
+
+- Self-contained, decentralized, and permissionless lifecycle via interactive CLI
+- 100% Sybil resistant
+- 100% double-vote resistant (as per identity level on Algorand blockchain)
+- Configurable Subscription to DAO and Participation to Proposals
 - Configurable Voting
+- Configurable Algo and BYOT for staking and fees
+- full separation of concerns on staking and fees on both proposals and voting aspects to maintain 100% decentralization and permissionless system
 - Configurable Vesting (future phase)
-- Configurable Algo and/or BYOT for staking
 
-A note on thresholds structure:
+A note on DAO business processes:
 
-`[100,100,51]` is a threshold scenario and is consisted of 3 unsigned integers between 0-100! First is threshold of participation , second is the percentage of vesting application and third is the required percentage for approval! Gora proposal accepts array of this array as array of voting scenarios depending of participation percentage!
+- GoraDAO Proposal Proposers processes
+  - Meet requirements (Minimum subscription fees in Algo and/or DAO Token)
+  - Subscribe to DAO
+  - Propose proposals
+- GoraDAO Proposal Participants processes
+  - Meet requirements (Minimum participation stakings and fees in Algo and/or DAO Token)
+  - Participate in proposal (it's like registration for voting)
+  - Cast vote
+- GoraDAO managers processes:
+  - Deploy DAO
+  - Configure DAO
+  - Distribute DAO token
 
-This lets a proposal to continue operation and go to vote even if the originally anticipated participation has not occurred! This can have either the same or different allocations and required approval percentages!
+A note on threshold parameters structure:
+Each proposal's behavior regarding activation for voting, the conclusion of voting, and such is controlled through some parameters during the proposal configuration ABI call:
 
-Example: `[[100,100, 52],[80, 70, 70], [60, 50, 70]]`
+- participation threshold: an array (tuple) of Uint64 integer numbers of expected participation count (e.g how many would participate in voting)
+- vote threshold: an array (tuple) of Uint64 integer numbers, the same size as the participation threshold ( extra values will be ignored by smart contract), including voting thresholds for peer index of participation threshold (for example: if 250 participants then 150 votes are needed for the proposal to pass). 
+- proposal allocations: an array (tuple) of Uint64 integer numbers, the same size as the participation threshold ( extra values will be ignored by smart contract), including allocation amounts for peer index of participation threshold (example: if 250 participants then 150 votes are needed for the proposal to pass and all 1000000 requested token are approved to be allocated for vesting)
 
-With this innovative approach DAO proposals get more dynamic and proactive in the face of different participation behaviors from community!
+Example: `
+[250,150, 100]
+[150,85, 50]
+[1000000,750000, 500000]
+`
+
+Important note: On UI level these numbers should be asked from the user as percentages and there (based on the total amount) software should calculate the rounded integer numbers for each index on each parameter and then make the ABI call.
+
+With this innovative approach, DAO proposals get more dynamic and proactive in the face of different participation behaviors from the community!
 
 ## Gora DAO Contracts: V1
 
 GoraDAO contracts follow these principal designs:
-- No static or hard coded value
+- No static or hard-coded value
 - All scenarios are created based on ABI calls to GoraDAO contracts
-- There are one Proposal and one Vesting contract(future work) per Proposal to make the GoraDAO as decentralized and permission-less as possible!
-- ABIs complying to ARC4
+- There is one Proposal and one Vesting contract(future work) per Proposal to make the GoraDAO as decentralized and permission-less as possible!
+- ABIs 100% compliant with ARC4
 - No Update or Delete for Proposals
 - No app opt-in or local state usage anywhere
 
-As illustrated in following diagram GoraDAO on-chain architecture is focused on integration and interoperability with existing working Gora smart contracts!
+As illustrated in the following diagram GoraDAO on-chain architecture is focused on integration and interoperability with existing working Gora smart contracts!
 
 **Gora & GoraDAO on-chain architecture:**
 
@@ -214,7 +252,7 @@ graph TD
 - config_proposal: Configures a Proposal contract! Returns the Proposal contract ID!
 - update_manager_address: Updates Proposal manager address! Returns new manager address.
 - activate_proposal: Activates a Proposal voting! Returns the Proposal contract ID!
-- close_proposal: Force closes a Proposal contract as last resort. Returns the Proposal contract ID!
+- close_proposal: Force closes a Proposal contract as a last resort. Returns the Proposal contract ID!
 - proposal_participate: Participates with a member account into a Proposal! Returns the participating member's account address!
 - proposal_withdraw_participate: Withdraws participation of a member account from a Proposal! Returns the withdrawing member's account address!
 - proposal_vote: Votes for a Proposal! Returns the voting member's account address concatenated with vote!
@@ -233,3 +271,26 @@ graph TD
     GoraDAO_Proposals --> proposal_withdraw_participate_P[proposal_withdraw_participate]
     GoraDAO_Proposals --> proposal_vote_P[proposal_vote]
 ```
+
+
+## GoraDAO interactive CLI Screen cast 
+
+![Screenshot 2024-03-02 at 16 42 39](https://github.com/GoraNetwork/gora-dao-smartcontracts/assets/1900448/42142974-7778-4308-9e1d-94a5c64b346e)
+
+![Screenshot 2024-03-02 at 16 37 26](https://github.com/GoraNetwork/gora-dao-smartcontracts/assets/1900448/cefa137d-c6b1-4c46-83ac-0f54b1f22c50)
+
+![Screenshot 2024-03-02 at 16 38 37](https://github.com/GoraNetwork/gora-dao-smartcontracts/assets/1900448/5e6f2f97-9565-4836-8b02-a5cbd7500d2a)
+
+![Screenshot 2024-03-02 at 16 39 15](https://github.com/GoraNetwork/gora-dao-smartcontracts/assets/1900448/59d0a374-47f8-4d3d-9af9-12c3f5bbef0c)
+
+![Screenshot 2024-03-02 at 16 39 46](https://github.com/GoraNetwork/gora-dao-smartcontracts/assets/1900448/d0fd02e1-7ac8-4c75-8312-4a0473a1a60b)
+
+![Screenshot 2024-03-02 at 16 40 35](https://github.com/GoraNetwork/gora-dao-smartcontracts/assets/1900448/9bd0f0aa-7738-40c2-b2ca-42a1fc4c9fb5)
+
+![Screenshot 2024-03-02 at 16 41 17](https://github.com/GoraNetwork/gora-dao-smartcontracts/assets/1900448/ce4b540b-9d36-44e1-8aae-d5123446d22d)
+
+![Screenshot 2024-03-02 at 16 44 45](https://github.com/GoraNetwork/gora-dao-smartcontracts/assets/1900448/bb5bdb42-e4fa-49e1-ab7b-a2f63d9a1ab6)
+
+![Screenshot 2024-03-02 at 16 46 44](https://github.com/GoraNetwork/gora-dao-smartcontracts/assets/1900448/f468e262-681a-4f68-b952-99bb8fdc484f)
+
+![Screenshot 2024-03-02 at 18 46 01](https://github.com/GoraNetwork/gora-dao-smartcontracts/assets/1900448/ecf4c4be-1c92-46d0-8653-8da684942b1f)
