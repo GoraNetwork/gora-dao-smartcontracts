@@ -549,9 +549,7 @@ async function mainMenu() {
             }
             break;
         case 'Tester Accounts Stats':
-            // Assuming testAccountStats is a method in GoraDaoDeployer
-
-            try {
+             try {
                 await goraDaoDeployer.deployerReport();
                 await inquirer.prompt([
                     {
