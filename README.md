@@ -2,37 +2,62 @@
 
 #### GoraDAO is Gora Network's DAO system!
 
-(WIP!) This repository contains Algorand AVM smart contracts of GoraDAO!
+This repository is a work in progress and contains Algorand TEAL smart contracts of GoraDAO, plus interactive CLI to test and operate it!
 
-GoraDAO uses dynamic generation of Proposals and Vesting (optional ) contracts via C2C calls and brings unique features onto the DAO technology:
+GoraDAO provides dynamic generation of Proposals and Vesting (optional for future development phase ) contracts via C2C calls and offers unique DAO features:
 
-- Optional Vesting (future phase)
-- Optional Staking
+- Self-contained, decentralized, and permissionless lifecycle via interactive CLI
+- 100% Sybil resistant
+- 100% double-vote resistant (as per identity level on Algorand blockchain)
+- Configurable Subscription to DAO and Participation to Proposals
 - Configurable Voting
+- Configurable Algo and BYOT for staking and fees
+- full separation of concerns on staking and fees on both proposals and voting aspects to maintain 100% decentralization and permissionless system
 - Configurable Vesting (future phase)
-- Configurable Algo and/or BYOT for staking
 
-A note on thresholds structure:
+A note on DAO business processes:
 
-`[100,100,51]` is a threshold scenario and is consisted of 3 unsigned integers between 0-100! First is threshold of participation , second is the percentage of vesting application and third is the required percentage for approval! Gora proposal accepts array of this array as array of voting scenarios depending of participation percentage!
+- GoraDAO Proposal Proposers processes
+  - Meet requirements (Minimum subscription fees in Algo and/or DAO Token)
+  - Subscribe to DAO
+  - Propose proposals
+- GoraDAO Proposal Participants processes
+  - Meet requirements (Minimum participation stakings and fees in Algo and/or DAO Token)
+  - Participate in proposal (it's like registration for voting)
+  - Cast vote
+- GoraDAO managers processes:
+  - Deploy DAO
+  - Configure DAO
+  - Distribute DAO token
 
-This lets a proposal to continue operation and go to vote even if the originally anticipated participation has not occurred! This can have either the same or different allocations and required approval percentages!
+A note on threshold parameters structure:
+Each proposal's behavior regarding activation for voting, the conclusion of voting, and such is controlled through some parameters during the proposal configuration ABI call:
 
-Example: `[[100,100, 52],[80, 70, 70], [60, 50, 70]]`
+- participation threshold: an array (tuple) of Uint64 integer numbers of expected participation count (e.g how many would participate in voting)
+- vote threshold: an array (tuple) of Uint64 integer numbers, the same size as the participation threshold ( extra values will be ignored by smart contract), including voting thresholds for peer index of participation threshold (for example: if 250 participants then 150 votes are needed for the proposal to pass). 
+- proposal allocations: an array (tuple) of Uint64 integer numbers, the same size as the participation threshold ( extra values will be ignored by smart contract), including allocation amounts for peer index of participation threshold (example: if 250 participants then 150 votes are needed for the proposal to pass and all 1000000 requested token are approved to be allocated for vesting)
 
-With this innovative approach DAO proposals get more dynamic and proactive in the face of different participation behaviors from community!
+Example: `
+[250,150, 100]
+[150,85, 50]
+[1000000,750000, 500000]
+`
+
+Important note: On UI level these numbers should be asked from the user as percentages and there (based on the total amount) software should calculate the rounded integer numbers for each index on each parameter and then make the ABI call.
+
+With this innovative approach, DAO proposals get more dynamic and proactive in the face of different participation behaviors from the community!
 
 ## Gora DAO Contracts: V1
 
 GoraDAO contracts follow these principal designs:
-- No static or hard coded value
+- No static or hard-coded value
 - All scenarios are created based on ABI calls to GoraDAO contracts
-- There are one Proposal and one Vesting contract(future work) per Proposal to make the GoraDAO as decentralized and permission-less as possible!
-- ABIs complying to ARC4
+- There is one Proposal and one Vesting contract(future work) per Proposal to make the GoraDAO as decentralized and permission-less as possible!
+- ABIs 100% compliant with ARC4
 - No Update or Delete for Proposals
 - No app opt-in or local state usage anywhere
 
-As illustrated in following diagram GoraDAO on-chain architecture is focused on integration and interoperability with existing working Gora smart contracts!
+As illustrated in the following diagram GoraDAO on-chain architecture is focused on integration and interoperability with existing working Gora smart contracts!
 
 **Gora & GoraDAO on-chain architecture:**
 
@@ -214,7 +239,7 @@ graph TD
 - config_proposal: Configures a Proposal contract! Returns the Proposal contract ID!
 - update_manager_address: Updates Proposal manager address! Returns new manager address.
 - activate_proposal: Activates a Proposal voting! Returns the Proposal contract ID!
-- close_proposal: Force closes a Proposal contract as last resort. Returns the Proposal contract ID!
+- close_proposal: Force closes a Proposal contract as a last resort. Returns the Proposal contract ID!
 - proposal_participate: Participates with a member account into a Proposal! Returns the participating member's account address!
 - proposal_withdraw_participate: Withdraws participation of a member account from a Proposal! Returns the withdrawing member's account address!
 - proposal_vote: Votes for a Proposal! Returns the voting member's account address concatenated with vote!
