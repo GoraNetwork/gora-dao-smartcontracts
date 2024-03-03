@@ -728,6 +728,8 @@ method_proposal_withdraw_participate:
 method_proposal_vote:
 	txna Accounts 0
 	store 0
+	txn Sender
+	store 2
 
 	byte "proposal_is_activated"
 	app_global_get
@@ -760,18 +762,18 @@ method_proposal_vote:
 	//pop
 
 	// Check participation
-	load 0
+	load 2
 	box_get
 	assert
 	pop
-	load 0
+	load 2
 	box_del
 	pop
 
 	
 
 	// Casting vote to proposal
-	load 0
+	load 2
 	load 1
 	itob
 	box_put
