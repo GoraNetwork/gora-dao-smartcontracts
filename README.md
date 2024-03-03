@@ -11,7 +11,9 @@
     Y88b  d88P Y88..88P 888    888  888 888  .d88P d8888888888 Y88b. .d88P 
      "Y8888P88  "Y88P"  888    "Y888888 8888888P" d88P     888  "Y88888P"  
 
-#### GoraDAO is developed, maintained, and implemented as GoraDAO service by [Gora Network](https://gora.io)!
+
+| <img src="https://avatars.githubusercontent.com/u/96357480?s=400&u=f54a2fab0e5faaf6bccf57b993e0a28ca2102001&v=4" width="100"> <br>GoraDAO is developed, maintained, and implemented as GoraDAO service by [Gora](https://gora.io)!| <img src="https://uploads-ssl.webflow.com/646efe133ad1fe199a53f269/64e8a304831329ff7513f00b_poseNewWebsite01_2-p-800.png" width="170">|  
+| -------- | ------- | 
 
 This repository is a work in progress and contains Algorand TEAL smart contracts of GoraDAO, plus interactive CLI to test and operate it!
 
