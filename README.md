@@ -1,4 +1,7 @@
-# gora-dao-smartcontracts
+# GoraDAO
+#### gora-dao-smartcontracts
+### A non-opinionated, dynamic approach to DAO
+
 
 #### GoraDAO is Gora Network's DAO system!
 
