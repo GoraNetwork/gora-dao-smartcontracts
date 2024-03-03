@@ -45,7 +45,7 @@ const goraDaoDeployer = new GoraDaoDeployer(props)
 
 async function goraDAOOperations() {
     let choices = []
-    if (config['gora_dao']['dao_asa_id'] > 0) {
+    if (!(config['gora_dao']['dao_asa_id'] > 0)) {
         choices.push('Create GoraDAO Asset')
     }
     if (config['gora_dao']['dao_dao_deployed'] === true) {
@@ -548,14 +548,14 @@ async function proposalsOperations() {
             //logger.info('Test flow: Create Proposal Asset ---> Distribute Proposal Asset to 5 test users ---> Deploy/Update new Proposal contract ---> Configure Proposal ---> Participate/Withdraw participation to/from Proposal ---> Vote on Proposal');
             logger.info(`
             +-----------------------+       +-----------------------------------+       +-----------------------------------+
-|                       |       |                                   |       |                                   |
-|  Create Proposal      +------->  Distribute Proposal Asset       +------->  Deploy/Update new Proposal       |
-|  Asset                |       |  to 5 test users                  |       |  contract                         |
-|                       |       |                                   |       |                                   |
-+-----------------------+       +-----------------------------------+       +-----------------------------------+
-                                                                                   |
-                                                                                   |
-                                                                                   v
+            |                       |       |                                   |       |                                   |
+            |  Create Proposal      +------->  Distribute Proposal Asset       +------->  Deploy/Update new Proposal       |
+            |  Asset                |       |  to 5 test users                  |       |  contract                         |
+            |                       |       |                                   |       |                                   |
+            +-----------------------+       +-----------------------------------+       +-----------------------------------+
+                                                                                            |
+                                                                                            |
+                                                                                            v
                                                                           +------------------------+       +---------------------------+
                                                                           |                        |       |                           |
                                                                           |  Configure Proposal    +------->  Participate/Withdraw     |
