@@ -229,7 +229,7 @@ graph TB
 - proposal_vote: Optionally Votes to a Proposal! Returns the Proposal contract ID!
 activate_proposal: Activates a Proposal! Returns the Proposal contract ID!
 - close_proposal: Force closes a Proposal contract as last resort. Returns the Proposal contract ID!
-``` Mermaid
+```mermaid
 graph TD
     GoraDAO_Main[GoraDAO Main Contract]
     GoraDAO_Main --> config_dao[config_dao]
@@ -257,7 +257,8 @@ graph TD
 - proposal_withdraw_participate: Withdraws participation of a member account from a Proposal! Returns the withdrawing member's account address!
 - proposal_vote: Votes for a Proposal! Returns the voting member's account address concatenated with vote!
 
-``` Mermaid
+```mermaid
+
 graph TD
     GoraDAO_Proposals[GoraDAO Proposals Contract]
     GoraDAO_Proposals --> create_proposal_P[create_proposal]
@@ -270,6 +271,7 @@ graph TD
     GoraDAO_Proposals --> proposal_participate_P[proposal_participate]
     GoraDAO_Proposals --> proposal_withdraw_participate_P[proposal_withdraw_participate]
     GoraDAO_Proposals --> proposal_vote_P[proposal_vote]
+
 ```
 
 
