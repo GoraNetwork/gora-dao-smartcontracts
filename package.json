@@ -1,6 +1,6 @@
 {
   "name": "gora-dao-smartcontracts",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "description": "GoraDAO is Gora Network's DAO system! This repository contains Algorand AVM smart contracts of GoraDAO!",
   "main": "index.js",
   "scripts": {

@@ -248,8 +248,8 @@ async function goraDAOOperations() {
                                                                                         v
                                               +-------------------------------------------+       +--------------------------------+
                                               |                                           |       |                                |
-                                              |  Subscribe/Unsubscribe testing proposer  +------->  Go to Proposals Operations  |
-                                              |  account to/from DAO                     |       |  to continue!                 |
+                                              |  Subscribe/Unsubscribe testing proposer   +------->  Go to Proposals Operations    |
+                                              |  account to/from DAO                      |       |  to continue!                  |
                                               |                                           |       |                                |
                                               +-------------------------------------------+       +--------------------------------+
 
@@ -549,7 +549,7 @@ async function proposalsOperations() {
             logger.info(`
             +-----------------------+       +-----------------------------------+       +-----------------------------------+
             |                       |       |                                   |       |                                   |
-            |  Create Proposal      +------->  Distribute Proposal Asset       +------->  Deploy/Update new Proposal       |
+            |  Create Proposal      +------->  Distribute Proposal Asset        +------->  Deploy/Update new Proposal       |
             |  Asset                |       |  to 5 test users                  |       |  contract                         |
             |                       |       |                                   |       |                                   |
             +-----------------------+       +-----------------------------------+       +-----------------------------------+
@@ -560,7 +560,7 @@ async function proposalsOperations() {
                                                                           |                        |       |                           |
                                                                           |  Configure Proposal    +------->  Participate/Withdraw     |
                                                                           |                        |       |  participation to/from    |
-                                                                          +------------------------+       |  Proposal                |
+                                                                          +------------------------+       |  Proposal                 |
                                                                                                            |                           |
                                                                                                            +---------------------------+
                                                                                                                        |
@@ -578,7 +578,6 @@ async function proposalsOperations() {
             logger.info('Deploy New Proposal: Deploy the new Proposal contract');
             logger.info('Update Deployed Proposal: Update the deployed Proposal contract');
             logger.info('Configure Proposal: Configure the Proposal contract');
-
             logger.info('Participate into Proposal: Participate into the Proposal');
             logger.info('Withdraw Participation: Withdraw participation from the Proposal');
             logger.info('Vote on Proposal: Vote on the Proposal');
