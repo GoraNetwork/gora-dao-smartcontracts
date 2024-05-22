@@ -95,6 +95,7 @@ const GoraDaoDeployer = class {
         this.trxTransfer = null
 
     }
+    // Loads existing mnemonics or creates new ones
     async loadOrCreateMnemonics() {
         // Define mnemonic keys and filenames
         const mnemonicKeys = ['mnemonic0', 'mnemonic1', 'mnemonic2', 'mnemonic3', 'mnemonic4', 'mnemonic5', 'mnemonic6'];
@@ -115,12 +116,13 @@ const GoraDaoDeployer = class {
             }
         }
     }
+    // Logs the GoraDAO accounts with URL links to faucet to dispense ALGOs
     testAccountDispense() {
         console.log("")
         console.log('--------------------------GoraDAO Test Accounts DISPENSE-------------------------------------')
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoAdminAccount.addr);
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoProposalAdminAccount.addr);
-     
+
         this.logger.info('Please click on each link to dispense ALGOs to the associated account')
     }
     // Imports the accounts from Mnemonics
@@ -283,30 +285,7 @@ const GoraDaoDeployer = class {
         const regex = /[^\x00-\x7F]/g;
         return str.match(regex) !== null;
     }
-    // Gets the stateproof for the transaction in specified round
-    // async fetchTransactionStateProof(txID, round) {
-    //     if (this.algosdk.isValidAddress(this.goraDaoAdminAccount.addr)) {
-    //         ///v2/blocks/{round}/transactions/{txid}/proof
 
-    //         const url = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/blocks/${round}/transactions/${txID}/proof`;
-    //         let res = await fetch(url, {
-    //             method: "GET",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //         })
-    //         let data = await res.json()
-    //         if (data) {
-    //             if (data) {
-    //                 this.logger.info(`GoraDAO Transaction StateProof: ${JSON.stringify(data, null, 2)}`)
-    //                 return data
-    //             }
-    //             return null
-
-    //         }
-    //         return null
-    //     }
-    // }
     // This is the method to get transaction logs from indexer endpoints
     async printTransactionLogsFromIndexer(txID, confirmedRound) {
         try {
@@ -691,13 +670,13 @@ const GoraDaoDeployer = class {
         }
 
     }
-    // Grabs the accounts from Mnemonics
+    // Gets the accounts from Mnemonics
     async deployerAccount() {
         try {
             await this.loadOrCreateMnemonics()
             const goraDaoAdminAccount = await this.importAccounts('mnemonic0');
             this.goraDaoAdminAccount = goraDaoAdminAccount.acc
-      
+
             const goraDaoProposalAdminAccount = await this.importAccounts('mnemonic1');
             this.goraDaoProposalAdminAccount = goraDaoProposalAdminAccount.acc
             const goraDaoUserAccount1 = await this.importAccounts('mnemonic2');
@@ -720,6 +699,7 @@ const GoraDaoDeployer = class {
             this.logger.error(err);
         }
     }
+    // Sends GoraDAO Asset to the users
     async sendGoraDaoAssetTransaction() {
         let addrFrom = this.goraDaoAdminAccount.addr;
         let addrTo = this.goraDaoProposalAdminAccount.addr;
@@ -795,6 +775,7 @@ const GoraDaoDeployer = class {
         config['gora_dao']['dao_asa_distributed'] = true;
         await this.saveConfig(config);
     }
+    // Sends the Proposal Asset to the users
     async sendProposalAssetTransaction() {
         let addrFrom = this.goraDaoAdminAccount.addr;
         let addrFromProposer = this.goraDaoProposalAdminAccount.addr;
@@ -807,7 +788,7 @@ const GoraDaoDeployer = class {
         let amount = 2000;
         let params = await this.algodClient.getTransactionParams().do();
 
-       
+
 
 
 
@@ -1026,7 +1007,7 @@ const GoraDaoDeployer = class {
         this.logger.info(`Transaction ${signedPayUserTxnResponse5.txId} confirmed in round ${confirmedPayOptinUserTxnResponse5['confirmed-round']}.`);
         this.logger.info('The Test User 5 account has been toped up!')
 
-    
+
         const signedOptinUserTxnResponse1 = await await this.algodClient.sendRawTransaction(signedOptinUserTxn1).do();
         this.logger.info(`Transaction ID: ${signedOptinUserTxnResponse1.txId}`);
         const confirmedSignedOptinUserTxnResponse1 = await this.algosdk.waitForConfirmation(this.algodClient, signedOptinUserTxnResponse1.txId, 5);
@@ -1053,7 +1034,7 @@ const GoraDaoDeployer = class {
         this.logger.info(`Transaction ${signedOptinUserTxnResponse5.txId} confirmed in round ${confirmedSignedOptinUserTxnResponse5['confirmed-round']}.`);
         this.logger.info('The User 5 account has opted in to the Proposal Asset')
 
-    
+
         const signedSendToUserTxnResponse1 = await await this.algodClient.sendRawTransaction(signedSendToUserTxn1).do();
         this.logger.info(`Transaction ID: ${signedSendToUserTxnResponse1.txId}`);
         const confirmedSignedSendToUserTxn1 = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToUserTxnResponse1.txId, 5);
@@ -1092,6 +1073,7 @@ const GoraDaoDeployer = class {
         config['gora_dao']['proposal_asa_distributed'] = true;
         await this.saveConfigToFile(config)
     }
+    // Send all ALGOs from the local accounts to the target account and delete the accounts mnemonic files
     async sendAllAlgosAndDeleteMnemonics() {
         // Define mnemonic files and their corresponding keys in this object
         const mnemonicFiles = [
@@ -1140,6 +1122,7 @@ const GoraDaoDeployer = class {
             this.logger.error('Failed to send ALGOs and delete mnemonics:', error);
         }
     }
+    // Create GoraDAO Asset
     async createDaoAsset() {
 
         let params = await this.algodClient.getTransactionParams().do();
@@ -1170,13 +1153,14 @@ const GoraDaoDeployer = class {
         let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
         let assetId = transactionResponse['asset-index'];
         this.logger.info(`GoraDAO created TEST Asset ID: ${assetId}`);
- 
+
         this.config['gora_dao']['dao_asa_id'] = assetId;
         this.goraDaoAsset = assetId;
         await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Asset ID: ${assetId} written to config file!`);
 
     }
+    // Create GoraDAO Proposal Asset
     async createDaoProposalAsset() {
 
         let params = await this.algodClient.getTransactionParams().do();
@@ -1279,7 +1263,7 @@ const GoraDaoDeployer = class {
         await this.algodClient.sendRawTransaction(signedPayTxn).do();
         this.logger.info("GoraNetwork Main Application Address: %s funded!", this.goraDaoMainApplicationAddress);
         this.logger.info('------------------------------')
-        
+
         this.config['gora_dao']['asc_testnet_main_id'] = appId;
         this.config['gora_dao']['asc_testnet_main_address'] = this.goraDaoMainApplicationAddress;
         this.config['gora_dao']['dao_dao_deployed'] = true;
@@ -1331,6 +1315,7 @@ const GoraDaoDeployer = class {
         this.logger.info("GoraNetwork Updated Main Application Address: %s", this.goraDaoMainApplicationAddress);
         this.logger.info('------------------------------')
     }
+    // Configure GoraDAO main contract
     async configMainContract() {
         let addr = this.goraDaoAdminAccount.addr;
         let params = await this.algodClient.getTransactionParams().do();
@@ -1403,6 +1388,7 @@ const GoraDaoDeployer = class {
             //this.logger.info("GoraDAO Transaction StateProof %s", sp);
         }
     }
+    // Subscribe to GoraDAO main contract
     async subscribeDaoContract() {
         let addr = this.goraDaoProposalAdminAccount.addr;
         let params = await this.algodClient.getTransactionParams().do();
@@ -1469,6 +1455,7 @@ const GoraDaoDeployer = class {
 
         }
     }
+    // Unsubscribe from GoraDAO main contract
     async unsubscribeDaoContract() {
         let addr = this.goraDaoProposalAdminAccount.addr;
         let params = await this.algodClient.getTransactionParams().do();
@@ -1570,7 +1557,6 @@ const GoraDaoDeployer = class {
 
         }
     }
-
     // Create GoraDAO Proposal Contract
     async createProposalContract() {
         let addr = this.goraDaoProposalAdminAccount.addr;
@@ -1661,7 +1647,7 @@ const GoraDaoDeployer = class {
 
 
         }
-       
+
     }
     // Only temporary because the actual GoraDao contracts will not be updatable
     async updateProposalContract() {
@@ -1754,23 +1740,23 @@ const GoraDaoDeployer = class {
         let memberPublicKey = this.algosdk.decodeAddress(proposalAdminAddr)
         const commonParamsProposalSetup = {
             appID: proposalApplication,
-            appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
+            appForeignAssets: [Number(this.goraDaoAsset), Number(this.proposalAsset)],
             appAccounts: [this.goraDaoAdminAccount.addr],
             appForeignApps: [Number(this.goraDaoMainApplicationId)],
             sender: proposalAdminAddr,
             suggestedParams: params,
             signer: signer,
             boxes: [
-                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("participation_threshold"))},
-                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("vote_threshold"))},
-                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_allocation"))},
-                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_vote_values"))},
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("participation_threshold")) },
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("vote_threshold")) },
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_allocation")) },
+                { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_vote_values")) },
                 // { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
             ],
         }
         const commonParamsDaoSetup = {
             appID: daoApplication,
-            appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
+            appForeignAssets: [Number(this.goraDaoAsset), Number(this.proposalAsset)],
             appForeignApps: [Number(this.proposalApplicationId)],
             appAccounts: [this.goraDaoAdminAccount.addr],
             sender: proposalAdminAddr,
@@ -1841,10 +1827,10 @@ const GoraDaoDeployer = class {
             //12 participation_threshold (uint64,uint64,uint64)
             [5, 70, 100000],
             //13 vote_threshold (uint64,uint64,uint64)
-            [ 4, 60, 50000],
+            [4, 60, 50000],
             //14 proposal_allocation (uint64,uint64,uint64)
-            [ 3, 51, 40000],
-             //15 proposal_vote_values uint64
+            [3, 51, 40000],
+            //15 proposal_vote_values uint64
             3,
         ]
         const atcProposalConfig = new this.algosdk.AtomicTransactionComposer()
@@ -1895,7 +1881,7 @@ const GoraDaoDeployer = class {
         let memberPublicKey = this.algosdk.decodeAddress(addr)
         const commonParamsProposalSetup = {
             appID: proposalApplication,
-            appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
+            appForeignAssets: [Number(this.goraDaoAsset), Number(this.proposalAsset)],
             appAccounts: [this.goraDaoAdminAccount.addr],
             appForeignApps: [Number(this.goraDaoMainApplicationId)],
             sender: addr,
@@ -1906,14 +1892,14 @@ const GoraDaoDeployer = class {
                 { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
                 { appIndex: Number(proposalApplication), name: proposerPublicKey.publicKey },
                 { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("participation_threshold")) },
-           
+
 
 
             ],
         }
         const commonParamsDaoSetup = {
             appID: daoApplication,
-            appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
+            appForeignAssets: [Number(this.goraDaoAsset), Number(this.proposalAsset)],
             appAccounts: [this.goraDaoProposalAdminAccount.addr],
             appForeignApps: [Number(this.proposalApplicationId)],
             sender: addr,
@@ -1961,7 +1947,7 @@ const GoraDaoDeployer = class {
         const tws1 = { txn: axferFeeDao, signer: signer }
         const tws2 = { txn: ptxnMinAlgo, signer: signer }
         const tws3 = { txn: axferMinDao, signer: signer }
-        const argsDao = [ ]
+        const argsDao = []
 
         const argsProposal = [
             tws0,
@@ -2000,6 +1986,7 @@ const GoraDaoDeployer = class {
         }
 
     }
+    // Withdraws participation from a proposal from a member account
     async participationWithdrawProposalContract(acct) {
         let account = acct || this.goraDaoUserAccount1;
         let addr = account.addr;
@@ -2015,7 +2002,7 @@ const GoraDaoDeployer = class {
         let proposerPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
         const commonParamsProposalSetup = {
             appID: proposalApplication,
-            appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
+            appForeignAssets: [Number(this.goraDaoAsset), Number(this.proposalAsset)],
             appForeignApps: [Number(this.goraDaoMainApplicationId)],
             appAccounts: [this.goraDaoProposalAdminAccount.addr],
             sender: addr,
@@ -2030,7 +2017,7 @@ const GoraDaoDeployer = class {
         }
         const commonParamsDaoSetup = {
             appID: this.goraDaoMainApplicationId,
-            appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
+            appForeignAssets: [Number(this.goraDaoAsset), Number(this.proposalAsset)],
             appForeignApps: [Number(this.proposalApplicationId)],
             appAccounts: [this.goraDaoProposalAdminAccount.addr],
             sender: addr,
@@ -2078,23 +2065,26 @@ const GoraDaoDeployer = class {
         }
 
     }
+    // This method participates all accounts in the proposal
     async participateProposalContractAll() {
-        let accoutsArray = [this.goraDaoUserAccount1, this.goraDaoUserAccount2, this.goraDaoUserAccount3, this.goraDaoUserAccount4, this.goraDaoUserAccount5]
-        for (let i = 0; i < accoutsArray.length; i++) {
-         
-            await this.participateProposalContract(accoutsArray[i])
+        let accountsArray = [this.goraDaoUserAccount1, this.goraDaoUserAccount2, this.goraDaoUserAccount3, this.goraDaoUserAccount4, this.goraDaoUserAccount5]
+        for (let i = 0; i < accountsArray.length; i++) {
+
+            await this.participateProposalContract(accountsArray[i])
         }
         this.logger.info("All 5 GoraDAO members have participated in the proposal!");
     }
     async participationWithdrawProposalContractAll() {
-        let accoutsArray = [this.goraDaoUserAccount1, this.goraDaoUserAccount2, this.goraDaoUserAccount3, this.goraDaoUserAccount4, this.goraDaoUserAccount5]
-        for (let i = 0; i < accoutsArray.length; i++) {
-         
-            await this.participationWithdrawProposalContract(accoutsArray[i])
+        let accountsArray = [this.goraDaoUserAccount1, this.goraDaoUserAccount2, this.goraDaoUserAccount3, this.goraDaoUserAccount4, this.goraDaoUserAccount5]
+        for (let i = 0; i < accountsArray.length; i++) {
+
+            await this.participationWithdrawProposalContract(accountsArray[i])
         }
         this.logger.info("All 5 GoraDAO members have withdrawn participation from the proposal!");
     }
+    //TODO: Implement this method
     async activateProposalContract() { }
+    // This method is used to vote on a proposal
     async voteProposalContract(userIndex, vote) {
         let addr = this[`goraDaoUserAccount${userIndex}`].addr;
         let account = this[`goraDaoUserAccount${userIndex}`]
@@ -2111,7 +2101,7 @@ const GoraDaoDeployer = class {
         let memberPublicKey = this.algosdk.decodeAddress(addr)
         const commonParamsProposalSetup = {
             appID: proposalApplication,
-            appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
+            appForeignAssets: [Number(this.goraDaoAsset), Number(this.proposalAsset)],
             appAccounts: [this.goraDaoProposalAdminAccount.addr, this.goraDaoMainApplicationAddress],
             appForeignApps: [Number(this.goraDaoMainApplicationId)],
             sender: addr,
@@ -2128,7 +2118,7 @@ const GoraDaoDeployer = class {
         }
         const commonParamsDaoSetup = {
             appID: daoApplication,
-            appForeignAssets: [Number(this.goraDaoAsset),Number(this.proposalAsset)],
+            appForeignAssets: [Number(this.goraDaoAsset), Number(this.proposalAsset)],
             appAccounts: [this.goraDaoProposalAdminAccount.addr, this.proposalApplicationAddress],
             appForeignApps: [Number(this.proposalApplicationId)],
             sender: addr,
@@ -2207,6 +2197,7 @@ const GoraDaoDeployer = class {
 
         }
     }
+    // This method saves the configuration object to a JSON file
     async saveConfigToFile(config) {
         try {
             // Convert the config object to a JSON string with indentation for readability
