@@ -235,7 +235,7 @@ method_create_staking:
 	int 0
 	app_global_put
 
-	byte "vote_count"
+	byte "stakings_count"
 	int 0
 	app_global_put
 
@@ -243,17 +243,10 @@ method_create_staking:
 	int 0
 	app_global_put
 
-	byte "staking_yays"
+	byte "staked_amount"
 	int 0
 	app_global_put
 
-	byte "staking_nays"
-	int 0
-	app_global_put
-
-	byte "staking_abs"
-	int 0
-	app_global_put
 
 
 	byte 0x151f7c75
@@ -320,21 +313,15 @@ method_update_staking:
 	int 0
 	app_global_put
 
-	byte "vote_count"
+	byte "stakings_count"
 	int 0
 	app_global_put
 
-	byte "staking_yays"
+	byte "staked_amount"
 	int 0
 	app_global_put
 
-	byte "staking_nays"
-	int 0
-	app_global_put
 
-	byte "staking_abs"
-	int 0
-	app_global_put
 
 	
 
@@ -452,14 +439,14 @@ method_config_staking:
 	txn ApplicationArgs 9 //staking_vote_fee
 	btoi
 	store 9
-	byte "staking_vote_fee"
+	byte "staking_fee"
 	load 9
 	app_global_put
 	//log
 
 	txn ApplicationArgs 10 //staking_vote_fee_algo
 	store 10
-	byte "staking_vote_fee_algo"
+	byte "staking_fee_algo"
 	load 10
 	btoi
 	app_global_put
@@ -481,7 +468,7 @@ method_config_staking:
 	load 11
 	box_put
 
-	byte "vote_threshold"
+	byte "staking_threshold"
 	load 12
 	box_put
 
@@ -489,7 +476,7 @@ method_config_staking:
 	load 13
 	box_put
 
-	byte "staking_vote_values"
+	byte "staking_values"
 	load 14
 	btoi
 	app_global_put
@@ -683,7 +670,7 @@ branch_delete_participate_box:
 	load 0
 	box_del
 	load 0
-    byte "VOTE_PLACE_HOLDER"
+    byte "STAKINGS_PLACE_HOLDER"
     box_put
 
 	byte 0x151f7c75
@@ -725,7 +712,7 @@ method_staking_withdraw_participate:
 	concat
 	b branch_log_return
 
-method_staking_vote:
+method_staking_stake:
 	txna Accounts 0
 	store 0
 	txn Sender
@@ -735,7 +722,7 @@ method_staking_vote:
 	app_global_get
 	bz branch_error_activation
 
-	// The vote value
+	// The staked amount
 	txn ApplicationArgs 1
 	btoi
 	store 1
@@ -774,17 +761,15 @@ method_staking_vote:
 
 	
 
-	// Casting vote to staking
+	// Staking finalization
 	load 2
 	load 1
 	itob
 	box_put
 	
-	load 1
-	switch branch_vote_nay branch_vote_yay branch_vote_abs
 
-branch_vote_nay:
-	byte "staking_nays"
+branch_stake_final:
+	byte "staking_amount"
 	dup
 	app_global_get
 	int 1
@@ -796,32 +781,7 @@ branch_vote_nay:
 	itob
 	concat
 	b branch_log_return
-branch_vote_yay:
-	byte "staking_yays"
-	dup
-	app_global_get
-	int 1
-	+
-	app_global_put
-	byte 0x151f7c75
-	global CurrentApplicationID
-	itob
-	concat
-	b branch_log_return
 
-branch_vote_abs:
-	byte "staking_abs"
-	dup
-	app_global_get
-	int 1
-	+
-	app_global_put
-
-	byte 0x151f7c75
-	global CurrentApplicationID
-	itob
-	concat
-	b branch_log_return
 
 
 
