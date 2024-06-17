@@ -436,7 +436,7 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 9 //staking_vote_fee
+	txn ApplicationArgs 9 //staking_fee
 	btoi
 	store 9
 	byte "staking_fee"
@@ -444,7 +444,7 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 10 //staking_vote_fee_algo
+	txn ApplicationArgs 10 //staking_fee_algo
 	store 10
 	byte "staking_fee_algo"
 	load 10
