@@ -289,8 +289,47 @@
             }
         },
         {
+            "name": "staking_participate",
+            "description": "Participates with a member account into a Staking! Returns the participating member's account address!",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "fee_payment_transaction",
+                    "description": "Payment from Staking participant to GoraDAO for fees!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "token_payment_transaction",
+                    "description": "Axfer from Staking participant to GoraDAO for fees!"
+                },
+                {
+                    "type": "pay",
+                    "name": "stake_payment_transaction",
+                    "description": "Payment from Staking participant to GoraDAO for  Staking participation MBRs!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "stake_axfer_transaction",
+                    "description": "Axfer from Staking participant to GoraDAO for  Staking participation MBRs!"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address"
+                },
+                {
+                    "name": "staking_threshold",
+                    "description": "Dynamic box ref for staking threshold program"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
             "name": "staking_withdraw",
-            "description": "Withdraws a member account from a Staking contract! Returns the withdrawing member's account address!",
+            "description": "Withdraws participation of a member account from Staking! Returns the withdrawing member's account address!",
             "args": [],
             "boxes": [
                 {
@@ -304,12 +343,13 @@
         },
         {
             "name": "staking_stake",
-            "description": "Stakes in a staking contract!",
-            "args": [  
+            "description": "Stakes in Staking contract! Returns the staking member's account address concatenated with staked amount!",
+            "args": [
+                
                 {
                     "type": "uint64",
-                    "name": "staked_amount",
-                    "description": "Staked amount"
+                    "name": "amount",
+                    "description": "Amount to be staked"
                 }
             ],
             "boxes": [
@@ -318,8 +358,8 @@
                     "description": "Dynamic box ref per member account address"
                 },
                 {
-                    "name": "manager_reference",
-                    "description": "Dynamic box ref per manager account address."
+                    "name": "staking_threshold",
+                    "description": "Dynamic box ref for staking threshold program"
                 }
             ],
             "returns": {

@@ -67,14 +67,15 @@ branch_delete:
 	int 1
 	return
 
+
+
+
 branch_closeout:
 
-	// callsub sub_check_owner_auth
+	callsub sub_check_owner_auth
 
-	// int 1
-	// return
-	int 0
-	err
+	int 1
+	return
 
 ///////////////////////////////////////////
 branch_method_router:
@@ -87,7 +88,7 @@ branch_method_router:
 	==
 	&&
 	bnz method_create_staking
-//
+
 	method "update_staking(application,uint64,uint64,address,address,string,string)address"
 	txn ApplicationArgs 0
 	==
@@ -108,6 +109,10 @@ branch_method_router:
 	==
 	bnz method_activate_staking
 
+	method "staking_participate(pay,axfer,pay,axfer)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_participate
 
     method "staking_withdraw()uint64"
 	txn ApplicationArgs 0
@@ -118,6 +123,7 @@ branch_method_router:
 	txn ApplicationArgs 0
 	==
 	bnz method_staking_stake
+
 
 	b branch_error
 
@@ -237,9 +243,18 @@ method_create_staking:
 	int 0
 	app_global_put
 
-	byte "staking_amount"
+	byte "staking_yays"
 	int 0
 	app_global_put
+
+	byte "staking_nays"
+	int 0
+	app_global_put
+
+	byte "staking_abs"
+	int 0
+	app_global_put
+
 
 	byte 0x151f7c75
 	global CurrentApplicationAddress
@@ -305,9 +320,23 @@ method_update_staking:
 	int 0
 	app_global_put
 
-	byte "staking_amount"
+	byte "vote_count"
 	int 0
 	app_global_put
+
+	byte "staking_yays"
+	int 0
+	app_global_put
+
+	byte "staking_nays"
+	int 0
+	app_global_put
+
+	byte "staking_abs"
+	int 0
+	app_global_put
+
+	
 
 	byte 0x151f7c75
 	global CurrentApplicationAddress
@@ -322,7 +351,7 @@ method_update_manager_address:
 	app_global_put
 
 	byte 0x151f7c75
-	byte "staking manager address is now updated!"
+	byte "Staking manager address is now updated!"
 	concat
 	b branch_log_return
 
@@ -334,11 +363,11 @@ method_activate_staking:
 	bz branch_error_activation
 
 	byte 0x151f7c75
-	byte "staking is activated!"
+	byte "Staking is activated!"
 	concat
 	b branch_log_return
 
-// Handles configuration of staking
+// Handles configuration of Staking
 method_config_staking:
 
 	gtxn 0 TypeEnum
@@ -388,17 +417,17 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 5 //staking_stake_duration
+	txn ApplicationArgs 5 //staking_voting_duration
 	store 5
-	byte "staking_stake_duration"
+	byte "staking_voting_duration"
 	load 5
 	btoi
 	app_global_put
 	//log
 
-	txn ApplicationArgs 6 //staking_stake_start
+	txn ApplicationArgs 6 //staking_voting_start
 	store 6
-	byte "staking_stake_start"
+	byte "staking_voting_start"
 	load 6
 	btoi
 	app_global_put
@@ -420,17 +449,17 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 9 //staking_stake_fee
+	txn ApplicationArgs 9 //staking_vote_fee
 	btoi
 	store 9
-	byte "staking_stake_fee"
+	byte "staking_vote_fee"
 	load 9
 	app_global_put
 	//log
 
-	txn ApplicationArgs 10 //staking_stake_fee_algo
+	txn ApplicationArgs 10 //staking_vote_fee_algo
 	store 10
-	byte "staking_stake_fee_algo"
+	byte "staking_vote_fee_algo"
 	load 10
 	btoi
 	app_global_put
@@ -445,7 +474,7 @@ method_config_staking:
 	txn ApplicationArgs 13 // staking_allocations
 	store 13
 
-	txn ApplicationArgs 14 // staking_values
+	txn ApplicationArgs 14 // staking_vote_values
 	store 14
 
 	byte "participation_threshold"
@@ -460,7 +489,7 @@ method_config_staking:
 	load 13
 	box_put
 
-	byte "staking_values"
+	byte "staking_vote_values"
 	load 14
 	btoi
 	app_global_put
@@ -488,9 +517,159 @@ method_config_staking:
 	b branch_log_return
 
 
+method_staking_participate:
+	txna Accounts 1 // GoraDAO Admin account
+	store 0
+
+	txn Sender // User
+	store 1
+
+	// Participation are closed after staking is activated for voting
+	byte "staking_is_activated"
+	app_global_get
+	bnz branch_error
+
+	byte "participation_count"
+	app_global_get
+	int 1
+	+
+	store 20
+	byte "participation_count"
+	load 20
+	app_global_put
+
+    // Checking Transaction group
+    global GroupSize
+    int 6
+    ==
+    assert
+    
+	// Checking the pay and axfer txns
+	gtxn 1 RekeyTo
+    global ZeroAddress
+    ==
+    gtxn 2 RekeyTo
+    global ZeroAddress
+    ==
+	gtxn 3 RekeyTo
+    global ZeroAddress
+    ==
+	gtxn 4 RekeyTo
+    global ZeroAddress
+    ==
+	&&
+	&&
+    assert
+
+    gtxn 1 CloseRemainderTo
+    global ZeroAddress
+    ==
+	gtxn 3 CloseRemainderTo
+    global ZeroAddress
+    ==
+	&&
+    assert
+
+    gtxn 2 AssetCloseTo
+    global ZeroAddress
+    ==
+	gtxn 4 AssetCloseTo
+    global ZeroAddress
+    ==
+	&&
+    assert
 
 
-branch_activate:
+    gtxn 1 Fee
+    global MinTxnFee
+    >=
+    gtxn 2 Fee
+    global MinTxnFee
+    >=
+	gtxn 3 Fee
+    global MinTxnFee
+    >=
+    gtxn 4 Fee
+    global MinTxnFee
+    >=
+	&&
+	&&
+    assert
+
+    byte "staking_asset_id"
+    app_global_get
+    gtxn 2 XferAsset
+    ==
+    assert
+
+	byte "staking_asset_id"
+    app_global_get
+    gtxn 4 XferAsset
+    ==
+    assert
+
+    gtxn 1 Amount
+    byte "staking_participation_fee_algo"
+	app_global_get
+    >=
+    assert
+
+    gtxn 2 AssetAmount
+    byte "staking_participation_fee"
+	app_global_get
+    ==
+    assert
+
+	gtxn 3 Amount
+    byte "staking_min_participation_algo"
+	app_global_get
+    >=
+    assert
+
+    gtxn 4 AssetAmount
+    byte "staking_min_participation_stake"
+	app_global_get
+    ==
+    assert
+
+
+    byte "staking_asset_id"
+    app_global_get
+    txna Assets 1
+    ==
+    assert
+
+	byte "dao_asset_id"
+    app_global_get
+    txna Assets 0
+    ==
+    assert
+
+	load 1
+	box_get
+	//bnz branch_delete_participate_box
+	bnz branch_error
+	load 1
+    byte ""
+    box_put
+
+	byte "participation_threshold"
+	box_get
+	assert
+	int 0
+	extract_uint64
+	load 20
+	swap
+	>=
+	bnz branch_activate_and_participate
+	
+    byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+branch_activate_and_participate:
 	byte "staking_is_activated"
 	int 1
 	app_global_put
@@ -500,12 +679,25 @@ branch_activate:
 	concat
 	b branch_log_return
 
+branch_delete_participate_box:
+	load 0
+	box_del
+	load 0
+    byte "VOTE_PLACE_HOLDER"
+    box_put
 
-method_staking_withdraw:
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+
+method_staking_withdraw_participate:
  	txna Accounts 0
     store 0
 
-	// Participation Withdrawals are closed after staking is activated
+	// Participation Withdrawals are closed after staking is activated for voting
 	byte "staking_is_activated"
 	app_global_get
 	bnz branch_error
@@ -533,7 +725,7 @@ method_staking_withdraw:
 	concat
 	b branch_log_return
 
-method_staking_stake:
+method_staking_vote:
 	txna Accounts 0
 	store 0
 	txn Sender
@@ -543,10 +735,11 @@ method_staking_stake:
 	app_global_get
 	bz branch_error_activation
 
-	// The Staked amount
+	// The vote value
 	txn ApplicationArgs 1
 	btoi
 	store 1
+
 
     // Checking Transaction group
     global GroupSize
@@ -579,16 +772,19 @@ method_staking_stake:
 	box_del
 	pop
 
-	// Casting stake to staking
+	
+
+	// Casting vote to staking
 	load 2
 	load 1
 	itob
 	box_put
 	
-	b branch_stake
+	load 1
+	switch branch_vote_nay branch_vote_yay branch_vote_abs
 
-branch_stake:
-	byte "staking_stake"
+branch_vote_nay:
+	byte "staking_nays"
 	dup
 	app_global_get
 	int 1
@@ -600,6 +796,34 @@ branch_stake:
 	itob
 	concat
 	b branch_log_return
+branch_vote_yay:
+	byte "staking_yays"
+	dup
+	app_global_get
+	int 1
+	+
+	app_global_put
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+branch_vote_abs:
+	byte "staking_abs"
+	dup
+	app_global_get
+	int 1
+	+
+	app_global_put
+
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+
 
 // Handles logging the last element on the stack then put a 1 on the top and return (log and approve)
 branch_log_return:
