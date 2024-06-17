@@ -142,6 +142,7 @@ graph TB
             DAO_Unsubscribe[dao_unsubscribe]
             Create_Proposal[create_proposal]
             Configure_Proposal[config_proposal]
+            Update_Proposal_Manager_address[update_proposal_manager_address]
             Proposal_Participate[proposal_participate]
             Proposal_Withdraw_Participation[proposal_withdraw_participation]
             Activate_Voting[activate_proposal]
@@ -149,6 +150,14 @@ graph TB
             Proposal_Vesting_Stats[proposal_vesting_stats]
             Configure_Vesting[configure_vesting]
             Force_Close_Proposal[close_proposal]
+
+            Create_Staking[create_staking]
+            Configure_Staking[config_staking]
+            Update_Staking_Manager_address[update_staking_manager_address]
+            Staking_Participate[staking_participate]
+            Staking_Withdraw_Participation[staking_withdraw_participation]
+            Activate_Staking[activate_staking]
+            Force_Close_Staking[close_staking]
        
         end
       
@@ -167,6 +176,14 @@ graph TB
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Proposal_Vesting_Stats
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Configure_Vesting
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Force_Close_Proposal
+
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Create_Staking
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Configure_Staking
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Staking_Participate
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Staking_Withdraw_Participation
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Activate_Staking
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Staking_Stake
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Force_Close_Staking
  
 
 ```

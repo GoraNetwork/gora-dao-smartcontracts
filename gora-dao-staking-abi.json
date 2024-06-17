@@ -1,0 +1,330 @@
+{
+    "name": "gora-dao-staking",
+    "desc": "GoraDAO staking smart contract",
+    "networks": {
+        "MainNet": {
+            "appID": 0
+        },
+        "TestNet": {
+            "appID": 0
+        }
+    },
+    "methods": [
+        {
+            "name": "create_staking",
+            "description": "Creates a new Staking contract! Returns the Staking contract ID!",
+            "args": [
+                {
+                    "type": "application",
+                    "name": "main_app_id",
+                    "description": "GoraNetwork Main App (GoraDao) ID"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Staking asset ID"
+                },
+                {
+                    "type": "account",
+                    "name": "member_reference",
+                    "description": "GoraDAO member account reference (Staking manager)"
+                },
+                {
+                    "type": "account",
+                    "name": "manager_reference",
+                    "description": "GoraDAO manager account reference (GoraDAO Manager)"
+                },
+                {
+                    "type": "string",
+                    "name": "staking_title",
+                    "description": "GoraDAO Staking title"
+                },
+                {
+                    "type": "string",
+                    "name": "staking_description",
+                    "description": "GoraDAO Staking description"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref for Staking manager GoraDAO member"
+                },
+               
+                {
+                    "name": "staking_app",
+                    "description": "Dynamic box ref for staking approval prog source code"
+                },
+                {
+                    "name": "staking_clr",
+                    "description": "Dynamic box ref for staking clear prog source code"
+                }
+            ],
+            "returns": {
+                "type": "address"
+            }
+        },
+        {
+            "name": "update_staking",
+            "description": "Updates an existing Staking contract! Returns the Staking contract ID!",
+            "args": [
+                {
+                    "type": "application",
+                    "name": "main_app_id",
+                    "description": "GoraNetwork Main App (GoraDao) ID"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Staking asset ID"
+                },
+                {
+                    "type": "account",
+                    "name": "manager_reference",
+                    "description": "GoraDAO member account reference (Staking manager)"
+                },
+                {
+                    "type": "account",
+                    "name": "manager_reference",
+                    "description": "GoraDAO manager account reference (GoraDAO manager)"
+                },
+                {
+                    "type": "string",
+                    "name": "staking_title",
+                    "description": "GoraDAO Staking title"
+                },
+                {
+                    "type": "string",
+                    "name": "staking_description",
+                    "description": "GoraDAO Staking description"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref for Staking manager GoraDAO member"
+                },
+              
+                {
+                    "name": "staking_app",
+                    "description": "Dynamic box ref for staking approval prog source code"
+                },
+                {
+                    "name": "staking_clr",
+                    "description": "Dynamic box ref for staking clear prog source code"
+                }
+            ],
+            "returns": {
+                "type": "address"
+            }
+        },
+        {
+            "name": "config_staking",
+            "description": "Configures a Staking contract! Returns the Staking contract ID!",
+            "args": [
+                
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Staking manager to GoraDAO for fees and Staking configuration MBRs!"
+                },
+                {
+                    "type": "uint64",
+                    "name": "staking_min_participation_algo",
+                    "description": "GoraDAO Staking minimum participation in microAlgos"
+                },
+                {
+                    "type": "uint64",
+                    "name": "staking_min_participation_stake",
+                    "description": "GoraDAO Staking minimum participation in DAO asset units"
+                },
+                {
+                    "type": "uint64",
+                    "name": "staking_duration",
+                    "description": "GoraDAO Staking total duration in days"
+                },
+            
+                {
+                    "type": "uint64",
+                    "name": "staking_amount",
+                    "description": "GoraDAO Staking total amount in asset units"
+                },
+                {
+                    "type": "uint64",
+                    "name": "staking_duration",
+                    "description": "GoraDAO Staking duration in working hours"
+                },
+                {
+                    "type": "uint64",
+                    "name": "min_participation",
+                    "description": "GoraDAO Staking minimum participation fee in asset units"
+                },
+                {
+                    "type": "uint64",
+                    "name": "min_participation_algo",
+                    "description": "GoraDAO Staking minimum participation fee in algo"
+                },
+                {
+                    "type": "uint64",
+                    "name": "staking_fee",
+                    "description": "GoraDAO Staking fee in DAO asset units"
+                },
+                {
+                    "type": "uint64",
+                    "name": "staking_fee_algo",
+                    "description": "GoraDAO Staking fee in Algos"
+                },
+                {
+                    "type": "uint64",
+                    "name": "staking_returns",
+                    "description": "GoraDAO Staking returns!"
+                },
+                {
+                    "type": "uint64",
+                    "name": "staking_incentives_percentage",
+                    "description": "GoraDAO Staking incentives percentage! "
+                },
+                {
+                    "type": "uint64",
+                    "name": "staking_type",
+                    "description": "GoraDAO Staking type, 0 for direct staking and greater than zero means proxy staking! "
+                },
+                {
+                    "type": "uint64",
+                    "name": "staking_incentives_period",
+                    "description": "GoraDAO Staking incentives period (the time interval based on which incentives will be distributed) "
+                },
+                {
+                    "type": "uint64",
+                    "name": "staking_eligibility",
+                    "description": "GoraDAO Staking incentives eligibility (Based on requests responded in staking period, e.g. one month) "
+                }
+             
+            ],
+            "boxes": [
+                {
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref for staking manager account"
+                },
+                {
+                    "name": "staked_amount",
+                    "description": "Dynamic box per staking with staked amount"
+                },
+                {
+                    "name": "staking_accounts",
+                    "description": "Dynamic box per staking containing total number of staking accounts"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "update_manager_address",
+            "description": "Updates Staking manager address! Should be sent by either owner (creator) or current manager! Returns new manager address",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Staking manager to GoraDAO for fees!"
+                },
+                {
+                    "type": "application",
+                    "name": "main_app_id",
+                    "description": "GoraDAO Main application ID"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "account",
+                    "name": "manager_reference",
+                    "description": "GoraDAO Staking new manager account reference"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "activate_staking",
+            "description": "Activates a Staking! Returns the Staking contract ID!",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Staking manager to GoraDAO for fees and Staking activation MBRs!"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_reference",
+                    "description": "GoraNetwork Main asset (Gora) ID"
+                },
+                {
+                    "type": "account",
+                    "name": "manager_reference",
+                    "description": "GoraDAO manager account reference"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref per manager account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "staking_withdraw",
+            "description": "Withdraws a member account from a Staking contract! Returns the withdrawing member's account address!",
+            "args": [],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "staking_stake",
+            "description": "Stakes in a staking contract!",
+            "args": [  
+                {
+                    "type": "uint64",
+                    "name": "staked_amount",
+                    "description": "Staked amount"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address"
+                },
+                {
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref per manager account address."
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        }
+    ]
+}

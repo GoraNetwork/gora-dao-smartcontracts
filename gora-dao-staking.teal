@@ -1,0 +1,614 @@
+// Gora DAO Staking Smart Contract
+// Version 1
+// Website: https://www.gora.io/
+// Creators: @emg110.algo
+// Github: https://github.com/GoraNetwork/gora-dao-smartcontracts
+/////////////////////////////////////////////////////////////////
+
+#pragma version 8
+
+//Check TXN first
+callsub sub_check_txn
+
+// Check creation TXN
+// txn ApplicationID
+// bz branch_create
+
+// Checking onCompletion type for update application call
+//txn OnCompletion
+//int UpdateApplication
+//==
+//txn ApplicationID
+//int 0
+//!=
+//&&
+//bnz branch_update
+
+// Checking onCompletion type for delete application call
+txn OnCompletion
+int DeleteApplication
+==
+txn ApplicationID
+int 0
+!=
+&&
+bnz branch_delete
+
+// Checking onCompletion type for close out application call
+txn OnCompletion
+int CloseOut
+==
+txn ApplicationID
+int 0
+!=
+&&
+bnz branch_closeout
+
+// Checking onCompletion type for optin application call
+txn OnCompletion
+int OptIn
+==
+bnz branch_error
+
+// Checks the number of application args , if 0 then no method it is
+txn NumAppArgs
+int 0
+==
+bz branch_method_router
+b branch_error
+
+///////////////////////////////////////////
+
+
+branch_delete:
+
+	callsub sub_check_owner_auth
+
+	int 1
+	return
+
+branch_closeout:
+
+	// callsub sub_check_owner_auth
+
+	// int 1
+	// return
+	int 0
+	err
+
+///////////////////////////////////////////
+branch_method_router:
+
+	method "create_staking(application,uint64,uint64,address,address,string,string)address"
+	txn ApplicationArgs 0
+	==
+	txn ApplicationID
+	int 0
+	==
+	&&
+	bnz method_create_staking
+//
+	method "update_staking(application,uint64,uint64,address,address,string,string)address"
+	txn ApplicationArgs 0
+	==
+	bnz method_update_staking
+
+	method "config_staking(pay,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,(uint64,uint64,uint64),(uint64,uint64,uint64),(uint64,uint64,uint64),uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_config_staking
+
+	method "update_manager_address(pay,byte[],byte[])string"
+	txn ApplicationArgs 0
+	==
+	bnz method_update_manager_address
+
+	method "activate_staking(application,byte[],byte[])string"
+	txn ApplicationArgs 0
+	==
+	bnz method_activate_staking
+
+
+    method "staking_withdraw()uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_withdraw
+
+	method "staking_stake(uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_stake
+
+	b branch_error
+
+sub_check_txn:
+
+	// Checks RekeyTo address transaction field to be empty (ZeroAddress)
+	txn RekeyTo
+	global ZeroAddress
+	==
+	assert
+
+	// Checks CloseRemainderTo address transaction field to be empty (ZeroAddress)
+	txn CloseRemainderTo
+	global ZeroAddress
+	==
+	assert
+
+	// Checks AssetCloseTo address transaction field to be empty (ZeroAddress)
+	txn AssetCloseTo
+	global ZeroAddress
+	==
+	assert
+
+	// Check transaction type to be application call
+	txn TypeEnum
+	int appl
+	==
+	bz branch_error
+
+	// Checking transaction fee
+	txn Fee
+	global MinTxnFee
+	>=
+	assert
+	retsub
+
+// Checks owner address authentication
+sub_check_owner_auth:
+
+	txn Sender
+	global CreatorAddress
+	==
+	assert
+	retsub
+
+// Checks manager address authentication
+sub_check_manager_auth:
+	txn Sender
+	byte "manager_address"
+	app_global_get
+	==
+	assert
+	retsub
+
+
+method_create_staking:
+
+	global CurrentApplicationID
+	store 0
+
+	txn ApplicationArgs 1
+	btoi
+	store 1
+	byte "dao_app_id"
+	load 1
+	app_global_put
+
+
+	txn ApplicationArgs 2
+	btoi
+	store 2
+	byte "dao_asset_id"
+	load 2
+	app_global_put
+
+	txn ApplicationArgs 3
+	btoi
+	store 3
+	byte "staking_asset_id"
+	load 3
+	app_global_put
+
+	txn ApplicationArgs 4
+	store 4
+	byte "staking_creator_address"
+	load 4
+	app_global_put
+
+	txn ApplicationArgs 5
+	store 5
+	byte "manager_address"
+	load 5
+	app_global_put
+
+	txn ApplicationArgs 6
+	store 6
+	byte "staking_title"
+	load 6
+	app_global_put
+
+	txn ApplicationArgs 7
+	store 7
+	byte "staking_description"
+	load 7
+	app_global_put
+
+
+	byte "participation_count"
+	int 0
+	app_global_put
+
+	byte "vote_count"
+	int 0
+	app_global_put
+
+	byte "staking_is_activated"
+	int 0
+	app_global_put
+
+	byte "staking_amount"
+	int 0
+	app_global_put
+
+	byte 0x151f7c75
+	global CurrentApplicationAddress
+	concat
+	b branch_log_return
+
+method_update_staking:
+	//byte "staking_is_activated"
+	//app_global_get
+	//int 1
+	//!=
+	//assert
+
+	global CurrentApplicationID
+	store 0
+
+	txn ApplicationArgs 1
+	btoi
+	store 1
+	byte "dao_app_id"
+	load 1
+	app_global_put
+
+	txn ApplicationArgs 2
+	btoi
+	store 2
+	byte "dao_asset_id"
+	load 2
+	app_global_put
+
+	txn ApplicationArgs 3
+	btoi
+	store 3
+	byte "staking_asset_id"
+	load 3
+	app_global_put
+
+	txn ApplicationArgs 4
+	store 4
+	byte "staking_creator_address"
+	load 4
+	app_global_put
+
+	txn ApplicationArgs 5
+	store 5
+	byte "manager_address"
+	load 5
+	app_global_put
+
+	txn ApplicationArgs 6
+	store 6
+	byte "staking_title"
+	load 6
+	app_global_put
+
+	txn ApplicationArgs 7
+	store 7
+	byte "staking_description"
+	load 7
+	app_global_put
+
+	byte "participation_count"
+	int 0
+	app_global_put
+
+	byte "staking_amount"
+	int 0
+	app_global_put
+
+	byte 0x151f7c75
+	global CurrentApplicationAddress
+	concat
+	b branch_log_return
+
+method_update_manager_address:
+	callsub sub_check_manager_auth
+
+	txn ApplicationArgs 1
+	byte "manager_address"
+	app_global_put
+
+	byte 0x151f7c75
+	byte "staking manager address is now updated!"
+	concat
+	b branch_log_return
+
+method_activate_staking:
+	callsub sub_check_manager_auth
+	
+	byte "staking_activation_allowed"
+	app_global_get
+	bz branch_error_activation
+
+	byte 0x151f7c75
+	byte "staking is activated!"
+	concat
+	b branch_log_return
+
+// Handles configuration of staking
+method_config_staking:
+
+	gtxn 0 TypeEnum
+	int pay
+	==
+	bz branch_error
+
+	gtxn 0 Amount
+	int 3000
+	>=
+	assert
+
+	gtxn 0 Receiver
+	global CurrentApplicationAddress
+	==
+	assert
+
+	txn ApplicationArgs 1 //staking_min_participation_algo
+	store 1
+	byte "staking_min_participation_algo"
+	load 1
+	btoi
+	app_global_put
+	//log
+
+	txn ApplicationArgs 2 //staking_min_participation_stake
+	store 2
+	byte "staking_min_participation_stake"
+	load 2
+	btoi
+	app_global_put
+	//log
+
+	txn ApplicationArgs 3 //staking_duration
+	store 3
+	byte "staking_duration"
+	load 3
+	btoi
+	app_global_put
+	//log
+
+	txn ApplicationArgs 4 //staking_amount
+	store 4
+	byte "staking_amount"
+	load 4
+	btoi
+	app_global_put
+	//log
+
+	txn ApplicationArgs 5 //staking_stake_duration
+	store 5
+	byte "staking_stake_duration"
+	load 5
+	btoi
+	app_global_put
+	//log
+
+	txn ApplicationArgs 6 //staking_stake_start
+	store 6
+	byte "staking_stake_start"
+	load 6
+	btoi
+	app_global_put
+	//log
+
+	txn ApplicationArgs 7 //staking_participation_fee
+	store 7
+	byte "staking_participation_fee"
+	load 7
+	btoi
+	app_global_put
+	//log
+
+	txn ApplicationArgs 8 //staking_participation_fee_algo
+	store 8
+	byte "staking_participation_fee_algo"
+	load 8
+	btoi
+	app_global_put
+	//log
+
+	txn ApplicationArgs 9 //staking_stake_fee
+	btoi
+	store 9
+	byte "staking_stake_fee"
+	load 9
+	app_global_put
+	//log
+
+	txn ApplicationArgs 10 //staking_stake_fee_algo
+	store 10
+	byte "staking_stake_fee_algo"
+	load 10
+	btoi
+	app_global_put
+	//log
+
+	txn ApplicationArgs 11 // staking_participation
+	store 11
+
+	txn ApplicationArgs 12 // staking_threshold
+	store 12
+
+	txn ApplicationArgs 13 // staking_allocations
+	store 13
+
+	txn ApplicationArgs 14 // staking_values
+	store 14
+
+	byte "participation_threshold"
+	load 11
+	box_put
+
+	byte "vote_threshold"
+	load 12
+	box_put
+
+	byte "staking_allocation"
+	load 13
+	box_put
+
+	byte "staking_values"
+	load 14
+	btoi
+	app_global_put
+
+
+	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int axfer
+	itxn_field TypeEnum
+	global CurrentApplicationAddress
+	itxn_field AssetReceiver
+	int 0
+	itxn_field AssetAmount
+	txna Assets 1
+	itxn_field XferAsset
+	itxn_submit
+	itxn TxID
+    log
+
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+
+
+
+branch_activate:
+	byte "staking_is_activated"
+	int 1
+	app_global_put
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+
+method_staking_withdraw:
+ 	txna Accounts 0
+    store 0
+
+	// Participation Withdrawals are closed after staking is activated
+	byte "staking_is_activated"
+	app_global_get
+	bnz branch_error
+
+	byte "participation_count"
+	app_global_get
+	int 1
+	-
+	store 20
+	byte "participation_count"
+	load 20
+	app_global_put
+
+	load 0
+	box_get
+	assert
+	pop
+	load 0
+    box_del
+    pop
+
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+method_staking_stake:
+	txna Accounts 0
+	store 0
+	txn Sender
+	store 2
+
+	byte "staking_is_activated"
+	app_global_get
+	bz branch_error_activation
+
+	// The Staked amount
+	txn ApplicationArgs 1
+	btoi
+	store 1
+
+    // Checking Transaction group
+    global GroupSize
+    int 4
+    ==
+    assert
+
+    // Checking the asset ref to be DAO asset
+    byte "dao_asset_id"
+    app_global_get
+    txna Assets 0
+    ==
+    assert
+
+	// Check DAO asset holding
+    //load 0
+    //txna Assets 0
+    //asset_holding_get AssetBalance
+    //assert
+	//pop
+
+	// Check participation
+	load 2
+	box_get
+	assert
+	byte ""
+	==
+	assert
+	load 2
+	box_del
+	pop
+
+	// Casting stake to staking
+	load 2
+	load 1
+	itob
+	box_put
+	
+	b branch_stake
+
+branch_stake:
+	byte "staking_stake"
+	dup
+	app_global_get
+	int 1
+	+
+	app_global_put
+
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+// Handles logging the last element on the stack then put a 1 on the top and return (log and approve)
+branch_log_return:
+	log
+	int 1
+	return
+
+branch_error:
+	err
+branch_error_activation:
+	err
+
