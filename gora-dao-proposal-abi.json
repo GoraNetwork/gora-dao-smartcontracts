@@ -31,7 +31,7 @@
                 },
                 {
                     "type": "account",
-                    "name": "manager_reference",
+                    "name": "member_reference",
                     "description": "GoraDAO member account reference (Proposal manager)"
                 },
                 {
@@ -90,7 +90,7 @@
                 },
                 {
                     "type": "account",
-                    "name": "manager_reference",
+                    "name": "member_reference",
                     "description": "GoraDAO member account reference (Proposal manager)"
                 },
                 {

@@ -90,7 +90,7 @@
                 },
                 {
                     "type": "account",
-                    "name": "manager_reference",
+                    "name": "member_reference",
                     "description": "GoraDAO member account reference (Staking manager)"
                 },
                 {
@@ -114,7 +114,6 @@
                     "name": "manager_reference",
                     "description": "Dynamic box ref for Staking manager GoraDAO member"
                 },
-              
                 {
                     "name": "staking_app",
                     "description": "Dynamic box ref for staking approval prog source code"
