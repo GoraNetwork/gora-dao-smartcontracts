@@ -10,20 +10,6 @@
 //Check TXN first
 callsub sub_check_txn
 
-// Check creation TXN
-// txn ApplicationID
-// bz branch_create
-
-// Checking onCompletion type for update application call
-//txn OnCompletion
-//int UpdateApplication
-//==
-//txn ApplicationID
-//int 0
-//!=
-//&&
-//bnz branch_update
-
 // Checking onCompletion type for delete application call
 txn OnCompletion
 int DeleteApplication
@@ -58,22 +44,15 @@ bz branch_method_router
 b branch_error
 
 ///////////////////////////////////////////
-
-
 branch_delete:
 
 	callsub sub_check_owner_auth
-
 	int 1
 	return
-
-
-
 
 branch_closeout:
 
 	callsub sub_check_owner_auth
-
 	int 1
 	return
 
@@ -124,9 +103,17 @@ branch_method_router:
 	==
 	bnz method_staking_stake
 
+	b branch_error
+
+	method "staking_unstake(uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_unstake
 
 	b branch_error
 
+///////////////////////////////////////////
+// Subroutine to handle transaction checks
 sub_check_txn:
 
 	// Checks RekeyTo address transaction field to be empty (ZeroAddress)
@@ -178,7 +165,7 @@ sub_check_manager_auth:
 	assert
 	retsub
 
-
+// Handles creation of Staking contract
 method_create_staking:
 
 	global CurrentApplicationID
@@ -254,6 +241,7 @@ method_create_staking:
 	concat
 	b branch_log_return
 
+// Handles updating of Staking contract
 method_update_staking:
 	//byte "staking_is_activated"
 	//app_global_get
@@ -330,6 +318,7 @@ method_update_staking:
 	concat
 	b branch_log_return
 
+// Handles updating of a staking contract manager address
 method_update_manager_address:
 	callsub sub_check_manager_auth
 
@@ -342,6 +331,7 @@ method_update_manager_address:
 	concat
 	b branch_log_return
 
+// Handles activation of Staking
 method_activate_staking:
 	callsub sub_check_manager_auth
 	
@@ -503,7 +493,7 @@ method_config_staking:
 	concat
 	b branch_log_return
 
-
+// Participate in staking
 method_staking_participate:
 	txna Accounts 1 // GoraDAO Admin account
 	store 0
@@ -767,8 +757,72 @@ method_staking_stake:
 	itob
 	box_put
 	
+	byte "staking_amount"
+	dup
+	app_global_get
+	int 1
+	+
+	app_global_put
 
-branch_stake_final:
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+method_staking_unstake:
+	txna Accounts 0
+	store 0
+	txn Sender
+	store 2
+
+	byte "staking_is_activated"
+	app_global_get
+	bz branch_error_activation
+
+	// The staked amount
+	txn ApplicationArgs 1
+	btoi
+	store 1
+
+
+    // Checking Transaction group
+    global GroupSize
+    int 4
+    ==
+    assert
+
+    // Checking the asset ref to be DAO asset
+    byte "dao_asset_id"
+    app_global_get
+    txna Assets 0
+    ==
+    assert
+
+	// Check DAO asset holding
+    //load 0
+    //txna Assets 0
+    //asset_holding_get AssetBalance
+    //assert
+	//pop
+
+	// Check participation
+	load 2
+	box_get
+	assert
+	byte ""
+	==
+	assert
+	load 2
+	box_del
+	pop
+
+	// Staking finalization
+	load 2
+	load 1
+	itob
+	box_put
+	
 	byte "staking_amount"
 	dup
 	app_global_get

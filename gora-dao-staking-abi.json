@@ -365,6 +365,31 @@
             "returns": {
                 "type": "uint64"
             }
+        },
+        {
+            "name": "staking_unstake",
+            "description": "Un-stakes from Staking contract! Returns the staking member's account address concatenated with un-staked amount!",
+            "args": [
+                
+                {
+                    "type": "uint64",
+                    "name": "amount",
+                    "description": "Amount to be un-staked"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address"
+                },
+                {
+                    "name": "staking_threshold",
+                    "description": "Dynamic box ref for staking threshold program"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
         }
     ]
 }
