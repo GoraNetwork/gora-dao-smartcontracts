@@ -1,6 +1,6 @@
 {
     "name": "gora-dao-staking",
-    "desc": "GoraDAO staking smart contract",
+    "desc": "Gora DAO staking smart contract",
     "networks": {
         "MainNet": {
             "appID": 0
@@ -17,43 +17,43 @@
                 {
                     "type": "application",
                     "name": "main_app_id",
-                    "description": "GoraNetwork Main App (GoraDao) ID"
+                    "description": "DAO Main App (DAO) ID"
                 },
                 {
                     "type": "uint64",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
+                    "description": "DAO Main asset (DAO) ID"
                 },
                 {
                     "type": "uint64",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Staking asset ID"
+                    "description": "Staking asset ID"
                 },
                 {
                     "type": "account",
                     "name": "manager_reference",
-                    "description": "GoraDAO member account reference (Staking manager)"
+                    "description": "DAO member account reference (Staking manager)"
                 },
                 {
                     "type": "account",
                     "name": "dao_manager_reference",
-                    "description": "GoraDAO manager account reference (GoraDAO Manager)"
+                    "description": "DAO manager account reference (DAO Manager)"
                 },
                 {
                     "type": "string",
                     "name": "staking_title",
-                    "description": "GoraDAO Staking title"
+                    "description": "Staking title"
                 },
                 {
                     "type": "string",
                     "name": "staking_description",
-                    "description": "GoraDAO Staking description"
+                    "description": "Staking description"
                 }
             ],
             "boxes": [
                 {
                     "name": "manager_reference",
-                    "description": "Dynamic box ref for Staking manager GoraDAO member"
+                    "description": "Dynamic box ref for Staking manager DAO member"
                 },
                
                 {
@@ -76,43 +76,43 @@
                 {
                     "type": "application",
                     "name": "main_app_id",
-                    "description": "GoraNetwork Main App (GoraDao) ID"
+                    "description": "DAO Main App ID"
                 },
                 {
                     "type": "uint64",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
+                    "description": "DAO Main asset ID"
                 },
                 {
                     "type": "uint64",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Staking asset ID"
+                    "description": "Staking asset ID"
                 },
                 {
                     "type": "account",
                     "name": "manager_reference",
-                    "description": "GoraDAO member account reference (Staking manager)"
+                    "description": "DAO member account reference (Staking manager)"
                 },
                 {
                     "type": "account",
                     "name": "dao_manager_reference",
-                    "description": "GoraDAO manager account reference (GoraDAO manager)"
+                    "description": "DAO manager account reference (DAO manager)"
                 },
                 {
                     "type": "string",
                     "name": "staking_title",
-                    "description": "GoraDAO Staking title"
+                    "description": "Staking title"
                 },
                 {
                     "type": "string",
                     "name": "staking_description",
-                    "description": "GoraDAO Staking description"
+                    "description": "Staking description"
                 }
             ],
             "boxes": [
                 {
                     "name": "manager_reference",
-                    "description": "Dynamic box ref for Staking manager GoraDAO member"
+                    "description": "Dynamic box ref for Staking manager DAO member"
                 },
                 {
                     "name": "staking_app",
@@ -135,68 +135,68 @@
                 {
                     "type": "pay",
                     "name": "payment_transaction",
-                    "description": "Payment from Staking manager to GoraDAO for fees and Staking configuration MBRs!"
+                    "description": "Payment from Staking manager to DAO for fees and Staking configuration MBRs!"
                 },
                 {
                     "type": "uint64",
                     "name": "staking_min_participation_algo",
-                    "description": "GoraDAO Staking minimum participation in microAlgos"
+                    "description": "DAO Staking minimum participation in microAlgos"
                 },
                 {
                     "type": "uint64",
                     "name": "staking_min_participation_token",
-                    "description": "GoraDAO Staking minimum participation in DAO asset units"
+                    "description": "DAO Staking minimum participation in DAO asset units"
                 },
                 {
                     "type": "uint64",
                     "name": "staking_duration",
-                    "description": "GoraDAO Staking total duration in days"
+                    "description": "DAO Staking total duration in days"
                 },
             
                 {
                     "type": "uint64",
                     "name": "staking_min_duration",
-                    "description": "GoraDAO Staking duration in working hours"
+                    "description": "DAO Staking duration in working hours"
                 },
                 {
                     "type": "uint64",
                     "name": "staking_participation_commission",
-                    "description": "GoraDAO Staking participation commission % in asset units"
+                    "description": "DAO Staking participation commission % in asset units"
                 },
                 {
                     "type": "uint64",
                     "name": "staking_participation_fee",
-                    "description": "GoraDAO Staking fee in DAO asset units"
+                    "description": "DAO Staking fee in DAO asset units"
                 },
                 {
                     "type": "uint64",
                     "name": "staking_participation_fee_algo",
-                    "description": "GoraDAO Staking fee in Algos"
+                    "description": "DAO Staking fee in Algos"
                 },
                 {
                     "type": "uint64",
                     "name": "staking_returns",
-                    "description": "GoraDAO Staking returns percentage!"
+                    "description": "DAO Staking returns percentage!"
                 },
                 {
                     "type": "uint64",
                     "name": "staking_incentives_percentage",
-                    "description": "GoraDAO Staking incentives percentage! "
+                    "description": "DAO Staking incentives percentage! "
                 },
                 {
                     "type": "uint64",
                     "name": "staking_type",
-                    "description": "GoraDAO Staking type, 0 for direct staking and greater than zero means proxy staking! "
+                    "description": "DAO Staking type, 0 for direct staking and greater than zero means proxy staking! "
                 },
                 {
                     "type": "uint64",
                     "name": "staking_incentives_duration",
-                    "description": "GoraDAO Staking incentives duration (the time interval based on which incentives will be distributed) "
+                    "description": "DAO Staking incentives duration (the time interval based on which incentives will be distributed) "
                 },
                 {
                     "type": "uint64",
                     "name": "staking_eligibility",
-                    "description": "GoraDAO Staking incentives eligibility measure (Based on responded requests quantity during staking duration, e.g. one month) "
+                    "description": "DAO Staking incentives eligibility measure (Based on responded requests quantity during staking duration, e.g. one month) "
                 }
              
             ],
@@ -217,12 +217,12 @@
                 {
                     "type": "pay",
                     "name": "payment_transaction",
-                    "description": "Payment from Staking manager to GoraDAO for fees!"
+                    "description": "Payment from Staking manager to DAO for fees!"
                 },
                 {
                     "type": "application",
                     "name": "main_app_id",
-                    "description": "GoraDAO Main application ID"
+                    "description": "DAO Main application ID"
                 },
                 {
                     "type": "uint64",
@@ -232,7 +232,7 @@
                 {
                     "type": "account",
                     "name": "manager_reference",
-                    "description": "GoraDAO Staking new manager account reference"
+                    "description": "DAO Staking new manager account reference"
                 }
             ],
             "returns": {
@@ -246,7 +246,7 @@
                 {
                     "type": "pay",
                     "name": "payment_transaction",
-                    "description": "Payment from Staking manager to GoraDAO for fees and Staking activation MBRs!"
+                    "description": "Payment from Staking manager to DAO for fees and Staking activation MBRs!"
                 },
                 {
                     "type": "uint64",
@@ -256,7 +256,7 @@
                 {
                     "type": "account",
                     "name": "manager_reference",
-                    "description": "GoraDAO manager account reference"
+                    "description": "DAO manager account reference"
                 }
             ],
             "boxes": [
@@ -276,17 +276,17 @@
                 {
                     "type": "pay",
                     "name": "fee_payment_transaction",
-                    "description": "Payment from Staking participant to GoraDAO for fees!"
+                    "description": "Payment from Staking participant to DAO for fees!"
                 },
                 {
                     "type": "axfer",
                     "name": "fee_axfer_transaction",
-                    "description": "Axfer from Staking participant to GoraDAO in GoraDAO token for fees!"
+                    "description": "Axfer from Staking participant to DAO in DAO token for fees!"
                 },
                 {
                     "type": "pay",
                     "name": "stake_payment_transaction",
-                    "description": "Payment from Staking participant to GoraDAO for  Staking participation MBRs!"
+                    "description": "Payment from Staking participant to DAO for  Staking participation MBRs!"
                 },
                 {
                     "type": "axfer",

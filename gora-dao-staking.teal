@@ -478,7 +478,7 @@ method_staking_participate:
 	==
 	assert
 	
-	txna Accounts 1 // GoraDAO Admin account
+	txna Accounts 1 // DAO Admin account
 	store 0
 
 	txn Sender // Participating user account
@@ -722,8 +722,8 @@ method_staking_withdraw_participate:
 	b branch_log_return
 
 method_staking_stake:
-	txna Accounts 0 // GoraDAO main account
-	store 0 // GoraDAO main account
+	txna Accounts 0 // DAO main account
+	store 0 // DAO main account
 	txn Sender // Staking user account
 	store 1 // Staking user account
 
@@ -904,7 +904,7 @@ method_staking_unstake:
     assert
 
 	txna Accounts 0
-	store 0 // GoraDAO main account
+	store 0 // DAO main account
 	txn Sender
 	store 1
 
