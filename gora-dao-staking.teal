@@ -73,7 +73,7 @@ branch_method_router:
 	==
 	bnz method_update_staking
 
-	method "config_staking(pay,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,(uint64,uint64,uint64),(uint64,uint64,uint64),(uint64,uint64,uint64),uint64)uint64"
+	method "config_staking(pay,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,(uint64,uint64,uint64),(uint64,uint64,uint64),(uint64,uint64,uint64),uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_staking
@@ -230,6 +230,10 @@ method_create_staking:
 	int 0
 	app_global_put
 
+	byte "staked_amount_algo"
+	int 0
+	app_global_put
+
 	byte "staked_amount"
 	int 0
 	app_global_put
@@ -370,71 +374,65 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 4 //staking_min_amount
+
+
+	txn ApplicationArgs 4 //staking_min_duration
 	store 4
-	byte "staking_min_amount"
+	byte "staking_min_duration"
 	load 4
 	btoi
 	app_global_put
 	//log
 
-	txn ApplicationArgs 5 //staking_min_duration
+	txn ApplicationArgs 5 //staking_participation_commission
 	store 5
-	byte "staking_min_duration"
+	byte "staking_participation_commission"
 	load 5
 	btoi
 	app_global_put
 	//log
 
-	txn ApplicationArgs 6 //staking_participation_commission
+	txn ApplicationArgs 6 //staking_participation_fee
 	store 6
-	byte "staking_participation_commission"
+	byte "staking_participation_fee"
 	load 6
 	btoi
 	app_global_put
 	//log
 
-	txn ApplicationArgs 7 //staking_participation_fee
+	txn ApplicationArgs 7 //staking_participation_fee_algo
 	store 7
-	byte "staking_participation_fee"
+	byte "staking_participation_fee_algo"
 	load 7
 	btoi
 	app_global_put
 	//log
 
-	txn ApplicationArgs 8 //staking_participation_fee_algo
+	txn ApplicationArgs 8 //staking_returns
+	btoi
 	store 8
-	byte "staking_participation_fee_algo"
-	load 8
-	btoi
-	app_global_put
-	//log
-
-	txn ApplicationArgs 9 //staking_returns
-	btoi
-	store 9
 	byte "staking_returns"
-	load 9
+	load 8
 	app_global_put
 	//log
 
-	txn ApplicationArgs 10 //staking_incentives_percentage
-	store 10
+	txn ApplicationArgs 9 //staking_incentives_percentage
+	store 9
 	byte "staking_incentives_percentage"
+	load 9
+	btoi
+	app_global_put
+	//log
+
+	txn ApplicationArgs 10 //staking_type
+	store 10
+	byte "staking_type"
 	load 10
 	btoi
 	app_global_put
 	//log
 
-	txn ApplicationArgs 11 //staking_type
-	store 11
-	byte "staking_type"
-	load 11
-	btoi
-	app_global_put
-	//log
-
-	txn ApplicationArgs 12 //staking_incentives_duration
+	txn ApplicationArgs 11 //staking_incentives_duration
 	store 11
 	byte "staking_incentives_duration"
 	load 11
@@ -442,10 +440,10 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 13 //staking_eligibility
-	store 11
+	txn ApplicationArgs 12 //staking_eligibility
+	store 12
 	byte "staking_eligibility"
-	load 11
+	load 12
 	btoi
 	app_global_put
 	//log
@@ -656,16 +654,99 @@ method_staking_stake:
 	txna Accounts 0
 	store 0
 	txn Sender
-	store 2
+	store 1
 
 	byte "staking_is_activated"
 	app_global_get
 	bz branch_error_activation
 
-	// The staked amount
+    // Checking the pay and axfer txns
+	gtxn 1 RekeyTo
+    global ZeroAddress
+    ==
+    gtxn 2 RekeyTo
+    global ZeroAddress
+    ==
+	&&
+	assert
+	gtxn 1 Fee
+    global MinTxnFee
+    >=
+    gtxn 2 Fee
+    global MinTxnFee
+    >=
+	&&
+	assert
+
+	gtxn 1 CloseRemainderTo
+	global ZeroAddress
+	==
+	gtxn 2 CloseRemainderTo
+	global ZeroAddress
+	==
+	&&
+	assert
+
+    byte "staking_asset_id"
+    app_global_get
+    gtxn 2 XferAsset
+    ==
+    assert
+
+	// The staked amount algo
 	txn ApplicationArgs 1
 	btoi
-	store 1
+	store 3
+
+	// The staked amount token
+	txn ApplicationArgs 2
+	btoi
+	store 4
+
+	gtxn 1 Amount
+	store 5
+	load 5
+    byte "staking_min_participation_algo"
+	app_global_get
+    >=
+    assert
+	load 5
+	load 3
+	==
+	assert
+
+
+    gtxn 2 AssetAmount
+	store 6
+	load 6
+    byte "staking_min_participation_token"
+	app_global_get
+    >=
+    assert
+	load 6
+	load 4
+	==
+	assert
+
+
+	byte "staked_amount_algo"
+	app_global_get
+	load 3
+	+
+	store 7
+	byte "staked_amount_algo"
+	load 7
+	app_global_put
+
+	byte "staked_amount"
+	app_global_get
+	load 4
+	+
+	store 8
+	byte "staked_amount"
+	load 8
+	app_global_put
+
 
 
     // Checking Transaction group
@@ -674,40 +755,30 @@ method_staking_stake:
     ==
     assert
 
-    // Checking the asset ref to be DAO asset
-    byte "dao_asset_id"
-    app_global_get
-    txna Assets 0
-    ==
-    assert
-
-	// Check DAO asset holding
-    //load 0
-    //txna Assets 0
-    //asset_holding_get AssetBalance
-    //assert
-	//pop
 
 	// Check participation
-	load 2
+	load 1
 	box_get
 	assert
 	byte ""
 	==
 	assert
-	load 2
+	load 1
 	box_del
 	pop
 
 	
 
 	// Staking finalization
-	load 2
 	load 1
+	load 3
 	itob
+	load 4
+	itob
+	concat
 	box_put
 	
-	byte "staking_min_amount"
+	byte "stakings_count"
 	dup
 	app_global_get
 	int 1
@@ -773,11 +844,11 @@ method_staking_unstake:
 	itob
 	box_put
 	
-	byte "staking_min_amount"
+	byte "stakings_count"
 	dup
 	app_global_get
 	int 1
-	+
+	-
 	app_global_put
 
 	byte 0x151f7c75
