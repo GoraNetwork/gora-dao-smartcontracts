@@ -378,7 +378,7 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 5 //staking_voting_duration
+	txn ApplicationArgs 5 //staking_min_duration
 	store 5
 	byte "staking_min_duration"
 	load 5
@@ -386,9 +386,9 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 6 //staking_voting_start
+	txn ApplicationArgs 6 //staking_participation_commission
 	store 6
-	byte "staking_start"
+	byte "staking_participation_commission"
 	load 6
 	btoi
 	app_global_put
@@ -410,50 +410,48 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 9 //staking_fee
+	txn ApplicationArgs 9 //staking_returns
 	btoi
 	store 9
-	byte "staking_fee"
+	byte "staking_returns"
 	load 9
 	app_global_put
 	//log
 
-	txn ApplicationArgs 10 //staking_fee_algo
+	txn ApplicationArgs 10 //staking_incentives_percentage
 	store 10
-	byte "staking_fee_algo"
+	byte "staking_incentives_percentage"
 	load 10
 	btoi
 	app_global_put
 	//log
 
-	txn ApplicationArgs 11 // staking_participation
+	txn ApplicationArgs 11 //staking_type
 	store 11
-
-	txn ApplicationArgs 12 // staking_threshold
-	store 12
-
-	txn ApplicationArgs 13 // staking_allocations
-	store 13
-
-	txn ApplicationArgs 14 // staking_values
-	store 14
-
-	byte "participation_threshold"
+	byte "staking_type"
 	load 11
-	box_put
-
-	byte "staking_threshold"
-	load 12
-	box_put
-
-	byte "staking_allocation"
-	load 13
-	box_put
-
-	byte "staking_values"
-	load 14
 	btoi
 	app_global_put
+	//log
+
+	txn ApplicationArgs 12 //staking_incentives_duration
+	store 11
+	byte "staking_incentives_duration"
+	load 11
+	btoi
+	app_global_put
+	//log
+
+	txn ApplicationArgs 13 //staking_eligibility
+	store 11
+	byte "staking_eligibility"
+	load 11
+	btoi
+	app_global_put
+	//log
+
+
+
 
 
 	itxn_begin

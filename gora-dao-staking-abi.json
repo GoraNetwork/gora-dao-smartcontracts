@@ -165,28 +165,23 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "min_participation",
-                    "description": "GoraDAO Staking minimum participation fee in asset units"
+                    "name": "staking_participation_commission",
+                    "description": "GoraDAO Staking participation commission % in asset units"
                 },
                 {
                     "type": "uint64",
-                    "name": "min_participation_algo",
-                    "description": "GoraDAO Staking minimum participation fee in algo"
-                },
-                {
-                    "type": "uint64",
-                    "name": "staking_fee",
+                    "name": "staking_participation_fee",
                     "description": "GoraDAO Staking fee in DAO asset units"
                 },
                 {
                     "type": "uint64",
-                    "name": "staking_fee_algo",
+                    "name": "staking_participation_fee_algo",
                     "description": "GoraDAO Staking fee in Algos"
                 },
                 {
                     "type": "uint64",
                     "name": "staking_returns",
-                    "description": "GoraDAO Staking returns!"
+                    "description": "GoraDAO Staking returns percentage!"
                 },
                 {
                     "type": "uint64",
@@ -200,13 +195,13 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "staking_incentives_period",
-                    "description": "GoraDAO Staking incentives period (the time interval based on which incentives will be distributed) "
+                    "name": "staking_incentives_duration",
+                    "description": "GoraDAO Staking incentives duration (the time interval based on which incentives will be distributed) "
                 },
                 {
                     "type": "uint64",
                     "name": "staking_eligibility",
-                    "description": "GoraDAO Staking incentives eligibility (Based on requests responded in staking period, e.g. one month) "
+                    "description": "GoraDAO Staking incentives eligibility measure (Based on responded requests quantity during staking duration, e.g. one month) "
                 }
              
             ],
@@ -216,12 +211,8 @@
                     "description": "Dynamic box ref for staking manager account"
                 },
                 {
-                    "name": "staked_amount",
-                    "description": "Dynamic box per staking with staked amount"
-                },
-                {
-                    "name": "staking_accounts",
-                    "description": "Dynamic box per staking containing total number of staking accounts"
+                    "name": "staking_account",
+                    "description": "Dynamic box per staking account (as key) and staking amount (as value)"
                 }
             ],
             "returns": {
