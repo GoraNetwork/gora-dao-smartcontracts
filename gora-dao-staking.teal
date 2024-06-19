@@ -633,10 +633,6 @@ method_staking_withdraw_participate:
  	txna Accounts 0
     store 0
 
-	// byte "staking_is_activated"
-	// app_global_get
-	// bnz branch_error
-
 	byte "participation_count"
 	app_global_get
 	int 1
@@ -889,11 +885,15 @@ method_staking_unstake:
 	box_del
 	assert
 
+	
+
 	// Staking finalization
 	load 4
 	load 5
 	load 2
 	-
+	store 8
+	load 8
 	itob
 	box_put
 
@@ -901,9 +901,33 @@ method_staking_unstake:
 	load 7
 	load 3
 	-
+	store 9
+	load 9
 	itob
 	box_put
 	
+	// Staking refund transactions
+	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	load 0
+	itxn_field Receiver
+	load 8
+	itxn_field Amount
+	int pay
+	itxn_field TypeEnum
+	itxn_submit
+
+	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field AssetSender
+	load 0
+	itxn_field AssetReceiver
+	load 9
+	itxn_field AssetAmount
+	int axfer
+	itxn_field TypeEnum
+	itxn_submit
 
 	// Stats update
 	byte "stakings_count"
