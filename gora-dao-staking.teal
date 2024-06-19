@@ -471,6 +471,8 @@ method_config_staking:
 
 // Participate in staking
 method_staking_participate:
+
+	// Checking the staking activation
 	byte "staking_is_activated"
 	int 1
 	==
@@ -479,18 +481,8 @@ method_staking_participate:
 	txna Accounts 1 // GoraDAO Admin account
 	store 0
 
-	txn Sender // User
+	txn Sender // Participating user account
 	store 1
-
-
-	byte "participation_count"
-	app_global_get
-	int 1
-	+
-	store 3
-	byte "participation_count"
-	load 3
-	app_global_put
 
     // Checking Transaction group
     global GroupSize
@@ -550,7 +542,7 @@ method_staking_participate:
 	&&
     assert
 
-    byte "staking_asset_id"
+    byte "dao_asset_id"
     app_global_get
     gtxn 2 XferAsset
     ==
@@ -599,33 +591,36 @@ method_staking_participate:
     ==
     assert
 
+	// Check participation and box preparation
 	load 1
 	byte "_algo"
 	concat
 	store 4
 	load 4
-	box_get
-	bnz branch_error
-	
+    gtxn 3 Amount
+	itob
+	box_put // Rejects if the user already participated
+
 	load 1
 	byte "_token"
 	concat
 	store 5
 	load 5
-	box_get
-	bnz branch_error
-	
-	load 4
-    gtxn 3 Amount
-	itob
-	box_put
-
-	load 5
 	gtxn 4 AssetAmount
 	itob
-    box_put
+    box_put // Rejects if the user already participated
 
-	
+	// Stats update
+	byte "participation_count"
+	app_global_get
+	int 1
+	+
+	store 3
+	byte "participation_count"
+	load 3
+	app_global_put
+
+	// Log and return
     byte 0x151f7c75
 	global CurrentApplicationID
 	itob

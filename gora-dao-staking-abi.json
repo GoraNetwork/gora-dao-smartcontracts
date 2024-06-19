@@ -280,8 +280,8 @@
                 },
                 {
                     "type": "axfer",
-                    "name": "token_payment_transaction",
-                    "description": "Axfer from Staking participant to GoraDAO for fees!"
+                    "name": "fee_axfer_transaction",
+                    "description": "Axfer from Staking participant to GoraDAO in GoraDAO token for fees!"
                 },
                 {
                     "type": "pay",
@@ -291,7 +291,7 @@
                 {
                     "type": "axfer",
                     "name": "stake_axfer_transaction",
-                    "description": "Axfer from Staking participant to GoraDAO for  Staking participation MBRs!"
+                    "description": "Axfer from Staking participant to Staking contract for Staking participation!"
                 }
             ],
             "boxes": [
