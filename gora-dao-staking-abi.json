@@ -152,11 +152,10 @@
                     "name": "staking_duration",
                     "description": "DAO Staking total duration in days"
                 },
-            
                 {
                     "type": "uint64",
                     "name": "staking_min_duration",
-                    "description": "DAO Staking duration in working hours"
+                    "description": "DAO Staking eligible duration in days"
                 },
                 {
                     "type": "uint64",
@@ -173,10 +172,11 @@
                     "name": "staking_participation_fee_algo",
                     "description": "DAO Staking fee in Algos"
                 },
+              
                 {
                     "type": "uint64",
-                    "name": "staking_returns",
-                    "description": "DAO Staking returns percentage!"
+                    "name": "staking_yield_percentage",
+                    "description": "DAO Staking yield percentage!"
                 },
                 {
                     "type": "uint64",
@@ -196,7 +196,7 @@
                 {
                     "type": "uint64",
                     "name": "staking_eligibility",
-                    "description": "DAO Staking incentives eligibility measure (Based on responded requests quantity during staking duration, e.g. one month) "
+                    "description": "DAO Staking incentives eligibility measure (Based on responded requests quantity during staking duration for proxied staking type and staking token amount for direct staking ) "
                 }
              
             ],
@@ -227,7 +227,7 @@
                 {
                     "type": "uint64",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
+                    "description": "DAO Main asset ID"
                 },
                 {
                     "type": "account",
@@ -251,7 +251,7 @@
                 {
                     "type": "uint64",
                     "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
+                    "description": "DAO Main asset ID"
                 },
                 {
                     "type": "account",
@@ -302,6 +302,10 @@
                 {
                     "name": "staking_account",
                     "description": "Dynamic box per staking account (as key) and staking amount (as value)"
+                },
+                {
+                    "name": "staking_account_timestamp",
+                    "description": "Dynamic box per staking account (as key) and staking update timestamp(as value)"
                 }
             ],
             "returns": {
@@ -320,6 +324,10 @@
                 {
                     "name": "staking_account",
                     "description": "Dynamic box per staking account (as key) and staking amount (as value)"
+                },
+                {
+                    "name": "staking_account_timestamp",
+                    "description": "Dynamic box per staking account (as key) and staking update timestamp(as value)"
                 }
             ],
             "returns": {

@@ -374,8 +374,6 @@ method_config_staking:
 	app_global_put
 	//log
 
-
-
 	txn ApplicationArgs 4 //staking_min_duration
 	store 4
 	byte "staking_min_duration"
@@ -408,10 +406,10 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 8 //staking_returns
+	txn ApplicationArgs 8 //staking_yield_percentage
 	btoi
 	store 8
-	byte "staking_returns"
+	byte "staking_yield_percentage"
 	load 8
 	app_global_put
 	//log
