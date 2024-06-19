@@ -487,9 +487,9 @@ method_staking_participate:
 	app_global_get
 	int 1
 	+
-	store 20
+	store 3
 	byte "participation_count"
-	load 20
+	load 3
 	app_global_put
 
     // Checking Transaction group
@@ -600,14 +600,29 @@ method_staking_participate:
     assert
 
 	load 1
+	byte "_algo"
+	concat
+	store 4
+	load 4
 	box_get
 	bnz branch_error
+	
 	load 1
+	byte "_token"
+	concat
+	store 5
+	load 5
+	box_get
+	bnz branch_error
+	
+	load 4
     gtxn 3 Amount
 	itob
+	box_put
+
+	load 5
 	gtxn 4 AssetAmount
 	itob
-	concat
     box_put
 
 	
@@ -631,18 +646,23 @@ method_staking_withdraw_participate:
 	app_global_get
 	int 1
 	-
-	store 20
+	store 1
 	byte "participation_count"
-	load 20
+	load 1
 	app_global_put
 
+	
 	load 0
-	box_get
-	assert
-	pop
-	load 0
+	byte "_algo"
+	concat
     box_del
-    pop
+    assert
+
+	load 0
+	byte "_token"
+	concat
+    box_del
+    assert
 
 	byte 0x151f7c75
 	global CurrentApplicationID
@@ -651,14 +671,31 @@ method_staking_withdraw_participate:
 	b branch_log_return
 
 method_staking_stake:
-	txna Accounts 0
-	store 0
-	txn Sender
-	store 1
+	txna Accounts 0 // GoraDAO main account
+	store 0 // GoraDAO main account
+	txn Sender // Staking user account
+	store 1 // Staking user account
 
+	txn ApplicationArgs 1 // The staked amount algo
+	btoi
+	store 3 // The staked amount algo
+
+	
+	txn ApplicationArgs 2 // The staked amount token
+	btoi
+	store 4 // The staked amount token
+
+
+	// Checking the staking activation
 	byte "staking_is_activated"
 	app_global_get
 	bz branch_error_activation
+
+	// Checking Transaction group
+    global GroupSize
+    int 4
+    ==
+    assert
 
     // Checking the pay and axfer txns
 	gtxn 1 RekeyTo
@@ -687,24 +724,16 @@ method_staking_stake:
 	&&
 	assert
 
+	// Checking the asset ref to be Staking asset ID
     byte "staking_asset_id"
     app_global_get
     gtxn 2 XferAsset
     ==
     assert
 
-	// The staked amount algo
-	txn ApplicationArgs 1
-	btoi
-	store 3
-
-	// The staked amount token
-	txn ApplicationArgs 2
-	btoi
-	store 4
-
+	// Checking staking minimum participation algos
 	gtxn 1 Amount
-	store 5
+	store 5 // The staked amount algo
 	load 5
     byte "staking_min_participation_algo"
 	app_global_get
@@ -715,9 +744,9 @@ method_staking_stake:
 	==
 	assert
 
-
+	// Checking staking minimum participation tokens
     gtxn 2 AssetAmount
-	store 6
+	store 6 // The staked amount token
 	load 6
     byte "staking_min_participation_token"
 	app_global_get
@@ -728,12 +757,61 @@ method_staking_stake:
 	==
 	assert
 
+	// Check participation and box preparation
+	load 1
+	byte "_algo"
+	concat
+	store 9 // the stake account algo box name
+	load 9
+	box_get
+	assert
+	btoi
+	store 10 // Staked amounts algos from account box
+	load 9
+	box_del
+	assert
+
+	load 1
+	byte "_token"
+	concat
+	store 11 // the stake account token box name
+	load 11
+	box_get
+	assert
+	btoi
+	store 12 // Staked amounts tokens from account box
+	load 11
+	box_del
+	assert
+
+	// Staking finalization and account boxes staking values update
+	load 9
+	load 3
+	load 5
+	+
+	itob
+	box_put
+
+	load 11
+	load 4
+	load 6
+	+
+	itob
+	box_put
+	
+	// Stats update
+	byte "stakings_count"
+	dup
+	app_global_get
+	int 1
+	+
+	app_global_put
 
 	byte "staked_amount_algo"
 	app_global_get
 	load 3
 	+
-	store 7
+	store 7 // The total staked amount algo
 	byte "staked_amount_algo"
 	load 7
 	app_global_put
@@ -742,49 +820,13 @@ method_staking_stake:
 	app_global_get
 	load 4
 	+
-	store 8
+	store 8 // The total staked amount token
 	byte "staked_amount"
 	load 8
 	app_global_put
 
 
-
-    // Checking Transaction group
-    global GroupSize
-    int 4
-    ==
-    assert
-
-
-	// Check participation
-	load 1
-	box_get
-	assert
-	byte ""
-	==
-	assert
-	load 1
-	box_del
-	pop
-
-	
-
-	// Staking finalization
-	load 1
-	load 3
-	itob
-	load 4
-	itob
-	concat
-	box_put
-	
-	byte "stakings_count"
-	dup
-	app_global_get
-	int 1
-	+
-	app_global_put
-
+	// Log and return
 	byte 0x151f7c75
 	global CurrentApplicationID
 	itob
@@ -795,55 +837,80 @@ method_staking_unstake:
 	txna Accounts 0
 	store 0
 	txn Sender
-	store 2
+	store 1
 
+	// Checking the staking activation
 	byte "staking_is_activated"
 	app_global_get
 	bz branch_error_activation
 
-	// The staked amount
-	txn ApplicationArgs 1
-	btoi
-	store 1
-
-
-    // Checking Transaction group
+	// Checking Transaction group
     global GroupSize
-    int 4
+    int 2
     ==
     assert
 
-    // Checking the asset ref to be DAO asset
-    byte "dao_asset_id"
+	// The unstaked amount algo
+	txn ApplicationArgs 1
+	btoi
+	store 2
+
+	// The unstaked amount token
+	txn ApplicationArgs 2
+	btoi
+	store 3
+
+    // Checking the asset ref to be staking asset
+    byte "staking_asset_id"
     app_global_get
     txna Assets 0
     ==
     assert
 
-	// Check DAO asset holding
-    //load 0
-    //txna Assets 0
-    //asset_holding_get AssetBalance
-    //assert
-	//pop
-
-	// Check participation
-	load 2
+	// Check participation and box preparation
+	load 1
+	byte "_algo"
+	concat
+	store 4 // the stake account algo box name
+	load 4
 	box_get
 	assert
-	byte ""
-	==
-	assert
-	load 2
+	btoi
+	store 5 // Staked amounts algos from account box
+	load 4
 	box_del
-	pop
+	assert
+
+	load 1
+	byte "_token"
+	concat
+	store 6 // the stake account token box name
+	load 6
+	box_get
+	assert
+	btoi
+	store 7 // Staked amounts tokens from account box
+	load 6
+	box_del
+	assert
 
 	// Staking finalization
+	load 4
+	load 5
 	load 2
-	load 1
+	-
+	itob
+	box_put
+
+	load 6
+	load 7
+	load 3
+	-
 	itob
 	box_put
 	
+
+	// Stats update
 	byte "stakings_count"
 	dup
 	app_global_get
@@ -851,13 +918,12 @@ method_staking_unstake:
 	-
 	app_global_put
 
+	// Log and return
 	byte 0x151f7c75
 	global CurrentApplicationID
 	itob
 	concat
 	b branch_log_return
-
-
 
 
 // Handles logging the last element on the stack then put a 1 on the top and return (log and approve)

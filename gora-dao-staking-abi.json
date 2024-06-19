@@ -371,10 +371,16 @@
             "description": "Un-stakes from Staking contract! Returns the staking member's account address concatenated with un-staked amount!",
             "args": [
                 
+                
                 {
                     "type": "uint64",
-                    "name": "amount",
+                    "name": "amount_algo",
                     "description": "Amount to be un-staked"
+                },
+                {
+                    "type": "uint64",
+                    "name": "amount_token",
+                    "description": "Token Amount to be un-staked"
                 }
             ],
             "boxes": [
