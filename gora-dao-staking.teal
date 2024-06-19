@@ -450,10 +450,6 @@ method_config_staking:
 	app_global_put
 	//log
 
-
-
-
-
 	itxn_begin
 	global CurrentApplicationAddress
 	itxn_field Sender
@@ -477,16 +473,17 @@ method_config_staking:
 
 // Participate in staking
 method_staking_participate:
+	byte "staking_is_activated"
+	int 1
+	==
+	assert
+	
 	txna Accounts 1 // GoraDAO Admin account
 	store 0
 
 	txn Sender // User
 	store 1
 
-	// Participation are closed after staking is activated for voting
-	byte "staking_is_activated"
-	app_global_get
-	bnz branch_error
 
 	byte "participation_count"
 	app_global_get
@@ -606,21 +603,15 @@ method_staking_participate:
 
 	load 1
 	box_get
-	//bnz branch_delete_participate_box
 	bnz branch_error
 	load 1
-    byte ""
+    gtxn 3 Amount
+	itob
+	gtxn 4 AssetAmount
+	itob
+	concat
     box_put
 
-	byte "participation_threshold"
-	box_get
-	assert
-	int 0
-	extract_uint64
-	load 20
-	swap
-	>=
-	bnz branch_activate_and_participate
 	
     byte 0x151f7c75
 	global CurrentApplicationID
@@ -628,38 +619,15 @@ method_staking_participate:
 	concat
 	b branch_log_return
 
-branch_activate_and_participate:
-	byte "staking_is_activated"
-	int 1
-	app_global_put
-	byte 0x151f7c75
-	global CurrentApplicationID
-	itob
-	concat
-	b branch_log_return
 
-branch_delete_participate_box:
-	load 0
-	box_del
-	load 0
-    byte "STAKINGS_PLACE_HOLDER"
-    box_put
-
-	byte 0x151f7c75
-	global CurrentApplicationID
-	itob
-	concat
-	b branch_log_return
-
-
+// Withdraw from staking
 method_staking_withdraw_participate:
  	txna Accounts 0
     store 0
 
-	// Participation Withdrawals are closed after staking is activated for voting
-	byte "staking_is_activated"
-	app_global_get
-	bnz branch_error
+	// byte "staking_is_activated"
+	// app_global_get
+	// bnz branch_error
 
 	byte "participation_count"
 	app_global_get
