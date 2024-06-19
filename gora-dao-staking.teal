@@ -646,15 +646,75 @@ method_staking_withdraw_participate:
 	load 0
 	byte "_algo"
 	concat
+	box_get
+	assert
+	btoi
+	store 2
+	load 2
     box_del
     assert
 
 	load 0
 	byte "_token"
 	concat
+	box_get
+	assert
+	btoi
+	store 3
+	load 3
     box_del
     assert
 
+	// Stats update
+	byte "staked_amount_algo"
+	app_global_get
+	load 2
+	-
+	store 4
+	byte "staked_amount_algo"
+	load 4
+	app_global_put
+
+	byte "staked_amount"
+	app_global_get
+	load 3
+	-
+	store 5
+	byte "staked_amount"
+	load 5
+	app_global_put
+
+	byte "stakings_count"
+	dup
+	app_global_get
+	int 1
+	-
+	app_global_put
+
+	// Staking refund transactions
+	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	load 0
+	itxn_field Receiver
+	load 2
+	itxn_field Amount
+	int pay
+	itxn_field TypeEnum
+	itxn_submit
+
+	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field AssetSender
+	load 0
+	itxn_field AssetReceiver
+	load 3
+	itxn_field AssetAmount
+	int axfer
+	itxn_field TypeEnum
+	itxn_submit
+
+	// Log and return
 	byte 0x151f7c75
 	global CurrentApplicationID
 	itob
@@ -825,21 +885,28 @@ method_staking_stake:
 	b branch_log_return
 
 method_staking_unstake:
-	txna Accounts 0
-	store 0
-	txn Sender
-	store 1
-
 	// Checking the staking activation
 	byte "staking_is_activated"
 	app_global_get
 	bz branch_error_activation
+
+	   // Checking the asset ref to be staking asset
+    byte "staking_asset_id"
+    app_global_get
+    txna Assets 0
+    ==
+    assert
 
 	// Checking Transaction group
     global GroupSize
     int 2
     ==
     assert
+
+	txna Accounts 0
+	store 0 // GoraDAO main account
+	txn Sender
+	store 1
 
 	// The unstaked amount algo
 	txn ApplicationArgs 1
@@ -851,12 +918,7 @@ method_staking_unstake:
 	btoi
 	store 3
 
-    // Checking the asset ref to be staking asset
-    byte "staking_asset_id"
-    app_global_get
-    txna Assets 0
-    ==
-    assert
+ 
 
 	// Check participation and box preparation
 	load 1
@@ -930,12 +992,7 @@ method_staking_unstake:
 	itxn_submit
 
 	// Stats update
-	byte "stakings_count"
-	dup
-	app_global_get
-	int 1
-	-
-	app_global_put
+	
 
 	// Log and return
 	byte 0x151f7c75
