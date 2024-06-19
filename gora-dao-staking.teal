@@ -195,13 +195,13 @@ method_create_staking:
 
 	txn ApplicationArgs 4
 	store 4
-	byte "staking_creator_address"
+	byte "manager_address"
 	load 4
 	app_global_put
 
 	txn ApplicationArgs 5
 	store 5
-	byte "manager_address"
+	byte "dao_manager_address"
 	load 5
 	app_global_put
 
@@ -275,13 +275,13 @@ method_update_staking:
 
 	txn ApplicationArgs 4
 	store 4
-	byte "staking_creator_address"
+	byte "manager_address"
 	load 4
 	app_global_put
 
 	txn ApplicationArgs 5
 	store 5
-	byte "manager_address"
+	byte "dao_manager_address"
 	load 5
 	app_global_put
 
@@ -296,22 +296,6 @@ method_update_staking:
 	byte "staking_description"
 	load 7
 	app_global_put
-
-	byte "participation_count"
-	int 0
-	app_global_put
-
-	byte "stakings_count"
-	int 0
-	app_global_put
-
-	byte "staked_amount"
-	int 0
-	app_global_put
-
-
-
-	
 
 	byte 0x151f7c75
 	global CurrentApplicationAddress
@@ -370,9 +354,9 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 2 //staking_min_participation_stake
+	txn ApplicationArgs 2 //staking_min_participation_token
 	store 2
-	byte "staking_min_participation_stake"
+	byte "staking_min_participation_token"
 	load 2
 	btoi
 	app_global_put
@@ -386,9 +370,9 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 4 //staking_amount
+	txn ApplicationArgs 4 //staking_min_amount
 	store 4
-	byte "staking_amount"
+	byte "staking_min_amount"
 	load 4
 	btoi
 	app_global_put
@@ -396,7 +380,7 @@ method_config_staking:
 
 	txn ApplicationArgs 5 //staking_voting_duration
 	store 5
-	byte "staking_voting_duration"
+	byte "staking_min_duration"
 	load 5
 	btoi
 	app_global_put
@@ -404,7 +388,7 @@ method_config_staking:
 
 	txn ApplicationArgs 6 //staking_voting_start
 	store 6
-	byte "staking_voting_start"
+	byte "staking_start"
 	load 6
 	btoi
 	app_global_put
@@ -451,7 +435,7 @@ method_config_staking:
 	txn ApplicationArgs 13 // staking_allocations
 	store 13
 
-	txn ApplicationArgs 14 // staking_vote_values
+	txn ApplicationArgs 14 // staking_values
 	store 14
 
 	byte "participation_threshold"
@@ -604,7 +588,7 @@ method_staking_participate:
     assert
 
     gtxn 4 AssetAmount
-    byte "staking_min_participation_stake"
+    byte "staking_min_participation_token"
 	app_global_get
     ==
     assert
@@ -757,7 +741,7 @@ method_staking_stake:
 	itob
 	box_put
 	
-	byte "staking_amount"
+	byte "staking_min_amount"
 	dup
 	app_global_get
 	int 1
@@ -823,7 +807,7 @@ method_staking_unstake:
 	itob
 	box_put
 	
-	byte "staking_amount"
+	byte "staking_min_amount"
 	dup
 	app_global_get
 	int 1

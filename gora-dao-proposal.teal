@@ -393,9 +393,9 @@ method_config_proposal:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 2 //proposal_min_participation_stake
+	txn ApplicationArgs 2 //proposal_min_participation_token
 	store 2
-	byte "proposal_min_participation_stake"
+	byte "proposal_min_participation_token"
 	load 2
 	btoi
 	app_global_put
@@ -627,7 +627,7 @@ method_proposal_participate:
     assert
 
     gtxn 4 AssetAmount
-    byte "proposal_min_participation_stake"
+    byte "proposal_min_participation_token"
 	app_global_get
     ==
     assert

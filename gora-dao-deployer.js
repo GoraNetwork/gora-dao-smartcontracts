@@ -1806,7 +1806,7 @@ const GoraDaoDeployer = class {
             tws1,
             //2 proposal_min_participation_algo
             10000,
-            //3 proposal_min_participation_stake
+            //3 proposal_min_participation_token
             25,
             //4 proposal_duration
             72,

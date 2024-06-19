@@ -280,7 +280,7 @@
             ],
             "boxes": [
                 {
-                    "name": "manager_reference",
+                    "name": "dao_manager_reference",
                     "description": "Dynamic box ref per proposal manager account address"
                 },
                 {
@@ -424,7 +424,7 @@
                 },
                 {
                     "type": "account",
-                    "name": "manager_reference",
+                    "name": "dao_manager_reference",
                     "description": "GoraDAO manager account reference"
                 }
             ],

@@ -31,12 +31,12 @@
                 },
                 {
                     "type": "account",
-                    "name": "member_reference",
+                    "name": "manager_reference",
                     "description": "GoraDAO member account reference (Proposal manager)"
                 },
                 {
                     "type": "account",
-                    "name": "manager_reference",
+                    "name": "dao_manager_reference",
                     "description": "GoraDAO manager account reference"
                 },
                 {
@@ -90,12 +90,12 @@
                 },
                 {
                     "type": "account",
-                    "name": "member_reference",
+                    "name": "manager_reference",
                     "description": "GoraDAO member account reference (Proposal manager)"
                 },
                 {
                     "type": "account",
-                    "name": "manager_reference",
+                    "name": "dao_manager_reference",
                     "description": "GoraDAO manager account reference"
                 },
                 {
@@ -145,7 +145,7 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "proposal_min_participation_stake",
+                    "name": "proposal_min_participation_token",
                     "description": "GoraDAO Proposal minimum participation staking in DAO asset units"
                 },
                 {
@@ -171,7 +171,7 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "proposal_min_participation_stake",
+                    "name": "proposal_min_participation_token",
                     "description": "GoraDAO Proposal minimum participation fee in Proposal asset units"
                 },
                 {
@@ -270,7 +270,7 @@
                 },
                 {
                     "type": "account",
-                    "name": "manager_reference",
+                    "name": "dao_manager_reference",
                     "description": "GoraDAO manager account reference"
                 }
             ],
@@ -347,7 +347,7 @@
             ],
             "boxes": [
                 {
-                    "name": "member_reference",
+                    "name": "manager_reference",
                     "description": "Dynamic box ref per member account address"
                 },
                 {
@@ -365,7 +365,7 @@
             "args": [],
             "boxes": [
                 {
-                    "name": "member_reference",
+                    "name": "manager_reference",
                     "description": "Dynamic box ref per member account address"
                 }
             ],
@@ -386,7 +386,7 @@
             ],
             "boxes": [
                 {
-                    "name": "member_reference",
+                    "name": "manager_reference",
                     "description": "Dynamic box ref per member account address"
                 },
                 {

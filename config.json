@@ -93,7 +93,7 @@
       ],
       "min_participation": 1000,
       "min_participation_balance": 3000000,
-      "participation_stake": 1000000,
+      "participation_token": 1000000,
       "vote_stake": 1500000
     }
   }

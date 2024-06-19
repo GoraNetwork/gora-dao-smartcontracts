@@ -1122,7 +1122,7 @@ method_proposal_withdraw_participate:
     store 1
 
     gtxn 1 ApplicationID
-    byte "proposal_min_participation_stake"
+    byte "proposal_min_participation_token"
     app_global_get_ex
     assert
     store 2
@@ -1941,7 +1941,7 @@ method_staking_withdraw:
     store 1
 
     gtxn 1 ApplicationID
-    byte "proposal_min_participation_stake"
+    byte "proposal_min_participation_token"
     app_global_get_ex
     assert
     store 2
