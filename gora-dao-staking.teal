@@ -382,9 +382,9 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 5 //staking_participation_commission
+	txn ApplicationArgs 5 //staking_commission_percentage
 	store 5
-	byte "staking_participation_commission"
+	byte "staking_commission_percentage"
 	load 5
 	btoi
 	app_global_put
@@ -438,9 +438,9 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 12 //staking_eligibility
+	txn ApplicationArgs 12 //staking_incentives_eligibility
 	store 12
-	byte "staking_eligibility"
+	byte "staking_incentives_eligibility"
 	load 12
 	btoi
 	app_global_put

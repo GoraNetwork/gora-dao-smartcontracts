@@ -159,7 +159,7 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "staking_participation_commission",
+                    "name": "staking_commission_percentage",
                     "description": "DAO Staking participation commission % in asset units"
                 },
                 {
@@ -195,7 +195,7 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "staking_eligibility",
+                    "name": "staking_incentives_eligibility",
                     "description": "DAO Staking incentives eligibility measure (Based on responded requests quantity during staking duration for proxied staking type and staking token amount for direct staking ) "
                 }
              
