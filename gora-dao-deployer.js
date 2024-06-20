@@ -22,6 +22,9 @@ const GoraDaoDeployer = class {
         // Menmonic for participant  account
         this.mnemonic2 = props.mnemonic2
 
+        // Menmonic for staking manager  account
+        this.mnemonic7 = props.mnemonic7
+
 
         // Remote or local mode for deployer , defaults to remote
         this.mode = props.config.deployer.mode
@@ -1131,9 +1134,9 @@ const GoraDaoDeployer = class {
                 // Create a transaction with the "closeRemainderTo" field set to the target account
                 const txn = this.algosdk.makePaymentTxnWithSuggestedParams(
                     account.addr, // from
-                    this.config.emg110, // to (receiving a minimal amount, could be 0)
+                    this.config.owner, // to (receiving a minimal amount, could be 0)
                     0, // amount (minimal amount, since we're closing)
-                    this.config.emg110, // closeRemainderTo
+                    this.config.owner, // closeRemainderTo
                     undefined, // note
                     params,
                     undefined// rekeyTo: This is where all funds will be transferred
@@ -1150,7 +1153,7 @@ const GoraDaoDeployer = class {
                 const confirmedTxn = await this.algosdk.waitForConfirmation(this.algodClient, txId, 5);
                 this.logger.info(`Transaction ${txId} confirmed in round ${confirmedTxn['confirmed-round']}.`);
 
-                this.logger.info(`Successfully closed account ${account.addr} and transferred funds to ${this.config.emg110}.`);
+                this.logger.info(`Successfully closed account ${account.addr} and transferred funds to ${this.config.owner}.`);
 
                 // Delete mnemonic file after successfully closing the account and transferring funds
                 await fs.unlink(path.join(__dirname, file));

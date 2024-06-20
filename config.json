@@ -22,7 +22,7 @@
     "participated_to_staking": false,
     "asc_vesting_id": 0,
     "asc_vesting_address": "",
-    "algo_wallet_address": "7BJQ2EUCPO4D3AJAJ6ZUCLH64E6X6ZQQTZEP3QICUSSZNWYZLN3RFFU5TE",
+    "algo_wallet_address": "",
     "algod_remote_server": "https://mainnet-api.algonode.cloud",
     "algod_testnet_remote_server": "https://testnet-api.algonode.cloud",
     "algod_remote_port": "",
@@ -34,7 +34,7 @@
     "algo_dispenser": "https://dispenser.testnet.aws.algodev.network/?account=",
     "verbose": false
   },
-  "emg110": "LP6QRRBRDTDSP4HF7CSPWJV4AG4QWE437OYHGW7K5Y7DETKCSK5H3HCA7Q",
+  "owner": "LP6QRRBRDTDSP4HF7CSPWJV4AG4QWE437OYHGW7K5Y7DETKCSK5H3HCA7Q",
   "deployer": {
     "version": "v1.0.0",
     "mode": "remote",
