@@ -1121,6 +1121,11 @@ const GoraDaoDeployer = class {
             'gora_mnemonic0.txt',
             'gora_mnemonic1.txt',
             'gora_mnemonic2.txt',
+            'gora_mnemonic3.txt',
+            'gora_mnemonic4.txt',
+            'gora_mnemonic5.txt',
+            'gora_mnemonic6.txt',
+            'gora_mnemonic7.txt',
         ];
 
         try {
