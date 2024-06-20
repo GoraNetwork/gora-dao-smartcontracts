@@ -846,7 +846,7 @@ async function stakingOperations() {
                 ]);
             }
             break;
-    
+
         case 'Help':
             logger.info('GoraDAO Help | Proposals Operations Menu');
             logger.info('------------------------------------');
@@ -936,6 +936,7 @@ async function mainMenu() {
                 'Tester Accounts Stats',
                 'GoraDAO Operations',
                 'Proposals Operations',
+                'Staking Operations',
                 'Tester Accounts Recreate',
                 'Help',
                 'Exit'
@@ -948,6 +949,7 @@ async function mainMenu() {
 
                 'GoraDAO Operations',
                 'Proposals Operations',
+                'Staking Operations',
                 'Tester Accounts Recreate',
                 'Help',
                 'Exit'
@@ -1039,6 +1041,9 @@ async function mainMenu() {
             break;
         case 'Proposals Operations':
             await proposalsOperations();
+            break;
+        case 'Staking Operations':
+            await stakingOperations();
             break;
         case 'Help':
             logger.info('GoraDAO Help | Main Operations Menu');

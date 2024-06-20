@@ -157,11 +157,15 @@ const GoraDaoDeployer = class {
     // Logs the GoraDAO accounts with URL links to faucet to dispense ALGOs
     testAccountDispense() {
         console.log("")
-        console.log('--------------------------GoraDAO Test Accounts DISPENSE-------------------------------------')
+        this.logger.info('Please click on each link to dispense ALGOs to the associated account:')
+        this.logger.info('--------------------------GoraDAO DAO Account DISPENSE-------------------------------------')
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoAdminAccount.addr);
+        this.logger.info('--------------------------GoraDAO Proposal Account DISPENSE-------------------------------------')
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoProposalAdminAccount.addr);
+        this.logger.info('--------------------------GoraDAO Staking Account DISPENSE-------------------------------------')
+        this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoStakingAdminAccount.addr);
 
-        this.logger.info('Please click on each link to dispense ALGOs to the associated account')
+
     }
     // Imports the accounts from Mnemonics
     importAccounts(mnemonicKey) {
@@ -175,10 +179,10 @@ const GoraDaoDeployer = class {
             let addr = acc.addr;
             this.logger.info("Account Address = %s", addr);
             let acc_decoded = this.algosdk.decodeAddress(addr);
-            this.logger.info("Account Address Decoded Public Key = %s", acc_decoded.publicKey.toString());
-            this.logger.info("Account Address Decoded Checksum = %s", acc_decoded.checksum.toString());
-            let acc_encoded = this.algosdk.encodeAddress(acc_decoded.publicKey);
-            this.logger.info("Account Address Encoded = %s", acc_encoded);
+            //this.logger.info("Account Address Decoded Public Key = %s", acc_decoded.publicKey.toString());
+            //this.logger.info("Account Address Decoded Checksum = %s", acc_decoded.checksum.toString());
+            //let acc_encoded = this.algosdk.encodeAddress(acc_decoded.publicKey);
+           // this.logger.info("Account Address Encoded = %s", acc_encoded);
             this.logger.warn(this.config.gora_dao['algo_dispenser'] + addr);
             return { acc, accRekey: null };
         }
@@ -205,31 +209,32 @@ const GoraDaoDeployer = class {
             let data = await res.json()
             if (data) {
                 if (data.account) {
-                    if (String(data.account.address) === String(this.goraDaoAdminAccount.addr)) {
-                        this.accountBalance = data.account.amount
-                        this.assetsHeld = data.account.assets
-                        this.assetsCreated = data.account["created-assets"]
-                        this.appsCreated = data.account["created-apps"]
-                        this.assetsHeldBalance = !!this.assetsHeld ? this.assetsHeld.length : 0
-                        this.assetsCreatedBalance = !!this.assetsCreated ? this.assetsCreated.length : 0
-                        if (this.appsCreated) this.appsCreatedBalance = this.appsCreated.length
+                   data = data.account;
+                }
+                if (String(data.address) === String(this.goraDaoAdminAccount.addr)) {
+                    this.accountBalance = data.amount
+                    this.assetsHeld = data.assets
+                    this.assetsCreated = data["created-assets"]
+                    this.appsCreated = data["created-apps"]
+                    this.assetsHeldBalance = !!this.assetsHeld ? this.assetsHeld.length : 0
+                    this.assetsCreatedBalance = !!this.assetsCreated ? this.assetsCreated.length : 0
+                    if (this.appsCreated) this.appsCreatedBalance = this.appsCreated.length
 
-                        this.logger.info('------------------------------')
-                        this.logger.info("Account Balance = %s", this.accountBalance);
-                        this.logger.info('------------------------------')
-                        this.logger.info("Account Created Assets = %s", JSON.stringify(this.assetsCreated, null, 2));
-                        this.logger.info('------------------------------')
-                        this.logger.info("Account Created Assets Balance= %s", this.assetsHeldBalance);
-                        this.logger.info('------------------------------')
-                        this.logger.info("Account Held Assets = %s", JSON.stringify(this.assetsHeld, null, 2));
-                        this.logger.info('------------------------------')
-                        this.logger.info("Account Held Assets Balance= %s", + this.assetsHeldBalance);
-                        this.logger.info('------------------------------')
-                        this.logger.info("Account Created Apps = %s", JSON.stringify(this.appsCreated, null, 2));
-                        this.logger.info('------------------------------')
-                        this.logger.info("Account Created Apps Balance = %s", this.appsCreatedBalance);
-                        this.logger.info('------------------------------')
-                    }
+                  
+                    this.logger.info("Account Balance = %s", this.accountBalance);
+                    this.logger.info('------------------------------')
+                    this.logger.info("Account Created Assets = %s", JSON.stringify(this.assetsCreated, null, 2));
+                    this.logger.info('------------------------------')
+                    this.logger.info("Account Created Assets Balance= %s", this.assetsHeldBalance);
+                    this.logger.info('------------------------------')
+                    this.logger.info("Account Held Assets = %s", JSON.stringify(this.assetsHeld, null, 2));
+                    this.logger.info('------------------------------')
+                    this.logger.info("Account Held Assets Balance= %s", + this.assetsHeldBalance);
+                    this.logger.info('------------------------------')
+                    this.logger.info("Account Created Apps = %s", JSON.stringify(this.appsCreated, null, 2));
+                    this.logger.info('------------------------------')
+                    this.logger.info("Account Created Apps Balance = %s", this.appsCreatedBalance);
+                    this.logger.info('------------------------------')
                 }
             }
             let resTrx = await fetch(urlTrx, {
@@ -585,9 +590,9 @@ const GoraDaoDeployer = class {
         this.assetsCreated = accountInfo['account']["created-assets"]
         this.assetsCreatedBalance = !!this.assetsCreated ? this.assetsCreated.length : 0
 
-        this.logger.info('------------------------------')
-        this.logger.info("Printed Account Balance = %s", this.accountBalance);
-        this.logger.info('------------------------------')
+        // this.logger.info('------------------------------')
+        // this.logger.info("Printed Account Balance = %s", this.accountBalance);
+        // this.logger.info('------------------------------')
         this.logger.info("Printed Account Created Assets = %s", JSON.stringify(!!this.assetsCreated ? this.assetsCreated.length : {}, null, 2));
         this.logger.info('------------------------------')
         this.logger.info("Printed Account Created Assets Balance= %s", this.assetsHeldBalance);
@@ -599,16 +604,20 @@ const GoraDaoDeployer = class {
                 if (assetid) {
                     if (sAsset['index'] == assetid) {
                         let params = JSON.stringify(sAsset['params'], null, 2);
-                        this.logger.info('------------------------------')
+         
                         this.logger.info("AssetID = %s", sAsset['index']);
+                        this.logger.info('------------------------------')
                         this.logger.info("Asset params = %s", params);
+                        this.logger.info('------------------------------')
                         break;
                     }
                 } else {
                     let params = JSON.stringify(sAsset['params'], null, 2);
-                    this.logger.info('------------------------------')
+                   
                     this.logger.info("Created AssetID = %s", sAsset['index']);
+                    this.logger.info('------------------------------')
                     this.logger.info("Created Asset Info = %s", params);
+                    this.logger.info('------------------------------')
                 }
             }
         }
@@ -620,7 +629,7 @@ const GoraDaoDeployer = class {
         this.assetsHeld = accountInfo.account.assets
         this.assetsHeldBalance = !!this.assetsHeld ? this.assetsHeld.length : 0
 
-        this.logger.info('------------------------------')
+
         this.logger.info("Printed Account Balance = %s", this.accountBalance);
         this.logger.info('------------------------------')
 
@@ -636,13 +645,16 @@ const GoraDaoDeployer = class {
                     if (sAsset['asset-id'] == assetid) {
                         let assetHoldings = JSON.stringify(sAsset, null, 2);
                         this.logger.info("Printed Held Asset Info = %s", assetHoldings);
+                        this.logger.info('------------------------------')
                         break;
                     }
                 } else {
                     let assetHoldings = JSON.stringify(sAsset, null, 2);
-                    this.logger.info('------------------------------')
+               
                     this.logger.info("Printed Held AssetID = %s", sAsset['asset-id']);
+                    this.logger.info('------------------------------')
                     this.logger.info("Printed Held Asset Info = %s", assetHoldings);
+                    this.logger.info('------------------------------')
                 }
             }
         }
@@ -650,12 +662,14 @@ const GoraDaoDeployer = class {
     // Prints the general report on GoraDAO account
     async deployerReport() {
         try {
+            this.logger.info("GoraDAO DAO Admin Account")
             await this.fetchAlgoWalletInfo();
         }
         catch (err) {
             this.logger.error(err);
         }
         try {
+            
             await this.printCreatedAsset();
         }
         catch (err) {
@@ -663,8 +677,14 @@ const GoraDaoDeployer = class {
             this.logger.error("No GoraDAO created assets found")
         }
         try {
+            
             await this.printAssetHolding(this.goraDaoAdminAccount.addr);
+            this.logger.info("GoraDAO Proposal Admin Account")
+            this.logger.info('------------------------------')
             await this.printAssetHolding(this.goraDaoProposalAdminAccount.addr);
+            this.logger.info("GoraDAO Staking Admin Account")
+            this.logger.info('------------------------------')
+            await this.printAssetHolding(this.goraDaoStakingAdminAccount.addr);
         }
         catch (err) {
             this.logger.error(err);
