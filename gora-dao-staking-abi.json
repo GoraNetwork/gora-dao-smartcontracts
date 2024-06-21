@@ -191,7 +191,7 @@
                 {
                     "type": "uint64",
                     "name": "staking_incentives_duration",
-                    "description": "DAO Staking incentives duration (the time interval based on which incentives will be distributed) "
+                    "description": "DAO Staking incentives duration in days(the time interval based on which incentives will be distributed) "
                 },
                 {
                     "type": "uint64",
