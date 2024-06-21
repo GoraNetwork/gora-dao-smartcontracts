@@ -93,20 +93,20 @@ branch_method_router:
 	==
 	bnz method_staking_participate
 
-    // method "staking_withdraw_participate()uint64"
-	// txn ApplicationArgs 0
-	// ==
-	// bnz method_staking_withdraw
+    method "staking_withdraw_participate()uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_withdraw_participate
 
-	// method "staking_stake(uint64)uint64"
-	// txn ApplicationArgs 0
-	// ==
-	// bnz method_staking_stake
+	method "staking_stake(uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_stake
 
-	// method "staking_unstake(uint64)uint64"
-	// txn ApplicationArgs 0
-	// ==
-	// bnz method_staking_unstake
+	method "staking_unstake(uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_unstake
 
 	b branch_error
 
