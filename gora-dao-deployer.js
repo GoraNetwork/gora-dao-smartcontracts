@@ -1131,7 +1131,7 @@ const GoraDaoDeployer = class {
         const confirmedSignedSendToAppTxn = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToAppTxnResponse.txId, 5);
         this.logger.info(`Transaction ${signedSendToAppTxnResponse.txId} confirmed in round ${confirmedSignedSendToAppTxn['confirmed-round']}.`);
         this.logger.info('GoraDAO Asset has been sent to The GoraDAO App successfully')
-        config['gora_dao']['proposal_asa_distributed'] = true;
+        this.config['gora_dao']['proposal_asa_distributed'] = true;
         await this.saveConfigToFile(config)
     }
 

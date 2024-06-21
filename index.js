@@ -297,6 +297,10 @@ async function proposalsOperations() {
     if (config['gora_dao']['dao_proposal_deployed'] === true) {
         choices.push('Configure Proposal')
     }
+    if (config['gora_dao']['dao_proposal_deployed'] === true) {
+        choices.push('Distribute Proposal Asset')
+    }
+    
     if (config['gora_dao']['participated_to_proposal'] === true) {
         choices.push('Withdraw Participation')
     } else {
