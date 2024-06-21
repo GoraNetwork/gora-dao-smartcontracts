@@ -169,32 +169,32 @@ branch_method_router:
     method "create_staking(pay,account,asset,asset,uint64,string,string)uint64"
 	txn ApplicationArgs 0
 	==
-	bnz method_proposal_create
+	bnz method_staking_create
 
 	method "update_staking(pay,application,uint64,address,uint64,string,string)uint64"
 	txn ApplicationArgs 0
 	==
-	bnz method_proposal_update
+	bnz method_staking_update
 
 	method "config_staking(pay,axfer)uint64"
 	txn ApplicationArgs 0
 	==
-	bnz method_proposal_config
+	bnz method_staking_config
 
     method "staking_participate()uint64"
 	txn ApplicationArgs 0
 	==
-	bnz method_proposal_config
+	bnz method_staking_participate
 
     method "staking_stake(pay,axfer,uint64)uint64"
 	txn ApplicationArgs 0
 	==
-	bnz method_proposal_config
+	bnz method_staking_stake
 
     method "staking_withdraw_participate()uint64"
 	txn ApplicationArgs 0
 	==
-	bnz method_proposal_config
+	bnz method_staking_withdraw_participate
 
 	b branch_error
 
