@@ -765,7 +765,9 @@ method_proposal_vote:
 	load 2
 	box_get
 	assert
-	pop
+	byte ""
+	==
+	assert
 	load 2
 	box_del
 	pop
