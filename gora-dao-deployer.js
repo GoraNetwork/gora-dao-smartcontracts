@@ -1132,7 +1132,7 @@ const GoraDaoDeployer = class {
         this.logger.info(`Transaction ${signedSendToAppTxnResponse.txId} confirmed in round ${confirmedSignedSendToAppTxn['confirmed-round']}.`);
         this.logger.info('GoraDAO Asset has been sent to The GoraDAO App successfully')
         this.config['gora_dao']['proposal_asa_distributed'] = true;
-        await this.saveConfigToFile(config)
+        await this.saveConfigToFile(this.config)
     }
 
     // Sends the Staking Asset to the users
