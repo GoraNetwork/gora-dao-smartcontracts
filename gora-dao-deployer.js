@@ -2442,6 +2442,9 @@ const GoraDaoDeployer = class {
             await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
         }
+        this.config['gora_dao']['participated_to_proposal'] = true;
+  
+        await this.saveConfigToFile(this.config)
 
     }
     // Withdraws participation from a proposal from a member account
