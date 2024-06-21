@@ -650,7 +650,7 @@ method_proposal_participate:
 	//bnz branch_delete_participate_box
 	bnz branch_error
 	load 1
-    byte ""
+    byte "THIS IS A PLACE HOLDER"
     box_put
 
 	byte "participation_threshold"

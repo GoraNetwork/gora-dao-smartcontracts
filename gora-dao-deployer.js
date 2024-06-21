@@ -2092,6 +2092,7 @@ const GoraDaoDeployer = class {
 
             this.config['gora_dao']['asc_proposal_id'] = Number(res);
             this.config['gora_dao']['asc_proposal_address'] = addr;
+            this.config['gora_dao']['dao_proposal_deployed'] = true;
             this.proposalApplicationId = Number(res)
             this.proposalApplicationAddress = addr
             await this.saveConfigToFile(this.config)
