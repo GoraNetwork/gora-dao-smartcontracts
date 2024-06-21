@@ -16,7 +16,7 @@
     "dao_dao_deployed": true,
     "dao_proposal_deployed": true,
     "dao_asa_distributed": true,
-    "proposal_asa_distributed": false,
+    "proposal_asa_distributed": true,
     "subscribed_to_dao": false,
     "participated_to_proposal": false,
     "participated_to_staking": false,

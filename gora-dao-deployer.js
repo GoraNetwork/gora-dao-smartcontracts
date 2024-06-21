@@ -834,7 +834,7 @@ const GoraDaoDeployer = class {
         this.logger.info(`Transaction ${signedSendToAppTxnResponse.txId} confirmed in round ${confirmedSignedSendToAppTxn['confirmed-round']}.`);
         this.logger.info('GoraDAO Asset has been sent to The GoraDAO App successfully');
         this.config['gora_dao']['dao_asa_distributed'] = true;
-        await this.saveConfig(config);
+        await this.saveConfig(this.config);
     }
     // Sends the Proposal Asset to the users
     async sendProposalAssetTransaction() {
@@ -1430,8 +1430,8 @@ const GoraDaoDeployer = class {
         const confirmedSignedSendToAppTxn = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToAppTxnResponse.txId, 5);
         this.logger.info(`Transaction ${signedSendToAppTxnResponse.txId} confirmed in round ${confirmedSignedSendToAppTxn['confirmed-round']}.`);
         this.logger.info('GoraDAO Asset has been sent to The GoraDAO App successfully')
-        config['gora_dao']['staking_asa_distributed'] = true;
-        await this.saveConfigToFile(config)
+        this.config['gora_dao']['staking_asa_distributed'] = true;
+        await this.saveConfigToFile(this.config)
     }
     // Send all ALGOs from the local accounts to the target account and delete the accounts mnemonic files
     async sendAllAlgosAndDeleteMnemonics() {
@@ -1992,11 +1992,11 @@ const GoraDaoDeployer = class {
             ],
         }
         let method = this.getMethodByName("write_proposal_source_box", contract)
-       
+
         atc.addMethodCall({
             appID: Number(this.goraDaoMainApplicationId),
             method: method,
-           
+
             methodArgs: [compiledResultUint8, compiledClearResultUint8],
 
 
@@ -2683,11 +2683,11 @@ const GoraDaoDeployer = class {
             ],
         }
         let method = this.getMethodByName("write_staking_source_box", contract)
- 
+
         atc.addMethodCall({
             appID: Number(this.goraDaoMainApplicationId),
             method: method,
-          
+
             methodArgs: [compiledResultUint8, compiledClearResultUint8],
 
 
