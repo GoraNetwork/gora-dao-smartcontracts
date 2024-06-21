@@ -57,15 +57,15 @@ async function goraDAOOperations() {
     if (config['gora_dao']['dao_dao_deployed'] === true) {
         choices.push('Configure Deployed GoraDAO')
     }
-
+    if (config['gora_dao']['dao_asa_distributed'] === false) {
+        choices.push('Distribute GoraDAO Asset')
+    }
     if (config['gora_dao']['subscribed_to_dao'] === true) {
         choices.push('Unsubscribe from GoraDAO')
     } else {
         choices.push('Subscribe to GoraDAO')
     }
-    if (config['gora_dao']['dao_asa_distributed'] === false) {
-        choices.push('Distribute GoraDAO Asset')
-    }
+  
 
 
     choices.push('Help')
