@@ -2534,6 +2534,9 @@ const GoraDaoDeployer = class {
 
             await this.participateProposalContract(accountsArray[i])
         }
+        this.config['gora_dao']['participated_to_proposal'] = true;
+        this.config['gora_dao']['proposal_is_activated'] = true;
+        await this.saveConfigToFile(this.config)
         this.logger.info("All 5 GoraDAO members have participated in the proposal!");
     }
     async participationWithdrawProposalContractAll() {
@@ -2542,6 +2545,9 @@ const GoraDaoDeployer = class {
 
             await this.participationWithdrawProposalContract(accountsArray[i])
         }
+        this.config['gora_dao']['participated_to_proposal'] = false;
+        this.config['gora_dao']['proposal_is_activated'] = false;
+        await this.saveConfigToFile(this.config)
         this.logger.info("All 5 GoraDAO members have withdrawn participation from the proposal!");
     }
     //TODO: Implement this method

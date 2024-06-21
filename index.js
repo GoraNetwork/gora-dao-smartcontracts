@@ -303,12 +303,12 @@ async function proposalsOperations() {
         choices.push('Re-Distribute Proposal Asset')
     }
     
-    if (config['gora_dao']['participated_to_proposal'] === true) {
-        choices.push('Withdraw Participation')
-    } else {
+    if (config['gora_dao']['participated_to_proposal'] === true && config['gora_dao']['proposal_is_activated'] === false) {
+        choices.push('Withdraw Proposal Participation')
+    } else  if ( config['gora_dao']['proposal_is_activated'] === false){
         choices.push('Participate into Proposal')
     }
-    if (config['gora_dao']['participated_to_proposal'] === true) {
+    if (config['gora_dao']['participated_to_proposal'] === true && config['gora_dao']['proposal_is_activated'] === true) {
         choices.push('Vote on Proposal')
     }
 
@@ -473,7 +473,7 @@ async function proposalsOperations() {
                 ]);
             }
             break;
-        case 'Withdraw Participation':
+        case 'Withdraw Proposal Participation':
             try {
                 await goraDaoDeployer.participationWithdrawProposalContractAll();
                 await inquirer.prompt([
@@ -608,7 +608,7 @@ async function proposalsOperations() {
             logger.info('Update Deployed Proposal: Update the deployed Proposal contract');
             logger.info('Configure Proposal: Configure the Proposal contract');
             logger.info('Participate into Proposal: Participate into the Proposal');
-            logger.info('Withdraw Participation: Withdraw participation from the Proposal');
+            logger.info('Withdraw Proposal Participation: Withdraw participation from the Proposal');
             logger.info('Vote on Proposal: Vote on the Proposal');
 
             await inquirer.prompt([
@@ -648,7 +648,7 @@ async function stakingOperations() {
         choices.push('Configure Staking')
     }
     if (config['gora_dao']['participated_to_staking'] === true) {
-        choices.push('Withdraw Participation')
+        choices.push('Withdraw Staking Participation')
     } else {
         choices.push('Participate into Staking')
     }
@@ -796,7 +796,7 @@ async function stakingOperations() {
                 ]);
             }
             break;
-        case 'Withdraw Participation':
+        case 'Withdraw Staking Participation':
             try {
                 await goraDaoDeployer.participationWithdrawStakingContractAll();
                 await inquirer.prompt([
@@ -911,7 +911,7 @@ async function stakingOperations() {
             logger.info('Update Deployed Proposal: Update the deployed Proposal contract');
             logger.info('Configure Proposal: Configure the Proposal contract');
             logger.info('Participate into Proposal: Participate into the Proposal');
-            logger.info('Withdraw Participation: Withdraw participation from the Proposal');
+            logger.info('Withdraw Staking Participation: Withdraw participation from the Proposal');
             logger.info('Vote on Proposal: Vote on the Proposal');
 
             await inquirer.prompt([
