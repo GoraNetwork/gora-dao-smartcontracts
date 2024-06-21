@@ -2833,7 +2833,6 @@ const GoraDaoDeployer = class {
         const result = await atc.execute(this.algodClient, 10)
 
         for (let idx in result.methodResults) {
-
             let res = this.algosdk.decodeUint64(result.methodResults[idx].rawReturnValue, "mixed")
             this.logger.info("GoraDAO Staking Contract ABI Exec method result = %s", res);
             let addr = this.algosdk.getApplicationAddress(Number(res))
@@ -2848,12 +2847,10 @@ const GoraDaoDeployer = class {
             this.logger.info(`GoraDAO Staking Application ID: ${Number(res)} written to config file!`);
             let txid = result.methodResults[idx].txID
             let confirmedRound = result.confirmedRound
-
             await this.printTransactionLogsFromIndexer(txid, confirmedRound)
-
-
-
         }
+        this.config['gora_dao']['dao_staking_deployed'] = true;
+        await this.saveConfigToFile(this.config)
 
     }
     // Only temporary because the actual GoraDao contracts will not be updatable
