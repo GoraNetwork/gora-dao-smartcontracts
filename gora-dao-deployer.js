@@ -3000,42 +3000,23 @@ const GoraDaoDeployer = class {
         const argsDao = [
             tws0,
             tws2,
-        ]
-
-
-
-
+        ];
+        
         //this.goraDaoMainApplicationId,
         const argsStaking = [
             tws1,
-            //2 staking_min_participation_algo
-            10000,
-            //3 staking_min_participation_token
-            25,
-            //4 staking_duration
-            72,
-            //5 staking_amount
-            550,
-            //6 staking_voting_duration
-            24,
-            //7 staking_voting_start
-            0,
-            //8 staking_participation_fee
-            20,
-            //9 staking_participation_fee_algo
-            11000,
-            //10 staking_vote_fee
-            3,
-            //11 staking_vote_fee_algo
-            1000,
-            //12 participation_threshold (uint64,uint64,uint64)
-            [5, 70, 100000],
-            //13 vote_threshold (uint64,uint64,uint64)
-            [4, 60, 50000],
-            //14 staking_allocation (uint64,uint64,uint64)
-            [3, 51, 40000],
-            //15 staking_vote_values uint64
-            3,
+            0,//2 staking_min_participation_algo
+            25, //3 staking_min_participation_token
+            365, //4 staking_duration
+            550,//5 staking_min_duration
+            12,//6 staking_commission_percentage
+            0,//7 staking_participation_fee
+            20,//8 staking_participation_fee_algo
+            11000,//9 staking_yield_percentage
+            3,//10 staking_incentives_percentage
+            1000,//11 staking_type
+            1000,//12 staking_incentives_duration 
+            10, //13 staking_incentives_eligibility
         ]
         const atcStakingConfig = new this.algosdk.AtomicTransactionComposer()
 
