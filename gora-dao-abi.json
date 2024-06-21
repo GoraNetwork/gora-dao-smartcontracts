@@ -121,7 +121,7 @@
             }
         },
         {
-            "name": "write_source_box",
+            "name": "write_proposal_source_box",
             "args": [
                 {
                     "type": "byte[]",
@@ -146,6 +146,33 @@
                 "type": "string"
             },
             "desc": "Writes the compiled teal source of proposal to a corresponding box proposal_approval or proposal_clear"
+        },
+        {
+            "name": "write_staking_source_box",
+            "args": [
+                {
+                    "type": "byte[]",
+                    "name": "staking_approval_source"
+                },
+                {
+                    "type": "byte[]",
+                    "name": "staking_clear_source"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "staking_app",
+                    "description": "Dynamic box ref"
+                },
+                {
+                    "name": "staking_clr",
+                    "description": "Dynamic box ref"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            },
+            "desc": "Writes the compiled teal source of staking to a corresponding box staking_approval or staking_clear"
         },
         {
             "name": "create_proposal",

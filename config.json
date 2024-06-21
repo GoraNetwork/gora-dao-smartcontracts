@@ -4,18 +4,18 @@
     "network": "testnet",
     "asc_main_id": 0,
     "asc_main_address": "",
-    "asc_testnet_main_id": 0,
-    "asc_testnet_main_address": "",
+    "asc_testnet_main_id": 684592249,
+    "asc_testnet_main_address": "R4B7SVOQUKMJAGXHKMDOT52G5RAXNPKS3P43WCGMBU7DNUXBFDC5HIYTIQ",
     "asc_proposal_id": 0,
     "asc_proposal_address": "",
     "asc_staking_id": 0,
     "asc_staking_address": "",
-    "dao_asa_id": 0,
+    "dao_asa_id": 685362420,
     "proposal_asa_id": 0,
     "staking_asa_id": 0,
-    "dao_dao_deployed": false,
+    "dao_dao_deployed": true,
     "dao_proposal_deployed": false,
-    "dao_asa_distributed": false,
+    "dao_asa_distributed": true,
     "proposal_asa_distributed": false,
     "subscribed_to_dao": false,
     "participated_to_proposal": false,
@@ -51,7 +51,6 @@
     "create_dao_asset": false,
     "create_dao_proposal_asset": false,
     "create_dao_staking_asset": false,
-
     "create_proposal_contracts": false,
     "update_proposal_contracts": false,
     "config_proposal_contracts": false,
@@ -60,7 +59,6 @@
     "participate_proposal_contracts": false,
     "withdraw_participate_proposal_contracts": false,
     "vote_proposal_contracts": true,
-
     "create_staking_contracts": false,
     "update_staking_contracts": false,
     "config_staking_contracts": false,
@@ -69,7 +67,6 @@
     "withdraw_participate_staking_contracts": false,
     "stake_staking_contracts": false,
     "unstake_staking_contracts": false,
-
     "num_local_int": 0,
     "num_local_byte": 0,
     "num_global_int": 15,
@@ -113,8 +110,6 @@
       "participation_token": 1000000,
       "vote_stake": 1500000
     },
-    "staking":{
-
-    }
+    "staking": {}
   }
 }

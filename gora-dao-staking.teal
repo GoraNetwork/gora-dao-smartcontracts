@@ -93,22 +93,20 @@ branch_method_router:
 	==
 	bnz method_staking_participate
 
-    method "staking_withdraw()uint64"
-	txn ApplicationArgs 0
-	==
-	bnz method_staking_withdraw
+    // method "staking_withdraw()uint64"
+	// txn ApplicationArgs 0
+	// ==
+	// bnz method_staking_withdraw
 
-	method "staking_stake(uint64)uint64"
-	txn ApplicationArgs 0
-	==
-	bnz method_staking_stake
+	// method "staking_stake(uint64)uint64"
+	// txn ApplicationArgs 0
+	// ==
+	// bnz method_staking_stake
 
-	b branch_error
-
-	method "staking_unstake(uint64)uint64"
-	txn ApplicationArgs 0
-	==
-	bnz method_staking_unstake
+	// method "staking_unstake(uint64)uint64"
+	// txn ApplicationArgs 0
+	// ==
+	// bnz method_staking_unstake
 
 	b branch_error
 
@@ -472,6 +470,7 @@ method_staking_participate:
 
 	// Checking the staking activation
 	byte "staking_is_activated"
+	app_global_get
 	int 1
 	==
 	assert
@@ -625,9 +624,8 @@ method_staking_participate:
 	concat
 	b branch_log_return
 
-
 // Withdraw from staking
-method_staking_withdraw_participate:
+method_staking_withdraw:
  	txna Accounts 0
     store 0
 
@@ -644,22 +642,24 @@ method_staking_withdraw_participate:
 	load 0
 	byte "_algo"
 	concat
+	dup
 	box_get
 	assert
 	btoi
 	store 2
-	load 2
+	
     box_del
     assert
 
 	load 0
 	byte "_token"
 	concat
+	dup
 	box_get
 	assert
 	btoi
 	store 3
-	load 3
+	
     box_del
     assert
 
@@ -719,7 +719,7 @@ method_staking_withdraw_participate:
 	concat
 	b branch_log_return
 
-method_staking_stake:
+	method_staking_stake:
 	txna Accounts 0 // DAO main account
 	store 0 // DAO main account
 	txn Sender // Staking user account

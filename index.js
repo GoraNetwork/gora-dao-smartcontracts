@@ -86,6 +86,7 @@ async function goraDAOOperations() {
             try {
                 await goraDaoDeployer.deployMainContract();
                 await goraDaoDeployer.writeProposalContractSourceBox();
+                await goraDaoDeployer.writeStakingContractSourceBox();
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -110,6 +111,7 @@ async function goraDAOOperations() {
             try {
                 await goraDaoDeployer.updateMainContract();
                 await goraDaoDeployer.writeProposalContractSourceBox();
+                await goraDaoDeployer.writeStakingContractSourceBox();
                 await inquirer.prompt([
                     {
                         type: 'input',

@@ -414,6 +414,7 @@ method_write_proposal_source_box:
 	byte "proposal_clr"
 	store 2
 
+
 	load 1
 	box_get
 	bz branch_write_box_app
@@ -425,6 +426,8 @@ method_write_proposal_source_box:
 	box_del
 	pop
 
+    b branch_write_box_app
+
 method_write_staking_source_box:
 
 	callsub sub_check_owner_auth
@@ -435,7 +438,7 @@ method_write_staking_source_box:
 	byte "staking_clr"
 	store 2
 
-	load 1
+    load 1
 	box_get
 	bz branch_write_box_app
 
