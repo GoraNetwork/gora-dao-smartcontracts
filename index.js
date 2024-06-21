@@ -59,13 +59,15 @@ async function goraDAOOperations() {
     }
     if (config['gora_dao']['dao_asa_distributed'] === false) {
         choices.push('Distribute GoraDAO Asset')
+    } else if (config['gora_dao']['dao_asa_distributed'] === true) {
+        choices.push('Re-Distribute GoraDAO Asset')
     }
     if (config['gora_dao']['subscribed_to_dao'] === true) {
         choices.push('Unsubscribe from GoraDAO')
     } else {
         choices.push('Subscribe to GoraDAO')
     }
-  
+
 
 
     choices.push('Help')
@@ -173,9 +175,31 @@ async function goraDAOOperations() {
                 ]);
             }
             break;
+        case 'Re-Distribute GoraDAO Asset':
+            try {
+                await goraDaoDeployer.sendGoraDaoAssetTransaction();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
         case 'Subscribe to GoraDAO':
             try {
-                await goraDaoDeployer.subscribeDaoContract();
+                await goraDaoDeployer.subscribeDaoContract('proposal');
+                await goraDaoDeployer.subscribeDaoContract('staking');
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -299,13 +323,13 @@ async function proposalsOperations() {
     }
     if (config['gora_dao']['dao_proposal_deployed'] === true && config['gora_dao']['proposal_asa_distributed'] === false) {
         choices.push('Distribute Proposal Asset')
-    }else if(config['gora_dao']['dao_proposal_deployed'] === true && config['gora_dao']['proposal_asa_distributed'] === true){
+    } else if (config['gora_dao']['dao_proposal_deployed'] === true && config['gora_dao']['proposal_asa_distributed'] === true) {
         choices.push('Re-Distribute Proposal Asset')
     }
-    
+
     if (config['gora_dao']['participated_to_proposal'] === true && config['gora_dao']['proposal_is_activated'] === false) {
         choices.push('Withdraw Proposal Participation')
-    } else  if ( config['gora_dao']['proposal_is_activated'] === false){
+    } else if (config['gora_dao']['proposal_is_activated'] === false) {
         choices.push('Participate into Proposal')
     }
     if (config['gora_dao']['participated_to_proposal'] === true && config['gora_dao']['proposal_is_activated'] === true) {
@@ -430,27 +454,27 @@ async function proposalsOperations() {
                 ]);
             }
             break;
-            case 'Re-Distribute Proposal Asset':
-                try {
-                    await goraDaoDeployer.sendProposalAssetTransaction();
-                    await inquirer.prompt([
-                        {
-                            type: 'input',
-                            name: 'continue',
-                            message: 'Press Enter to go back to menu...',
-                        },
-                    ]);
-                } catch (error) {
-                    console.error('An error occurred:', error);
-                    await inquirer.prompt([
-                        {
-                            type: 'input',
-                            name: 'continue',
-                            message: 'Press Enter to go back to menu...',
-                        },
-                    ]);
-                }
-                break;
+        case 'Re-Distribute Proposal Asset':
+            try {
+                await goraDaoDeployer.sendProposalAssetTransaction();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
         case 'Participate into Proposal':
             try {
                 await goraDaoDeployer.participateProposalContractAll();
@@ -647,6 +671,11 @@ async function stakingOperations() {
     if (config['gora_dao']['dao_staking_deployed'] === true) {
         choices.push('Configure Staking')
     }
+    if (config['gora_dao']['dao_staking_deployed'] === true && config['gora_dao']['staking_asa_distributed'] === false) {
+        choices.push('Distribute Staking Asset')
+    } else if (config['gora_dao']['dao_staking_deployed'] === true && config['gora_dao']['staking_asa_distributed'] === true) {
+        choices.push('Re-Distribute Staking Asset')
+    }
     if (config['gora_dao']['participated_to_staking'] === true) {
         choices.push('Withdraw Staking Participation')
     } else {
@@ -754,6 +783,27 @@ async function stakingOperations() {
             }
             break;
         case 'Distribute Staking Asset':
+            try {
+                await goraDaoDeployer.sendStakingAssetTransaction();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Re-Distribute Staking Asset':
             try {
                 await goraDaoDeployer.sendStakingAssetTransaction();
                 await inquirer.prompt([

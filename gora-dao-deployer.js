@@ -763,13 +763,25 @@ const GoraDaoDeployer = class {
     // Sends GoraDAO Asset to the users
     async sendGoraDaoAssetTransaction() {
         let addrFrom = this.goraDaoAdminAccount.addr;
-        let addrTo = this.goraDaoProposalAdminAccount.addr;
+        let addrToProposer = this.goraDaoProposalAdminAccount.addr;
+        let addrToStaking = this.goraDaoStakingAdminAccount.addr;
         let appAddrTo = this.config.gora_dao.asc_testnet_main_address;
-        let amount = 10000;
+        let amount = 20000;
         let params = await this.algodClient.getTransactionParams().do();
         const txnOptinProposer = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-            addrTo, // from
-            addrTo, // to 
+            addrToProposer, // from
+            addrToProposer, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            0, // amount 
+            undefined,// Note
+            this.goraDaoAsset, // assetID
+            params,
+            undefined
+        );
+        const txnOptinStaking = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrToStaking, // from
+            addrToStaking, // to 
             undefined, // closeRemainderTo
             undefined, // note
             0, // amount 
@@ -780,7 +792,18 @@ const GoraDaoDeployer = class {
         );
         const txnSendToProposer = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
             addrFrom, // from
-            addrTo, // to 
+            addrToProposer, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            amount, // amount 
+            undefined,// Note
+            this.goraDaoAsset, // assetID
+            params,
+            undefined
+        );
+        const txnSendToStaking = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrFrom, // from
+            addrToStaking, // to 
             undefined, // closeRemainderTo
             undefined, // note
             amount, // amount 
@@ -801,13 +824,17 @@ const GoraDaoDeployer = class {
             undefined
         );
 
-        // Sign the transaction
+
+
+        // Sign the transactions
         const signedOptinProposerTxn = txnOptinProposer.signTxn(this.goraDaoProposalAdminAccount.sk);
         const signedSendToProposerTxn = txnSendToProposer.signTxn(this.goraDaoAdminAccount.sk);
+        const signedOptinStakingTxn = txnOptinStaking.signTxn(this.goraDaoStakingAdminAccount.sk);
+        const signedSendToStakingTxn = txnSendToStaking.signTxn(this.goraDaoAdminAccount.sk);
         const signedSendToAppTxn = txnSendToApp.signTxn(this.goraDaoAdminAccount.sk);
 
+        // Send the transaction
         const signedOptinProposerTxnResponse = await await this.algodClient.sendRawTransaction(signedOptinProposerTxn).do();
-
         this.logger.info(`Transaction ID: ${signedOptinProposerTxnResponse.txId}`);
 
         // Wait for confirmation
@@ -817,24 +844,45 @@ const GoraDaoDeployer = class {
 
 
         // Send the transaction
-        const signedSendToProposerTxnResponse = await await this.algodClient.sendRawTransaction(signedSendToProposerTxn).do();
+        const signedOptinStakingTxnResponse = await await this.algodClient.sendRawTransaction(signedOptinStakingTxn).do();
+        this.logger.info(`Transaction ID: ${signedOptinStakingTxnResponse.txId}`);
 
+        // Wait for confirmation
+        const confirmedSignedOptinStakingTxnResponse = await this.algosdk.waitForConfirmation(this.algodClient, signedOptinStakingTxnResponse.txId, 5);
+        this.logger.info(`Transaction ${signedOptinStakingTxnResponse.txId} confirmed in round ${confirmedSignedOptinStakingTxnResponse['confirmed-round']}.`);
+        this.logger.info('The staking account has opted in to the GoraDAO Asset');
+
+        // Send the transaction
+        const signedSendToProposerTxnResponse = await await this.algodClient.sendRawTransaction(signedSendToProposerTxn).do();
         this.logger.info(`Transaction ID: ${signedSendToProposerTxnResponse.txId}`);
 
         // Wait for confirmation
         const confirmedSignedSendToProposerTxn = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToProposerTxnResponse.txId, 5);
         this.logger.info(`Transaction ${signedSendToProposerTxnResponse.txId} confirmed in round ${confirmedSignedSendToProposerTxn['confirmed-round']}.`);
         this.logger.info('GoraDAO Asset has been sent to The proposer account successfully')
-        const signedSendToAppTxnResponse = await await this.algodClient.sendRawTransaction(signedSendToAppTxn).do();
 
+        // Send the transaction
+        const signedSendToStakingTxnResponse = await await this.algodClient.sendRawTransaction(signedSendToStakingTxn).do();
+        this.logger.info(`Transaction ID: ${signedSendToStakingTxnResponse.txId}`);
+
+        // Wait for confirmation
+        const confirmedSignedSendToStakingTxn = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToStakingTxnResponse.txId, 5);
+        this.logger.info(`Transaction ${signedSendToStakingTxnResponse.txId} confirmed in round ${confirmedSignedSendToStakingTxn['confirmed-round']}.`);
+        this.logger.info('GoraDAO Asset has been sent to The proposer account successfully')
+
+
+        // Send the transaction
+        const signedSendToAppTxnResponse = await await this.algodClient.sendRawTransaction(signedSendToAppTxn).do();
         this.logger.info(`Transaction ID: ${signedSendToAppTxnResponse.txId}`);
 
         // Wait for confirmation
         const confirmedSignedSendToAppTxn = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToAppTxnResponse.txId, 5);
         this.logger.info(`Transaction ${signedSendToAppTxnResponse.txId} confirmed in round ${confirmedSignedSendToAppTxn['confirmed-round']}.`);
         this.logger.info('GoraDAO Asset has been sent to The GoraDAO App successfully');
+
+        // Write config
         this.config['gora_dao']['dao_asa_distributed'] = true;
-        await this.saveConfig(this.config);
+        await this.saveConfigToFile(this.config);
     }
     // Sends the Proposal Asset to the users
     async sendProposalAssetTransaction() {
@@ -1758,22 +1806,23 @@ const GoraDaoDeployer = class {
         }
     }
     // Subscribe to GoraDAO main contract
-    async subscribeDaoContract() {
-        let addr = this.goraDaoProposalAdminAccount.addr;
+    async subscribeDaoContract(type) {
+        let account = type === 'proposal' ? this.goraDaoProposalAdminAccount : this.goraDaoStakingAdminAccount
+
         let params = await this.algodClient.getTransactionParams().do();
         const atc = new this.algosdk.AtomicTransactionComposer()
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoProposalAdminAccount)
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(account)
 
         const contractJson = JSON.parse(this.daoContract.toString())
         const contract = new this.algosdk.ABIContract(contractJson)
 
-        let memberPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
+        let memberPublicKey = this.algosdk.decodeAddress(account.addr)
 
         const commonParams = {
             appID: Number(this.goraDaoMainApplicationId),
-            appAccounts: [addr],
+            appAccounts: [account.addr],
             appForeignAssets: [Number(this.goraDaoAsset)],
-            sender: addr,
+            sender: account.addr,
             suggestedParams: params,
             signer: signer,
             boxes: [
@@ -1785,7 +1834,7 @@ const GoraDaoDeployer = class {
         let method = this.getMethodByName("subscribe_dao", contract)
 
         const ptxn = new this.algosdk.Transaction({
-            from: addr,
+            from: account.addr,
             to: this.goraDaoMainApplicationAddress,
             amount: 3000,
             fee: params.minFee,
@@ -1801,8 +1850,8 @@ const GoraDaoDeployer = class {
             methodArgs: [
                 tws0,//pay
                 Number(this.goraDaoAsset),
-                addr,// member account 
-                addr,// member account 
+                account.addr,// member account 
+                account.addr,// member account 
             ],
             ...commonParams
         })
@@ -1825,20 +1874,20 @@ const GoraDaoDeployer = class {
         }
     }
     // Unsubscribe from GoraDAO main contract
-    async unsubscribeDaoContract() {
-        let addr = this.goraDaoProposalAdminAccount.addr;
+    async unsubscribeDaoContract(account) {
+
         let params = await this.algodClient.getTransactionParams().do();
         const atc = new this.algosdk.AtomicTransactionComposer()
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoProposalAdminAccount)
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(account)
 
         const contractJson = JSON.parse(this.daoContract.toString())
         const contract = new this.algosdk.ABIContract(contractJson)
 
-        let memberPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
+        let memberPublicKey = this.algosdk.decodeAddress(account.addr)
 
         const commonParams = {
             appID: Number(this.goraDaoMainApplicationId),
-            sender: addr,
+            sender: account.addr,
             suggestedParams: params,
             signer: signer,
             boxes: [
@@ -1857,8 +1906,8 @@ const GoraDaoDeployer = class {
             methodArgs: [
 
                 Number(this.goraDaoAsset),
-                addr,// member account 
-                addr,// member account 
+                account.addr,// member account 
+                account.addr,// member account 
             ],
             ...commonParams
         })
@@ -2765,7 +2814,7 @@ const GoraDaoDeployer = class {
             methodArgs: [
                 tws0,//pay
                 addr,// member account (Staking manager)
-                Number(this.stakingstakingAsset),// Staking asset ref
+                Number(this.stakingAsset),// Staking asset ref
                 Number(this.goraDaoAsset),// DAO asset ref
                 Number(this.stakingAsset),// Staking asset id
                 "Staking_Test",//title
