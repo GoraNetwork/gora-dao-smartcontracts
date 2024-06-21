@@ -2457,7 +2457,7 @@ const GoraDaoDeployer = class {
         const proposalContract = new this.algosdk.ABIContract(JSON.parse(this.proposalContract.toString()))
         const signer = this.algosdk.makeBasicAccountTransactionSigner(account)
         let methodProposalWithdrawParticipate = this.getMethodByName("proposal_withdraw_participate", proposalContract)
-        let methodDaoProposalWaithdrawParticipate = this.getMethodByName("proposal_withdraw_participate", daoContract)
+        let methodDaoProposalWithdrawParticipate = this.getMethodByName("proposal_withdraw_participate", daoContract)
         let memberPublicKey = this.algosdk.decodeAddress(addr)
         let proposerPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
         const commonParamsProposalSetup = {
@@ -2496,7 +2496,7 @@ const GoraDaoDeployer = class {
         const argsProposal = []
         const atcProposalParticipate = new this.algosdk.AtomicTransactionComposer()
         atcProposalParticipate.addMethodCall({
-            method: methodDaoProposalWaithdrawParticipate,
+            method: methodDaoProposalWithdrawParticipate,
             methodArgs: argsDao,
             ...commonParamsDaoSetup
         })
@@ -2508,7 +2508,7 @@ const GoraDaoDeployer = class {
             ...commonParamsProposalSetup
         })
         this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", methodDaoProposalWaithdrawParticipate);
+        this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", methodDaoProposalWithdrawParticipate);
 
         const proposalParticipateResults = await atcProposalParticipate.execute(this.algodClient, 10);
         for (const idx in proposalParticipateResults.methodResults) {
