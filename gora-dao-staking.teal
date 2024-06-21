@@ -93,7 +93,7 @@ branch_method_router:
 	==
 	bnz method_staking_participate
 
-    // method "staking_withdraw()uint64"
+    // method "staking_withdraw_participate()uint64"
 	// txn ApplicationArgs 0
 	// ==
 	// bnz method_staking_withdraw
@@ -625,7 +625,7 @@ method_staking_participate:
 	b branch_log_return
 
 // Withdraw from staking
-method_staking_withdraw:
+method_staking_withdraw_participate:
  	txna Accounts 0
     store 0
 

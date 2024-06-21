@@ -468,6 +468,258 @@
             "returns": {
                 "type": "uint64"
             }
+        },
+        
+        {
+            "name": "create_proposal",
+            "description": "Creates a new Proposal contract! Returns the Proposal contract ID!",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Proposer to GoraDAO for Proposal fees and initiation MBRs!"
+                },
+                {
+                    "type": "account",
+                    "name": "member_reference",
+                    "description": "GoraDAO member account reference (Proposal manager)"
+                },
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraDAO Proposal asset ref"
+                },
+                {
+                    "type": "asset",
+                    "name": "asset_reference",
+                    "description": "GoraDAO dao asset ref"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_id",
+                    "description": "GoraDAO Proposal asset ID"
+                },
+                {
+                    "type": "string",
+                    "name": "proposal_title",
+                    "description": "GoraDAO Proposal title"
+                },
+                {
+                    "type": "string",
+                    "name": "proposal_description",
+                    "description": "GoraDAO Proposal description"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref for Proposal manager GoraDAO member"
+                },
+                {
+                    "name": "proposal_app",
+                    "description": "Proposal approval source box ref"
+                },
+                {
+                    "name": "proposal_clr",
+                    "description": "Proposal clear source box ref"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "update_proposal",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Proposer to GoraDAO for Proposal fees and initiation MBRs!"
+                },
+                {
+                    "type": "application",
+                    "name": "proposal_app_ref",
+                    "description": "Proposal application  to be referenced"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proposal_app_rid",
+                    "description": "Proposal application  ID to be updated"
+                },
+                {
+                    "type": "address",
+                    "name": "member_reference",
+                    "description": "GoraDAO member account reference (Proposal manager)"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_reference",
+                    "description": "GoraDAO Proposal asset ID"
+                },
+                {
+                    "type": "string",
+                    "name": "proposal_title",
+                    "description": "GoraDAO Proposal title"
+                },
+                {
+                    "type": "string",
+                    "name": "proposal_description",
+                    "description": "GoraDAO Proposal description"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref for Proposal manager GoraDAO member"
+                },
+                {
+                    "name": "proposal_app",
+                    "description": "Proposal approval source box ref"
+                },
+                {
+                    "name": "proposal_clr",
+                    "description": "Proposal clear source box ref"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            },
+            "desc": "Updates a Proposal smart contract and returns application ID"
+        },
+        {
+            "name": "config_proposal",
+            "description": "Configures a Proposal contract! Returns the Proposal contract ID!",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Proposer to GoraDAO for fees and Proposal MBRs!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "dao_asset_transfer_transaction",
+                    "description": "Asset transfer transaction to deposit DAO asset (Gora)!"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "dao_manager_reference",
+                    "description": "Dynamic box ref per proposal manager account address"
+                },
+                {
+                    "name": "proposal_reference",
+                    "description": "Dynamic box ref per proposal account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "proposal_participate",
+            "description": "Participates a member to a Proposal! Returns the Proposal contract ID!",
+            "args": [
+                
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address"
+                },
+                {
+                    "name": "proposal_reference",
+                    "description": "Dynamic box ref per proposal app id"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "staking_withdraw_participate",
+            "description": "Withdraws a member participation from staking contract! Returns the Staking contract ID! Withdraw un-stakes all the staked for an account",
+            "args": [],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address"
+                },
+                {
+                    "name": "staking_reference",
+                    "description": "Dynamic box ref per staking app id"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "staking_stake",
+            "description": "Stake in staking contract!",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from participants to GoraDAO for fees and participation MBRs!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "asset_transfer_transaction",
+                    "description": "Asset transfer transaction to deposit Gora!"
+                },
+                {
+                    "type": "uint64",
+                    "name": "amount",
+                    "description": "Staked amount"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address"
+                },
+                {
+                    "name": "staking_reference",
+                    "description": "Dynamic box ref per staking contract account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "activate_staking",
+            "description": "Activates staking contract!",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from manager to GoraDAO for fees!"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_reference",
+                    "description": "GoraDAO Main asset (Gora) ID"
+                },
+                {
+                    "type": "account",
+                    "name": "member_reference",
+                    "description": "GoraDAO member account reference"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref per member account address"
+                },
+                {
+                    "name": "staking_reference",
+                    "description": "Dynamic box ref per staking contract account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
         }
     ]
 }

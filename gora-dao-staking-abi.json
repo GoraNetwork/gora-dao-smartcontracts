@@ -313,7 +313,7 @@
             }
         },
         {
-            "name": "staking_withdraw",
+            "name": "staking_withdraw_participate",
             "description": "Withdraws participation of a member account from Staking! Returns the withdrawing member's account address!",
             "args": [],
             "boxes": [
