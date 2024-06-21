@@ -647,7 +647,7 @@ method_proposal_participate:
 
 	load 1
 	box_get
-	//bnz branch_delete_participate_box
+
 	bnz branch_error
 	load 1
     byte ""
@@ -679,18 +679,6 @@ branch_activate_and_participate:
 	concat
 	b branch_log_return
 
-branch_delete_participate_box:
-	load 0
-	box_del
-	load 0
-    byte "VOTE_PLACE_HOLDER"
-    box_put
-
-	byte 0x151f7c75
-	global CurrentApplicationID
-	itob
-	concat
-	b branch_log_return
 
 
 method_proposal_withdraw_participate:
