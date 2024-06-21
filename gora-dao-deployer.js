@@ -3073,12 +3073,9 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-
                 { appIndex: Number(stakingApplication), name: memberPublicKey.publicKey },
                 { appIndex: Number(stakingApplication), name: proposerPublicKey.publicKey },
                 { appIndex: Number(stakingApplication), name: new Uint8Array(Buffer.from("participation_threshold")) },
-
-
 
             ],
         }
@@ -3170,6 +3167,29 @@ const GoraDaoDeployer = class {
 
         }
 
+    }
+     // This method participates all accounts in the staking
+     async participateStakingContractAll() {
+        let accountsArray = [this.goraDaoUserAccount1, this.goraDaoUserAccount2, this.goraDaoUserAccount3, this.goraDaoUserAccount4, this.goraDaoUserAccount5]
+        for (let i = 0; i < accountsArray.length; i++) {
+
+            await this.participateStakingContract(accountsArray[i])
+        }
+        this.config['gora_dao']['participated_to_staking'] = true;
+        this.config['gora_dao']['staking_is_activated'] = true;
+        await this.saveConfigToFile(this.config)
+        this.logger.info("All 5 GoraDAO members have participated in the staking!");
+    }
+    async participationWithdrawStakingContractAll() {
+        let accountsArray = [this.goraDaoUserAccount1, this.goraDaoUserAccount2, this.goraDaoUserAccount3, this.goraDaoUserAccount4, this.goraDaoUserAccount5]
+        for (let i = 0; i < accountsArray.length; i++) {
+
+            await this.participationWithdrawStakingContract(accountsArray[i])
+        }
+        this.config['gora_dao']['participated_to_staking'] = false;
+        this.config['gora_dao']['staking_is_activated'] = false;
+        await this.saveConfigToFile(this.config)
+        this.logger.info("All 5 GoraDAO members have withdrawn participation from the staking!");
     }
     // Withdraws participation from a staking from a member account
     async participationWithdrawStakingContract(acct) {
