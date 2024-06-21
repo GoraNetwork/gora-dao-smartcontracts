@@ -2443,7 +2443,6 @@ const GoraDaoDeployer = class {
 
         }
         this.config['gora_dao']['participated_to_proposal'] = true;
-  
         await this.saveConfigToFile(this.config)
 
     }
@@ -2457,8 +2456,8 @@ const GoraDaoDeployer = class {
         const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
         const proposalContract = new this.algosdk.ABIContract(JSON.parse(this.proposalContract.toString()))
         const signer = this.algosdk.makeBasicAccountTransactionSigner(account)
-        let methodProposalParticipate = this.getMethodByName("proposal_withdraw_participate", proposalContract)
-        let methodDaoProposalParticipate = this.getMethodByName("proposal_withdraw_participate", daoContract)
+        let methodProposalWithdrawParticipate = this.getMethodByName("proposal_withdraw_participate", proposalContract)
+        let methodDaoProposalWaithdrawParticipate = this.getMethodByName("proposal_withdraw_participate", daoContract)
         let memberPublicKey = this.algosdk.decodeAddress(addr)
         let proposerPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
         const commonParamsProposalSetup = {
@@ -2497,19 +2496,19 @@ const GoraDaoDeployer = class {
         const argsProposal = []
         const atcProposalParticipate = new this.algosdk.AtomicTransactionComposer()
         atcProposalParticipate.addMethodCall({
-            method: methodDaoProposalParticipate,
+            method: methodDaoProposalWaithdrawParticipate,
             methodArgs: argsDao,
             ...commonParamsDaoSetup
         })
         this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodProposalParticipate);
+        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodProposalWithdrawParticipate);
         atcProposalParticipate.addMethodCall({
-            method: methodProposalParticipate,
+            method: methodProposalWithdrawParticipate,
             methodArgs: argsProposal,
             ...commonParamsProposalSetup
         })
         this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", methodDaoProposalParticipate);
+        this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", methodDaoProposalWaithdrawParticipate);
 
         const proposalParticipateResults = await atcProposalParticipate.execute(this.algodClient, 10);
         for (const idx in proposalParticipateResults.methodResults) {
@@ -2524,6 +2523,8 @@ const GoraDaoDeployer = class {
             await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
         }
+        this.config['gora_dao']['participated_to_proposal'] = false;
+        await this.saveConfigToFile(this.config)
 
     }
     // This method participates all accounts in the proposal
@@ -2557,7 +2558,7 @@ const GoraDaoDeployer = class {
         const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
         const proposalContract = new this.algosdk.ABIContract(JSON.parse(this.proposalContract.toString()))
         const signer = this.algosdk.makeBasicAccountTransactionSigner(account)
-        let methodProposalParticipate = this.getMethodByName("proposal_vote", proposalContract)
+        let methodProposalVote = this.getMethodByName("proposal_vote", proposalContract)
         let methodDaoProposalParticipate = this.getMethodByName("proposal_vote", daoContract)
         let memberPublicKey = this.algosdk.decodeAddress(addr)
         const commonParamsProposalSetup = {
@@ -2635,9 +2636,9 @@ const GoraDaoDeployer = class {
             ...commonParamsDaoSetup
         })
         this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodProposalParticipate);
+        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodProposalVote);
         atcProposalParticipate.addMethodCall({
-            method: methodProposalParticipate,
+            method: methodProposalVote,
             methodArgs: argsProposal,
             ...commonParamsProposalSetup
         })

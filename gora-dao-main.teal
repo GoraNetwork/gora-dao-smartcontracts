@@ -1163,14 +1163,15 @@ method_proposal_withdraw_participate:
 	itxn_field Sender
 	int axfer
 	itxn_field TypeEnum
-    txna Assets 0
-    itxn_field XferAsset
+  
 	load 0
 	itxn_field AssetReceiver
 	load 2
     load 4
     +
 	itxn_field AssetAmount
+    txna Assets 1
+    itxn_field XferAsset
 	itxn_submit
 	//itxn TxID
     //log
