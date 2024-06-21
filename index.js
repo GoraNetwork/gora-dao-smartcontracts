@@ -297,8 +297,10 @@ async function proposalsOperations() {
     if (config['gora_dao']['dao_proposal_deployed'] === true) {
         choices.push('Configure Proposal')
     }
-    if (config['gora_dao']['dao_proposal_deployed'] === true) {
+    if (config['gora_dao']['dao_proposal_deployed'] === true && config['gora_dao']['proposal_asa_distributed'] === false) {
         choices.push('Distribute Proposal Asset')
+    }else if(config['gora_dao']['dao_proposal_deployed'] === true && config['gora_dao']['proposal_asa_distributed'] === true){
+        choices.push('Re-Distribute Proposal Asset')
     }
     
     if (config['gora_dao']['participated_to_proposal'] === true) {
@@ -428,6 +430,27 @@ async function proposalsOperations() {
                 ]);
             }
             break;
+            case 'Re-Distribute Proposal Asset':
+                try {
+                    await goraDaoDeployer.sendProposalAssetTransaction();
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                }
+                break;
         case 'Participate into Proposal':
             try {
                 await goraDaoDeployer.participateProposalContractAll();
@@ -552,7 +575,6 @@ async function proposalsOperations() {
         case 'Help':
             logger.info('GoraDAO Help | Proposals Operations Menu');
             logger.info('------------------------------------');
-            //logger.info('Test flow: Create Proposal Asset ---> Distribute Proposal Asset to 5 test users ---> Deploy/Update new Proposal contract ---> Configure Proposal ---> Participate/Withdraw participation to/from Proposal ---> Vote on Proposal');
             logger.info(`
             +-----------------------+       +-----------------------------------+       +-----------------------------------+
             |                       |       |                                   |       |                                   |
@@ -856,7 +878,6 @@ async function stakingOperations() {
         case 'Help':
             logger.info('GoraDAO Help | Proposals Operations Menu');
             logger.info('------------------------------------');
-            //logger.info('Test flow: Create Proposal Asset ---> Distribute Proposal Asset to 5 test users ---> Deploy/Update new Proposal contract ---> Configure Proposal ---> Participate/Withdraw participation to/from Proposal ---> Vote on Proposal');
             logger.info(`
             +-----------------------+       +-----------------------------------+       +-----------------------------------+
             |                       |       |                                   |       |                                   |
