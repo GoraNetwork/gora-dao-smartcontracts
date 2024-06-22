@@ -766,7 +766,7 @@ const GoraDaoDeployer = class {
         let addrToProposer = this.goraDaoProposalAdminAccount.addr;
         let addrToStaking = this.goraDaoStakingAdminAccount.addr;
         let appAddrTo = this.config.gora_dao.asc_testnet_main_address;
-        let amount = 20000;
+        let amount = 5000;
         let params = await this.algodClient.getTransactionParams().do();
         const txnOptinProposer = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
             addrToProposer, // from
@@ -1186,13 +1186,13 @@ const GoraDaoDeployer = class {
     // Sends the Staking Asset to the users
     async sendStakingAssetTransaction() {
         let addrFrom = this.goraDaoAdminAccount.addr;
-        let addrFromProposer = this.goraDaoStakingAdminAccount.addr;
+        let addrFromStaking = this.goraDaoStakingAdminAccount.addr;
         let addrTo1 = this.goraDaoUserAccount1.addr;
         let addrTo2 = this.goraDaoUserAccount2.addr;
         let addrTo3 = this.goraDaoUserAccount3.addr;
         let addrTo4 = this.goraDaoUserAccount4.addr;
         let addrTo5 = this.goraDaoUserAccount5.addr;
-        let appAddrTo = this.proposalApplicationAddress;
+        let appAddrTo = this.stakingApplicationAddress;
         let amount = 2000;
         let params = await this.algodClient.getTransactionParams().do();
 
@@ -1201,7 +1201,7 @@ const GoraDaoDeployer = class {
 
 
         const txnPayUser1 = this.algosdk.makePaymentTxnWithSuggestedParams(
-            addrFromProposer, // from
+            addrFromStaking, // from
             addrTo1, // to 
             500000, // amount 
             undefined,// closeRemainderTo
@@ -1210,7 +1210,7 @@ const GoraDaoDeployer = class {
             undefined,// rekey-to
         );
         const txnPayUser2 = this.algosdk.makePaymentTxnWithSuggestedParams(
-            addrFromProposer, // from
+            addrFromStaking, // from
             addrTo2, // to 
             500000, // amount 
             undefined,// closeRemainderTo
@@ -1219,7 +1219,7 @@ const GoraDaoDeployer = class {
             undefined,// rekey-to
         );
         const txnPayUser3 = this.algosdk.makePaymentTxnWithSuggestedParams(
-            addrFromProposer, // from
+            addrFromStaking, // from
             addrTo3, // to 
             500000, // amount 
             undefined,// closeRemainderTo
@@ -1228,7 +1228,7 @@ const GoraDaoDeployer = class {
             undefined,// rekey-to
         );
         const txnPayUser4 = this.algosdk.makePaymentTxnWithSuggestedParams(
-            addrFromProposer, // from
+            addrFromStaking, // from
             addrTo4, // to 
             500000, // amount 
             undefined,// closeRemainderTo
@@ -1237,7 +1237,7 @@ const GoraDaoDeployer = class {
             undefined,// rekey-to
         );
         const txnPayUser5 = this.algosdk.makePaymentTxnWithSuggestedParams(
-            addrFromProposer, // from
+            addrFromStaking, // from
             addrTo5, // to 
             500000, // amount 
             undefined,// closeRemainderTo
@@ -1303,7 +1303,7 @@ const GoraDaoDeployer = class {
         );
         // Axfer transactions to 
         const txnSendToUser1 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-            addrFromProposer, // from
+            addrFromStaking, // from
             addrTo1, // to 
             undefined, // closeRemainderTo
             undefined, // note
@@ -1314,7 +1314,7 @@ const GoraDaoDeployer = class {
             undefined
         );
         const txnSendToUser2 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-            addrFromProposer, // from
+            addrFromStaking, // from
             addrTo2, // to 
             undefined, // closeRemainderTo
             undefined, // note
@@ -1325,7 +1325,7 @@ const GoraDaoDeployer = class {
             undefined
         );
         const txnSendToUser3 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-            addrFromProposer, // from
+            addrFromStaking, // from
             addrTo3, // to 
             undefined, // closeRemainderTo
             undefined, // note
@@ -1336,7 +1336,7 @@ const GoraDaoDeployer = class {
             undefined
         );
         const txnSendToUser4 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-            addrFromProposer, // from
+            addrFromStaking, // from
             addrTo4, // to 
             undefined, // closeRemainderTo
             undefined, // note
@@ -1347,7 +1347,7 @@ const GoraDaoDeployer = class {
             undefined
         );
         const txnSendToUser5 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-            addrFromProposer, // from
+            addrFromStaking, // from
             addrTo5, // to 
             undefined, // closeRemainderTo
             undefined, // note
@@ -1357,9 +1357,9 @@ const GoraDaoDeployer = class {
             params,
             undefined
         );
-        // Axfer transaction to send proposal asset to proposal contract
+        // Axfer transaction to send staking asset to staking contract
         const txnSendToApp = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-            addrFromProposer, // from
+            addrFromStaking, // from
             appAddrTo, // to 
             undefined, // closeRemainderTo
             undefined, // note
@@ -3021,18 +3021,20 @@ const GoraDaoDeployer = class {
         const atcStakingConfig = new this.algosdk.AtomicTransactionComposer()
 
         atcStakingConfig.addMethodCall({
+            ...commonParamsStakingSetup,
             method: methodStakingConfig,
-            accounts: [this.goraDaoMainApplicationAddress],
+            appAccounts: [this.goraDaoMainApplicationAddress],
             methodArgs: argsStaking,
-            ...commonParamsStakingSetup
+            
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Contract ABI Exec method = %s", methodDaoStakingConfig);
         atcStakingConfig.addMethodCall({
+            ...commonParamsDaoSetup,
             method: methodDaoStakingConfig,
-            accounts: [this.stakingApplicationAddress],
+            appAccounts: [this.stakingApplicationAddress],
             methodArgs: argsDao,
-            ...commonParamsDaoSetup
+            
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodStakingConfig);
