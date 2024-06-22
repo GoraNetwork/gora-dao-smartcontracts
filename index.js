@@ -649,11 +649,11 @@ async function proposalsOperations() {
     }
 
     // Loop back to proposals operations menu unless going back to main menu
-    if (answers.proposalOperation !== 'Back to Main Menu') {
+    if (answers.proposalOperation && answers.proposalOperation !== 'Back to Main Menu') {
         await proposalsOperations();
     }
     // Loop back to staking operations menu unless going back to main menu
-    if (answers.stakingOperation !== 'Back to Main Menu') {
+    if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu') {
         await stakingOperations();
     }
 }
@@ -978,11 +978,11 @@ async function stakingOperations() {
     }
 
     // Loop back to proposals operations menu unless going back to main menu
-    if (answers.proposalOperation !== 'Back to Main Menu') {
+    if (answers.proposalOperation && answers.proposalOperation !== 'Back to Main Menu') {
         await proposalsOperations();
     }
     // Loop back to Stakings operations menu unless going back to main menu
-    if (answers.stakingOperation !== 'Back to Main Menu') {
+    if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu') {
         await stakingOperations();
     }
 }
