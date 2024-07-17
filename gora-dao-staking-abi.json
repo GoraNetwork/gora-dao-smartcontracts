@@ -41,7 +41,7 @@
                 },
                 {
                     "type": "string",
-                    "name": "staking_title",
+                    "name": "staking_name",
                     "description": "Staking title"
                 },
                 {
@@ -99,7 +99,7 @@
                 },
                 {
                     "type": "string",
-                    "name": "staking_title",
+                    "name": "staking_name",
                     "description": "Staking title"
                 },
                 {
