@@ -138,14 +138,10 @@
                     "description": "Payment from Staking manager to DAO for fees and Staking configuration MBRs!"
                 },
                 {
-                    "type": "uint64",
-                    "name": "staking_min_participation_algo",
-                    "description": "DAO Staking minimum participation in microAlgos"
-                },
-                {
-                    "type": "uint64",
-                    "name": "staking_min_participation_token",
-                    "description": "DAO Staking minimum participation in DAO asset units"
+                    "type": "(uint64,uint64,uint64,uint64,uint64,uint64,uint64)",
+                    "name": "staking_min_participation_algo, staking_min_participation_token, staking_min_duration, staking_commission_percentage, staking_commission_percentage_algo, staking_participation_fee, staking_participation_fee_algo, staking_incentives_percentage",
+                    "description": "DAO Staking configuration tuple: \n DAO Staking minimum participation in microAlgos \n DAO Staking minimum participation in DAO asset units \n DAO Staking eligible duration in days \n DAO Staking participation commission % in asset units \n DAO Staking commission percentage in MicroAlgos \n DAO Staking fee in DAO asset units \n DAO Staking fee in Algos \n  DAO Staking incentives percentage"
+                
                 },
                 {
                     "type": "uint64",
@@ -154,39 +150,8 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "staking_min_duration",
-                    "description": "DAO Staking eligible duration in days"
-                },
-                {
-                    "type": "uint64",
-                    "name": "staking_commission_percentage",
-                    "description": "DAO Staking participation commission % in asset units"
-                },
-                {
-                    "type": "uint64",
-                    "name": "staking_participation_fee",
-                    "description": "DAO Staking fee in DAO asset units"
-                },
-                {
-                    "type": "uint64",
-                    "name": "staking_participation_fee_algo",
-                    "description": "DAO Staking fee in Algos"
-                },
-              
-                {
-                    "type": "uint64",
-                    "name": "staking_token_commission_percentage",
-                    "description": "DAO Staking token commission percentage!"
-                },
-                {
-                    "type": "uint64",
-                    "name": "staking_incentives_percentage",
-                    "description": "DAO Staking incentives percentage! "
-                },
-                {
-                    "type": "uint64",
                     "name": "staking_type",
-                    "description": "DAO Staking type, 0 for direct staking and greater than zero means proxy staking! "
+                    "description": "DAO Staking type, 0 for direct staking , 1 and greater than zero means proxy staking"
                 },
                 {
                     "type": "uint64",

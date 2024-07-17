@@ -3012,7 +3012,7 @@ const GoraDaoDeployer = class {
             12,//6 staking_commission_percentage
             0,//7 staking_participation_fee
             0,//8 staking_participation_fee_algo
-            25,//9 staking_token_commission_percentage
+            25,//9 staking_commission_percentage_algo
             2,//10 staking_incentives_percentage
             1,//11 staking_type
             30,//12 staking_incentives_duration

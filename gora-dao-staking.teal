@@ -348,7 +348,12 @@ method_config_staking:
 	==
 	assert
 
-	txn ApplicationArgs 1 //staking_min_participation_algo
+	txn ApplicationArgs 1 
+	store 0
+
+	load 0
+	int 0
+	extract_uint64 //staking_min_participation_algo
 	store 1
 	byte "staking_min_participation_algo"
 	load 1
@@ -356,7 +361,9 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 2 //staking_min_participation_token
+	load 0
+	int 8
+	extract_uint64 //staking_min_participation_token
 	store 2
 	byte "staking_min_participation_token"
 	load 2
@@ -364,7 +371,7 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 3 //staking_duration
+	txn ApplicationArgs 2 //staking_duration
 	store 3
 	byte "staking_duration"
 	load 3
@@ -372,7 +379,9 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 4 //staking_min_duration
+	load 0
+	int 16
+	extract_uint64 //staking_min_duration
 	store 4
 	byte "staking_min_duration"
 	load 4
@@ -380,7 +389,9 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 5 //staking_commission_percentage
+	load 0
+	int 24
+	extract_uint64 //staking_commission_percentage
 	store 5
 	byte "staking_commission_percentage"
 	load 5
@@ -388,7 +399,9 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 6 //staking_participation_fee
+	load 0
+	int 32
+	extract_uint64 //staking_participation_fee
 	store 6
 	byte "staking_participation_fee"
 	load 6
@@ -396,7 +409,9 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 7 //staking_participation_fee_algo
+	load 0
+	int 40
+	extract_uint64 //staking_participation_fee_algo
 	store 7
 	byte "staking_participation_fee_algo"
 	load 7
@@ -404,15 +419,19 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 8 //staking_token_commission_percentage
+	load 0
+	int 48
+	extract_uint64 //staking_commission_percentage_algo
 	btoi
 	store 8
-	byte "staking_token_commission_percentage"
+	byte "staking_commission_percentage_algo"
 	load 8
 	app_global_put
 	//log
 
-	txn ApplicationArgs 9 //staking_incentives_percentage
+	load 0
+	int 56
+	extract_uint64 //staking_incentives_percentage
 	store 9
 	byte "staking_incentives_percentage"
 	load 9
@@ -420,7 +439,7 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 10 //staking_type
+	txn ApplicationArgs 3 //staking_type
 	store 10
 	byte "staking_type"
 	load 10
@@ -428,7 +447,7 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 11 //staking_incentives_duration
+	txn ApplicationArgs 4 //staking_incentives_duration
 	store 11
 	byte "staking_incentives_duration"
 	load 11
@@ -436,7 +455,7 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 12 //staking_incentives_eligibility
+	txn ApplicationArgs 5 //staking_incentives_eligibility
 	store 12
 	byte "staking_incentives_eligibility"
 	load 12
