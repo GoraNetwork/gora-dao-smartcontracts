@@ -1,7 +1,253 @@
+// Participate in staking
+method_staking_participate:
+
+	// Checking the staking activation
+	byte "staking_is_activated"
+	app_global_get
+	int 1
+	==
+	assert
+	
+	txna Accounts 1 // DAO Admin account
+	store 0
+
+	txn Sender // Participating user account
+	store 1
+
+    // Checking Transaction group
+    global GroupSize
+    int 6
+    ==
+    assert
+    
+	// Checking the pay and axfer txns
+	gtxn 1 RekeyTo
+    global ZeroAddress
+    ==
+    gtxn 2 RekeyTo
+    global ZeroAddress
+    ==
+	gtxn 3 RekeyTo
+    global ZeroAddress
+    ==
+	gtxn 4 RekeyTo
+    global ZeroAddress
+    ==
+	&&
+	&&
+    assert
+
+    gtxn 1 CloseRemainderTo
+    global ZeroAddress
+    ==
+	gtxn 3 CloseRemainderTo
+    global ZeroAddress
+    ==
+	&&
+    assert
+
+    gtxn 2 AssetCloseTo
+    global ZeroAddress
+    ==
+	gtxn 4 AssetCloseTo
+    global ZeroAddress
+    ==
+	&&
+    assert
 
 
+    gtxn 1 Fee
+    global MinTxnFee
+    >=
+    gtxn 2 Fee
+    global MinTxnFee
+    >=
+	gtxn 3 Fee
+    global MinTxnFee
+    >=
+    gtxn 4 Fee
+    global MinTxnFee
+    >=
+	&&
+	&&
+    assert
+
+    byte "dao_asset_id"
+    app_global_get
+    gtxn 2 XferAsset
+    ==
+    assert
+
+	byte "staking_asset_id"
+    app_global_get
+    gtxn 4 XferAsset
+    ==
+    assert
+
+    gtxn 1 Amount
+    byte "staking_participation_fee_algo"
+	app_global_get
+    >=
+    assert
+
+    gtxn 2 AssetAmount
+    byte "staking_participation_fee"
+	app_global_get
+    ==
+    assert
+
+	gtxn 3 Amount
+    byte "staking_min_participation_algo"
+	app_global_get
+    >=
+    assert
+
+    gtxn 4 AssetAmount
+    byte "staking_min_participation_token"
+	app_global_get
+    ==
+    assert
 
 
+    byte "staking_asset_id"
+    app_global_get
+    txna Assets 1
+    ==
+    assert
 
+	byte "dao_asset_id"
+    app_global_get
+    txna Assets 0
+    ==
+    assert
 
+	// Check participation and box preparation
+	load 1
+	byte "_algo"
+	concat
+	store 4
+	load 4
+    gtxn 3 Amount
+	itob
+	box_put // Rejects if the user already participated
 
+	load 1
+	byte "_token"
+	concat
+	store 5
+	load 5
+	gtxn 4 AssetAmount
+	itob
+    box_put // Rejects if the user already participated
+
+	// Stats update
+	byte "participation_count"
+	app_global_get
+	int 1
+	+
+	store 3
+	byte "participation_count"
+	load 3
+	app_global_put
+
+	// Log and return
+    byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+// Withdraw from staking
+method_staking_withdraw_participate:
+ 	txna Accounts 0
+    store 0
+
+	byte "participation_count"
+	app_global_get
+	int 1
+	-
+	store 1
+	byte "participation_count"
+	load 1
+	app_global_put
+
+	
+	load 0
+	byte "_algo"
+	concat
+	dup
+	box_get
+	assert
+	btoi
+	store 2
+	
+    box_del
+    assert
+
+	load 0
+	byte "_token"
+	concat
+	dup
+	box_get
+	assert
+	btoi
+	store 3
+	
+    box_del
+    assert
+
+	// Stats update
+	byte "staked_amount_algo"
+	app_global_get
+	load 2
+	-
+	store 4
+	byte "staked_amount_algo"
+	load 4
+	app_global_put
+
+	byte "staked_amount"
+	app_global_get
+	load 3
+	-
+	store 5
+	byte "staked_amount"
+	load 5
+	app_global_put
+
+	byte "stakings_count"
+	dup
+	app_global_get
+	int 1
+	-
+	app_global_put
+
+	// Staking refund transactions
+	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	load 0
+	itxn_field Receiver
+	load 2
+	itxn_field Amount
+	int pay
+	itxn_field TypeEnum
+	itxn_submit
+
+	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field AssetSender
+	load 0
+	itxn_field AssetReceiver
+	load 3
+	itxn_field AssetAmount
+	int axfer
+	itxn_field TypeEnum
+	itxn_submit
+
+	// Log and return
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
