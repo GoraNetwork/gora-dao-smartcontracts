@@ -404,10 +404,10 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 8 //staking_yield_percentage
+	txn ApplicationArgs 8 //staking_token_commission_percentage
 	btoi
 	store 8
-	byte "staking_yield_percentage"
+	byte "staking_token_commission_percentage"
 	load 8
 	app_global_put
 	//log

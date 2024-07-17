@@ -175,8 +175,8 @@
               
                 {
                     "type": "uint64",
-                    "name": "staking_yield_percentage",
-                    "description": "DAO Staking yield percentage!"
+                    "name": "staking_token_commission_percentage",
+                    "description": "DAO Staking token commission percentage!"
                 },
                 {
                     "type": "uint64",
