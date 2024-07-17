@@ -357,7 +357,6 @@ method_config_staking:
 	store 1
 	byte "staking_min_participation_algo"
 	load 1
-	btoi
 	app_global_put
 	//log
 
@@ -367,7 +366,6 @@ method_config_staking:
 	store 2
 	byte "staking_min_participation_token"
 	load 2
-	btoi
 	app_global_put
 	//log
 
@@ -377,7 +375,6 @@ method_config_staking:
 	store 3
 	byte "staking_duration"
 	load 3
-	btoi
 	app_global_put
 	//log
 
@@ -387,7 +384,6 @@ method_config_staking:
 	store 4
 	byte "staking_min_duration"
 	load 4
-	btoi
 	app_global_put
 	//log
 
@@ -397,7 +393,6 @@ method_config_staking:
 	store 5
 	byte "staking_commission_percentage"
 	load 5
-	btoi
 	app_global_put
 	//log
 
@@ -407,7 +402,6 @@ method_config_staking:
 	store 6
 	byte "staking_commission_percentage_algo"
 	load 6
-	btoi
 	app_global_put
 	//log
 
@@ -417,17 +411,14 @@ method_config_staking:
 	store 7
 	byte "staking_participation_fee"
 	load 7
-	btoi
 	app_global_put
 	//log
 
 	load 0
 	int 56
 	extract_uint64 //staking_participation_fee_algo
-	btoi
 	store 8
 	byte "staking_participation_fee_algo"
-	load 8
 	app_global_put
 	//log
 
@@ -437,7 +428,6 @@ method_config_staking:
 	store 9
 	byte "staking_incentives_percentage"
 	load 9
-	btoi
 	app_global_put
 	//log
 
@@ -447,7 +437,6 @@ method_config_staking:
 	store 10
 	byte "staking_type"
 	load 10
-	btoi
 	app_global_put
 	//log
 
@@ -457,7 +446,6 @@ method_config_staking:
 	store 11
 	byte "staking_incentives_duration"
 	load 11
-	btoi
 	app_global_put
 	//log
 
@@ -467,7 +455,6 @@ method_config_staking:
 	store 12
 	byte "staking_incentives_eligibility"
 	load 12
-	btoi
 	app_global_put
 	//log
 
@@ -833,7 +820,7 @@ method_staking_withdraw_participate:
 	concat
 	b branch_log_return
 
-	method_staking_stake:
+method_staking_stake:
 	txna Accounts 0 // DAO main account
 	store 0 // DAO main account
 	txn Sender // Staking user account
