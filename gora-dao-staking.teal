@@ -371,7 +371,9 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 2 //staking_duration
+	load 0
+	int 16
+	extract_uint64 //staking_duration
 	store 3
 	byte "staking_duration"
 	load 3
@@ -380,7 +382,7 @@ method_config_staking:
 	//log
 
 	load 0
-	int 16
+	int 24
 	extract_uint64 //staking_min_duration
 	store 4
 	byte "staking_min_duration"
@@ -390,7 +392,7 @@ method_config_staking:
 	//log
 
 	load 0
-	int 24
+	int 32
 	extract_uint64 //staking_commission_percentage
 	store 5
 	byte "staking_commission_percentage"
@@ -400,37 +402,37 @@ method_config_staking:
 	//log
 
 	load 0
-	int 32
-	extract_uint64 //staking_participation_fee
+	int 40
+	extract_uint64 //staking_commission_percentage_algo
 	store 6
-	byte "staking_participation_fee"
+	byte "staking_commission_percentage_algo"
 	load 6
 	btoi
 	app_global_put
 	//log
 
 	load 0
-	int 40
-	extract_uint64 //staking_participation_fee_algo
+	int 48
+	extract_uint64 //staking_participation_fee
 	store 7
-	byte "staking_participation_fee_algo"
+	byte "staking_participation_fee"
 	load 7
 	btoi
 	app_global_put
 	//log
 
 	load 0
-	int 48
-	extract_uint64 //staking_commission_percentage_algo
+	int 56
+	extract_uint64 //staking_participation_fee_algo
 	btoi
 	store 8
-	byte "staking_commission_percentage_algo"
+	byte "staking_participation_fee_algo"
 	load 8
 	app_global_put
 	//log
 
 	load 0
-	int 56
+	int 64
 	extract_uint64 //staking_incentives_percentage
 	store 9
 	byte "staking_incentives_percentage"
@@ -439,7 +441,9 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 3 //staking_type
+	load 0
+	int 72
+	extract_uint64 //staking_type
 	store 10
 	byte "staking_type"
 	load 10
@@ -447,7 +451,9 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 4 //staking_incentives_duration
+	load 0
+	int 80
+	extract_uint64 //staking_incentives_duration
 	store 11
 	byte "staking_incentives_duration"
 	load 11
@@ -455,10 +461,99 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 5 //staking_incentives_eligibility
+	load 0
+	int 88
+	extract_uint64 //staking_incentives_eligibility
 	store 12
 	byte "staking_incentives_eligibility"
 	load 12
+	btoi
+	app_global_put
+	//log
+
+	txn ApplicationArgs 2 //staking_name
+	store 13
+	byte "staking_name"
+	load 13
+	app_global_put
+	//log
+
+	txn ApplicationArgs 3 //staking_description
+	store 13
+	byte "staking_description"
+	load 13
+	app_global_put
+	//log
+
+	txn ApplicationArgs 4 //staking_website
+	store 14
+	byte "staking_website"
+	load 14
+	app_global_put
+	//log
+
+	txn ApplicationArgs 5 //staking_banner
+	store 15
+	byte "staking_banner"
+	load 15
+	app_global_put
+	//log
+
+	txn ApplicationArgs 5 //staking_proxy_app_id
+	store 16
+	byte "staking_proxy_app_id"
+	load 16
+	btoi
+	app_global_put
+	//log
+
+	txn ApplicationArgs 6 //staking_proxy_app_address
+	store 17
+	byte "staking_proxy_app_address"
+	load 17
+	app_global_put
+	//log
+
+	txn ApplicationArgs 7 //staking_proxy_app_creator
+	store 18
+	byte "staking_proxy_app_creator"
+	load 18
+	app_global_put
+	//log
+
+	txn ApplicationArgs 8 //staking_proxy_app_manager
+	store 19
+	byte "staking_proxy_app_manager"
+	load 19
+	app_global_put
+	//log
+
+	txn ApplicationArgs 9 //staking_proxy_app_created_at
+	store 20
+	byte "staking_proxy_app_created_at"
+	load 20
+	app_global_put
+	//log
+
+	txn ApplicationArgs 10 //staking_proxy_app_updated_at
+	store 21
+	byte "staking_proxy_app_updated_at"
+	load 21
+	app_global_put
+	//log
+
+	txn ApplicationArgs 11 //staking_proxy_app_is_whitelisted
+	store 22
+	byte "staking_proxy_app_is_whitelisted"
+	load 22
+	btoi
+	app_global_put
+	//log
+
+	txn ApplicationArgs 12 //staking_proxy_app_is_pending
+	store 23
+	byte "staking_proxy_app_is_pending"
+	load 23
 	btoi
 	app_global_put
 	//log

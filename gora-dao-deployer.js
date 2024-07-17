@@ -3005,6 +3005,7 @@ const GoraDaoDeployer = class {
         //this.goraDaoMainApplicationId,
         const argsStaking = [
             tws1,
+            [
             0,//2 staking_min_participation_algo
             25, //3 staking_min_participation_token
             365, //4 staking_duration
@@ -3017,6 +3018,8 @@ const GoraDaoDeployer = class {
             1,//11 staking_type
             30,//12 staking_incentives_duration
             10, //13 staking_incentives_eligibility
+            ]
+            
         ]
         const atcStakingConfig = new this.algosdk.AtomicTransactionComposer()
 

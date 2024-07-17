@@ -55,7 +55,6 @@
                     "name": "manager_reference",
                     "description": "Dynamic box ref for Staking manager DAO member"
                 },
-               
                 {
                     "name": "staking_app",
                     "description": "Dynamic box ref for staking approval prog source code"
@@ -131,39 +130,76 @@
             "name": "config_staking",
             "description": "Configures a Staking contract! Returns the Staking contract ID!",
             "args": [
-                
                 {
                     "type": "pay",
                     "name": "payment_transaction",
                     "description": "Payment from Staking manager to DAO for fees and Staking configuration MBRs!"
                 },
                 {
-                    "type": "(uint64,uint64,uint64,uint64,uint64,uint64,uint64)",
-                    "name": "staking_min_participation_algo, staking_min_participation_token, staking_min_duration, staking_commission_percentage, staking_commission_percentage_algo, staking_participation_fee, staking_participation_fee_algo, staking_incentives_percentage",
-                    "description": "DAO Staking configuration tuple: \n DAO Staking minimum participation in microAlgos \n DAO Staking minimum participation in DAO asset units \n DAO Staking eligible duration in days \n DAO Staking participation commission % in asset units \n DAO Staking commission percentage in MicroAlgos \n DAO Staking fee in DAO asset units \n DAO Staking fee in Algos \n  DAO Staking incentives percentage"
-                
+                    "type": "(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64)",
+                    "name": "staking_config_params",
+                    "description": "(staking_min_participation_algo, staking_min_participation_token, staking_duration, staking_min_duration, staking_commission_percentage, staking_commission_percentage_algo, staking_participation_fee, staking_participation_fee_algo, staking_incentives_percentage, staking_type, staking_incentives_duration, staking_incentives_eligibility)"
+                },
+                {
+                    "type": "string",
+                    "name": "staking_name",
+                    "description": "DAO Staking name"
+                },
+                {
+                    "type": "string",
+                    "name": "staking_description",
+                    "description": "DAO Staking description"
+                },
+                {
+                    "type": "string",
+                    "name": "staking_website",
+                    "description": "DAO Staking website"
+                },
+                {
+                    "type": "string",
+                    "name": "staking_banner",
+                    "description": "DAO Staking banner image URL"
                 },
                 {
                     "type": "uint64",
-                    "name": "staking_duration",
-                    "description": "DAO Staking total duration in days"
+                    "name": "staking_proxy_app_id",
+                    "description": "DAO Staking app ID"
+                },
+                {
+                    "type": "address",
+                    "name": "staking_proxy_app_address",
+                    "description": "DAO Staking app address"
+                },
+                {
+                    "type": "address",
+                    "name": "staking_proxy_app_creator",
+                    "description": "DAO Staking app creator address"
+                },
+                {
+                    "type": "address",
+                    "name": "staking_proxy_app_manager",
+                    "description": "DAO Staking app manager address"
+                },
+                {
+                    "type": "string",
+                    "name": "staking_proxy_app_created_at",
+                    "description": "DAO Staking app creation timestamp"
+                },
+                {
+                    "type": "string",
+                    "name": "staking_proxy_app_updated_at",
+                    "description": "DAO Staking app update timestamp"
                 },
                 {
                     "type": "uint64",
-                    "name": "staking_type",
-                    "description": "DAO Staking type, 0 for direct staking , 1 and greater than zero means proxy staking"
+                    "name": "staking_proxy_app_is_whitelisted",
+                    "description": "DAO Staking app whitelist status"
                 },
                 {
                     "type": "uint64",
-                    "name": "staking_incentives_duration",
-                    "description": "DAO Staking incentives duration in days(the time interval based on which incentives will be distributed) "
-                },
-                {
-                    "type": "uint64",
-                    "name": "staking_incentives_eligibility",
-                    "description": "DAO Staking incentives eligibility measure (Based on responded requests quantity during staking duration for proxied staking type and staking token amount for direct staking ) "
+                    "name": "staking_proxy_app_is_pending",
+                    "description": "DAO Staking app pending status"
                 }
-             
             ],
             "boxes": [
                 {
@@ -313,7 +349,6 @@
                     "name": "stake_axfer_transaction",
                     "description": "Axfer from Staking participant for staking token!"
                 },
-                
                 {
                     "type": "uint64",
                     "name": "amount_algo",
@@ -343,8 +378,6 @@
             "name": "staking_unstake",
             "description": "Un-stakes from Staking contract! Returns the staking member's account address concatenated with un-staked amount!",
             "args": [
-                
-                
                 {
                     "type": "uint64",
                     "name": "amount_algo",
