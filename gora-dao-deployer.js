@@ -3011,14 +3011,27 @@ const GoraDaoDeployer = class {
             365, //4 staking_duration
             550,//5 staking_min_duration
             12,//6 staking_commission_percentage
+            25,//9 staking_commission_percentage_algo
             0,//7 staking_participation_fee
             0,//8 staking_participation_fee_algo
-            25,//9 staking_commission_percentage_algo
             2,//10 staking_incentives_percentage
             1,//11 staking_type
             30,//12 staking_incentives_duration
             10, //13 staking_incentives_eligibility
-            ]
+            ],
+            "Test Staking",
+            "This is a test staking contract for GoraDAO",
+            "https://gora.fi",
+            "https://storage.googleapis.com/download/storage/v1/b/algoracle.appspot.com/o/validators-v2-testnet%2FDOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ?generation=1692035953300634&alt=media",
+            "274900373",
+            "R2SAMADWJMQ5B4F3R627ICK3AC4O2WMPSNCW7G4EHJT5MYKIHW6H6UAWIM",
+            "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",
+            "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",
+            "1721224697",
+            "1721224697",
+            1,
+            0
+
             
         ]
         const atcStakingConfig = new this.algosdk.AtomicTransactionComposer()
