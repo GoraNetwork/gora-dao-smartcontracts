@@ -3022,7 +3022,7 @@ const GoraDaoDeployer = class {
             "Test Staking",
             "This is a test staking contract for GoraDAO",
             "https://gora.fi",
-            "https://storage.googleapis.com/download/storage/v1/b/algoracle.appspot.com/o/validators-v2-testnet%2FDOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ?generation=1692035953300634&alt=media",
+            "%2FDOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ?generation=1692035953300634&alt=media",
             274900373,
             "R2SAMADWJMQ5B4F3R627ICK3AC4O2WMPSNCW7G4EHJT5MYKIHW6H6UAWIM",
             "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",
@@ -3067,225 +3067,225 @@ const GoraDaoDeployer = class {
         }
     }
     // participates to a Staking from e member account
-    async participateStakingContract(acct) {
-        let account = acct || this.goraDaoUserAccount1;
-        let addr = account.addr;
-        let params = await this.algodClient.getTransactionParams().do();
-        let stakingApplication = Number(this.stakingApplicationId)
-        let daoApplication = Number(this.goraDaoMainApplicationId)
-        const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
-        const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()))
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(account)
-        let methodStakingParticipate = this.getMethodByName("staking_participate", stakingContract)
-        let methodDaoStakingParticipate = this.getMethodByName("staking_participate", daoContract)
-        let proposerPublicKey = this.algosdk.decodeAddress(this.goraDaoStakingAdminAccount.addr)
-        let memberPublicKey = this.algosdk.decodeAddress(addr)
-        const commonParamsStakingSetup = {
-            appID: stakingApplication,
-            appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
-            appAccounts: [this.goraDaoAdminAccount.addr],
-            appForeignApps: [Number(this.goraDaoMainApplicationId)],
-            sender: addr,
-            suggestedParams: params,
-            signer: signer,
-            boxes: [
-                { appIndex: Number(stakingApplication), name: memberPublicKey.publicKey },
-                { appIndex: Number(stakingApplication), name: proposerPublicKey.publicKey },
-                { appIndex: Number(stakingApplication), name: new Uint8Array(Buffer.from("participation_threshold")) },
+    // async participateStakingContract(acct) {
+    //     let account = acct || this.goraDaoUserAccount1;
+    //     let addr = account.addr;
+    //     let params = await this.algodClient.getTransactionParams().do();
+    //     let stakingApplication = Number(this.stakingApplicationId)
+    //     let daoApplication = Number(this.goraDaoMainApplicationId)
+    //     const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
+    //     const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()))
+    //     const signer = this.algosdk.makeBasicAccountTransactionSigner(account)
+    //     let methodStakingParticipate = this.getMethodByName("staking_participate", stakingContract)
+    //     let methodDaoStakingParticipate = this.getMethodByName("staking_participate", daoContract)
+    //     let proposerPublicKey = this.algosdk.decodeAddress(this.goraDaoStakingAdminAccount.addr)
+    //     let memberPublicKey = this.algosdk.decodeAddress(addr)
+    //     const commonParamsStakingSetup = {
+    //         appID: stakingApplication,
+    //         appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
+    //         appAccounts: [this.goraDaoAdminAccount.addr],
+    //         appForeignApps: [Number(this.goraDaoMainApplicationId)],
+    //         sender: addr,
+    //         suggestedParams: params,
+    //         signer: signer,
+    //         boxes: [
+    //             { appIndex: Number(stakingApplication), name: memberPublicKey.publicKey },
+    //             { appIndex: Number(stakingApplication), name: proposerPublicKey.publicKey },
+    //             { appIndex: Number(stakingApplication), name: new Uint8Array(Buffer.from("participation_threshold")) },
 
-            ],
-        }
-        const commonParamsDaoSetup = {
-            appID: daoApplication,
-            appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
-            appAccounts: [this.goraDaoStakingAdminAccount.addr],
-            appForeignApps: [Number(this.stakingApplicationId)],
-            sender: addr,
-            suggestedParams: params,
-            signer: signer,
-            boxes: [
-                { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.stakingApplicationId) },
-                { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
-                { appIndex: Number(daoApplication), name: proposerPublicKey.publicKey },
-            ],
-        }
+    //         ],
+    //     }
+    //     const commonParamsDaoSetup = {
+    //         appID: daoApplication,
+    //         appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
+    //         appAccounts: [this.goraDaoStakingAdminAccount.addr],
+    //         appForeignApps: [Number(this.stakingApplicationId)],
+    //         sender: addr,
+    //         suggestedParams: params,
+    //         signer: signer,
+    //         boxes: [
+    //             { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.stakingApplicationId) },
+    //             { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
+    //             { appIndex: Number(daoApplication), name: proposerPublicKey.publicKey },
+    //         ],
+    //     }
 
-        const ptxnFeeDao = new this.algosdk.Transaction({
-            from: addr,
-            to: this.goraDaoMainApplicationAddress,
-            amount: 11000,
-            type: 'pay',
-            ...params
-        })
-        const axferFeeDao = new this.algosdk.Transaction({
-            from: addr,
-            to: `${this.goraDaoMainApplicationAddress}`,
-            amount: 20,
-            assetIndex: Number(this.stakingAsset),
-            type: 'axfer',
-            ...params
-        })
-        const ptxnMinAlgo = new this.algosdk.Transaction({
-            from: addr,
-            to: this.goraDaoMainApplicationAddress,
-            amount: 10000,
-            type: 'pay',
-            ...params
-        })
-        const axferMinDao = new this.algosdk.Transaction({
-            from: addr,
-            to: `${this.goraDaoMainApplicationAddress}`,
-            amount: 25,
-            assetIndex: Number(this.stakingAsset),
-            type: 'axfer',
-            ...params
-        })
+    //     const ptxnFeeDao = new this.algosdk.Transaction({
+    //         from: addr,
+    //         to: this.goraDaoMainApplicationAddress,
+    //         amount: 11000,
+    //         type: 'pay',
+    //         ...params
+    //     })
+    //     const axferFeeDao = new this.algosdk.Transaction({
+    //         from: addr,
+    //         to: `${this.goraDaoMainApplicationAddress}`,
+    //         amount: 20,
+    //         assetIndex: Number(this.stakingAsset),
+    //         type: 'axfer',
+    //         ...params
+    //     })
+    //     const ptxnMinAlgo = new this.algosdk.Transaction({
+    //         from: addr,
+    //         to: this.goraDaoMainApplicationAddress,
+    //         amount: 10000,
+    //         type: 'pay',
+    //         ...params
+    //     })
+    //     const axferMinDao = new this.algosdk.Transaction({
+    //         from: addr,
+    //         to: `${this.goraDaoMainApplicationAddress}`,
+    //         amount: 25,
+    //         assetIndex: Number(this.stakingAsset),
+    //         type: 'axfer',
+    //         ...params
+    //     })
 
-        const tws0 = { txn: ptxnFeeDao, signer: signer }
-        const tws1 = { txn: axferFeeDao, signer: signer }
-        const tws2 = { txn: ptxnMinAlgo, signer: signer }
-        const tws3 = { txn: axferMinDao, signer: signer }
-        const argsDao = []
+    //     const tws0 = { txn: ptxnFeeDao, signer: signer }
+    //     const tws1 = { txn: axferFeeDao, signer: signer }
+    //     const tws2 = { txn: ptxnMinAlgo, signer: signer }
+    //     const tws3 = { txn: axferMinDao, signer: signer }
+    //     const argsDao = []
 
-        const argsStaking = [
-            tws0,
-            tws1,
-            tws2,
-            tws3,
-        ]
-        const atcStakingParticipate = new this.algosdk.AtomicTransactionComposer()
-        atcStakingParticipate.addMethodCall({
-            method: methodDaoStakingParticipate,
-            methodArgs: argsDao,
-            ...commonParamsDaoSetup
-        })
-        this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodStakingParticipate);
-        atcStakingParticipate.addMethodCall({
-            method: methodStakingParticipate,
-            methodArgs: argsStaking,
-            ...commonParamsStakingSetup
-        })
-        this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodDaoStakingParticipate);
+    //     const argsStaking = [
+    //         tws0,
+    //         tws1,
+    //         tws2,
+    //         tws3,
+    //     ]
+    //     const atcStakingParticipate = new this.algosdk.AtomicTransactionComposer()
+    //     atcStakingParticipate.addMethodCall({
+    //         method: methodDaoStakingParticipate,
+    //         methodArgs: argsDao,
+    //         ...commonParamsDaoSetup
+    //     })
+    //     this.logger.info('------------------------------')
+    //     this.logger.info("GoraDAO Contract ABI Exec method = %s", methodStakingParticipate);
+    //     atcStakingParticipate.addMethodCall({
+    //         method: methodStakingParticipate,
+    //         methodArgs: argsStaking,
+    //         ...commonParamsStakingSetup
+    //     })
+    //     this.logger.info('------------------------------')
+    //     this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodDaoStakingParticipate);
 
-        const stakingParticipateResults = await atcStakingParticipate.execute(this.algodClient, 10);
-        for (const idx in stakingParticipateResults.methodResults) {
-            let txid = stakingParticipateResults.methodResults[idx].txID
+    //     const stakingParticipateResults = await atcStakingParticipate.execute(this.algodClient, 10);
+    //     for (const idx in stakingParticipateResults.methodResults) {
+    //         let txid = stakingParticipateResults.methodResults[idx].txID
 
-            //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
-            let confirmedRound = stakingParticipateResults.confirmedRound
+    //         //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
+    //         let confirmedRound = stakingParticipateResults.confirmedRound
 
 
-            let returnedResults = this.algosdk.decodeUint64(stakingParticipateResults.methodResults[idx].rawReturnValue, "mixed")
-            this.logger.info("GoraDAO Staking Contract ABI Exec result = %s", returnedResults);
-            await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+    //         let returnedResults = this.algosdk.decodeUint64(stakingParticipateResults.methodResults[idx].rawReturnValue, "mixed")
+    //         this.logger.info("GoraDAO Staking Contract ABI Exec result = %s", returnedResults);
+    //         await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
-        }
+    //     }
 
-    }
+    // }
     // This method participates all accounts in the staking
-    async participateStakingContractAll() {
-        let accountsArray = [this.goraDaoUserAccount1, this.goraDaoUserAccount2, this.goraDaoUserAccount3, this.goraDaoUserAccount4, this.goraDaoUserAccount5]
-        for (let i = 0; i < accountsArray.length; i++) {
+    // async participateStakingContractAll() {
+    //     let accountsArray = [this.goraDaoUserAccount1, this.goraDaoUserAccount2, this.goraDaoUserAccount3, this.goraDaoUserAccount4, this.goraDaoUserAccount5]
+    //     for (let i = 0; i < accountsArray.length; i++) {
 
-            await this.participateStakingContract(accountsArray[i])
-        }
-        this.config['gora_dao']['participated_to_staking'] = true;
-        this.config['gora_dao']['staking_is_activated'] = true;
-        await this.saveConfigToFile(this.config)
-        this.logger.info("All 5 GoraDAO members have participated in the staking!");
-    }
-    async participationWithdrawStakingContractAll() {
-        let accountsArray = [this.goraDaoUserAccount1, this.goraDaoUserAccount2, this.goraDaoUserAccount3, this.goraDaoUserAccount4, this.goraDaoUserAccount5]
-        for (let i = 0; i < accountsArray.length; i++) {
+    //         await this.participateStakingContract(accountsArray[i])
+    //     }
+    //     this.config['gora_dao']['participated_to_staking'] = true;
+    //     this.config['gora_dao']['staking_is_activated'] = true;
+    //     await this.saveConfigToFile(this.config)
+    //     this.logger.info("All 5 GoraDAO members have participated in the staking!");
+    // }
+    // async participationWithdrawStakingContractAll() {
+    //     let accountsArray = [this.goraDaoUserAccount1, this.goraDaoUserAccount2, this.goraDaoUserAccount3, this.goraDaoUserAccount4, this.goraDaoUserAccount5]
+    //     for (let i = 0; i < accountsArray.length; i++) {
 
-            await this.participationWithdrawStakingContract(accountsArray[i])
-        }
-        this.config['gora_dao']['participated_to_staking'] = false;
-        this.config['gora_dao']['staking_is_activated'] = false;
-        await this.saveConfigToFile(this.config)
-        this.logger.info("All 5 GoraDAO members have withdrawn participation from the staking!");
-    }
+    //         await this.participationWithdrawStakingContract(accountsArray[i])
+    //     }
+    //     this.config['gora_dao']['participated_to_staking'] = false;
+    //     this.config['gora_dao']['staking_is_activated'] = false;
+    //     await this.saveConfigToFile(this.config)
+    //     this.logger.info("All 5 GoraDAO members have withdrawn participation from the staking!");
+    // }
     // Withdraws participation from a staking from a member account
-    async participationWithdrawStakingContract(acct) {
-        let account = acct || this.goraDaoUserAccount1;
-        let addr = account.addr;
-        let params = await this.algodClient.getTransactionParams().do();
-        let stakingApplication = Number(this.stakingApplicationId)
-        let daoApplication = Number(this.goraDaoMainApplicationId)
-        const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
-        const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()))
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(account)
-        let methodStakingParticipate = this.getMethodByName("staking_withdraw_participate", stakingContract)
-        let methodDaoStakingParticipate = this.getMethodByName("staking_withdraw_participate", daoContract)
-        let memberPublicKey = this.algosdk.decodeAddress(addr)
-        let proposerPublicKey = this.algosdk.decodeAddress(this.goraDaoStakingAdminAccount.addr)
-        const commonParamsStakingSetup = {
-            appID: stakingApplication,
-            appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
-            appForeignApps: [Number(this.goraDaoMainApplicationId)],
-            appAccounts: [this.goraDaoStakingAdminAccount.addr],
-            sender: addr,
-            suggestedParams: params,
-            signer: signer,
-            boxes: [
+    // async participationWithdrawStakingContract(acct) {
+    //     let account = acct || this.goraDaoUserAccount1;
+    //     let addr = account.addr;
+    //     let params = await this.algodClient.getTransactionParams().do();
+    //     let stakingApplication = Number(this.stakingApplicationId)
+    //     let daoApplication = Number(this.goraDaoMainApplicationId)
+    //     const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
+    //     const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()))
+    //     const signer = this.algosdk.makeBasicAccountTransactionSigner(account)
+    //     let methodStakingParticipate = this.getMethodByName("staking_withdraw_participate", stakingContract)
+    //     let methodDaoStakingParticipate = this.getMethodByName("staking_withdraw_participate", daoContract)
+    //     let memberPublicKey = this.algosdk.decodeAddress(addr)
+    //     let proposerPublicKey = this.algosdk.decodeAddress(this.goraDaoStakingAdminAccount.addr)
+    //     const commonParamsStakingSetup = {
+    //         appID: stakingApplication,
+    //         appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
+    //         appForeignApps: [Number(this.goraDaoMainApplicationId)],
+    //         appAccounts: [this.goraDaoStakingAdminAccount.addr],
+    //         sender: addr,
+    //         suggestedParams: params,
+    //         signer: signer,
+    //         boxes: [
 
-                { appIndex: Number(stakingApplication), name: memberPublicKey.publicKey },
-
-
-            ],
-        }
-        const commonParamsDaoSetup = {
-            appID: this.goraDaoMainApplicationId,
-            appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
-            appForeignApps: [Number(this.stakingApplicationId)],
-            appAccounts: [this.goraDaoStakingAdminAccount.addr],
-            sender: addr,
-            suggestedParams: params,
-            signer: signer,
-            boxes: [
-                { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.stakingApplicationId) },
-                { appIndex: Number(daoApplication), name: proposerPublicKey.publicKey },
-                { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
-            ],
-        }
+    //             { appIndex: Number(stakingApplication), name: memberPublicKey.publicKey },
 
 
-        const argsDao = []
-
-        const argsStaking = []
-        const atcStakingParticipate = new this.algosdk.AtomicTransactionComposer()
-        atcStakingParticipate.addMethodCall({
-            method: methodDaoStakingParticipate,
-            methodArgs: argsDao,
-            ...commonParamsDaoSetup
-        })
-        this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodStakingParticipate);
-        atcStakingParticipate.addMethodCall({
-            method: methodStakingParticipate,
-            methodArgs: argsStaking,
-            ...commonParamsStakingSetup
-        })
-        this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodDaoStakingParticipate);
-
-        const stakingParticipateResults = await atcStakingParticipate.execute(this.algodClient, 10);
-        for (const idx in stakingParticipateResults.methodResults) {
-            let txid = stakingParticipateResults.methodResults[idx].txID
-
-            //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
-            let confirmedRound = stakingParticipateResults.confirmedRound
+    //         ],
+    //     }
+    //     const commonParamsDaoSetup = {
+    //         appID: this.goraDaoMainApplicationId,
+    //         appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
+    //         appForeignApps: [Number(this.stakingApplicationId)],
+    //         appAccounts: [this.goraDaoStakingAdminAccount.addr],
+    //         sender: addr,
+    //         suggestedParams: params,
+    //         signer: signer,
+    //         boxes: [
+    //             { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.stakingApplicationId) },
+    //             { appIndex: Number(daoApplication), name: proposerPublicKey.publicKey },
+    //             { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
+    //         ],
+    //     }
 
 
-            let returnedResults = this.algosdk.decodeUint64(stakingParticipateResults.methodResults[idx].rawReturnValue, "mixed")
-            this.logger.info("GoraDAO Staking Contract ABI Exec result = %s", returnedResults);
-            await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+    //     const argsDao = []
 
-        }
+    //     const argsStaking = []
+    //     const atcStakingParticipate = new this.algosdk.AtomicTransactionComposer()
+    //     atcStakingParticipate.addMethodCall({
+    //         method: methodDaoStakingParticipate,
+    //         methodArgs: argsDao,
+    //         ...commonParamsDaoSetup
+    //     })
+    //     this.logger.info('------------------------------')
+    //     this.logger.info("GoraDAO Contract ABI Exec method = %s", methodStakingParticipate);
+    //     atcStakingParticipate.addMethodCall({
+    //         method: methodStakingParticipate,
+    //         methodArgs: argsStaking,
+    //         ...commonParamsStakingSetup
+    //     })
+    //     this.logger.info('------------------------------')
+    //     this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodDaoStakingParticipate);
 
-    }
+    //     const stakingParticipateResults = await atcStakingParticipate.execute(this.algodClient, 10);
+    //     for (const idx in stakingParticipateResults.methodResults) {
+    //         let txid = stakingParticipateResults.methodResults[idx].txID
+
+    //         //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
+    //         let confirmedRound = stakingParticipateResults.confirmedRound
+
+
+    //         let returnedResults = this.algosdk.decodeUint64(stakingParticipateResults.methodResults[idx].rawReturnValue, "mixed")
+    //         this.logger.info("GoraDAO Staking Contract ABI Exec result = %s", returnedResults);
+    //         await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+
+    //     }
+
+    // }
     async activateStakingContract() { }
     // This method is used to stake in a staking contract
     async stakeStakingContract(userIndex, amount) {
