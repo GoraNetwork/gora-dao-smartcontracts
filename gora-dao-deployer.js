@@ -3292,7 +3292,7 @@ const GoraDaoDeployer = class {
         let addr = this[`goraDaoUserAccount${userIndex}`].addr;
         let account = this[`goraDaoUserAccount${userIndex}`]
         let proposerAdminAddr = this.goraDaoStakingAdminAccount.addr;
-        let proposerPublicKey = this.algosdk.decodeAddress(this.goraDaoStakingAdminAccount.addr)
+        let stakerPublicKey = this.algosdk.decodeAddress(this.goraDaoStakingAdminAccount.addr)
         let params = await this.algodClient.getTransactionParams().do();
         let stakingApplication = Number(this.stakingApplicationId)
         let daoApplication = Number(this.goraDaoMainApplicationId)
@@ -3313,7 +3313,7 @@ const GoraDaoDeployer = class {
             boxes: [
 
                 { appIndex: Number(stakingApplication), name: memberPublicKey.publicKey },
-                { appIndex: Number(stakingApplication), name: proposerPublicKey.publicKey },
+                { appIndex: Number(stakingApplication), name: stakerPublicKey.publicKey },
                 { appIndex: Number(stakingApplication), name: new Uint8Array(Buffer.from("participation_threshold")) },
 
 
@@ -3329,8 +3329,8 @@ const GoraDaoDeployer = class {
             signer: signer,
             boxes: [
                 { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.stakingApplicationId) },
-                { appIndex: Number(stakingApplication), name: proposerPublicKey.publicKey },
-                { appIndex: Number(daoApplication), name: proposerPublicKey.publicKey },
+                { appIndex: Number(stakingApplication), name: stakerPublicKey.publicKey },
+                { appIndex: Number(daoApplication), name: stakerPublicKey.publicKey },
             ],
         }
 
@@ -3406,7 +3406,7 @@ const GoraDaoDeployer = class {
         let addr = this[`goraDaoUserAccount${userIndex}`].addr;
         let account = this[`goraDaoUserAccount${userIndex}`]
         let proposerAdminAddr = this.goraDaoStakingAdminAccount.addr;
-        let proposerPublicKey = this.algosdk.decodeAddress(this.goraDaoStakingAdminAccount.addr)
+        let stakerPublicKey = this.algosdk.decodeAddress(this.goraDaoStakingAdminAccount.addr)
         let params = await this.algodClient.getTransactionParams().do();
         let stakingApplication = Number(this.stakingApplicationId)
         let daoApplication = Number(this.goraDaoMainApplicationId)
@@ -3427,7 +3427,7 @@ const GoraDaoDeployer = class {
             boxes: [
 
                 { appIndex: Number(stakingApplication), name: memberPublicKey.publicKey },
-                { appIndex: Number(stakingApplication), name: proposerPublicKey.publicKey },
+                { appIndex: Number(stakingApplication), name: stakerPublicKey.publicKey },
                 { appIndex: Number(stakingApplication), name: new Uint8Array(Buffer.from("participation_threshold")) },
 
 
@@ -3443,8 +3443,8 @@ const GoraDaoDeployer = class {
             signer: signer,
             boxes: [
                 { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.stakingApplicationId) },
-                { appIndex: Number(stakingApplication), name: proposerPublicKey.publicKey },
-                { appIndex: Number(daoApplication), name: proposerPublicKey.publicKey },
+                { appIndex: Number(stakingApplication), name: stakerPublicKey.publicKey },
+                { appIndex: Number(daoApplication), name: stakerPublicKey.publicKey },
             ],
         }
 
