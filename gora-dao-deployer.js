@@ -3291,7 +3291,6 @@ const GoraDaoDeployer = class {
     async stakeStakingContract(userIndex, amount) {
         let addr = this[`goraDaoUserAccount${userIndex}`].addr;
         let account = this[`goraDaoUserAccount${userIndex}`]
-        let proposerAdminAddr = this.goraDaoStakingAdminAccount.addr;
         let stakerPublicKey = this.algosdk.decodeAddress(this.goraDaoStakingAdminAccount.addr)
         let params = await this.algodClient.getTransactionParams().do();
         let stakingApplication = Number(this.stakingApplicationId)
@@ -3405,7 +3404,6 @@ const GoraDaoDeployer = class {
     async unstakeStakingContract(userIndex, amount) {
         let addr = this[`goraDaoUserAccount${userIndex}`].addr;
         let account = this[`goraDaoUserAccount${userIndex}`]
-        let proposerAdminAddr = this.goraDaoStakingAdminAccount.addr;
         let stakerPublicKey = this.algosdk.decodeAddress(this.goraDaoStakingAdminAccount.addr)
         let params = await this.algodClient.getTransactionParams().do();
         let stakingApplication = Number(this.stakingApplicationId)
