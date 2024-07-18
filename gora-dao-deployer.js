@@ -3299,8 +3299,8 @@ const GoraDaoDeployer = class {
         const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
         const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()))
         const signer = this.algosdk.makeBasicAccountTransactionSigner(account)
-        let methodStakingParticipate = this.getMethodByName("staking_vote", stakingContract)
-        let methodDaoStakingParticipate = this.getMethodByName("staking_vote", daoContract)
+        let methodStakingParticipate = this.getMethodByName("staking_stake", stakingContract)
+        let methodDaoStakingParticipate = this.getMethodByName("staking_stake", daoContract)
         let memberPublicKey = this.algosdk.decodeAddress(addr)
         const commonParamsStakingSetup = {
             appID: stakingApplication,
