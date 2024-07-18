@@ -73,7 +73,7 @@ branch_method_router:
 	==
 	bnz method_update_staking
 
-	method "config_staking(pay,(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64),string,string,string,string,uint64,address,address,address,string,string,uint64,uint64)uint64"
+	method "config_staking(pay,(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64),string,string,string,string,string,address,address,address,string,string,string,string)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_staking
@@ -492,7 +492,6 @@ method_config_staking:
 	store 16
 	byte "staking_proxy_app_id"
 	load 16
-	btoi
 	app_global_put
 	//log
 

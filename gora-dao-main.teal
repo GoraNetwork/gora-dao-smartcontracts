@@ -1418,7 +1418,7 @@ method_staking_create:
     // itxn 
     int 15
     itxn_field GlobalNumByteSlice
-    int 20
+    int 25
     itxn_field GlobalNumUint
     int 2
     itxn_field LocalNumUint
