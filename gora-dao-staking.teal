@@ -567,6 +567,18 @@ method_config_staking:
 	concat
 	b branch_log_return
 
+branch_stake_new_account:
+	load 9
+	gtxn 1 Amount
+	itob
+	box_put
+
+	load 11
+	gtxn 2 AssetAmount
+	itob
+	box_put
+
+	b branch_stake_continue
 
 
 method_staking_stake:
@@ -661,38 +673,48 @@ method_staking_stake:
 	byte "_algo"
 	concat
 	store 9 // the stake account algo box name
+
+	load 1
+	byte "_token"
+	concat
+	store 11 // the stake account token box name
+
+	int 0
+	dup
+	store 10
+	store 12
+
+// Checking staked algo amount box 
 	load 9
 	box_get
-	assert
+	bz branch_stake_continue
 	btoi
 	store 10 // Staked amounts algos from account box
 	load 9
 	box_del
 	assert
 
-	load 1
-	byte "_token"
-	concat
-	store 11 // the stake account token box name
 	load 11
 	box_get
-	assert
+	bz branch_stake_continue
 	btoi
 	store 12 // Staked amounts tokens from account box
 	load 11
 	box_del
 	assert
 
+
+branch_stake_continue:
 	// Staking finalization and account boxes staking values update
 	load 9
-	load 3
+	load 10
 	load 5
 	+
 	itob
 	box_put
 
 	load 11
-	load 4
+	load 12
 	load 6
 	+
 	itob
@@ -708,20 +730,18 @@ method_staking_stake:
 
 	byte "staked_amount_algo"
 	app_global_get
-	load 3
-	+
-	store 7 // The total staked amount algo
+	load 5
+	+ // The total staked amount algo
 	byte "staked_amount_algo"
-	load 7
+	swap
 	app_global_put
 
 	byte "staked_amount"
 	app_global_get
 	load 4
-	+
-	store 8 // The total staked amount token
+	+// The total staked amount token
 	byte "staked_amount"
-	load 8
+	swap
 	app_global_put
 
 

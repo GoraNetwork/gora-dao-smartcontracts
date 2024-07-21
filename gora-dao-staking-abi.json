@@ -270,7 +270,6 @@
                 "type": "uint64"
             }
         },
-       
         {
             "name": "staking_stake",
             "description": "Stakes in Staking contract! Returns the staking member's account address concatenated with staked amount!",
