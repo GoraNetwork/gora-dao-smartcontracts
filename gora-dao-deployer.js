@@ -3308,7 +3308,7 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-                { appIndex: Number(stakingApplication), name: new Uint8Array(Buffer.from("manager_reference")) },
+                { appIndex: Number(stakingApplication), name: memberPublicKey.publicKey },
             ],
         }
         const commonParamsDaoActivate = {
