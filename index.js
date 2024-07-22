@@ -676,14 +676,12 @@ async function stakingOperations() {
     } else if (config['gora_dao']['dao_staking_deployed'] === true && config['gora_dao']['staking_asa_distributed'] === true) {
         choices.push('Re-Distribute Staking Asset')
     }
-    if (config['gora_dao']['participated_to_staking'] === true) {
-        choices.push('Withdraw Staking Participation')
-    } else {
-        choices.push('Participate into Staking')
+    if (config['gora_dao']['staking_is_activated'] === false) {
+        choices.push('Activate Staking')
+    } else if (config['gora_dao']['staking_is_activated'] === true) {
+        choices.push('Stake in Staking contract')
     }
-    if (config['gora_dao']['participated_to_staking'] === true) {
-        choices.push('Stake in Staking')
-    }
+
 
     choices.push('Help')
     choices.push('Back to Main Menu')
@@ -824,67 +822,61 @@ async function stakingOperations() {
                 ]);
             }
             break;
-        case 'Participate into Staking':
-            try {
-                await goraDaoDeployer.participateStakingContractAll();
+        // case 'Participate into Staking':
+        //     try {
+        //         await goraDaoDeployer.participateStakingContractAll();
 
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            } catch (error) {
-                console.error('An error occurred:', error);
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            }
-            break;
-        case 'Withdraw Staking Participation':
+        //         await inquirer.prompt([
+        //             {
+        //                 type: 'input',
+        //                 name: 'continue',
+        //                 message: 'Press Enter to go back to menu...',
+        //             },
+        //         ]);
+        //     } catch (error) {
+        //         console.error('An error occurred:', error);
+        //         await inquirer.prompt([
+        //             {
+        //                 type: 'input',
+        //                 name: 'continue',
+        //                 message: 'Press Enter to go back to menu...',
+        //             },
+        //         ]);
+        //     }
+        //     break;
+        // case 'Withdraw Staking Participation':
+        //     try {
+        //         await goraDaoDeployer.participationWithdrawStakingContractAll();
+        //         await inquirer.prompt([
+        //             {
+        //                 type: 'input',
+        //                 name: 'continue',
+        //                 message: 'Press Enter to go back to menu...',
+        //             },
+        //         ]);
+
+        //     } catch (error) {
+        //         console.error('An error occurred:', error);
+        //         await inquirer.prompt([
+        //             {
+        //                 type: 'input',
+        //                 name: 'continue',
+        //                 message: 'Press Enter to go back to menu...',
+        //             },
+        //         ]);
+        //     }
+        //     break;
+        case 'Stake in Staking contract':
             try {
-                await goraDaoDeployer.participationWithdrawStakingContractAll();
-                await inquirer.prompt([
+                let { amount } = await inquirer.prompt([
                     {
                         type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
+                        name: 'amount',
+                        message: 'What amount you want to stake?',
                     },
                 ]);
 
-            } catch (error) {
-                console.error('An error occurred:', error);
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            }
-            break;
-        case 'Vote on Staking':
-            try {
-                let { userIndex } = await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'userIndex',
-                        message: 'Which user to vote for? (1-5):',
-                    },
-                ]);
-                let { vote } = await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'vote',
-                        message: 'What is the vote? (0: NO, 1:YES, 2: Abstain ):',
-                    },
-                ]);
-                await goraDaoDeployer.stakeStakingContract(Number(userIndex), Number(vote));
+                await goraDaoDeployer.stakeStakingContract(Number(amount));
                 await inquirer.prompt([
                     {
                         type: 'input',

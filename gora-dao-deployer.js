@@ -1608,8 +1608,8 @@ const GoraDaoDeployer = class {
             if (this.config.deployer['config_staking_contracts']) await this.configureStakingContract();
 
             if (this.config.deployer['activate_staking_contracts']) await this.activateStakingContract();
-            if (this.config.deployer['participate_staking_contracts']) await this.participateStakingContract();
-            if (this.config.deployer['withdraw_participate_staking_contracts']) await this.participationWithdrawStakingContract();
+            // if (this.config.deployer['participate_staking_contracts']) await this.participateStakingContract();
+            // if (this.config.deployer['withdraw_participate_staking_contracts']) await this.participationWithdrawStakingContract();
             if (this.config.deployer['stake_staking_contracts']) await this.stakeStakingContract();
             if (this.config.deployer['unstake_staking_contracts']) await this.stakeStakingContract();
             process.exit();
@@ -3329,7 +3329,7 @@ const GoraDaoDeployer = class {
         ];
         //this.goraDaoMainApplicationId,
         const argsStaking = [
-            
+
            
         ];
         const atcStakingActivate = new this.algosdk.AtomicTransactionComposer()
