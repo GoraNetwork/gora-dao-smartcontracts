@@ -3308,11 +3308,7 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-                { appIndex: Number(stakingApplication), name: new Uint8Array(Buffer.from("participation_threshold")) },
-                { appIndex: Number(stakingApplication), name: new Uint8Array(Buffer.from("vote_threshold")) },
-                { appIndex: Number(stakingApplication), name: new Uint8Array(Buffer.from("staking_allocation")) },
-                { appIndex: Number(stakingApplication), name: new Uint8Array(Buffer.from("staking_vote_values")) },
-                // { appIndex: Number(stakingApplication), name: memberPublicKey.publicKey },
+                { appIndex: Number(stakingApplication), name: new Uint8Array(Buffer.from("manager_reference")) },
             ],
         }
         const commonParamsDaoActivate = {
