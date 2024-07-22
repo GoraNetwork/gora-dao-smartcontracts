@@ -325,7 +325,8 @@ method_activate_staking:
 	bz branch_error_activation
 
 	byte 0x151f7c75
-	byte "Staking is activated!"
+	global CurrentApplicationID
+	itob
 	concat
 	b branch_log_return
 
