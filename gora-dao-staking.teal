@@ -319,7 +319,9 @@ method_update_manager_address:
 // Handles activation of Staking
 method_activate_staking:
 	callsub sub_check_manager_auth
-	
+	byte "staking_is_activated"
+	int 1
+	app_global_put
 
 	byte 0x151f7c75
 	global CurrentApplicationID
