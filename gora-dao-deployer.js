@@ -3329,6 +3329,7 @@ const GoraDaoDeployer = class {
         ];
         //this.goraDaoMainApplicationId,
         const argsStaking = [
+            
            
         ];
         const atcStakingActivate = new this.algosdk.AtomicTransactionComposer()

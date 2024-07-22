@@ -181,7 +181,7 @@ branch_method_router:
 	==
 	bnz method_staking_config
 
-    method "method_staking_activate(uint64)uint64"
+    method "method_staking_activate()uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_staking_activate

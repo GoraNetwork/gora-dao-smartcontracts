@@ -691,11 +691,7 @@
             "name": "activate_staking",
             "description": "Activates staking contract!",
             "args": [
-                {
-                    "type": "uint64",
-                    "name": "asset_reference",
-                    "description": "DAO Main token (E.g. Gora) ID"
-                }
+               
             ],
             "boxes": [
                 {

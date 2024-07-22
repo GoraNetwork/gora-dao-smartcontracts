@@ -245,11 +245,7 @@
             "description": "Activates a Staking! Returns the Staking contract ID!",
             "args": [
                 
-                {
-                    "type": "uint64",
-                    "name": "asset_reference",
-                    "description": "DAO Main asset ID"
-                }
+               
             ],
             "boxes": [
                 {

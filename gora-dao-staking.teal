@@ -83,7 +83,7 @@ branch_method_router:
 	==
 	bnz method_update_manager_address
 
-	method "activate_staking(application,byte[],byte[])string"
+	method "activate_staking()uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_activate_staking
