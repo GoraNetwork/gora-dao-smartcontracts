@@ -3343,7 +3343,7 @@ const GoraDaoDeployer = class {
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Contract ABI Exec method = %s", methodDaoStakingActivate);
-        atcStakingConfig.addMethodCall({
+        atcStakingActivate.addMethodCall({
             ...commonParamsDaoActivate,
             method: methodDaoStakingActivate,
             appAccounts: [this.stakingApplicationAddress],

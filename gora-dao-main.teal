@@ -181,7 +181,7 @@ branch_method_router:
 	==
 	bnz method_staking_config
 
-    method "method_activate_staking()uint64"
+    method "activate_staking()uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_activate_staking
@@ -1849,7 +1849,7 @@ method_staking_config:
 	b branch_log_return
 
 method_activate_staking:
-    gtxn 1 ApplicationID
+    gtxn 0 ApplicationID
     byte "manager_address"
     app_global_get_ex
     assert
