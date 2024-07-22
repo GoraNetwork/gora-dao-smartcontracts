@@ -244,20 +244,11 @@
             "name": "activate_staking",
             "description": "Activates a Staking! Returns the Staking contract ID!",
             "args": [
-                {
-                    "type": "pay",
-                    "name": "payment_transaction",
-                    "description": "Payment from Staking manager to DAO for fees and Staking activation MBRs!"
-                },
+                
                 {
                     "type": "uint64",
                     "name": "asset_reference",
                     "description": "DAO Main asset ID"
-                },
-                {
-                    "type": "account",
-                    "name": "manager_reference",
-                    "description": "DAO manager account reference"
                 }
             ],
             "boxes": [
