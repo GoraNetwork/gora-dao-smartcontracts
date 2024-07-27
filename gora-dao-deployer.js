@@ -3015,9 +3015,11 @@ const GoraDaoDeployer = class {
                 0,//7 staking_participation_fee
                 0,//8 staking_participation_fee_algo
                 2,//10 staking_incentives_percentage
+                2,//10 staking_incentives_percentage_algo
                 1,//11 staking_type
                 30,//12 staking_incentives_duration
-                10, //13 staking_incentives_eligibility
+                10,// staking return percentage
+                0, // staking return percentage Algo
             ],
             "Test Staking",
             "This is a test staking contract for GoraDAO",
@@ -3030,7 +3032,8 @@ const GoraDaoDeployer = class {
             "1721224697",
             "1721224697",
             1,
-            0
+            0,
+            1,
         ]
         const atcStakingConfig = new this.algosdk.AtomicTransactionComposer()
 

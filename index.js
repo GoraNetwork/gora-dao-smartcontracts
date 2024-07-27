@@ -679,7 +679,8 @@ async function stakingOperations() {
     if (config['gora_dao']['staking_is_activated'] === false) {
         choices.push('Activate Staking')
     } else if (config['gora_dao']['staking_is_activated'] === true) {
-        choices.push('Stake in Staking contract')
+        choices.push('Stake in staking contract')
+        choices.push('Withdraw stake from staking contract')
     }
 
 
@@ -866,7 +867,36 @@ async function stakingOperations() {
         //         ]);
         //     }
         //     break;
-        case 'Stake in Staking contract':
+        case 'Stake in staking contract':
+            try {
+                let { amount } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'amount',
+                        message: 'What amount you want to stake?',
+                    },
+                ]);
+
+                await goraDaoDeployer.stakeStakingContract(Number(amount));
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Withdraw stake from staking contract':
             try {
                 let { amount } = await inquirer.prompt([
                     {

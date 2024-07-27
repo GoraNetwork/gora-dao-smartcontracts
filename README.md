@@ -17,9 +17,10 @@
 
 This repository is a work in progress and contains Algorand TEAL smart contracts of GoraDAO, plus interactive CLI to test and operate it!
 
-GoraDAO provides dynamic generation of Proposals and Vesting (optional for future development phase ) contracts via C2C calls and offers unique DAO features:
+GoraDAO provides dynamic generation of Staking, Proposals and Vesting (optional for future development phase ) contracts via C2C calls and offers unique DAO features:
 
-- Self-contained, decentralized, and permissionless lifecycle via interactive CLI
+- Self-contained, decentralized, and permission-less lifecycle
+- Interactive CLI
 - 100% Sybil resistant
 - 100% double-vote resistant (as per identity level on Algorand blockchain)
 - Configurable Subscription to DAO and Participation to Proposals
@@ -27,6 +28,7 @@ GoraDAO provides dynamic generation of Proposals and Vesting (optional for futur
 - Configurable Algo and BYOT for staking and fees
 - full separation of concerns on staking and fees on both proposals and voting aspects to maintain 100% decentralization and permissionless system
 - Configurable Vesting (future phase)
+- Configurable Staking (Direct and delegated staking contract under one DAO)
 
 A note on DAO business processes:
 
@@ -41,6 +43,10 @@ A note on DAO business processes:
 - GoraDAO managers processes:
   - Deploy DAO
   - Configure DAO
+  - Distribute DAO token
+- GoraDAO Staking managers processes:
+  - Create Staking
+  - Configure Staking
   - Distribute DAO token
 
 A note on threshold parameters structure:
