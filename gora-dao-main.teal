@@ -1423,11 +1423,11 @@ method_staking_create:
     // itxn 
     int 15
     itxn_field GlobalNumByteSlice
-    int 25
+    int 30
     itxn_field GlobalNumUint
-    int 2
+    int 5
     itxn_field LocalNumUint
-    int 0
+    int 3
     itxn_field LocalNumByteSlice
     txn Sender
     itxn_field Note
