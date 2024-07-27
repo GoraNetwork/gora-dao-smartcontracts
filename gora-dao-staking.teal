@@ -334,8 +334,8 @@ method_config_staking:
 	byte "participation_count"
 	app_global_del
 
-	txn Sender
 	byte "manager_address"
+	txn Sender
 	app_global_put
 	
 	gtxn 0 TypeEnum
