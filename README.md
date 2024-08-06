@@ -297,7 +297,6 @@ graph TD
 
 ```
 
-
 ## GoraDAO interactive CLI Screen cast 
 ![Screenshot 2024-03-03 at 18 48 02](https://github.com/GoraNetwork/gora-dao-smartcontracts/assets/1900448/092eed58-efb8-43c9-8a39-f7948dbed0fb)
 
@@ -320,3 +319,7 @@ graph TD
 ![Screenshot 2024-03-02 at 16 46 44](https://github.com/GoraNetwork/gora-dao-smartcontracts/assets/1900448/f468e262-681a-4f68-b952-99bb8fdc484f)
 
 ![Screenshot 2024-03-02 at 18 46 01](https://github.com/GoraNetwork/gora-dao-smartcontracts/assets/1900448/ecf4c4be-1c92-46d0-8653-8da684942b1f)
+
+
+## GoraDAO Staking
+GoraDAO staking serves two concurrent purposes: Staking contracts under DAO and proxy staking contracts as a wrapper around new functionalities on existing staking smart contracts, helping migration phases for existing DAO contracts operationally easier.
