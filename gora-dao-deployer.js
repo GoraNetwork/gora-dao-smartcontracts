@@ -1612,6 +1612,9 @@ const GoraDaoDeployer = class {
             // if (this.config.deployer['withdraw_participate_staking_contracts']) await this.participationWithdrawStakingContract();
             if (this.config.deployer['stake_staking_contracts']) await this.stakeStakingContract();
             if (this.config.deployer['unstake_staking_contracts']) await this.stakeStakingContract();
+            if (this.config.deployer['optin_proxy_staking_contracts']) await this.optinProxyStakingContract();
+            if (this.config.deployer['stake_proxy_staking_contracts']) await this.stakeProxyStakingContract();
+            if (this.config.deployer['unstake_proxy_staking_contracts']) await this.unstakeProxyStakingContract();
             process.exit();
         }
     }

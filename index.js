@@ -1008,6 +1008,7 @@ async function stakingOperations() {
     }
 }
 async function mainMenu(isInteractive) {
+    // Run deployer for account preparation and loading Mnemonics
     await goraDaoDeployer.runDeployer(isInteractive)
     console.log(` 
     .d8888b.                           8888888b.        d8888  .d88888b.  
@@ -1020,133 +1021,134 @@ async function mainMenu(isInteractive) {
      "Y8888P88  "Y88P"  888    "Y888888 8888888P" d88P     888  "Y88888P"  
                                                                            
                                                                            
-                                                                           `)
+                                                                           `);
+    if (isInteractive) {
+        // Main menu options
+        const answers = await inquirer.prompt([
+            {
+                type: 'list',
+                name: 'action',
+                message: 'Select the operation you would like to perform:',
+                choices: Number(config['gora_dao']['proposal_asa_id']) > 0 ? [
 
-    const answers = await inquirer.prompt([
-        {
-            type: 'list',
-            name: 'action',
-            message: 'Select the operation you would like to perform:',
-            choices: Number(config['gora_dao']['proposal_asa_id']) > 0 ? [
+                    'Tester Accounts Dispense',
+                    'Tester Accounts Stats',
+                    'GoraDAO Operations',
+                    'Proposals Operations',
+                    'Staking Operations',
+                    'Tester Accounts Recreate',
+                    'Help',
+                    'Exit'
+                ] : [
 
-                'Tester Accounts Dispense',
-                'Tester Accounts Stats',
-                'GoraDAO Operations',
-                'Proposals Operations',
-                'Staking Operations',
-                'Tester Accounts Recreate',
-                'Help',
-                'Exit'
-            ] : [
-
-                'Tester Accounts Dispense',
-                'Tester Accounts Stats',
+                    'Tester Accounts Dispense',
+                    'Tester Accounts Stats',
 
 
 
-                'GoraDAO Operations',
-                'Proposals Operations',
-                'Staking Operations',
-                'Tester Accounts Recreate',
-                'Help',
-                'Exit'
-            ],
-        },
-    ]);
+                    'GoraDAO Operations',
+                    'Proposals Operations',
+                    'Staking Operations',
+                    'Tester Accounts Recreate',
+                    'Help',
+                    'Exit'
+                ],
+            },
+        ]);
+        // Main menu operations
+        switch (answers.action) {
+            case 'Tester Accounts Recreate':
+                // Assuming testAccountStats is a method in GoraDaoDeployer
 
-    switch (answers.action) {
-        case 'Tester Accounts Recreate':
-            // Assuming testAccountStats is a method in GoraDaoDeployer
-
-            try {
-                let { recreate } = await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'recreate',
-                        message: 'Are you sure you want to re-create the tester accounts? (y/n)',
-                    },
-                ]);
-                if (recreate === 'y') {
-                    await goraDaoDeployer.sendAllAlgosAndDeleteMnemonics();
-                    await goraDaoDeployer.deployerReport();
-                } else {
-                    logger.info('Tester accounts recreation cancelled')
+                try {
+                    let { recreate } = await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'recreate',
+                            message: 'Are you sure you want to re-create the tester accounts? (y/n)',
+                        },
+                    ]);
+                    if (recreate === 'y') {
+                        await goraDaoDeployer.sendAllAlgosAndDeleteMnemonics();
+                        await goraDaoDeployer.deployerReport();
+                    } else {
+                        logger.info('Tester accounts recreation cancelled')
+                    }
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
                 }
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            } catch (error) {
-                console.error('An error occurred:', error);
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            }
-            break;
-        case 'Tester Accounts Stats':
-            try {
-                await goraDaoDeployer.deployerReport();
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            } catch (error) {
-                console.error('An error occurred:', error);
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            }
-            break;
-        case 'Tester Accounts Dispense':
-            // Assuming testAccountDispense is a method in GoraDaoDeployer
-            try {
-                await goraDaoDeployer.testAccountDispense();
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            } catch (error) {
-                console.error('An error occurred:', error);
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            }
-            break;
-        case 'GoraDAO Operations':
-            await goraDAOOperations();
-            break;
-        case 'Proposals Operations':
-            await proposalsOperations();
-            break;
-        case 'Staking Operations':
-            await stakingOperations();
-            break;
-        case 'Help':
-            logger.info('GoraDAO Help | Main Operations Menu');
-            logger.info('------------------------------------');
-            //logger.info('Test flow: Dispense ino Tester accounts---> Go to GoraDAO Operations to continue!');
-            logger.info(`
+                break;
+            case 'Tester Accounts Stats':
+                try {
+                    await goraDaoDeployer.deployerReport();
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                }
+                break;
+            case 'Tester Accounts Dispense':
+                // Assuming testAccountDispense is a method in GoraDaoDeployer
+                try {
+                    await goraDaoDeployer.testAccountDispense();
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                }
+                break;
+            case 'GoraDAO Operations':
+                await goraDAOOperations();
+                break;
+            case 'Proposals Operations':
+                await proposalsOperations();
+                break;
+            case 'Staking Operations':
+                await stakingOperations();
+                break;
+            case 'Help':
+                logger.info('GoraDAO Help | Main Operations Menu');
+                logger.info('------------------------------------');
+                //logger.info('Test flow: Dispense ino Tester accounts---> Go to GoraDAO Operations to continue!');
+                logger.info(`
             +-------------------------------------------+       +--------------------------------+
             |                                           |       |                                |
             |  Dispense ino Tester accounts             |------>|  Go to GoraDAO Operations      |
@@ -1154,28 +1156,28 @@ async function mainMenu(isInteractive) {
             +-------------------------------------------+       +--------------------------------+
             
             `);
-            logger.info('Tester Accounts Dispense: Dispense algos to tester accounts');
-            logger.info('Tester Accounts Stats: Show tester accounts stats');
+                logger.info('Tester Accounts Dispense: Dispense algos to tester accounts');
+                logger.info('Tester Accounts Stats: Show tester accounts stats');
 
-            logger.info('GoraDAO Operations: Perform GoraDAO operations');
-            logger.info('Proposals Operations: Perform Proposals operations');
-            logger.info('Tester Accounts Recreate: Recreate tester accounts');
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
-            break;
+                logger.info('GoraDAO Operations: Perform GoraDAO operations');
+                logger.info('Proposals Operations: Perform Proposals operations');
+                logger.info('Tester Accounts Recreate: Recreate tester accounts');
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+                break;
 
-        case 'Exit':
-            console.log('Exiting...');
-            process.exit(0);
+            case 'Exit':
+                console.log('Exiting...');
+                process.exit(0);
+        }
+        // Loop back to main menu unless exited
+        await mainMenu(isInteractive);
     }
-
-    // Loop back to main menu unless exited
-    await mainMenu(isInteractive);
 }
 
 // Initialize and run the main menu
