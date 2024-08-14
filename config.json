@@ -39,6 +39,7 @@
   },
   "owner": "LP6QRRBRDTDSP4HF7CSPWJV4AG4QWE437OYHGW7K5Y7DETKCSK5H3HCA7Q",
   "deployer": {
+    "is_interactive": true,
     "version": "v1.0.0",
     "mode": "remote",
     "deployer_report": false,

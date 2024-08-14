@@ -299,7 +299,7 @@ async function goraDAOOperations() {
             ]);
             break;
         case 'Back to Main Menu':
-            await mainMenu();
+            await mainMenu(true);
             break;
     }
 
@@ -644,7 +644,7 @@ async function proposalsOperations() {
             ]);
             break;
         case 'Back to Main Menu':
-            await mainMenu();
+            await mainMenu(true);
             break;
     }
 
@@ -657,7 +657,6 @@ async function proposalsOperations() {
         await stakingOperations();
     }
 }
-
 async function stakingOperations() {
     let choices = [];
     if (!(Number(config['gora_dao']['staking_asa_id']) > 0)) {
@@ -995,7 +994,7 @@ async function stakingOperations() {
             ]);
             break;
         case 'Back to Main Menu':
-            await mainMenu();
+            await mainMenu(true);
             break;
     }
 
@@ -1008,9 +1007,8 @@ async function stakingOperations() {
         await stakingOperations();
     }
 }
-
-async function mainMenu() {
-    await goraDaoDeployer.runDeployer(true)
+async function mainMenu(isInteractive) {
+    await goraDaoDeployer.runDeployer(isInteractive)
     console.log(` 
     .d8888b.                           8888888b.        d8888  .d88888b.  
     d88P  Y88b                          888  "Y88b      d88888 d88P" "Y88b 
@@ -1177,11 +1175,11 @@ async function mainMenu() {
     }
 
     // Loop back to main menu unless exited
-    await mainMenu();
+    await mainMenu(isInteractive);
 }
 
 // Initialize and run the main menu
-mainMenu().catch(err => {
+mainMenu(config.deployer['is_interactive']).catch(err => {
     console.error('An error occurred:', err);
     process.exit(1);
 });
