@@ -899,7 +899,7 @@ const GoraDaoDeployer = class {
         let addrTo4 = this.goraDaoUserAccount4.addr;
         let addrTo5 = this.goraDaoUserAccount5.addr;
         let appAddrTo = this.proposalApplicationAddress;
-        let amount = 2;
+        let amount = 5;
         let params = await this.algodClient.getTransactionParams().do();
 
 
@@ -1198,7 +1198,7 @@ const GoraDaoDeployer = class {
         let addrTo4 = this.goraDaoUserAccount4.addr;
         let addrTo5 = this.goraDaoUserAccount5.addr;
         let appAddrTo = this.stakingApplicationAddress;
-        let amount = 2000;
+        let amount = 5;
         let params = await this.algodClient.getTransactionParams().do();
 
 
