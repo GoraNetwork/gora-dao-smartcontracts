@@ -3034,9 +3034,9 @@ const GoraDaoDeployer = class {
             "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",//staking_proxy_app_manager
             "1721224697",//staking_proxy_app_created_at
             "1721224697",//staking_proxy_app_updated_at
-            1,
-            0,
-            1,
+            1,//staking_proxy_app_is_whitelisted
+            0,//staking_proxy_app_is_pending
+            1,//staking_incentives_eligibility
         ]
         const atcStakingConfig = new this.algosdk.AtomicTransactionComposer()
 

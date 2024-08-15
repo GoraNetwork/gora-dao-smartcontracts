@@ -4,6 +4,7 @@
     "network": "testnet",
     "asc_main_id": 0,
     "asc_main_address": "",
+    "gora_token_id":227418519,
     "asc_testnet_main_id": 684592249,
     "asc_testnet_main_address": "R4B7SVOQUKMJAGXHKMDOT52G5RAXNPKS3P43WCGMBU7DNUXBFDC5HIYTIQ",
     "asc_proposal_id": 685371818,
@@ -118,20 +119,36 @@
       "vote_stake": 1500000
     },
     "staking": {
-      "staking_min_participation_algo": 1000,
-      "staking_min_participation_token" : 1000000,
-      "staking_duration"  : 1000,
-      "staking_min_duration"  : 1000,
-      "staking_commission_percentage" : 100,
-      "staking_commission_percentage_algo"  : 100,
-      "staking_participation_fee" : 100,
-      "staking_participation_fee_algo"  : 100,
-      "staking_incentives_percentage" : 100,
-      "staking_incentives_percentage_algo"  : 100,
-      "staking_type"  : "staking_type",
-      "staking_incentives_duration" : 1000,
-      "staking_return_percentage" : 100,
-      "staking_return_percentage_algo"  : 100
+      "staking_params": {
+        "staking_min_participation_algo": 1000,
+        "staking_min_participation_token": 1000000,
+        "staking_duration": 1000,
+        "staking_min_duration": 1000,
+        "staking_commission_percentage": 100,
+        "staking_commission_percentage_algo": 100,
+        "staking_participation_fee": 100,
+        "staking_participation_fee_algo": 100,
+        "staking_incentives_percentage": 100,
+        "staking_incentives_percentage_algo": 100,
+        "staking_type": "staking_type",
+        "staking_incentives_duration": 1000,
+        "staking_return_percentage": 100,
+        "staking_return_percentage_algo": 100,
+        "staking_name":"",
+        "staking_description":"",
+        "staking_url":"",
+        "staking_banner":"",
+        "staking_proxy_app_id":"",
+        "staking_proxy_app_address":"",
+        "staking_proxy_app_creator":"",
+        "staking_proxy_app_manager":"",
+        "staking_proxy_app_created_at":"",
+        "staking_proxy_app_updated_at":"",
+        "staking_proxy_app_is_whitelisted":"",
+        "staking_proxy_app_is_pending":"",
+        "staking_incentives_eligibility":""
+      },
+      "proxy_staking_vesting_app_id": 259104850
     }
   }
 }
