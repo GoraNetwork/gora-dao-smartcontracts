@@ -1477,6 +1477,7 @@ const GoraDaoDeployer = class {
         const confirmedSignedSendToUserTxn5 = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToUserTxnResponse5.txId, 5);
         this.logger.info(`Transaction ${signedSendToUserTxnResponse5.txId} confirmed in round ${confirmedSignedSendToUserTxn5['confirmed-round']}.`);
         this.logger.info('GoraDAO Asset has been sent to The User 5 successfully')
+
         const signedSendToAppTxnResponse = await await this.algodClient.sendRawTransaction(signedSendToAppTxn).do();
         this.logger.info(`Transaction ID: ${signedSendToAppTxnResponse.txId}`);
         // Wait for confirmation
@@ -1572,11 +1573,13 @@ const GoraDaoDeployer = class {
 
             let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
             assetId = transactionResponse['asset-index'];
+            this.logger.info(`GoraDAO created TEST Asset ID: ${assetId}`);
 
         } else if (this.isGoraTokenEnforced && !!this.goraToken) {
             assetId = this.goraToken;
+            this.logger.info(`GoraDAO Asset has been explicitly set to Gora Token ID (By config): ${assetId}`);
         }
-        this.logger.info(`GoraDAO created TEST Asset ID: ${assetId}`);
+       
 
         this.config['gora_dao']['dao_asa_id'] = assetId;
         this.goraDaoAsset = assetId;
@@ -1975,36 +1978,52 @@ const GoraDaoDeployer = class {
 
             let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
             assetId = transactionResponse['asset-index'];
+            this.logger.info(`GoraDAO Proposal TEST created Asset ID: ${assetId}`);
         } else if (this.isGoraTokenEnforced && !!this.goraToken) {
             assetId = this.goraToken;
             let params = await this.algodClient.getTransactionParams().do();
-            const txnOptinUser1 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-                addrTo1, // from
-                addrTo1, // to 
+            const txnOptinProposalAccount = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+                this.goraDaoProposalAdminAccount, // from
+                this.goraDaoProposalAdminAccount, // to 
                 undefined, // closeRemainderTo
                 undefined, // note
                 0, // amount 
                 undefined,// Note
-                this.stakingAsset, // assetID
+                this.goraToken, // assetID
                 params,
                 undefined
             );
-            const signedOptinUserTxn1 = txnOptinUser1.signTxn(this.goraDaoUserAccount1.sk);
-            const txnSendToUser1 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-                addrFromStaking, // from
-                addrTo1, // to 
+          
+            const txnSendToProposalAccount = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+                this.goraDaoAdminAccount, // from
+                this.goraDaoProposalAdminAccount, // to 
                 undefined, // closeRemainderTo
                 undefined, // note
-                amount, // amount 
+                5, // amount 
                 undefined,// Note
-                this.stakingAsset, // assetID
+                this.goraToken, // assetID
                 params,
                 undefined
             );
-            const signedSendToUserTxn1 = txnSendToUser1.signTxn(this.goraDaoStakingAdminAccount.sk);
+
+            const signedTxnOptinProposalAccount = txnOptinProposalAccount.signTxn(this.goraDaoProposalAdminAccount.sk);
+            const signedOptinProposalAccountTxnResponse = await await this.algodClient.sendRawTransaction(signedTxnOptinProposalAccount).do();
+            this.logger.info(`Transaction ID: ${signedOptinProposalAccountTxnResponse.txId}`);
+            const confirmedSignedOptinUserTxnResponse = await this.algosdk.waitForConfirmation(this.algodClient, signedOptinProposalAccountTxnResponse.txId, 5);
+            this.logger.info(`Transaction ${signedOptinProposalAccountTxnResponse.txId} confirmed in round ${confirmedSignedOptinUserTxnResponse['confirmed-round']}.`);
+            this.logger.info('By config enforcement, The Proposal account has explicitly opted in to the Gora Token')
+
+                   
+            const signedTxnSendToProposalAccount = txnSendToProposalAccount.signTxn(this.goraDaoAdminAccount.sk);
+            const signedTxnSendToProposalAccountResponse = await await this.algodClient.sendRawTransaction(signedTxnSendToProposalAccount).do();
+            this.logger.info(`Transaction ID: ${signedTxnSendToProposalAccountResponse.txId}`);
+            const confirmedSignedTxnSendToProposalAccountResponse = await this.algosdk.waitForConfirmation(this.algodClient, signedTxnSendToProposalAccountResponse.txId, 5);
+            this.logger.info(`Transaction ${signedTxnSendToProposalAccountResponse.txId} confirmed in round ${confirmedSignedTxnSendToProposalAccountResponse['confirmed-round']}.`);
+            this.logger.info('By config enforcement Gora  Token has been sent to Proposal creator account successfully')
+            this.logger.info(`GoraDAO Proposal Asset has explicitly been set to Gora Token (by config values): ${this.goraToken}`);
         }
 
-        this.logger.info(`GoraDAO Proposal TEST created Asset ID: ${assetId}`);
+        
 
 
         this.config['gora_dao']['proposal_asa_id'] = assetId;
@@ -2047,12 +2066,53 @@ const GoraDaoDeployer = class {
 
             let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
             assetId = transactionResponse['asset-index'];
+            this.logger.info(`GoraDAO Staking TEST created Asset ID: ${assetId}`);
 
         } else if (this.isGoraTokenEnforced && !!this.goraToken) {
             assetId = this.goraToken;
+            let params = await this.algodClient.getTransactionParams().do();
+            const txnOptinStakingAccount = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+                this.goraDaoStakingAdminAccount, // from
+                this.goraDaoStakingAdminAccount, // to 
+                undefined, // closeRemainderTo
+                undefined, // note
+                0, // amount 
+                undefined,// Note
+                this.goraToken, // assetID
+                params,
+                undefined
+            );
+          
+            const txnSendToStakingAccount = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+                this.goraDaoAdminAccount, // from
+                this.goraDaoStakingAdminAccount, // to 
+                undefined, // closeRemainderTo
+                undefined, // note
+                5, // amount 
+                undefined,// Note
+                this.goraToken, // assetID
+                params,
+                undefined
+            );
+
+            const signedTxnOptinStakingAccount = txnOptinStakingAccount.signTxn(this.goraDaoStakingAdminAccount.sk);
+            const signedOptinStakingAccountTxnResponse = await await this.algodClient.sendRawTransaction(signedTxnOptinStakingAccount).do();
+            this.logger.info(`Transaction ID: ${signedOptinStakingAccountTxnResponse.txId}`);
+            const confirmedSignedOptinUserTxnResponse = await this.algosdk.waitForConfirmation(this.algodClient, signedOptinStakingAccountTxnResponse.txId, 5);
+            this.logger.info(`Transaction ${signedOptinStakingAccountTxnResponse.txId} confirmed in round ${confirmedSignedOptinUserTxnResponse['confirmed-round']}.`);
+            this.logger.info('By config enforcement, The Staking account has explicitly opted in to the Gora Token')
+
+                   
+            const signedTxnSendToStakingAccount = txnSendToStakingAccount.signTxn(this.goraDaoAdminAccount.sk);
+            const signedTxnSendToStakingAccountResponse = await await this.algodClient.sendRawTransaction(signedTxnSendToStakingAccount).do();
+            this.logger.info(`Transaction ID: ${signedTxnSendToStakingAccountResponse.txId}`);
+            const confirmedSignedTxnSendToStakingAccountResponse = await this.algosdk.waitForConfirmation(this.algodClient, signedTxnSendToStakingAccountResponse.txId, 5);
+            this.logger.info(`Transaction ${signedTxnSendToStakingAccountResponse.txId} confirmed in round ${confirmedSignedTxnSendToStakingAccountResponse['confirmed-round']}.`);
+            this.logger.info('By config enforcement Gora  Token has been sent to Staking creator account successfully')
+            this.logger.info(`GoraDAO Staking Asset has explicitly been set to Gora Token (by config values): ${this.goraToken}`);
         }
 
-        this.logger.info(`GoraDAO Staking TEST created Asset ID: ${assetId}`);
+       
         this.config['gora_dao']['staking_asa_id'] = assetId;
         this.stakingAsset = assetId
         await this.saveConfigToFile(this.config)
