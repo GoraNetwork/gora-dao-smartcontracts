@@ -162,6 +162,19 @@ sub_check_manager_auth:
 	==
 	assert
 	retsub
+branch_optin_gora_asset:
+	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	global CurrentApplicationAddress
+	itxn_field AssetReceiver
+	int 0
+	itxn_field AssetAmount
+	txna Assets 0
+	itxn_field XferAsset
+	itxn_submit
+	b branch_finalize_create_staking
+	
 
 // Handles creation of Staking contract
 method_create_staking:
@@ -215,10 +228,6 @@ method_create_staking:
 	load 7
 	app_global_put
 
-
-	
-
-
 	byte "stakings_count"
 	int 0
 	app_global_put
@@ -235,8 +244,12 @@ method_create_staking:
 	int 0
 	app_global_put
 
+	txna Assets 0
+	bnz branch_optin_gora_asset
 
 
+
+branch_finalize_create_staking:
 	byte 0x151f7c75
 	global CurrentApplicationAddress
 	concat
@@ -595,18 +608,7 @@ method_config_staking:
 	concat
 	b branch_log_return
 
-branch_stake_new_account:
-	load 9
-	gtxn 1 Amount
-	itob
-	box_put
 
-	load 11
-	gtxn 2 AssetAmount
-	itob
-	box_put
-
-	b branch_stake_continue
 
 
 

@@ -877,7 +877,7 @@ const GoraDaoDeployer = class {
 
 
         // Send the transaction
-        const signedSendToAppTxnResponse = await await this.algodClient.sendRawTransaction(signedSendToAppTxn).do();
+        const signedSendToAppTxnResponse = await this.algodClient.sendRawTransaction(signedSendToAppTxn).do();
         this.logger.info(`Transaction ID: ${signedSendToAppTxnResponse.txId}`);
 
         // Wait for confirmation
