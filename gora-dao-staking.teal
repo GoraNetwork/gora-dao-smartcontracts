@@ -568,6 +568,12 @@ method_config_staking:
 	app_global_put
 	//log
 
+	txna Accounts 1 //staking_proxy_participating_address
+	store 26
+	byte "staking_proxy_participating_address"
+	load 26
+	app_global_put
+
 	itxn_begin
 	global CurrentApplicationAddress
 	itxn_field Sender

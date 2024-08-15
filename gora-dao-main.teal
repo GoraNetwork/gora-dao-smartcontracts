@@ -1421,7 +1421,7 @@ method_staking_create:
     itxn_field OnCompletion
 
     // itxn 
-    int 15
+    int 20
     itxn_field GlobalNumByteSlice
     int 30
     itxn_field GlobalNumUint

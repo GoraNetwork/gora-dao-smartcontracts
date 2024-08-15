@@ -3168,7 +3168,7 @@ const GoraDaoDeployer = class {
         atcStakingConfig.addMethodCall({
             ...commonParamsStakingSetup,
             method: methodStakingConfig,
-            appAccounts: [this.goraDaoMainApplicationAddress],
+            appAccounts: [this.goraDaoMainApplicationAddress, this.stakingProxyParticipationAddress],
             methodArgs: argsStaking,
 
         })
