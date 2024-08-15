@@ -1577,6 +1577,27 @@ const GoraDaoDeployer = class {
 
         } else if (this.isGoraTokenEnforced && !!this.goraToken) {
             assetId = this.goraToken;
+            assetId = this.goraToken;
+            let params = await this.algodClient.getTransactionParams().do();
+            const txnOptinAdminAccount = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+                this.goraDaoAdminAccount, // from
+                this.goraDaoAdminAccount, // to 
+                undefined, // closeRemainderTo
+                undefined, // note
+                0, // amount 
+                undefined,// Note
+                this.goraToken, // assetID
+                params,
+                undefined
+            );
+        
+
+            const signedTxnOptinAdminAccount = txnOptinAdminAccount.signTxn(this.goraDaoAdminAccount.sk);
+            const signedOptinAdminAccountTxnResponse = await await this.algodClient.sendRawTransaction(signedTxnOptinAdminAccount).do();
+            this.logger.info(`Transaction ID: ${signedOptinAdminAccountTxnResponse.txId}`);
+            const confirmedSignedOptinUserTxnResponse = await this.algosdk.waitForConfirmation(this.algodClient, signedOptinAdminAccountTxnResponse.txId, 5);
+            this.logger.info(`Transaction ${signedOptinAdminAccountTxnResponse.txId} confirmed in round ${confirmedSignedOptinUserTxnResponse['confirmed-round']}.`);
+            this.logger.info('By config enforcement, The Admin account has explicitly opted in to the Gora Token')
             this.logger.info(`GoraDAO Asset has been explicitly set to Gora Token ID (By config): ${assetId}`);
         }
        
