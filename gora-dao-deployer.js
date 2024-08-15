@@ -1599,7 +1599,7 @@ const GoraDaoDeployer = class {
             this.logger.info(`Transaction ${signedOptinAdminAccountTxnResponse.txId} confirmed in round ${confirmedSignedOptinUserTxnResponse['confirmed-round']}.`);
             this.logger.info('By config enforcement, The Admin account has explicitly opted in to the Gora Token')
             this.logger.info(`GoraDAO Asset has been explicitly set to Gora Token ID (By config): ${assetId}`);
-        }
+         }
        
 
         this.config['gora_dao']['dao_asa_id'] = assetId;
