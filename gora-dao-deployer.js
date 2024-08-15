@@ -3154,6 +3154,7 @@ const GoraDaoDeployer = class {
         this.config['gora_dao']['staking_is_activated'] = true;
         await this.saveConfigToFile(this.config)
     }
+
     // This method is used to stake in a staking contract
     async stakeStakingContract(userIndex, amount) {
         let addr = this[`goraDaoUserAccount${userIndex}`].addr;
@@ -3378,6 +3379,89 @@ const GoraDaoDeployer = class {
             await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
         }
+    }
+
+     // This function is used to opt-in to a proxy staking contract
+     async optinProxyStakingContract() {
+        let stakingAdminAddr = this.goraDaoStakingAdminAccount.addr;
+        let params = await this.algodClient.getTransactionParams().do();
+        let stakingApplication = Number(this.stakingApplicationId)
+        let daoApplication = Number(this.goraDaoMainApplicationId)
+        const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
+        const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()))
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoStakingAdminAccount)
+        let methodStakingActivate = this.getMethodByName("activate_staking", stakingContract)
+        let methodDaoStakingActivate = this.getMethodByName("activate_staking", daoContract)
+
+        let memberPublicKey = this.algosdk.decodeAddress(stakingAdminAddr)
+        const commonParamsStakingActivate = {
+            appID: stakingApplication,
+            appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
+            appAccounts: [this.goraDaoAdminAccount.addr],
+            appForeignApps: [Number(this.goraDaoMainApplicationId)],
+            sender: stakingAdminAddr,
+            suggestedParams: params,
+            signer: signer,
+            boxes: [
+                { appIndex: Number(stakingApplication), name: memberPublicKey.publicKey },
+            ],
+        }
+        const commonParamsDaoActivate = {
+            appID: daoApplication,
+            appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
+            appForeignApps: [Number(this.stakingApplicationId)],
+            appAccounts: [this.goraDaoAdminAccount.addr],
+            sender: stakingAdminAddr,
+            suggestedParams: params,
+            signer: signer,
+            boxes: [
+                { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.stakingApplicationId) },
+                { appIndex: Number(daoApplication), name: memberPublicKey.publicKey },
+            ],
+        }
+        const argsDao = [
+
+        ];
+        //this.goraDaoMainApplicationId,
+        const argsStaking = [
+
+           
+        ];
+        const atcStakingActivate = new this.algosdk.AtomicTransactionComposer()
+
+        atcStakingActivate.addMethodCall({
+            ...commonParamsStakingActivate,
+            method: methodStakingActivate,
+            appAccounts: [this.goraDaoMainApplicationAddress],
+            methodArgs: argsStaking,
+
+        })
+        this.logger.info('------------------------------')
+        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodDaoStakingActivate);
+        atcStakingActivate.addMethodCall({
+            ...commonParamsDaoActivate,
+            method: methodDaoStakingActivate,
+            appAccounts: [this.stakingApplicationAddress],
+            methodArgs: argsDao,
+
+        })
+        this.logger.info('------------------------------')
+        this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodStakingActivate);
+        const stakingActivateResults = await atcStakingActivate.execute(this.algodClient, 10);
+        for (const idx in stakingActivateResults.methodResults) {
+            let txid = stakingActivateResults.methodResults[idx].txID
+
+            //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
+            let confirmedRound = stakingActivateResults.confirmedRound
+
+
+            let returnedResults = this.algosdk.decodeUint64(stakingActivateResults.methodResults[idx].rawReturnValue, "mixed")
+            this.logger.info("GoraDAO Staking Contract ABI Exec result = %s", returnedResults);
+            await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+
+        }
+        this.config['gora_dao']['staking_is_activated'] = true;
+        await this.saveConfigToFile(this.config)
     }
     ////////////////////////////////////////////////
 
