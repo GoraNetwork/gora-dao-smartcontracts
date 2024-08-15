@@ -3016,11 +3016,11 @@ const GoraDaoDeployer = class {
                 0,// staking_min_participation_algo
                 25, // staking_min_participation_token
                 365, // staking_duration
-                550,// staking_min_duration
+                365,// staking_min_duration
                 12,// staking_commission_percentage
+                25,// staking_commission_percentage_algo
                 0,// staking_participation_fee
                 0,// staking_participation_fee_algo
-                25,// staking_commission_percentage_algo
                 2,// staking_incentives_percentage
                 2,// staking_incentives_percentage_algo
                 1,// staking_type
@@ -3032,12 +3032,12 @@ const GoraDaoDeployer = class {
             "This is a test staking contract for GoraDAO",//staking_description
             "https://develop.gora.fi", //staking_url
             "QmWjvCGPyL9zmA5B84WPqLYF27dL2nFgr1Lw6rMd7CpQPV/images/goranetwork_logo.jpeg",//staking_banner
-            "274900373",//staking_proxy_app_id
+            274900373,//staking_proxy_app_id
             "R2SAMADWJMQ5B4F3R627ICK3AC4O2WMPSNCW7G4EHJT5MYKIHW6H6UAWIM",//staking_proxy_app_address
             "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",//staking_proxy_app_creator
             "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",//staking_proxy_app_manager
-            "1721224697",//staking_proxy_app_created_at
-            "1721224697",//staking_proxy_app_updated_at
+            1721224697,//staking_proxy_app_created_at
+            1721224697,//staking_proxy_app_updated_at
             1,//staking_proxy_app_is_whitelisted
             0,//staking_proxy_app_is_pending
             1,//staking_incentives_eligibility
