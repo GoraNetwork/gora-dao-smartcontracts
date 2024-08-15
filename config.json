@@ -119,6 +119,7 @@
       "vote_stake": 1500000
     },
     "staking": {
+      "proxy_staking_vesting_app_id": 259104850,
       "staking_params": {
         "staking_min_participation_algo": 1000,
         "staking_min_participation_token": 1000000,
@@ -147,8 +148,7 @@
         "staking_proxy_app_is_whitelisted":"",
         "staking_proxy_app_is_pending":"",
         "staking_incentives_eligibility":""
-      },
-      "proxy_staking_vesting_app_id": 259104850
+      }
     }
   }
 }
