@@ -152,8 +152,8 @@
                 },
                 {
                     "type": "string",
-                    "name": "staking_website",
-                    "description": "DAO Staking website"
+                    "name": "staking_url",
+                    "description": "DAO Staking URL"
                 },
                 {
                     "type": "string",
@@ -248,6 +248,20 @@
         {
             "name": "activate_staking",
             "description": "Activates a Staking! Returns the Staking contract ID!",
+            "args": [],
+            "boxes": [
+                {
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref per manager account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "optin_staking",
+            "description": "Opts a user account into a proxied Staking contract! Returns the proxied Staking contract ID!",
             "args": [],
             "boxes": [
                 {

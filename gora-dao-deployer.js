@@ -3009,31 +3009,31 @@ const GoraDaoDeployer = class {
         const argsStaking = [
             tws1,
             [
-                0,//2 staking_min_participation_algo
-                25, //3 staking_min_participation_token
-                365, //4 staking_duration
-                550,//5 staking_min_duration
-                12,//6 staking_commission_percentage
-                25,//9 staking_commission_percentage_algo
-                0,//7 staking_participation_fee
-                0,//8 staking_participation_fee_algo
-                2,//10 staking_incentives_percentage
-                2,//10 staking_incentives_percentage_algo
-                1,//11 staking_type
-                30,//12 staking_incentives_duration
-                10,// staking return percentage
-                0, // staking return percentage Algo
+                0,// staking_min_participation_algo
+                25, // staking_min_participation_token
+                365, // staking_duration
+                550,// staking_min_duration
+                12,// staking_commission_percentage
+                0,// staking_participation_fee
+                0,// staking_participation_fee_algo
+                25,// staking_commission_percentage_algo
+                2,// staking_incentives_percentage
+                2,// staking_incentives_percentage_algo
+                1,// staking_type
+                30,// staking_incentives_duration
+                10,// staking_return_percentage
+                0, // staking_return_percentage_algo
             ],
-            "Test Staking",
-            "This is a test staking contract for GoraDAO",
-            "https://gora.fi",
-            "%2FDOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ?generation=1692035953300634&alt=media",
-            "274900373",
-            "R2SAMADWJMQ5B4F3R627ICK3AC4O2WMPSNCW7G4EHJT5MYKIHW6H6UAWIM",
-            "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",
-            "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",
-            "1721224697",
-            "1721224697",
+            "Test Staking", //staking_name
+            "This is a test staking contract for GoraDAO",//staking_description
+            "https://develop.gora.fi", //staking_url
+            "QmWjvCGPyL9zmA5B84WPqLYF27dL2nFgr1Lw6rMd7CpQPV/images/goranetwork_logo.jpeg",//staking_banner
+            "274900373",//staking_proxy_app_id
+            "R2SAMADWJMQ5B4F3R627ICK3AC4O2WMPSNCW7G4EHJT5MYKIHW6H6UAWIM",//staking_proxy_app_address
+            "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",//staking_proxy_app_creator
+            "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",//staking_proxy_app_manager
+            "1721224697",//staking_proxy_app_created_at
+            "1721224697",//staking_proxy_app_updated_at
             1,
             0,
             1,
@@ -3390,11 +3390,11 @@ const GoraDaoDeployer = class {
         const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
         const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()))
         const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoStakingAdminAccount)
-        let methodStakingActivate = this.getMethodByName("activate_staking", stakingContract)
-        let methodDaoStakingActivate = this.getMethodByName("activate_staking", daoContract)
+        let methodStakingOptin = this.getMethodByName("optin_staking", stakingContract)
+        let methodDaoStakingOptin = this.getMethodByName("optin_staking", daoContract)
 
         let memberPublicKey = this.algosdk.decodeAddress(stakingAdminAddr)
-        const commonParamsStakingActivate = {
+        const commonParamsStakingOptin = {
             appID: stakingApplication,
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
             appAccounts: [this.goraDaoAdminAccount.addr],
@@ -3406,7 +3406,7 @@ const GoraDaoDeployer = class {
                 { appIndex: Number(stakingApplication), name: memberPublicKey.publicKey },
             ],
         }
-        const commonParamsDaoActivate = {
+        const commonParamsDaoOptin = {
             appID: daoApplication,
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
             appForeignApps: [Number(this.stakingApplicationId)],
@@ -3427,40 +3427,40 @@ const GoraDaoDeployer = class {
 
            
         ];
-        const atcStakingActivate = new this.algosdk.AtomicTransactionComposer()
+        const atcStakingOptin = new this.algosdk.AtomicTransactionComposer()
 
-        atcStakingActivate.addMethodCall({
-            ...commonParamsStakingActivate,
-            method: methodStakingActivate,
+        atcStakingOptin.addMethodCall({
+            ...commonParamsStakingOptin,
+            method: methodStakingOptin,
             appAccounts: [this.goraDaoMainApplicationAddress],
             methodArgs: argsStaking,
 
         })
         this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodDaoStakingActivate);
-        atcStakingActivate.addMethodCall({
-            ...commonParamsDaoActivate,
-            method: methodDaoStakingActivate,
+        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodDaoStakingOptin);
+        atcStakingOptin.addMethodCall({
+            ...commonParamsDaoOptin,
+            method: methodDaoStakingOptin,
             appAccounts: [this.stakingApplicationAddress],
             methodArgs: argsDao,
 
         })
         this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodStakingActivate);
-        const stakingActivateResults = await atcStakingActivate.execute(this.algodClient, 10);
-        for (const idx in stakingActivateResults.methodResults) {
-            let txid = stakingActivateResults.methodResults[idx].txID
+        this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodStakingOptin);
+        const stakingOptinResults = await atcStakingOptin.execute(this.algodClient, 10);
+        for (const idx in stakingOptinResults.methodResults) {
+            let txid = stakingOptinResults.methodResults[idx].txID
 
             //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
-            let confirmedRound = stakingActivateResults.confirmedRound
+            let confirmedRound = stakingOptinResults.confirmedRound
 
 
-            let returnedResults = this.algosdk.decodeUint64(stakingActivateResults.methodResults[idx].rawReturnValue, "mixed")
+            let returnedResults = this.algosdk.decodeUint64(stakingOptinResults.methodResults[idx].rawReturnValue, "mixed")
             this.logger.info("GoraDAO Staking Contract ABI Exec result = %s", returnedResults);
             await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
         }
-        this.config['gora_dao']['staking_is_activated'] = true;
+        this.config['gora_dao']['proxy_staking_is_opted_in'] = true;
         await this.saveConfigToFile(this.config)
     }
     ////////////////////////////////////////////////
