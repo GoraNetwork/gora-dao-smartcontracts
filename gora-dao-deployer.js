@@ -163,11 +163,11 @@ const GoraDaoDeployer = class {
     testAccountDispense() {
         console.log("")
         this.logger.info('Please click on each link to dispense ALGOs to the associated account:')
-        this.logger.info('--------------------------GoraDAO DAO Account DISPENSE-------------------------------------')
+        this.logger.info('--------------------------GoraDAO DAO Creator Account DISPENSE-------------------------------------')
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoAdminAccount.addr);
-        this.logger.info('--------------------------GoraDAO Proposal Account DISPENSE-------------------------------------')
+        this.logger.info('--------------------------GoraDAO Proposal Creator Account DISPENSE-------------------------------------')
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoProposalAdminAccount.addr);
-        this.logger.info('--------------------------GoraDAO Staking Account DISPENSE-------------------------------------')
+        this.logger.info('--------------------------GoraDAO Staking Creator Account DISPENSE-------------------------------------')
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoStakingAdminAccount.addr);
 
 
