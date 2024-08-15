@@ -100,7 +100,7 @@ const GoraDaoDeployer = class {
 
         this.proxyStakingVestingAppId = props.config.gora_dao.proxy_staking_vesting_app_id
         this.stakingParams = props.config.deployer.staking.staking_params
-        this.goraToken = props.config.gora_dao.gora_token_id
+        this.goraToken = props.config.gora_dao.gora_testnet_token_id
         this.isGoraTokenEnforced = props.config.gora_dao.enforce_gora_token
 
 
@@ -1580,8 +1580,8 @@ const GoraDaoDeployer = class {
             assetId = this.goraToken;
             let params = await this.algodClient.getTransactionParams().do();
             const txnOptinAdminAccount = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-                this.goraDaoAdminAccount, // from
-                this.goraDaoAdminAccount, // to 
+                this.goraDaoAdminAccount.addr, // from
+                this.goraDaoAdminAccount.addr, // to 
                 undefined, // closeRemainderTo
                 undefined, // note
                 0, // amount 
@@ -2004,8 +2004,8 @@ const GoraDaoDeployer = class {
             assetId = this.goraToken;
             let params = await this.algodClient.getTransactionParams().do();
             const txnOptinProposalAccount = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-                this.goraDaoProposalAdminAccount, // from
-                this.goraDaoProposalAdminAccount, // to 
+                this.goraDaoProposalAdminAccount.addr, // from
+                this.goraDaoProposalAdminAccount.addr, // to 
                 undefined, // closeRemainderTo
                 undefined, // note
                 0, // amount 
@@ -2016,8 +2016,8 @@ const GoraDaoDeployer = class {
             );
 
             const txnSendToProposalAccount = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-                this.goraDaoAdminAccount, // from
-                this.goraDaoProposalAdminAccount, // to 
+                this.goraDaoAdminAccount.addr, // from
+                this.goraDaoProposalAdminAccount.addr, // to 
                 undefined, // closeRemainderTo
                 undefined, // note
                 5, // amount 
@@ -2093,8 +2093,8 @@ const GoraDaoDeployer = class {
             assetId = this.goraToken;
             let params = await this.algodClient.getTransactionParams().do();
             const txnOptinStakingAccount = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-                this.goraDaoStakingAdminAccount, // from
-                this.goraDaoStakingAdminAccount, // to 
+                this.goraDaoStakingAdminAccount.addr, // from
+                this.goraDaoStakingAdminAccount.addr, // to 
                 undefined, // closeRemainderTo
                 undefined, // note
                 0, // amount 
@@ -2105,8 +2105,8 @@ const GoraDaoDeployer = class {
             );
 
             const txnSendToStakingAccount = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-                this.goraDaoAdminAccount, // from
-                this.goraDaoStakingAdminAccount, // to 
+                this.goraDaoAdminAccount.addr, // from
+                this.goraDaoStakingAdminAccount.addr, // to 
                 undefined, // closeRemainderTo
                 undefined, // note
                 5, // amount 
