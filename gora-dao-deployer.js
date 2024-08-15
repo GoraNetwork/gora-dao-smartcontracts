@@ -98,6 +98,10 @@ const GoraDaoDeployer = class {
         this.stakingApprovalProgData = props.stakingApprovalProgData
         this.stakingClearProgData = props.stakingClearProgData
 
+        this.proxyStakingVestingAppId = props.config.gora_dao.proxy_staking_vesting_app_id
+        this.stakingParams = props.config.deployer.staking.staking_params
+        this.goraToken = props.config.gora_dao.gora_token_id
+
 
         // Global Variables attached to class instance object
 
