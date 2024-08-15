@@ -1590,7 +1590,7 @@ const GoraDaoDeployer = class {
                 params,
                 undefined
             );
-        
+
 
             const signedTxnOptinAdminAccount = txnOptinAdminAccount.signTxn(this.goraDaoAdminAccount.sk);
             const signedOptinAdminAccountTxnResponse = await await this.algodClient.sendRawTransaction(signedTxnOptinAdminAccount).do();
@@ -1599,8 +1599,8 @@ const GoraDaoDeployer = class {
             this.logger.info(`Transaction ${signedOptinAdminAccountTxnResponse.txId} confirmed in round ${confirmedSignedOptinUserTxnResponse['confirmed-round']}.`);
             this.logger.info('By config enforcement, The Admin account has explicitly opted in to the Gora Token')
             this.logger.info(`GoraDAO Asset has been explicitly set to Gora Token ID (By config): ${assetId}`);
-         }
-       
+        }
+
 
         this.config['gora_dao']['dao_asa_id'] = assetId;
         this.goraDaoAsset = assetId;
@@ -2014,7 +2014,7 @@ const GoraDaoDeployer = class {
                 params,
                 undefined
             );
-          
+
             const txnSendToProposalAccount = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 this.goraDaoAdminAccount, // from
                 this.goraDaoProposalAdminAccount, // to 
@@ -2034,7 +2034,7 @@ const GoraDaoDeployer = class {
             this.logger.info(`Transaction ${signedOptinProposalAccountTxnResponse.txId} confirmed in round ${confirmedSignedOptinUserTxnResponse['confirmed-round']}.`);
             this.logger.info('By config enforcement, The Proposal account has explicitly opted in to the Gora Token')
 
-                   
+
             const signedTxnSendToProposalAccount = txnSendToProposalAccount.signTxn(this.goraDaoAdminAccount.sk);
             const signedTxnSendToProposalAccountResponse = await await this.algodClient.sendRawTransaction(signedTxnSendToProposalAccount).do();
             this.logger.info(`Transaction ID: ${signedTxnSendToProposalAccountResponse.txId}`);
@@ -2044,7 +2044,7 @@ const GoraDaoDeployer = class {
             this.logger.info(`GoraDAO Proposal Asset has explicitly been set to Gora Token (by config values): ${this.goraToken}`);
         }
 
-        
+
 
 
         this.config['gora_dao']['proposal_asa_id'] = assetId;
@@ -2103,7 +2103,7 @@ const GoraDaoDeployer = class {
                 params,
                 undefined
             );
-          
+
             const txnSendToStakingAccount = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 this.goraDaoAdminAccount, // from
                 this.goraDaoStakingAdminAccount, // to 
@@ -2123,7 +2123,7 @@ const GoraDaoDeployer = class {
             this.logger.info(`Transaction ${signedOptinStakingAccountTxnResponse.txId} confirmed in round ${confirmedSignedOptinUserTxnResponse['confirmed-round']}.`);
             this.logger.info('By config enforcement, The Staking account has explicitly opted in to the Gora Token')
 
-                   
+
             const signedTxnSendToStakingAccount = txnSendToStakingAccount.signTxn(this.goraDaoAdminAccount.sk);
             const signedTxnSendToStakingAccountResponse = await await this.algodClient.sendRawTransaction(signedTxnSendToStakingAccount).do();
             this.logger.info(`Transaction ID: ${signedTxnSendToStakingAccountResponse.txId}`);
@@ -2133,7 +2133,7 @@ const GoraDaoDeployer = class {
             this.logger.info(`GoraDAO Staking Asset has explicitly been set to Gora Token (by config values): ${this.goraToken}`);
         }
 
-       
+
         this.config['gora_dao']['staking_asa_id'] = assetId;
         this.stakingAsset = assetId
         await this.saveConfigToFile(this.config)
