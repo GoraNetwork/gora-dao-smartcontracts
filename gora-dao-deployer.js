@@ -101,6 +101,7 @@ const GoraDaoDeployer = class {
         this.proxyStakingVestingAppId = props.config.gora_dao.proxy_staking_vesting_app_id
         this.stakingParams = props.config.deployer.staking.staking_params
         this.goraToken = props.config.gora_dao.gora_token_id
+        this.isGoraTokenEnforced = props.config.gora_dao.enforce_gora_token
 
 
         // Global Variables attached to class instance object
@@ -1542,33 +1543,39 @@ const GoraDaoDeployer = class {
     // Create GoraDAO Asset
     async createDaoAsset() {
 
-        let params = await this.algodClient.getTransactionParams().do();
-        const atxn = this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
-            assetMetadataHash: new Uint8Array(32),
-            assetName: 'GoraDAO TEST ASSET',
-            assetURL: 'https://gora.io',
-            clawback: this.goraDaoAdminAccount.addr,
-            decimals: 0,
-            defaultFrozen: false,
-            freeze: this.goraDaoAdminAccount.addr,
-            from: this.goraDaoAdminAccount.addr,
-            manager: this.goraDaoAdminAccount.addr,
-            note: new Uint8Array(Buffer.from('GoraDAO TEST Asset')),
-            reserve: this.goraDaoAdminAccount.addr,
-            suggestedParams: { ...params, fee: 1000, flatFee: true, },
-            total: 1000000,
-            unitName: 'GDT',
+        let assetId = 0
+        if (!this.isGoraTokenEnforced) {
+            let params = await this.algodClient.getTransactionParams().do();
+            const atxn = this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
+                assetMetadataHash: new Uint8Array(32),
+                assetName: 'GoraDAO TEST ASSET',
+                assetURL: 'https://gora.io',
+                clawback: this.goraDaoAdminAccount.addr,
+                decimals: 0,
+                defaultFrozen: false,
+                freeze: this.goraDaoAdminAccount.addr,
+                from: this.goraDaoAdminAccount.addr,
+                manager: this.goraDaoAdminAccount.addr,
+                note: new Uint8Array(Buffer.from('GoraDAO TEST Asset')),
+                reserve: this.goraDaoAdminAccount.addr,
+                suggestedParams: { ...params, fee: 1000, flatFee: true, },
+                total: 1000000,
+                unitName: 'GDT',
 
-        })
-        this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Asset Creation...");
-        let txnId = atxn.txID().toString();
-        let signedTxn = await atxn.signTxn(this.goraDaoAdminAccount.sk);
-        await this.algodClient.sendRawTransaction(signedTxn).do();
-        await this.algosdk.waitForConfirmation(this.algodClient, txnId, 10)
+            })
+            this.logger.info('------------------------------')
+            this.logger.info("GoraDAO Asset Creation...");
+            let txnId = atxn.txID().toString();
+            let signedTxn = await atxn.signTxn(this.goraDaoAdminAccount.sk);
+            await this.algodClient.sendRawTransaction(signedTxn).do();
+            await this.algosdk.waitForConfirmation(this.algodClient, txnId, 10)
 
-        let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
-        let assetId = transactionResponse['asset-index'];
+            let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
+            assetId = transactionResponse['asset-index'];
+
+        } else if (this.isGoraTokenEnforced && !!this.goraToken) {
+            assetId = this.goraToken;
+        }
         this.logger.info(`GoraDAO created TEST Asset ID: ${assetId}`);
 
         this.config['gora_dao']['dao_asa_id'] = assetId;
@@ -1939,36 +1946,39 @@ const GoraDaoDeployer = class {
 
     // Create GoraDAO Proposal Asset
     async createDaoProposalAsset() {
-        let params = await this.algodClient.getTransactionParams().do();
-        const atxn = this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
-            assetMetadataHash: new Uint8Array(32),
-            assetName: 'GoraDAO Proposal TEST ASSET',
-            assetURL: 'https://gora.io',
-            clawback: this.goraDaoProposalAdminAccount.addr,
-            decimals: 0,
-            defaultFrozen: false,
-            freeze: this.goraDaoProposalAdminAccount.addr,
-            from: this.goraDaoProposalAdminAccount.addr,
-            manager: this.goraDaoProposalAdminAccount.addr,
-            note: new Uint8Array(Buffer.from('GoraDAO Proposal TEST Asset')),
-            reserve: this.goraDaoProposalAdminAccount.addr,
-            suggestedParams: { ...params, fee: 1000, flatFee: true, },
-            total: 1000000,
-            unitName: 'GDPT',
-
-        })
-
-
-
-        this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Proposal Asset Creation...");
-        let txnId = atxn.txID().toString();
-        let signedTxn = await atxn.signTxn(this.goraDaoProposalAdminAccount.sk);
-        await this.algodClient.sendRawTransaction(signedTxn).do();
-        await this.algosdk.waitForConfirmation(this.algodClient, txnId, 10)
-
-        let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
-        let assetId = transactionResponse['asset-index'];
+        let assetId = 0
+        if (!this.isGoraTokenEnforced) {
+            let params = await this.algodClient.getTransactionParams().do();
+            const atxn = this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
+                assetMetadataHash: new Uint8Array(32),
+                assetName: 'GoraDAO Proposal TEST ASSET',
+                assetURL: 'https://gora.io',
+                clawback: this.goraDaoProposalAdminAccount.addr,
+                decimals: 0,
+                defaultFrozen: false,
+                freeze: this.goraDaoProposalAdminAccount.addr,
+                from: this.goraDaoProposalAdminAccount.addr,
+                manager: this.goraDaoProposalAdminAccount.addr,
+                note: new Uint8Array(Buffer.from('GoraDAO Proposal TEST Asset')),
+                reserve: this.goraDaoProposalAdminAccount.addr,
+                suggestedParams: { ...params, fee: 1000, flatFee: true, },
+                total: 1000000,
+                unitName: 'GDPT',
+    
+            })
+            this.logger.info('------------------------------')
+            this.logger.info("GoraDAO Proposal Asset Creation...");
+            let txnId = atxn.txID().toString();
+            let signedTxn = await atxn.signTxn(this.goraDaoProposalAdminAccount.sk);
+            await this.algodClient.sendRawTransaction(signedTxn).do();
+            await this.algosdk.waitForConfirmation(this.algodClient, txnId, 10)
+    
+            let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
+            assetId = transactionResponse['asset-index'];
+        }else if (this.isGoraTokenEnforced && !!this.goraToken) {
+            assetId = this.goraToken;
+        }
+        
         this.logger.info(`GoraDAO Proposal TEST created Asset ID: ${assetId}`);
 
 
@@ -1980,7 +1990,9 @@ const GoraDaoDeployer = class {
     }
     // Create GoraDAO Staking Asset
     async createDaoStakingAsset() {
-        let params = await this.algodClient.getTransactionParams().do();
+        let assetId = 0
+        if (!this.isGoraTokenEnforced) {
+            let params = await this.algodClient.getTransactionParams().do();
         const atxn = this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
             assetMetadataHash: new Uint8Array(32),
             assetName: 'GoraDAO Staking TEST ASSET',
@@ -2009,10 +2021,13 @@ const GoraDaoDeployer = class {
         await this.algosdk.waitForConfirmation(this.algodClient, txnId, 10)
 
         let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
-        let assetId = transactionResponse['asset-index'];
+        assetId = transactionResponse['asset-index'];
+
+        }else if (this.isGoraTokenEnforced && !!this.goraToken) {
+            assetId = this.goraToken;
+        }
+        
         this.logger.info(`GoraDAO Staking TEST created Asset ID: ${assetId}`);
-
-
         this.config['gora_dao']['staking_asa_id'] = assetId;
         this.stakingAsset = assetId
         await this.saveConfigToFile(this.config)
@@ -3120,7 +3135,7 @@ const GoraDaoDeployer = class {
         //this.goraDaoMainApplicationId,
         const argsStaking = [
 
-           
+
         ];
         const atcStakingActivate = new this.algosdk.AtomicTransactionComposer()
 
@@ -3385,11 +3400,12 @@ const GoraDaoDeployer = class {
         }
     }
 
-     // This function is used to opt-in to a proxy staking contract
-     async optinProxyStakingContract() {
+    // This function is used to opt-in to a proxy staking contract
+    async optinProxyStakingContract() {
         let stakingAdminAddr = this.goraDaoStakingAdminAccount.addr;
         let params = await this.algodClient.getTransactionParams().do();
-        let stakingApplication = Number(this.stakingApplicationId)
+        let stakingApplication = Number(this.stakingApplicationId);
+        let proxyStakingApplication = Number(this.stakingParams.staking_proxy_app_id)
         let daoApplication = Number(this.goraDaoMainApplicationId)
         const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()))
         const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()))
@@ -3427,9 +3443,10 @@ const GoraDaoDeployer = class {
 
         ];
         //this.goraDaoMainApplicationId,
-        const argsStaking = [
+        const argsOptin = [
+            proxyStakingApplication,
+            this.proxyStakingVestingAppId,
 
-           
         ];
         const atcStakingOptin = new this.algosdk.AtomicTransactionComposer()
 
@@ -3437,7 +3454,7 @@ const GoraDaoDeployer = class {
             ...commonParamsStakingOptin,
             method: methodStakingOptin,
             appAccounts: [this.goraDaoMainApplicationAddress],
-            methodArgs: argsStaking,
+            methodArgs: argsOptin,
 
         })
         this.logger.info('------------------------------')

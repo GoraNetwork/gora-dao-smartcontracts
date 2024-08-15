@@ -5,6 +5,7 @@
     "asc_main_id": 0,
     "asc_main_address": "",
     "gora_token_id":227418519,
+    "enforce_gora_token":true,
     "asc_testnet_main_id": 684592249,
     "asc_testnet_main_address": "R4B7SVOQUKMJAGXHKMDOT52G5RAXNPKS3P43WCGMBU7DNUXBFDC5HIYTIQ",
     "asc_proposal_id": 685371818,
