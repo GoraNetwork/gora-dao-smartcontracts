@@ -3170,13 +3170,14 @@ const GoraDaoDeployer = class {
             1,//staking_proxy_app_is_whitelisted
             0,//staking_proxy_app_is_pending
             1,//staking_incentives_eligibility
+            this.stakingProxyParticipationAddress
         ]
         const atcStakingConfig = new this.algosdk.AtomicTransactionComposer()
 
         atcStakingConfig.addMethodCall({
             ...commonParamsStakingSetup,
             method: methodStakingConfig,
-            appAccounts: [this.goraDaoMainApplicationAddress, this.stakingProxyParticipationAddress],
+            appAccounts: [this.goraDaoMainApplicationAddress],
             methodArgs: argsStaking,
 
         })

@@ -204,6 +204,11 @@
                     "type": "uint64",
                     "name": "staking_incentives_eligibility",
                     "description": "DAO Staking eligibility for incentives, based on voting and consensus participation"
+                },
+                {
+                    "type": "address",
+                    "name": "staking_proxy_participating_address",
+                    "description": "DAO Proxy Staking app participation address"
                 }
             ],
             "boxes": [
