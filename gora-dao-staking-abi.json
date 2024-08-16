@@ -161,7 +161,7 @@
                     "description": "DAO Staking banner image URL"
                 },
                 {
-                    "type": "string",
+                    "type": "uint64",
                     "name": "staking_proxy_app_id",
                     "description": "DAO Staking app ID"
                 },

@@ -102,7 +102,7 @@ const GoraDaoDeployer = class {
         this.stakingParams = props.config.deployer.staking.staking_params
         this.goraToken = props.config.gora_dao.gora_testnet_token_id
         this.isGoraTokenEnforced = props.config.gora_dao.enforce_gora_token
-
+        this.stakingProxyParticipationAddress = props.config.deployer.staking.staking_params.staking_proxy_app_participating_address
 
         // Global Variables attached to class instance object
 
@@ -3165,8 +3165,8 @@ const GoraDaoDeployer = class {
             "R2SAMADWJMQ5B4F3R627ICK3AC4O2WMPSNCW7G4EHJT5MYKIHW6H6UAWIM",//staking_proxy_app_address
             "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",//staking_proxy_app_creator
             "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",//staking_proxy_app_manager
-            1721224697,//staking_proxy_app_created_at
-            1721224697,//staking_proxy_app_updated_at
+            "1721224697",//staking_proxy_app_created_at
+            "1721224697",//staking_proxy_app_updated_at
             1,//staking_proxy_app_is_whitelisted
             0,//staking_proxy_app_is_pending
             1,//staking_incentives_eligibility
