@@ -88,6 +88,11 @@ branch_method_router:
 	==
 	bnz method_activate_staking
 
+	// method "optin_staking(uint64)uint64"
+	// txn ApplicationArgs 0
+	// ==
+	// bnz method_optin_staking
+
 	// method "staking_participate(pay,axfer,pay,axfer)uint64"
 	// txn ApplicationArgs 0
 	// ==
@@ -594,10 +599,26 @@ method_config_staking:
 	concat
 	b branch_log_return
 
+// method_optin_staking:
+// 	itxn_begin
+// 	global CurrentApplicationAddress
+// 	itxn_field Sender
+// 	int appl
+// 	itxn_field TypeEnum
+// 	int NoOp
+// 	itxn_field OnCompletion
 
-
-
-
+// 	method "opt_in(uint64)void"
+// 	itxn_field ApplicationArgs
+// 	txn Applications 2
+// 	itxn_field ApplicationID
+// 	txn ApplicationArgs 1
+// 	itxn_field ApplicationArgs
+// 	itxn_submit
+// 	byte 0x151f7c75
+// 	txn ApplicationArgs 1
+// 	concat
+// 	b branch_log_return
 
 // Handles logging the last element on the stack then put a 1 on the top and return (log and approve)
 branch_log_return:

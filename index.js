@@ -677,12 +677,15 @@ async function stakingOperations() {
     } else if (config['gora_dao']['dao_staking_deployed'] === true && config['gora_dao']['staking_asa_distributed'] === true) {
         choices.push('Re-Distribute Staking Asset')
     }
+    choices.push('Opt-in to Proxy Staking')
     if (config['gora_dao']['staking_is_activated'] === false) {
         choices.push('Activate Staking')
     } else if (config['gora_dao']['staking_is_activated'] === true) {
         choices.push('Stake in staking contract')
         choices.push('Withdraw stake from staking contract')
     }
+   
+    
 
 
     choices.push('Help')
@@ -947,6 +950,27 @@ async function stakingOperations() {
                 ]);
             }
             break;
+        case 'Opt-in to Proxy Staking':
+            try {
+                await goraDaoDeployer.optinProxyStakingContract();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+                
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
 
         case 'Help':
             logger.info('GoraDAO Help | Proposals Operations Menu');

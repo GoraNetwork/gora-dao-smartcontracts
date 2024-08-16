@@ -265,9 +265,15 @@
             }
         },
         {
-            "name": "optin_staking",
+            "name": "opt_in",
             "description": "Opts a user account into a proxied Staking contract! Returns the proxied Staking contract ID!",
-            "args": [],
+            "args": [
+                {
+                    "type": "uint64",
+                    "name": "proxy_staking_vesting_app_id",
+                    "description": "Proxied V2 Staking contract's id"
+                }
+            ],
             "boxes": [
                 {
                     "name": "manager_reference",
@@ -275,7 +281,7 @@
                 }
             ],
             "returns": {
-                "type": "uint64"
+                "type": "void"
             }
         },
         {

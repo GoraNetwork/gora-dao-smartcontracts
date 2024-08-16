@@ -37,7 +37,8 @@
     "indexer_remote_token": "",
     "indexer_remote_port": "",
     "algo_dispenser": "https://dispenser.testnet.aws.algodev.network/?account=",
-    "verbose": false
+    "verbose": false,
+    "proxy_staking_is_opted_in": true
   },
   "owner": "LP6QRRBRDTDSP4HF7CSPWJV4AG4QWE437OYHGW7K5Y7DETKCSK5H3HCA7Q",
   "deployer": {
