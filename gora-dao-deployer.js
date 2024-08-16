@@ -1679,9 +1679,17 @@ const GoraDaoDeployer = class {
         params.fee = 1000
         params.flatFee = true
         let appTxn = this.algosdk.makeApplicationCreateTxnFromObject({
-            from: addr, suggestedParams: params, onComplete,
-            approvalProgram: compiledResultUint8, clearProgram: compiledClearResultUint8,
-            numLocalInts: localInts, numLocalByteSlices: localBytes, numGlobalInts: globalInts, numGlobalByteSlices: globalBytes, extraPages: 1
+            foreignAssets: [this.goraDaoAsset],
+            from: addr,
+            suggestedParams: params,
+            onComplete,
+            approvalProgram: compiledResultUint8,
+            clearProgram: compiledClearResultUint8,
+            numLocalInts: localInts,
+            numLocalByteSlices: localBytes,
+            numGlobalInts: globalInts,
+            numGlobalByteSlices: globalBytes,
+            extraPages: 1
         });
         let appTxnId = appTxn.txID().toString();
 

@@ -52,7 +52,20 @@ check_owner_auth:
 	==
 	assert
 	retsub
-
+branch_optin_gora_asset:
+	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int axfer
+	itxn_field TypeEnum
+	global CurrentApplicationAddress
+	itxn_field AssetReceiver
+	int 0
+	itxn_field AssetAmount
+	load 2
+	itxn_field XferAsset
+	itxn_submit
+	retsub
 branch_create:
 	
 	byte "manager_address"
@@ -86,6 +99,8 @@ branch_create:
 	byte "active_stakings_count"
 	int 0
 	app_global_put
+
+ 
 
 	int 1
 	return
@@ -292,22 +307,11 @@ method_config_dao:
     app_global_put
 
 
-	itxn_begin
-	global CurrentApplicationAddress
-	itxn_field Sender
-	int axfer
-	itxn_field TypeEnum
-	global CurrentApplicationAddress
-	itxn_field AssetReceiver
-	int 0
-	itxn_field AssetAmount
-	txna Assets 0
-	itxn_field XferAsset
-	itxn_submit
+    callsub branch_optin_gora_asset
 	
 
 	byte 0x151f7c75
-	txna Assets 0
+	load 2
 	itob
 	concat
 	b branch_log_return
