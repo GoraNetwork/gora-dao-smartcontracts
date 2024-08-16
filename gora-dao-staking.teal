@@ -162,18 +162,6 @@ sub_check_manager_auth:
 	==
 	assert
 	retsub
-branch_optin_gora_asset:
-	itxn_begin
-	global CurrentApplicationAddress
-	itxn_field Sender
-	global CurrentApplicationAddress
-	itxn_field AssetReceiver
-	int 0
-	itxn_field AssetAmount
-	txna Assets 0
-	itxn_field XferAsset
-	itxn_submit
-	b branch_finalize_create_staking
 	
 
 // Handles creation of Staking contract
@@ -244,8 +232,6 @@ method_create_staking:
 	int 0
 	app_global_put
 
-	txna Assets 0
-	bnz branch_optin_gora_asset
 
 
 

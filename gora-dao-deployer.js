@@ -1804,7 +1804,7 @@ const GoraDaoDeployer = class {
         const ptxn = new this.algosdk.Transaction({
             from: addr,
             to: this.goraDaoMainApplicationAddress,
-            amount: 0,
+            amount: 500000,
             fee: params.minFee,
             ...params
         })
@@ -1816,13 +1816,13 @@ const GoraDaoDeployer = class {
             tws0,
             Number(this.goraDaoAsset),
             //2 proposal_fee_stake
-            10,
+            0,
             //3 proposal_fee_algo
-            500000,
+            10000,
             //4 min_subscription_algo
-            1000000,
+            100000,
             //5 min_subscription_stake
-            2000,
+            5,
 
         ]
         const atcDaoConfig = new this.algosdk.AtomicTransactionComposer()

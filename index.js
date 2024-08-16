@@ -198,7 +198,9 @@ async function goraDAOOperations() {
             break;
         case 'Subscribe to GoraDAO':
             try {
+                // Subscribing Gora Proposal account to DAO
                 await goraDaoDeployer.subscribeDaoContract('proposal');
+                // Subscribing Gora Staking account to DAO
                 await goraDaoDeployer.subscribeDaoContract('staking');
                 await inquirer.prompt([
                     {

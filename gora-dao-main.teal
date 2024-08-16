@@ -555,13 +555,17 @@ method_proposal_create:
     asset_holding_get AssetBalance
     assert
     pop
+    txn NumAssets
+    int 1
+    >
+    bz branch_proposal_create_final
     // Check Proposal manager Proposal asset optin
     txna Accounts 0
     txna Assets 1
     asset_holding_get AssetBalance
     assert
     pop
-
+branch_proposal_create_final:
     // Inner transaction to create the Proposal smart contract
     itxn_begin
     // itxn Type to "appl"
@@ -959,12 +963,18 @@ method_proposal_config:
     asset_holding_get AssetBalance
     assert
     pop
+    txn NumAssets
+    int 1
+    >
+    bz branch_finalize_config_proposal
     // Check Proposal manager Proposal asset optin
     txna Accounts 0
     txna Assets 1
     asset_holding_get AssetBalance
     assert
     pop
+
+branch_finalize_config_proposal:
 
     itxn_begin
 	global CurrentApplicationAddress
@@ -1166,6 +1176,10 @@ method_proposal_withdraw_participate:
 	itxn_submit
 	//itxn TxID
     //log
+    txn NumAssets
+    int 1
+    >
+    bz branch_proposal_withdraw_participate_final
 
     itxn_begin
 	global CurrentApplicationAddress
@@ -1184,7 +1198,7 @@ method_proposal_withdraw_participate:
 	itxn_submit
 	//itxn TxID
     //log
-
+branch_proposal_withdraw_participate_final:
     byte 0x151f7c75
 	global CurrentApplicationID
 	itob
@@ -1409,11 +1423,18 @@ method_staking_create:
     assert
     pop
     // Check Staking manager Staking asset optin
+    txn NumAssets
+    int 1
+    >
+    bz branch_staking_create_final
+    
     txna Accounts 0
     txna Assets 1
     asset_holding_get AssetBalance
     assert
     pop
+
+branch_staking_create_final:
 
     // Inner transaction to create the Staking smart contract
     itxn_begin
@@ -1793,10 +1814,10 @@ method_staking_config:
     //log
 
     // Staking asset id
-    txna Assets 1
+    // txna Assets 1
     //btoi
-    store 4
-    load 4
+    // store 4
+    //load 4
     //itob
     //log
 
@@ -1813,12 +1834,16 @@ method_staking_config:
     assert
     pop
     // Check Staking manager Staking asset optin
+    txn NumAssets
+    int 1
+    >
+    bz branch_finalize_config_staking
     txna Accounts 0
     txna Assets 1
     asset_holding_get AssetBalance
     assert
     pop
-
+branch_finalize_config_staking:
     itxn_begin
 	global CurrentApplicationAddress
 	itxn_field Sender
