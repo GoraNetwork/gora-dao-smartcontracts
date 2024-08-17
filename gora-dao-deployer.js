@@ -3147,18 +3147,18 @@ const GoraDaoDeployer = class {
             tws1,
             [
                 0,// staking_min_participation_algo
-                25, // staking_min_participation_token
+                5, // staking_min_participation_token
                 365, // staking_duration
-                365,// staking_min_duration
-                12,// staking_commission_percentage
-                25,// staking_commission_percentage_algo
+                1,// staking_min_duration
+                10,// staking_commission_percentage
+                0,// staking_commission_percentage_algo
                 0,// staking_participation_fee
                 0,// staking_participation_fee_algo
                 2,// staking_incentives_percentage
                 2,// staking_incentives_percentage_algo
                 1,// staking_type
                 30,// staking_incentives_duration
-                10,// staking_return_percentage
+                17,// staking_return_percentage
                 0, // staking_return_percentage_algo
 
                 1,//staking_proxy_app_is_whitelisted
@@ -3338,21 +3338,7 @@ const GoraDaoDeployer = class {
                 { appIndex: Number(daoApplication), name: stakerPublicKey.publicKey },
             ],
         }
-        const axferStaking = new this.algosdk.Transaction({
-            from: addr,
-            to: `${this.stakingApplicationAddress}`,
-            amount: 3,
-            assetIndex: Number(this.stakingAsset),
-            type: 'axfer',
-            ...params
-        })
-        const ptxnStaking = new this.algosdk.Transaction({
-            from: addr,
-            to: this.stakingApplicationAddress,
-            amount: 1000,
-            type: 'pay',
-            ...params
-        })
+       
 
         const axferDao = new this.algosdk.Transaction({
             from: addr,
@@ -3586,14 +3572,17 @@ const GoraDaoDeployer = class {
     }
 
     async stakeProxyStakingContract(userIndex, amount) {
-        let addr = this[`goraDaoUserAccount${userIndex}`].addr;
-        let account = this[`goraDaoUserAccount${userIndex}`];
+        //let addr = this[`goraDaoUserAccount${userIndex}`].addr;
         let stakingAdminAddr = this.goraDaoStakingAdminAccount.addr;
+        let addr = stakingAdminAddr;
+        //let account = this[`goraDaoUserAccount${userIndex}`];
+        let account = this.goraDaoStakingAdminAccount;
         let stakerPublicKey = this.algosdk.decodeAddress(stakingAdminAddr);
 
         let params = await this.algodClient.getTransactionParams().do();
         let stakingApplication = Number(this.stakingApplicationId);
         let proxyStakingApplication = Number(this.stakingParams.staking_proxy_app_id);
+        this.logger.info(`Staking into proxy staking contract ${stakingApplication} which proxies ${proxyStakingApplication}`);
 
         let daoApplication = Number(this.goraDaoMainApplicationId);
         const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()));
@@ -3630,17 +3619,11 @@ const GoraDaoDeployer = class {
             ],
         }
 
-        // const ptxnStaking = new this.algosdk.Transaction({
-        //     from: addr,
-        //     to: this.stakingApplicationAddress,
-        //     amount: 1000,
-        //     type: 'pay',
-        //     ...params
-        // })
+      
         const axferDao = new this.algosdk.Transaction({
             from: addr,
             to: `${this.goraDaoMainApplicationAddress}`,
-            amount: 3,
+            amount: 0,
             assetIndex: Number(this.stakingAsset),
             type: 'axfer',
             ...params
@@ -3648,23 +3631,44 @@ const GoraDaoDeployer = class {
         const ptxnDao = new this.algosdk.Transaction({
             from: addr,
             to: this.goraDaoMainApplicationAddress,
+            amount: 0,
+            type: 'pay',
+            ...params
+        })
+        const axferStaking = new this.algosdk.Transaction({
+            from: addr,
+            to: `${this.stakingApplicationAddress}`,
+            amount: 3,
+            assetIndex: Number(this.stakingAsset),
+            type: 'axfer',
+            ...params
+        })
+        const ptxnStaking = new this.algosdk.Transaction({
+            from: addr,
+            to: this.stakingApplicationAddress,
             amount: 1000,
             type: 'pay',
             ...params
         })
-
         const tws0 = { txn: ptxnDao, signer: signer }
         const tws1 = { txn: axferDao, signer: signer }
+        const tws2 = { txn: axferStaking, signer: signer }
+        const tws3 = { txn: ptxnStaking, signer: signer }
         // const tws2 = { txn: ptxnStaking, signer: signer }
         const argsDao = [
             tws0,
             tws1,
-            1
+            0,
+            0
 
         ]
 
         const argsStaking = [
-            Number(vote)
+            tws2,
+            tws3,
+            3,
+            1000,
+
         ]
         const atcStakingStake = new this.algosdk.AtomicTransactionComposer()
         atcStakingStake.addMethodCall({
