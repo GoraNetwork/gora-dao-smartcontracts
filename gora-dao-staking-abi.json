@@ -190,11 +190,20 @@
                     "name": "staking_proxy_app_updated_at",
                     "description": "DAO Staking app update timestamp"
                 },
-                
                 {
                     "type": "address",
                     "name": "staking_proxy_participating_address",
                     "description": "DAO Proxy Staking app participation address"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proxy_staking_vesting_app_id",
+                    "description": "DAO Proxied Staking app vesting APP ID"
+                },
+                {
+                    "type": "uint64",
+                    "name": "proxy_staking_main_app_id",
+                    "description": "DAO Proxied Staking app ID"
                 }
             ],
             "boxes": [

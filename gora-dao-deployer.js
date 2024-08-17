@@ -3085,7 +3085,6 @@ const GoraDaoDeployer = class {
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
             appAccounts: [
                 this.goraDaoAdminAccount.addr,
-                this.stakingProxyParticipationAddress //staking_proxy_participation_address
             ],
             appForeignApps: [Number(this.goraDaoMainApplicationId)],
             sender: stakingAdminAddr,
@@ -3176,7 +3175,9 @@ const GoraDaoDeployer = class {
             "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",//staking_proxy_app_manager
             "1721224697",//staking_proxy_app_created_at
             "1721224697",//staking_proxy_app_updated_at
-            this.stakingProxyParticipationAddress //staking_proxy_participation_address
+            this.stakingProxyParticipationAddress, //staking_proxy_participation_address
+            this.proxyStakingVestingAppId, //proxy_staking_vesting_app_id
+            this.proxyStakingMainAppId //proxy_staking_main_app_id
             
         ]
         const atcStakingConfig = new this.algosdk.AtomicTransactionComposer()
