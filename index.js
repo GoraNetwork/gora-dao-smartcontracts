@@ -620,6 +620,9 @@ async function proposalsOperations() {
                 ]);
             }
             break;
+        case 'Back to Main Menu':
+            await mainMenu(true);
+            break;
         case 'Help':
             logger.info('GoraDAO Help | Proposals Operations Menu');
             logger.info('------------------------------------');
@@ -667,9 +670,7 @@ async function proposalsOperations() {
                 },
             ]);
             break;
-        case 'Back to Main Menu':
-            await mainMenu(true);
-            break;
+        
     }
 
     // Loop back to proposals operations menu unless going back to main menu
@@ -700,8 +701,8 @@ async function stakingOperations() {
         choices.push('Re-Distribute Staking Asset')
         choices.push('Re-Distribute Staking Asset(App only)')
     }
-    
-    
+
+
     if (config['gora_dao']['proxy_staking_is_opted_in'] === false) {
         choices.push('Opt-in to Proxy Staking')
     } else if (config['gora_dao']['proxy_staking_is_opted_in'] === true) {
@@ -877,50 +878,6 @@ async function stakingOperations() {
                 ]);
             }
             break;
-        // case 'Participate into Staking':
-        //     try {
-        //         await goraDaoDeployer.participateStakingContractAll();
-
-        //         await inquirer.prompt([
-        //             {
-        //                 type: 'input',
-        //                 name: 'continue',
-        //                 message: 'Press Enter to go back to menu...',
-        //             },
-        //         ]);
-        //     } catch (error) {
-        //         console.error('An error occurred:', error);
-        //         await inquirer.prompt([
-        //             {
-        //                 type: 'input',
-        //                 name: 'continue',
-        //                 message: 'Press Enter to go back to menu...',
-        //             },
-        //         ]);
-        //     }
-        //     break;
-        // case 'Withdraw Staking Participation':
-        //     try {
-        //         await goraDaoDeployer.participationWithdrawStakingContractAll();
-        //         await inquirer.prompt([
-        //             {
-        //                 type: 'input',
-        //                 name: 'continue',
-        //                 message: 'Press Enter to go back to menu...',
-        //             },
-        //         ]);
-
-        //     } catch (error) {
-        //         console.error('An error occurred:', error);
-        //         await inquirer.prompt([
-        //             {
-        //                 type: 'input',
-        //                 name: 'continue',
-        //                 message: 'Press Enter to go back to menu...',
-        //             },
-        //         ]);
-        //     }
-        //     break;
         case 'Stake in staking contract':
             try {
                 let { amount } = await inquirer.prompt([
@@ -1023,7 +980,9 @@ async function stakingOperations() {
                     },
                 ]);
             }
-
+        case 'Back to Main Menu':
+            await mainMenu(true);
+            break;
         case 'Help':
             logger.info('GoraDAO Help | Proposals Operations Menu');
             logger.info('------------------------------------');
@@ -1071,9 +1030,7 @@ async function stakingOperations() {
                 },
             ]);
             break;
-        case 'Back to Main Menu':
-            await mainMenu(true);
-            break;
+        
     }
 
     // Loop back to proposals operations menu unless going back to main menu
