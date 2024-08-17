@@ -953,6 +953,7 @@ async function stakingOperations() {
         case 'Opt-in to Proxy Staking':
             try {
                 await goraDaoDeployer.optinProxyStakingContract();
+                await goraDaoDeployer.optinProxyStakingContractTransactionAll();
                 await inquirer.prompt([
                     {
                         type: 'input',

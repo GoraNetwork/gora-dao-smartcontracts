@@ -25,6 +25,7 @@
     "participated_to_proposal": false,
     "proposal_is_activated": false,
     "staking_is_activated": true,
+    "proxy_staking_optin_all": true,
     "asc_vesting_id": 0,
     "asc_vesting_address": "",
     "algo_wallet_address": "",

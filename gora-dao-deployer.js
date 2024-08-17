@@ -3521,11 +3521,10 @@ const GoraDaoDeployer = class {
         let stakingAdminAddr = this.goraDaoStakingAdminAccount.addr;
         let params = await this.algodClient.getTransactionParams().do();
         let stakingApplication = Number(this.stakingApplicationId);
-        let proxyStakingApplication = Number(this.stakingParams.staking_proxy_app_id)
-        const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()))
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoStakingAdminAccount)
-        let methodStakingOptin = this.getMethodByName("opt_in", stakingContract)
-
+        let proxyStakingApplication = Number(this.stakingParams.staking_proxy_app_id);
+        const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()));
+        let methodStakingOptin = this.getMethodByName("opt_in", stakingContract);
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoStakingAdminAccount);
 
         //let memberPublicKey = this.algosdk.decodeAddress(stakingAdminAddr)
         const commonParamsStakingOptin = {
@@ -3542,43 +3541,134 @@ const GoraDaoDeployer = class {
             // ],
         }
 
-
         //this.goraDaoMainApplicationId,
         const argsOptin = [
             this.proxyStakingVestingAppId,
-
         ];
-        const atcStakingOptin = new this.algosdk.AtomicTransactionComposer()
-
+        const atcStakingOptin = new this.algosdk.AtomicTransactionComposer();
         atcStakingOptin.addMethodCall({
             ...commonParamsStakingOptin,
             method: methodStakingOptin,
             appAccounts: [this.goraDaoMainApplicationAddress],
             methodArgs: argsOptin,
+        });
 
-        })
 
-
-        this.logger.info('------------------------------')
+        this.logger.info('------------------------------');
         this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodStakingOptin);
         try {
             const stakingOptinResults = await atcStakingOptin.execute(this.algodClient, 10);
             if (stakingOptinResults) {
                 this.config['gora_dao']['proxy_staking_is_opted_in'] = true;
-                await this.saveConfigToFile(this.config)
+                await this.saveConfigToFile(this.config);
+                this.logger.info("Staking account is now opted into the proxy staking contract!");
             }
         } catch (error) {
-            if(error.message.indexOf('has already opted in to app') > -1){
+            if (error.message.indexOf('has already opted in to app') > -1) {
                 this.config['gora_dao']['proxy_staking_is_opted_in'] = true;
-                await this.saveConfigToFile(this.config)
-            }else{
+                await this.saveConfigToFile(this.config);
+                this.logger.info("Staking account is now opted into the proxy staking contract!");
+            } else {
                 console.error(error)
             }
-           
-
         }
+    }
+
+    // Sends the Staking Asset to the users
+    async optinProxyStakingContractTransactionAll() {
+        let acc1 = this.goraDaoUserAccount1;
+        let acc2 = this.goraDaoUserAccount2;
+        let acc3 = this.goraDaoUserAccount3;
+        let acc4 = this.goraDaoUserAccount4;
+        let acc5 = this.goraDaoUserAccount5;
+
+        let proxyStakingApplication = Number(this.stakingParams.staking_proxy_app_id);
+        const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()));
+        let methodStakingOptin = this.getMethodByName("opt_in", stakingContract);
+        let params = await this.algodClient.getTransactionParams().do();
 
 
+       
+
+        //this.goraDaoMainApplicationId,
+        const argsOptin = [
+            this.proxyStakingVestingAppId,
+        ];
+        const atcStakingOptin = new this.algosdk.AtomicTransactionComposer();
+        const signerUser1 = this.algosdk.makeBasicAccountTransactionSigner(acc1);
+        atcStakingOptin.addMethodCall({
+            sender: acc1.addr,
+            signer: signerUser1,
+            appID: proxyStakingApplication,
+            onComplete: 1,
+            suggestedParams: params,
+            method: methodStakingOptin,
+            appAccounts: [this.goraDaoMainApplicationAddress],
+            methodArgs: argsOptin,
+        });
+        const signerUser2 = this.algosdk.makeBasicAccountTransactionSigner(acc2);
+        atcStakingOptin.addMethodCall({
+            sender: acc2.addr,
+            signer: signerUser2,
+            appID: proxyStakingApplication,
+            onComplete: 1,
+            suggestedParams: params,
+            method: methodStakingOptin,
+            appAccounts: [this.goraDaoMainApplicationAddress],
+            methodArgs: argsOptin,
+        });
+        const signerUser3 = this.algosdk.makeBasicAccountTransactionSigner(acc3);
+        atcStakingOptin.addMethodCall({
+            sender: acc3.addr,
+            signer: signerUser3,
+            appID: proxyStakingApplication,
+            onComplete: 1,
+            suggestedParams: params,
+            method: methodStakingOptin,
+            appAccounts: [this.goraDaoMainApplicationAddress],
+            methodArgs: argsOptin,
+        });
+        const signerUser4 = this.algosdk.makeBasicAccountTransactionSigner(acc4);
+        atcStakingOptin.addMethodCall({
+            sender: acc4.addr,
+            signer: signerUser4,
+            appID: proxyStakingApplication,
+            onComplete: 1,
+            suggestedParams: params,
+            method: methodStakingOptin,
+            appAccounts: [this.goraDaoMainApplicationAddress],
+            methodArgs: argsOptin,
+        });
+        const signerUser5 = this.algosdk.makeBasicAccountTransactionSigner(acc5);
+        atcStakingOptin.addMethodCall({
+            sender: acc5.addr,
+            signer: signerUser5,
+            appID: proxyStakingApplication,
+            onComplete: 1,
+            suggestedParams: params,
+            method: methodStakingOptin,
+            appAccounts: [this.goraDaoMainApplicationAddress],
+            methodArgs: argsOptin,
+        });
+        try {
+            const stakingOptinResults = await atcStakingOptin.execute(this.algodClient, 10);
+            if (stakingOptinResults) {
+                this.config['gora_dao']['proxy_staking_is_opted_in'] = true;
+                await this.saveConfigToFile(this.config);
+                this.logger.info("All accounts are now opted into the proxy staking contract!");
+            }
+        } catch (error) {
+            if (error.message.indexOf('has already opted in to app') > -1) {
+                this.config['gora_dao']['proxy_staking_is_opted_in'] = true;
+                await this.saveConfigToFile(this.config);
+                this.logger.info("All accounts are now opted into the proxy staking contract!");
+            } else {
+               console.error(error)
+            }
+        }
+     
+        this.config['gora_dao']['proxy_staking_optin_all'] = true;
+        await this.saveConfigToFile(this.config)
     }
     ////////////////////////////////////////////////
 
