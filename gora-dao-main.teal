@@ -1894,13 +1894,18 @@ method_activate_staking:
 method_staking_stake:
     txna Accounts 1 // Staking admin account
     store 0
+    // Checking manager account box ref
+    load 0
+    box_get
+    assert
+    pop
 
     // Checking Transaction group
     global GroupSize
     int 6
     ==
     assert
-
+    
     gtxn 5 ApplicationID
     byte "dao_app_id"
     app_global_get_ex
@@ -1909,17 +1914,17 @@ method_staking_stake:
     ==
     assert
 
-    gtxn 1 TypeEnum
+    gtxn 0 TypeEnum
     int pay
     ==
-    gtxn 3 TypeEnum
-    int pay
+    gtxn 1 TypeEnum
+    int axfer
     ==
     &&
     assert
    
-    gtxn 2 TypeEnum
-    int axfer
+    gtxn 3 TypeEnum
+    int pay
     ==
     gtxn 4 TypeEnum
     int axfer
@@ -1927,17 +1932,23 @@ method_staking_stake:
     &&
     assert
 
-    gtxn 1 Receiver
+    
+    
+    
+    
+    
+    
+    gtxn 0 Receiver
     global CurrentApplicationAddress
     ==
-    gtxn 2 AssetReceiver
+    gtxn 1 AssetReceiver
     global CurrentApplicationAddress
     ==
     gtxn 3 Receiver
-    global CurrentApplicationAddress
+    txn Accounts 2
     ==
     gtxn 4 AssetReceiver
-    global CurrentApplicationAddress
+    txn Accounts 2
     ==
     &&
     &&
@@ -1947,11 +1958,48 @@ method_staking_stake:
     gtxn 3 XferAsset
     ==
     gtxn 1 XferAsset
-    byte "proposal_asset_id"
-    app_global_get
+    gtxn 5 ApplicationID
+    byte "staking_asset_id"
+    app_global_get_ex
+    pop
     ==
     && 
     assert
+
+    gtxn 0 Amount
+    gtxn 5 ApplicationID
+    byte "staking_fee_algo"
+    app_global_get_ex
+    pop
+    >=
+    assert
+
+    gtxn 3 Amount
+    gtxn 5 ApplicationID
+    byte "staking_min_algo"
+    app_global_get_ex
+    pop
+    >=
+    assert
+
+    gtxn 1 AssetAmount
+    gtxn 5 ApplicationID
+    byte "staking_min_stake_token"
+    app_global_get_ex
+    pop
+    >=
+    assert
+
+    gtxn 4 AssetAmount
+    gtxn 5 ApplicationID
+    byte "staking_min_stake_token"
+    app_global_get_ex
+    pop
+    >=
+    assert
+
+
+    
 
     // Checking the asset ref to be DAO asset
     byte "dao_asset_id"
@@ -1959,15 +2007,6 @@ method_staking_stake:
     txna Assets 0
     ==
     assert
-
-    load 0
-    box_get
-    assert
-    pop
-
-    txn Sender
-    byte ""
-    box_put
 
     byte 0x151f7c75
 	global CurrentApplicationID

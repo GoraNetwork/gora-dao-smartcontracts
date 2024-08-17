@@ -138,7 +138,7 @@
                 {
                     "type": "(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64)",
                     "name": "staking_config_params",
-                    "description": "staking_min_participation_algo, staking_min_participation_token, staking_duration, staking_min_duration, staking_commission_percentage, staking_commission_percentage_algo, staking_participation_fee, staking_participation_fee_algo, staking_incentives_percentage,staking_incentives_percentage_algo, staking_type, staking_incentives_duration, staking_return_percentage, staking_return_percentage_algo, staking_proxy_app_is_whitelisted,staking_proxy_app_is_pending,staking_incentives_eligibility"
+                    "description": "staking_min_algo, staking_min_token, staking_duration, staking_min_duration, staking_commission_percentage, staking_commission_percentage_algo, staking_fee_token, staking_fee_algo, staking_incentives_percentage,staking_incentives_percentage_algo, staking_type, staking_incentives_duration, staking_return_percentage, staking_return_percentage_algo, staking_proxy_app_is_whitelisted,staking_proxy_app_is_pending,staking_incentives_eligibility"
                 },
                 {
                     "type": "string",

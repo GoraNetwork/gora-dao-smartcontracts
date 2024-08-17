@@ -85,25 +85,25 @@ method_staking_participate:
     assert
 
     gtxn 1 Amount
-    byte "staking_participation_fee_algo"
+    byte "staking_fee_algo"
 	app_global_get
     >=
     assert
 
     gtxn 2 AssetAmount
-    byte "staking_participation_fee"
+    byte "staking_fee_token"
 	app_global_get
     ==
     assert
 
 	gtxn 3 Amount
-    byte "staking_min_participation_algo"
+    byte "staking_min_algo"
 	app_global_get
     >=
     assert
 
     gtxn 4 AssetAmount
-    byte "staking_min_participation_token"
+    byte "staking_min_token"
 	app_global_get
     ==
     assert

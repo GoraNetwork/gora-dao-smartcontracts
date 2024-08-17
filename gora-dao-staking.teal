@@ -362,18 +362,18 @@ method_config_staking:
 
 	load 0
 	int 0
-	extract_uint64 //staking_min_participation_algo
+	extract_uint64 //staking_min_algo
 	store 1
-	byte "staking_min_participation_algo"
+	byte "staking_min_algo"
 	load 1
 	app_global_put
 	//log
 
 	load 0
 	int 8
-	extract_uint64 //staking_min_participation_token
+	extract_uint64 //staking_min_token
 	store 2
-	byte "staking_min_participation_token"
+	byte "staking_min_token"
 	load 2
 	app_global_put
 	//log
@@ -416,18 +416,18 @@ method_config_staking:
 
 	load 0
 	int 48
-	extract_uint64 //staking_participation_fee
+	extract_uint64 //staking_fee_token
 	store 7
-	byte "staking_participation_fee"
+	byte "staking_fee_token"
 	load 7
 	app_global_put
 	//log
 
 	load 0
 	int 56
-	extract_uint64 //staking_participation_fee_algo
+	extract_uint64 //staking_fee_algo
 	store 8
-	byte "staking_participation_fee_algo"
+	byte "staking_fee_algo"
 	load 8
 	app_global_put
 	//log

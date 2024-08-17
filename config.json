@@ -116,7 +116,7 @@
           70
         ]
       ],
-      "min_participation": 1000,
+      "min_participation_token": 1000,
       "min_participation_balance": 3000000,
       "participation_token": 1000000,
       "vote_stake": 1500000
@@ -125,14 +125,14 @@
       "proxy_staking_vesting_app_id": 259104850,
       "proxy_staking_main_app_id": 253775752,
       "staking_params": {
-        "staking_min_participation_algo": 0,
-        "staking_min_participation_token": 25,
+        "staking_min_algo": 0,
+        "staking_min_token": 25,
         "staking_duration": 3600,
         "staking_min_duration": 3600,
         "staking_commission_percentage": 10,
         "staking_commission_percentage_algo": 0,
-        "staking_participation_fee": 0,
-        "staking_participation_fee_algo": 0,
+        "staking_fee_token": 0,
+        "staking_fee_algo": 0,
         "staking_incentives_percentage": 2,
         "staking_incentives_percentage_algo": 0,
         "staking_type": 1,
