@@ -1975,7 +1975,7 @@ method_staking_stake:
     app_global_get_ex
     pop
     ==
-    assert//THIS
+    assert
 
     gtxn 1 AssetAmount
     gtxn 5 ApplicationID

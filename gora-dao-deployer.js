@@ -3760,7 +3760,6 @@ const GoraDaoDeployer = class {
         const argsStaking = [
             tws2,
             tws3,
-
         ]
         const atcStakingStake = new this.algosdk.AtomicTransactionComposer()
         atcStakingStake.addMethodCall({
