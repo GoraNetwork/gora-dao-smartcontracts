@@ -1938,6 +1938,7 @@ method_staking_stake:
     gtxn 1 AssetReceiver
     global CurrentApplicationAddress
     ==
+    &&
     gtxn 3 Receiver
     txn Accounts 2
     ==
@@ -1949,15 +1950,15 @@ method_staking_stake:
     assert
 
     gtxn 1 XferAsset
-    gtxn 3 XferAsset
+    gtxn 4 XferAsset
     ==
+    assert
     gtxn 1 XferAsset
     gtxn 5 ApplicationID
     byte "staking_asset_id"
     app_global_get_ex
-    pop
+    assert
     ==
-    && 
     assert
 
     gtxn 0 Amount
@@ -1965,7 +1966,7 @@ method_staking_stake:
     byte "staking_fee_algo"
     app_global_get_ex
     pop
-    >=
+    ==
     assert
 
     gtxn 3 Amount
@@ -1973,23 +1974,23 @@ method_staking_stake:
     byte "staking_min_algo"
     app_global_get_ex
     pop
-    >=
-    assert
+    ==
+    assert//THIS
 
     gtxn 1 AssetAmount
     gtxn 5 ApplicationID
-    byte "staking_min_stake_token"
+    byte "staking_fee_token"
     app_global_get_ex
     pop
-    >=
+    ==
     assert
 
     gtxn 4 AssetAmount
     gtxn 5 ApplicationID
-    byte "staking_min_stake_token"
+    byte "staking_min_token"
     app_global_get_ex
     pop
-    >=
+    ==
     assert
 
     // Checking the asset ref to be DAO asset
@@ -2048,81 +2049,6 @@ method_staking_stake:
 	itob
 	concat
 	b branch_log_return
-
-
-method_staking_unstake:
-
-    txna Accounts 0
-    store 0
-
-    txna Accounts 1
-    box_get
-    assert
-    pop
-
-    gtxn 1 ApplicationID
-    byte "proposal_min_participation_algo"
-    app_global_get_ex
-    assert
-    store 1
-
-    gtxn 1 ApplicationID
-    byte "proposal_min_participation_token"
-    app_global_get_ex
-    assert
-    store 2
-
-    gtxn 1 ApplicationID
-    byte "proposal_participation_fee_algo"
-    app_global_get_ex
-    assert
-    store 3
-
-    gtxn 1 ApplicationID
-    byte "proposal_participation_fee"
-    app_global_get_ex
-    assert
-    store 4
-
-
-    itxn_begin
-	global CurrentApplicationAddress
-	itxn_field Sender
-	int pay
-	itxn_field TypeEnum
-	load 0
-	itxn_field Receiver
-	load 1
-    load 3
-    +
-	itxn_field Amount
-	itxn_submit
-	//itxn TxID
-    //log
-
-    itxn_begin
-	global CurrentApplicationAddress
-	itxn_field Sender
-	int axfer
-	itxn_field TypeEnum
-    txna Assets 0
-    itxn_field XferAsset
-	load 0
-	itxn_field AssetReceiver
-	load 2
-    load 4
-    +
-	itxn_field AssetAmount
-	itxn_submit
-	//itxn TxID
-    //log
-
-    byte 0x151f7c75
-	global CurrentApplicationID
-	itob
-	concat
-	b branch_log_return
-
 
 branch_error:
 	err
