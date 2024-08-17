@@ -631,8 +631,13 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "amount",
-                    "description": "Staked amount"
+                    "name": "amount_algo",
+                    "description": "Staked amount Algo"
+                },
+                {
+                    "type": "uint64",
+                    "name": "amount_token",
+                    "description": "Staked amount token"
                 }
             ],
             "boxes": [
