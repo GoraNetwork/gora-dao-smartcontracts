@@ -712,7 +712,7 @@ async function stakingOperations() {
         choices.push('Activate Staking')
     } else if (config['gora_dao']['staking_is_activated'] === true) {
         choices.push('Stake into staking contract')
-        choices.push('Withdraw stake from staking contract')
+        //choices.push('Withdraw stake from staking contract')
     }
 
 
@@ -888,7 +888,8 @@ async function stakingOperations() {
                     },
                 ]);
 
-                await goraDaoDeployer.stakeStakingContract(Number(amount));
+                //await goraDaoDeployer.stakeStakingContract(Number(amount));
+                await goraDaoDeployer.stakeProxyStakingContract(Number(amount));
                 await inquirer.prompt([
                     {
                         type: 'input',

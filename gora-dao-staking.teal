@@ -683,10 +683,16 @@ method_staking_stake:
 	int 0
 	extract_uint64
 	store 11
+	load 11
+	itob
+	log
 	load 10
 	int 8
 	extract_uint64
 	store 12
+	load 12
+	itob
+	log
 
 	load 1
 	box_del
