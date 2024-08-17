@@ -3118,7 +3118,7 @@ const GoraDaoDeployer = class {
         const axferStaking = new this.algosdk.Transaction({
             from: stakingAdminAddr,
             to: `${this.goraDaoMainApplicationAddress}`,
-            amount: 10,
+            amount: 1,
             assetIndex: Number(this.goraDaoAsset),
             type: 'axfer',
             ...params

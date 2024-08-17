@@ -225,7 +225,7 @@ method_create_staking:
 	int 0
 	app_global_put
 
-	byte "staked_amount"
+	byte "staked_amount_token"
 	int 0
 	app_global_put
 
@@ -669,11 +669,6 @@ method_staking_stake:
 	store 6 
 
 
-
-
-
-
-
     // Checking staked algo amount box 
 	load 1
 	box_get
@@ -713,8 +708,6 @@ branch_stake_continue:
 	concat
 	box_put
 
-	
-	
 	// Stats update
 	byte "stakings_count"
 	dup
@@ -731,11 +724,11 @@ branch_stake_continue:
 	swap
 	app_global_put
 
-	byte "staked_amount"
+	byte "staked_amount_token"
 	app_global_get
-	load 4
+	load 6
 	+// The total staked amount token
-	byte "staked_amount"
+	byte "staked_amount_token"
 	swap
 	app_global_put
 

@@ -206,12 +206,12 @@ method_staking_withdraw_participate:
 	load 4
 	app_global_put
 
-	byte "staked_amount"
+	byte "staked_amount_token"
 	app_global_get
 	load 3
 	-
 	store 5
-	byte "staked_amount"
+	byte "staked_amount_token"
 	load 5
 	app_global_put
 
