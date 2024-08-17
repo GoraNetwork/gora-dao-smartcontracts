@@ -1063,28 +1063,14 @@ async function mainMenu(isInteractive) {
             {
                 type: 'list',
                 name: 'action',
-                message: 'Select the operation you would like to perform:',
-                choices: Number(config['gora_dao']['proposal_asa_id']) > 0 ? [
-
+                message: 'Select the operation to perform:',
+                choices: [
                     'Tester Accounts Dispense',
                     'Tester Accounts Stats',
                     'GoraDAO Operations',
                     'Proposals Operations',
                     'Staking Operations',
-                    'Tester Accounts Recreate',
-                    'Help',
-                    'Exit'
-                ] : [
-
-                    'Tester Accounts Dispense',
-                    'Tester Accounts Stats',
-
-
-
-                    'GoraDAO Operations',
-                    'Proposals Operations',
-                    'Staking Operations',
-                    'Tester Accounts Recreate',
+                    'Tester Accounts Recreate (optional! be careful!)',
                     'Help',
                     'Exit'
                 ],
@@ -1092,7 +1078,7 @@ async function mainMenu(isInteractive) {
         ]);
         // Main menu operations
         switch (answers.action) {
-            case 'Tester Accounts Recreate':
+            case 'Tester Accounts Recreate (optional! be careful!)':
                 // Assuming testAccountStats is a method in GoraDaoDeployer
 
                 try {
@@ -1196,7 +1182,7 @@ async function mainMenu(isInteractive) {
 
                 logger.info('GoraDAO Operations: Perform GoraDAO operations');
                 logger.info('Proposals Operations: Perform Proposals operations');
-                logger.info('Tester Accounts Recreate: Recreate tester accounts');
+                logger.info('Tester Accounts Recreate (optional! be careful!): Recreate tester accounts');
                 await inquirer.prompt([
                     {
                         type: 'input',
