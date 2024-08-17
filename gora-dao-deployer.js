@@ -100,6 +100,7 @@ const GoraDaoDeployer = class {
         this.stakingClearProgData = props.stakingClearProgData
 
         this.proxyStakingVestingAppId = props.config.deployer.staking.proxy_staking_vesting_app_id
+        this.proxyStakingMainAppId = props.config.deployer.staking.proxy_staking_main_app_id
         this.stakingParams = props.config.deployer.staking.staking_params
         this.goraToken = props.config.gora_dao.gora_testnet_token_id
         this.isGoraTokenEnforced = props.config.gora_dao.enforce_gora_token
@@ -3082,7 +3083,10 @@ const GoraDaoDeployer = class {
         const commonParamsStakingSetup = {
             appID: stakingApplication,
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
-            appAccounts: [this.goraDaoAdminAccount.addr],
+            appAccounts: [
+                this.goraDaoAdminAccount.addr,
+                this.stakingProxyParticipationAddress //staking_proxy_participation_address
+            ],
             appForeignApps: [Number(this.goraDaoMainApplicationId)],
             sender: stakingAdminAddr,
             suggestedParams: params,
@@ -3157,6 +3161,10 @@ const GoraDaoDeployer = class {
                 30,// staking_incentives_duration
                 10,// staking_return_percentage
                 0, // staking_return_percentage_algo
+
+                1,//staking_proxy_app_is_whitelisted
+                0,//staking_proxy_app_is_pending
+                1,//staking_incentives_eligibility
             ],
             "Test Staking", //staking_name
             "This is a test staking contract for GoraDAO",//staking_description
@@ -3168,10 +3176,8 @@ const GoraDaoDeployer = class {
             "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",//staking_proxy_app_manager
             "1721224697",//staking_proxy_app_created_at
             "1721224697",//staking_proxy_app_updated_at
-            1,//staking_proxy_app_is_whitelisted
-            0,//staking_proxy_app_is_pending
-            1,//staking_incentives_eligibility
-            this.stakingProxyParticipationAddress
+            this.stakingProxyParticipationAddress //staking_proxy_participation_address
+            
         ]
         const atcStakingConfig = new this.algosdk.AtomicTransactionComposer()
 
@@ -3331,14 +3337,22 @@ const GoraDaoDeployer = class {
                 { appIndex: Number(daoApplication), name: stakerPublicKey.publicKey },
             ],
         }
+        const axferStaking = new this.algosdk.Transaction({
+            from: addr,
+            to: `${this.stakingApplicationAddress}`,
+            amount: 3,
+            assetIndex: Number(this.stakingAsset),
+            type: 'axfer',
+            ...params
+        })
+        const ptxnStaking = new this.algosdk.Transaction({
+            from: addr,
+            to: this.stakingApplicationAddress,
+            amount: 1000,
+            type: 'pay',
+            ...params
+        })
 
-        // const ptxnStaking = new this.algosdk.Transaction({
-        //     from: addr,
-        //     to: this.stakingApplicationAddress,
-        //     amount: 1000,
-        //     type: 'pay',
-        //     ...params
-        // })
         const axferDao = new this.algosdk.Transaction({
             from: addr,
             to: `${this.goraDaoMainApplicationAddress}`,
@@ -3575,7 +3589,7 @@ const GoraDaoDeployer = class {
         let account = this[`goraDaoUserAccount${userIndex}`];
         let stakingAdminAddr = this.goraDaoStakingAdminAccount.addr;
         let stakerPublicKey = this.algosdk.decodeAddress(stakingAdminAddr);
-      
+
         let params = await this.algodClient.getTransactionParams().do();
         let stakingApplication = Number(this.stakingApplicationId);
         let proxyStakingApplication = Number(this.stakingParams.staking_proxy_app_id);
@@ -3767,10 +3781,10 @@ const GoraDaoDeployer = class {
                 await this.saveConfigToFile(this.config);
                 this.logger.info("All accounts are now opted into the proxy staking contract!");
             } else {
-               console.error(error)
+                console.error(error)
             }
         }
-     
+
         this.config['gora_dao']['proxy_staking_optin_all'] = true;
         await this.saveConfigToFile(this.config)
     }

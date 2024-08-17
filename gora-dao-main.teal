@@ -201,20 +201,10 @@ branch_method_router:
 	==
 	bnz method_activate_staking
 
-    // method "staking_participate()uint64"
-	// txn ApplicationArgs 0
-	// ==
-	// bnz method_staking_participate
-
-    // method "staking_withdraw_participate()uint64"
-	// txn ApplicationArgs 0
-	// ==
-	// bnz method_staking_withdraw_participate
-
-    // method "staking_stake(pay,axfer,uint64)uint64"
-	// txn ApplicationArgs 0
-	// ==
-	// bnz method_staking_stake
+    method "staking_stake(pay,axfer,uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_stake
 
 	b branch_error
 
@@ -1427,7 +1417,7 @@ method_staking_create:
     int 1
     >
     bz branch_staking_create_final
-    
+
     txna Accounts 0
     txna Assets 1
     asset_holding_get AssetBalance
@@ -1901,8 +1891,8 @@ method_activate_staking:
 	b branch_log_return
 
 
-method_staking_participate:
-    txna Accounts 1 // Proposal admin account
+method_staking_stake:
+    txna Accounts 1 // Staking admin account
     store 0
 
     // Checking Transaction group
@@ -1986,7 +1976,7 @@ method_staking_participate:
 	b branch_log_return
 
 
-method_staking_withdraw_participate:
+method_staking_unstake:
 
     txna Accounts 0
     store 0

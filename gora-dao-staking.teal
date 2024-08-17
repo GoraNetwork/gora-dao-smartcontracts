@@ -73,7 +73,7 @@ branch_method_router:
 	==
 	bnz method_update_staking
 
-	method "config_staking(pay,(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64),string,string,string,string,uint64,address,address,address,string,string,uint64,uint64,uint64,address)uint64"
+	method "config_staking(pay,(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64),string,string,string,string,uint64,address,address,address,string,string,address)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_staking
@@ -486,6 +486,33 @@ method_config_staking:
 	app_global_put
 	//log
 
+	load 0
+	int 112
+	extract_uint64 //staking_proxy_app_is_whitelisted
+	store 24
+	byte "staking_proxy_app_is_whitelisted"
+	load 24
+	app_global_put
+	//log
+
+	load 0
+	int 120
+	extract_uint64 //staking_proxy_app_is_pending
+	store 25
+	byte "staking_proxy_app_is_pending"
+	load 25
+	app_global_put
+	//log
+
+	load 0
+	int 128
+	extract_uint64 //staking_incentives_eligibility
+	store 27
+	byte "staking_incentives_eligibility"
+	load 27
+	app_global_put
+	//log
+
 	txn ApplicationArgs 2 //staking_name
 	store 14
 	byte "staking_name"
@@ -502,7 +529,7 @@ method_config_staking:
 
 	txn ApplicationArgs 4 //staking_url
 	store 16
-	byte "staking_website"
+	byte "staking_url"
 	load 16
 	app_global_put
 	//log
@@ -515,6 +542,7 @@ method_config_staking:
 	//log
 
 	txn ApplicationArgs 6 //staking_proxy_app_id
+	btoi
 	store 18
 	byte "staking_proxy_app_id"
 	load 18
@@ -556,23 +584,7 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 12 //staking_proxy_app_is_whitelisted
-	store 24
-	byte "staking_proxy_app_is_whitelisted"
-	load 24
-	btoi
-	app_global_put
-	//log
-
-	txn ApplicationArgs 13 //staking_proxy_app_is_pending
-	store 25
-	byte "staking_proxy_app_is_pending"
-	load 25
-	btoi
-	app_global_put
-	//log
-
-	txna Accounts 1 //staking_proxy_participating_address
+	txn ApplicationArgs 12 //staking_proxy_participating_address
 	store 26
 	byte "staking_proxy_participating_address"
 	load 26

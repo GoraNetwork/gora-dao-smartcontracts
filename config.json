@@ -123,6 +123,7 @@
     },
     "staking": {
       "proxy_staking_vesting_app_id": 259104850,
+      "proxy_staking_main_app_id": 253775752,
       "staking_params": {
         "staking_min_participation_algo": 0,
         "staking_min_participation_token": 25,
