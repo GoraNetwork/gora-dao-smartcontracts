@@ -61,6 +61,7 @@ async function goraDAOOperations() {
         choices.push('Distribute GoraDAO Asset')
     } else if (config['gora_dao']['dao_asa_distributed'] === true) {
         choices.push('Re-Distribute GoraDAO Asset')
+        choices.push('Re-Distribute GoraDAO Asset(APP Only)')
     }
     if (config['gora_dao']['subscribed_to_dao'] === true) {
         choices.push('Unsubscribe from GoraDAO')
@@ -156,7 +157,28 @@ async function goraDAOOperations() {
             break;
         case 'Distribute GoraDAO Asset':
             try {
-                await goraDaoDeployer.sendGoraDaoAssetTransaction();
+                await goraDaoDeployer.sendGoraDaoAssetTransaction(false);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Re-Distribute GoraDAO Asset(APP Only)':
+            try {
+                await goraDaoDeployer.sendGoraDaoAssetTransaction(true);
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -177,7 +199,7 @@ async function goraDAOOperations() {
             break;
         case 'Re-Distribute GoraDAO Asset':
             try {
-                await goraDaoDeployer.sendGoraDaoAssetTransaction();
+                await goraDaoDeployer.sendGoraDaoAssetTransaction(false);
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -676,16 +698,23 @@ async function stakingOperations() {
         choices.push('Distribute Staking Asset')
     } else if (config['gora_dao']['dao_staking_deployed'] === true && config['gora_dao']['staking_asa_distributed'] === true) {
         choices.push('Re-Distribute Staking Asset')
+        choices.push('Re-Distribute Staking Asset(App only)')
     }
-    choices.push('Opt-in to Proxy Staking')
+    
+    
+    if (config['gora_dao']['proxy_staking_is_opted_in'] === false) {
+        choices.push('Opt-in to Proxy Staking')
+    } else if (config['gora_dao']['proxy_staking_is_opted_in'] === true) {
+        choices.push('Check Opt-in to Proxy Staking')
+    }
     if (config['gora_dao']['staking_is_activated'] === false) {
         choices.push('Activate Staking')
     } else if (config['gora_dao']['staking_is_activated'] === true) {
         choices.push('Stake in staking contract')
         choices.push('Withdraw stake from staking contract')
     }
-   
-    
+
+
 
 
     choices.push('Help')
@@ -788,6 +817,27 @@ async function stakingOperations() {
         case 'Distribute Staking Asset':
             try {
                 await goraDaoDeployer.sendStakingAssetTransaction();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Re-Distribute Staking Asset(App only)':
+            try {
+                await goraDaoDeployer.sendStakingAssetTransaction(true);
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -951,6 +1001,7 @@ async function stakingOperations() {
             }
             break;
         case 'Opt-in to Proxy Staking':
+        case 'Check Opt-in to Proxy Staking':
             try {
                 await goraDaoDeployer.optinProxyStakingContract();
                 await goraDaoDeployer.optinProxyStakingContractTransactionAll();
@@ -961,7 +1012,7 @@ async function stakingOperations() {
                         message: 'Press Enter to go back to menu...',
                     },
                 ]);
-                
+
             } catch (error) {
                 console.error('An error occurred:', error);
                 await inquirer.prompt([
