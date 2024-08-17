@@ -628,17 +628,8 @@
                     "type": "axfer",
                     "name": "asset_transfer_transaction",
                     "description": "Asset transfer transaction to send DAO Token for fees!"
-                },
-                {
-                    "type": "uint64",
-                    "name": "amount_algo",
-                    "description": "Staked amount Algo"
-                },
-                {
-                    "type": "uint64",
-                    "name": "amount_token",
-                    "description": "Staked amount token"
                 }
+                
             ],
             "boxes": [
                 {

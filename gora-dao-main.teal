@@ -201,7 +201,7 @@ branch_method_router:
 	==
 	bnz method_activate_staking
 
-    method "staking_stake(pay,axfer,uint64,uint64)uint64"
+    method "staking_stake(pay,axfer)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_staking_stake
@@ -1932,12 +1932,6 @@ method_staking_stake:
     &&
     assert
 
-    
-    
-    
-    
-    
-    
     gtxn 0 Receiver
     global CurrentApplicationAddress
     ==
@@ -1998,15 +1992,56 @@ method_staking_stake:
     >=
     assert
 
-
-    
-
     // Checking the asset ref to be DAO asset
     byte "dao_asset_id"
     app_global_get
     txna Assets 0
     ==
     assert
+
+    // Checking the pay and axfer txns
+	gtxn 0 RekeyTo
+    global ZeroAddress
+    ==
+    gtxn 1 RekeyTo
+    global ZeroAddress
+    ==
+	&&
+	gtxn 3 RekeyTo
+    global ZeroAddress
+    ==
+    gtxn 4 RekeyTo
+    global ZeroAddress
+    ==
+	&&
+	&&
+	assert
+
+    gtxn 0 CloseRemainderTo 
+	global ZeroAddress
+	==
+	gtxn 1 CloseRemainderTo
+	global ZeroAddress
+	==
+	&&
+    gtxn 3 CloseRemainderTo 
+	global ZeroAddress
+	==
+	gtxn 4 CloseRemainderTo
+	global ZeroAddress
+	==
+	&&
+    &&
+	assert
+
+	gtxn 0 Fee
+    global MinTxnFee
+    >=
+    gtxn 1 Fee
+    global MinTxnFee
+    >=
+	&&
+	assert
 
     byte 0x151f7c75
 	global CurrentApplicationID

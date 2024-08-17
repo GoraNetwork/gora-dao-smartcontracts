@@ -93,25 +93,17 @@ branch_method_router:
 	// ==
 	// bnz method_optin_staking
 
-	// method "staking_participate(pay,axfer,pay,axfer)uint64"
-	// txn ApplicationArgs 0
-	// ==
-	// bnz method_staking_participate
+	method "staking_stake(pay,axfer)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_stake
 
-    // method "staking_withdraw_participate()uint64"
-	// txn ApplicationArgs 0
-	// ==
-	// bnz method_staking_withdraw_participate
-
-	// method "staking_stake(uint64)uint64"
-	// txn ApplicationArgs 0
-	// ==
-	// bnz method_staking_stake
-
-	// method "staking_unstake(uint64)uint64"
+    // method "staking_unstake()uint64"
 	// txn ApplicationArgs 0
 	// ==
 	// bnz method_staking_unstake
+
+
 
 	b branch_error
 
@@ -643,6 +635,111 @@ method_config_staking:
 // 	txn ApplicationArgs 1
 // 	concat
 // 	b branch_log_return
+
+
+method_staking_stake:
+	txna Accounts 0 // DAO main account
+	store 0 
+	txn Sender // Staking user account
+	store 1 
+
+	// Checking the staking activation
+	byte "staking_is_activated"
+	app_global_get
+	bz branch_error_activation
+
+	// Checking the asset ref to be Staking asset ID
+    byte "staking_asset_id"
+    app_global_get
+	dup
+    gtxn 1 XferAsset
+    ==
+    assert
+	gtxn 4 XferAsset
+	==
+	assert
+
+	// Checking staking minimum participation algos
+	gtxn 3 Amount // The staked amount algo
+	store 5 
+	
+
+	// Checking staking minimum participation tokens
+    gtxn 4 AssetAmount // The staked amount token
+	store 6 
+
+
+
+
+
+
+
+    // Checking staked algo amount box 
+	load 1
+	box_get
+	bz branch_stake_continue
+	store 10 // Staked amounts algos from account box
+	load 10
+	int 0
+	extract_uint64
+	store 11
+	load 10
+	int 8
+	extract_uint64
+	store 12
+
+	load 1
+	box_del
+	assert
+
+
+branch_stake_continue:
+	// Staking finalization and account boxes staking values update
+	load 1
+	load 11
+	load 5
+	+
+	itob
+	load 12
+	load 6
+	+
+	itob
+	concat
+	box_put
+
+	
+	
+	// Stats update
+	byte "stakings_count"
+	dup
+	app_global_get
+	int 1
+	+
+	app_global_put
+
+	byte "staked_amount_algo"
+	app_global_get
+	load 5
+	+ // The total staked amount algo
+	byte "staked_amount_algo"
+	swap
+	app_global_put
+
+	byte "staked_amount"
+	app_global_get
+	load 4
+	+// The total staked amount token
+	byte "staked_amount"
+	swap
+	app_global_put
+
+
+	// Log and return
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
 
 // Handles logging the last element on the stack then put a 1 on the top and return (log and approve)
 branch_log_return:

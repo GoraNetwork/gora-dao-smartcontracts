@@ -292,17 +292,8 @@
                     "type": "axfer",
                     "name": "stake_axfer_transaction",
                     "description": "Axfer from Staking participant for staking token!"
-                },
-                {
-                    "type": "uint64",
-                    "name": "amount_algo",
-                    "description": "Amount to be staked"
-                },
-                {
-                    "type": "uint64",
-                    "name": "amount_token",
-                    "description": "Token Amount to be staked"
                 }
+                
             ],
             "boxes": [
                 {
