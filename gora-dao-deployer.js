@@ -3586,10 +3586,6 @@ const GoraDaoDeployer = class {
         const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()));
         let methodStakingOptin = this.getMethodByName("opt_in", stakingContract);
         let params = await this.algodClient.getTransactionParams().do();
-
-
-       
-
         //this.goraDaoMainApplicationId,
         const argsOptin = [
             this.proxyStakingVestingAppId,
