@@ -617,7 +617,7 @@
         },
         {
             "name": "staking_stake",
-            "description": "Stake in staking contract!",
+            "description": "Stake into staking contract!",
             "args": [
                 {
                     "type": "pay",
