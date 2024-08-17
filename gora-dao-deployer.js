@@ -2541,7 +2541,7 @@ const GoraDaoDeployer = class {
 
             ],
         }
-        const commonParamsDaoSetup = {
+        const commonParamsDaoParticipate = {
             appID: daoApplication,
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.proposalAsset)],
             appAccounts: [this.goraDaoProposalAdminAccount.addr],
@@ -2603,14 +2603,14 @@ const GoraDaoDeployer = class {
         atcProposalParticipate.addMethodCall({
             method: methodDaoProposalParticipate,
             methodArgs: argsDao,
-            ...commonParamsDaoSetup
+            ...commonParamsDaoParticipate
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Contract ABI Exec method = %s", methodProposalParticipate);
         atcProposalParticipate.addMethodCall({
             method: methodProposalParticipate,
             methodArgs: argsProposal,
-            ...commonParamsProposalSetup
+            ...commonParamsProposalParticipate
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", methodDaoProposalParticipate);
@@ -2646,7 +2646,7 @@ const GoraDaoDeployer = class {
         let methodDaoProposalWithdrawParticipate = this.getMethodByName("proposal_withdraw_participate", daoContract)
         let memberPublicKey = this.algosdk.decodeAddress(addr)
         let proposerPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
-        const commonParamsProposalSetup = {
+        const commonParamsProposalParticipate = {
             appID: proposalApplication,
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.proposalAsset)],
             appForeignApps: [Number(this.goraDaoMainApplicationId)],
@@ -2661,7 +2661,7 @@ const GoraDaoDeployer = class {
 
             ],
         }
-        const commonParamsDaoSetup = {
+        const commonParamsDaoParticipate = {
             appID: this.goraDaoMainApplicationId,
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.proposalAsset)],
             appForeignApps: [Number(this.proposalApplicationId)],
@@ -2684,14 +2684,14 @@ const GoraDaoDeployer = class {
         atcProposalParticipate.addMethodCall({
             method: methodDaoProposalWithdrawParticipate,
             methodArgs: argsDao,
-            ...commonParamsDaoSetup
+            ...commonParamsDaoParticipate
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Contract ABI Exec method = %s", methodProposalWithdrawParticipate);
         atcProposalParticipate.addMethodCall({
             method: methodProposalWithdrawParticipate,
             methodArgs: argsProposal,
-            ...commonParamsProposalSetup
+            ...commonParamsProposalParticipate
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", methodDaoProposalWithdrawParticipate);
@@ -2753,7 +2753,7 @@ const GoraDaoDeployer = class {
         let methodProposalVote = this.getMethodByName("proposal_vote", proposalContract)
         let methodDaoProposalParticipate = this.getMethodByName("proposal_vote", daoContract)
         let memberPublicKey = this.algosdk.decodeAddress(addr)
-        const commonParamsProposalSetup = {
+        const commonParamsProposalVote = {
             appID: proposalApplication,
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.proposalAsset)],
             appAccounts: [this.goraDaoProposalAdminAccount.addr, this.goraDaoMainApplicationAddress],
@@ -2770,7 +2770,7 @@ const GoraDaoDeployer = class {
 
             ],
         }
-        const commonParamsDaoSetup = {
+        const commonParamsDaoVote = {
             appID: daoApplication,
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.proposalAsset)],
             appAccounts: [this.goraDaoProposalAdminAccount.addr, this.proposalApplicationAddress],
@@ -2825,14 +2825,14 @@ const GoraDaoDeployer = class {
         atcProposalParticipate.addMethodCall({
             method: methodDaoProposalParticipate,
             methodArgs: argsDao,
-            ...commonParamsDaoSetup
+            ...commonParamsDaoVote
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Contract ABI Exec method = %s", methodProposalVote);
         atcProposalParticipate.addMethodCall({
             method: methodProposalVote,
             methodArgs: argsProposal,
-            ...commonParamsProposalSetup
+            ...commonParamsProposalVote
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", methodDaoProposalParticipate);
@@ -3304,7 +3304,7 @@ const GoraDaoDeployer = class {
         let methodStakingStake = this.getMethodByName("staking_stake", stakingContract);
         let methodDaoStakingStake = this.getMethodByName("staking_stake", daoContract);
         let memberPublicKey = this.algosdk.decodeAddress(addr);
-        const commonParamsStakingSetup = {
+        const commonParamsStakingStake = {
             appID: stakingApplication,
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
             appAccounts: [this.goraDaoStakingAdminAccount.addr, this.goraDaoMainApplicationAddress],
@@ -3317,7 +3317,7 @@ const GoraDaoDeployer = class {
                 { appIndex: Number(stakingApplication), name: stakerPublicKey.publicKey },
             ],
         }
-        const commonParamsDaoSetup = {
+        const commonParamsDaoStake = {
             appID: daoApplication,
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
             appAccounts: [this.goraDaoStakingAdminAccount.addr, this.stakingApplicationAddress],
@@ -3372,14 +3372,14 @@ const GoraDaoDeployer = class {
         atcStakingStake.addMethodCall({
             method: methodDaoStakingStake,
             methodArgs: argsDao,
-            ...commonParamsDaoSetup
+            ...commonParamsDaoStake
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Contract ABI Exec method = %s", methodStakingStake);
         atcStakingStake.addMethodCall({
             method: methodStakingStake,
             methodArgs: argsStaking,
-            ...commonParamsStakingSetup
+            ...commonParamsStakingStake
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodDaoStakingStake);
@@ -3413,7 +3413,7 @@ const GoraDaoDeployer = class {
         let methodStakingParticipate = this.getMethodByName("staking_vote", stakingContract)
         let methodDaoStakingParticipate = this.getMethodByName("staking_vote", daoContract)
         let memberPublicKey = this.algosdk.decodeAddress(addr)
-        const commonParamsStakingSetup = {
+        const commonParamsStakingStake = {
             appID: stakingApplication,
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
             appAccounts: [this.goraDaoStakingAdminAccount.addr, this.goraDaoMainApplicationAddress],
@@ -3430,7 +3430,7 @@ const GoraDaoDeployer = class {
 
             ],
         }
-        const commonParamsDaoSetup = {
+        const commonParamsDaoStake = {
             appID: daoApplication,
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
             appAccounts: [this.goraDaoStakingAdminAccount.addr, this.stakingApplicationAddress],
@@ -3485,14 +3485,14 @@ const GoraDaoDeployer = class {
         atcStakingParticipate.addMethodCall({
             method: methodDaoStakingParticipate,
             methodArgs: argsDao,
-            ...commonParamsDaoSetup
+            ...commonParamsDaoStake
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Contract ABI Exec method = %s", methodStakingParticipate);
         atcStakingParticipate.addMethodCall({
             method: methodStakingParticipate,
             methodArgs: argsStaking,
-            ...commonParamsStakingSetup
+            ...commonParamsStakingStake
         })
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodDaoStakingParticipate);
@@ -3570,60 +3570,115 @@ const GoraDaoDeployer = class {
         }
     }
 
-    async stakeProxyStakingContract() {
+    async stakeProxyStakingContract(userIndex, amount) {
+        let addr = this[`goraDaoUserAccount${userIndex}`].addr;
+        let account = this[`goraDaoUserAccount${userIndex}`];
         let stakingAdminAddr = this.goraDaoStakingAdminAccount.addr;
+        let stakerPublicKey = this.algosdk.decodeAddress(stakingAdminAddr);
+      
         let params = await this.algodClient.getTransactionParams().do();
         let stakingApplication = Number(this.stakingApplicationId);
         let proxyStakingApplication = Number(this.stakingParams.staking_proxy_app_id);
-        const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()));
-        let methodStakingOptin = this.getMethodByName("opt_in", stakingContract);
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoStakingAdminAccount);
 
-        //let memberPublicKey = this.algosdk.decodeAddress(stakingAdminAddr)
-        const commonParamsStakingOptin = {
-            appID: proxyStakingApplication,
-            //appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
-            //appAccounts: [this.goraDaoAdminAccount.addr],
-            //appForeignApps: [Number(this.goraDaoMainApplicationId), proxyStakingApplication],
-            sender: stakingAdminAddr,
-            onComplete: 1,
+        let daoApplication = Number(this.goraDaoMainApplicationId);
+        const daoContract = new this.algosdk.ABIContract(JSON.parse(this.daoContract.toString()));
+        const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()));
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(account);
+        let methodStakingStake = this.getMethodByName("staking_stake", stakingContract);
+        let methodDaoStakingStake = this.getMethodByName("staking_stake", daoContract);
+        let memberPublicKey = this.algosdk.decodeAddress(addr);
+        const commonParamsStakingStake = {
+            appID: stakingApplication,
+            appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
+            appAccounts: [this.goraDaoStakingAdminAccount.addr, this.goraDaoMainApplicationAddress],
+            appForeignApps: [Number(this.goraDaoMainApplicationId)],
+            sender: addr,
             suggestedParams: params,
             signer: signer,
-            // boxes: [
-            //     { appIndex: Number(stakingApplication), name: memberPublicKey.publicKey },
-            // ],
+            boxes: [
+                { appIndex: Number(stakingApplication), name: memberPublicKey.publicKey },
+                { appIndex: Number(stakingApplication), name: stakerPublicKey.publicKey },
+            ],
+        }
+        const commonParamsDaoStake = {
+            appID: daoApplication,
+            appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
+            appAccounts: [this.goraDaoStakingAdminAccount.addr, this.stakingApplicationAddress],
+            appForeignApps: [Number(this.stakingApplicationId)],
+            sender: addr,
+            suggestedParams: params,
+            signer: signer,
+            boxes: [
+                { appIndex: Number(daoApplication), name: this.algosdk.encodeUint64(this.stakingApplicationId) },
+                { appIndex: Number(stakingApplication), name: stakerPublicKey.publicKey },
+                { appIndex: Number(daoApplication), name: stakerPublicKey.publicKey },
+            ],
         }
 
-        //this.goraDaoMainApplicationId,
-        const argsOptin = [
-            this.proxyStakingVestingAppId,
-        ];
-        const atcStakingOptin = new this.algosdk.AtomicTransactionComposer();
-        atcStakingOptin.addMethodCall({
-            ...commonParamsStakingOptin,
-            method: methodStakingOptin,
-            appAccounts: [this.goraDaoMainApplicationAddress],
-            methodArgs: argsOptin,
-        });
+        // const ptxnStaking = new this.algosdk.Transaction({
+        //     from: addr,
+        //     to: this.stakingApplicationAddress,
+        //     amount: 1000,
+        //     type: 'pay',
+        //     ...params
+        // })
+        const axferDao = new this.algosdk.Transaction({
+            from: addr,
+            to: `${this.goraDaoMainApplicationAddress}`,
+            amount: 3,
+            assetIndex: Number(this.stakingAsset),
+            type: 'axfer',
+            ...params
+        })
+        const ptxnDao = new this.algosdk.Transaction({
+            from: addr,
+            to: this.goraDaoMainApplicationAddress,
+            amount: 1000,
+            type: 'pay',
+            ...params
+        })
+
+        const tws0 = { txn: ptxnDao, signer: signer }
+        const tws1 = { txn: axferDao, signer: signer }
+        // const tws2 = { txn: ptxnStaking, signer: signer }
+        const argsDao = [
+            tws0,
+            tws1,
+            1
+
+        ]
+
+        const argsStaking = [
+            Number(vote)
+        ]
+        const atcStakingStake = new this.algosdk.AtomicTransactionComposer()
+        atcStakingStake.addMethodCall({
+            method: methodDaoStakingStake,
+            methodArgs: argsDao,
+            ...commonParamsDaoStake
+        })
+        this.logger.info('------------------------------')
+        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodStakingStake);
+        atcStakingStake.addMethodCall({
+            method: methodStakingStake,
+            methodArgs: argsStaking,
+            ...commonParamsStakingStake
+        })
+        this.logger.info('------------------------------')
+        this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodDaoStakingStake);
+
+        const stakingStakeResults = await atcStakingStake.execute(this.algodClient, 10);
+        for (const idx in stakingStakeResults.methodResults) {
+            let txid = stakingStakeResults.methodResults[idx].txID
+
+            //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
+            let confirmedRound = stakingStakeResults.confirmedRound
 
 
-        this.logger.info('------------------------------');
-        this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodStakingOptin);
-        try {
-            const stakingOptinResults = await atcStakingOptin.execute(this.algodClient, 10);
-            if (stakingOptinResults) {
-                this.config['gora_dao']['proxy_staking_is_opted_in'] = true;
-                await this.saveConfigToFile(this.config);
-                this.logger.info("Staking account is now opted into the proxy staking contract!");
-            }
-        } catch (error) {
-            if (error.message.indexOf('has already opted in to app') > -1) {
-                this.config['gora_dao']['proxy_staking_is_opted_in'] = true;
-                await this.saveConfigToFile(this.config);
-                this.logger.info("Staking account is now opted into the proxy staking contract!");
-            } else {
-                console.error(error)
-            }
+            let returnedResults = this.algosdk.decodeUint64(stakingStakeResults.methodResults[idx].rawReturnValue, "mixed")
+            this.logger.info("GoraDAO Staking Contract ABI Exec result = %s", returnedResults);
+            await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+
         }
     }
 
