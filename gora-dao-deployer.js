@@ -101,6 +101,7 @@ const GoraDaoDeployer = class {
 
         this.proxyStakingVestingAppId = props.config.deployer.staking.proxy_staking_vesting_app_id
         this.proxyStakingMainAppId = props.config.deployer.staking.proxy_staking_main_app_id
+
         this.stakingParams = props.config.deployer.staking.staking_params
         this.goraToken = props.config.gora_dao.gora_testnet_token_id
         this.isGoraTokenEnforced = props.config.gora_dao.enforce_gora_token
@@ -3691,8 +3692,8 @@ const GoraDaoDeployer = class {
         const commonParamsStakingStake = {
             appID: stakingApplication,
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
-            appAccounts: [this.goraDaoStakingAdminAccount.addr, this.goraDaoMainApplicationAddress],
-            appForeignApps: [Number(this.goraDaoMainApplicationId)],
+            appAccounts: [this.goraDaoStakingAdminAccount.addr, this.goraDaoMainApplicationAddress, this.stakingParams['staking_proxy_app_address']],
+            appForeignApps: [Number(this.stakingParams['staking_proxy_app_id'])],
             sender: addr,
             suggestedParams: params,
             signer: signer,
@@ -3760,6 +3761,7 @@ const GoraDaoDeployer = class {
         const argsStaking = [
             tws2,
             tws3,
+            
         ]
         const atcStakingStake = new this.algosdk.AtomicTransactionComposer()
         atcStakingStake.addMethodCall({

@@ -635,7 +635,52 @@ method_config_staking:
 // 	txn ApplicationArgs 1
 // 	concat
 // 	b branch_log_return
+branch_stake_in_proxy:
+	// Staking V2 Asset Transfer inner transaction: asset_pay
+	itxn_begin
+	// global CurrentApplicationAddress
+	// itxn_field Sender
+	byte "staking_proxy_app_address"
+	app_global_get
+	itxn_field AssetReceiver
+	int axfer
+	itxn_field TypeEnum
+	gtxn 4 XferAsset
+	itxn_field XferAsset
+	load 6
+	itxn_field AssetAmount
 
+	// Proxied staking V2 Application ABI call for stake
+	itxn_next
+	byte "staking_proxy_app_id"
+	app_global_get
+	itxn_field ApplicationID
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int NoOp
+	itxn_field OnCompletion
+	int appl
+	itxn_field TypeEnum
+	method "stake(axfer,account,application,asset,account)void"
+	itxn_field ApplicationArgs // method
+	txn Sender
+	itxn_field Accounts
+	int 0
+	itob
+	itxn_field ApplicationArgs //vesting_on_behalf_of
+	byte "proxy_staking_main_app_id"
+	app_global_get
+	itob
+	itxn_field ApplicationArgs //main_app_ref
+	byte "staking_asset_id"
+	app_global_get
+	itob
+	itxn_field ApplicationArgs //asset_ref
+	byte "staking_proxy_app_manager"
+	app_global_get
+	itxn_field ApplicationArgs //manager_reference
+	itxn_submit
+	b branch_staking_stake_finalize
 
 method_staking_stake:
 	txna Accounts 0 // DAO main account
@@ -732,7 +777,13 @@ branch_stake_continue:
 	swap
 	app_global_put
 
+	byte "staking_type"
+	app_global_get
+	int 0
+	>
+	bnz branch_stake_in_proxy
 
+branch_staking_stake_finalize:
 	// Log and return
 	byte 0x151f7c75
 	global CurrentApplicationID
