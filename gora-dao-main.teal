@@ -1953,13 +1953,13 @@ method_staking_stake:
     gtxn 4 XferAsset
     ==
     assert
-    gtxn 1 XferAsset
-    gtxn 5 ApplicationID
-    byte "staking_asset_id"
-    app_global_get_ex
-    assert
-    ==
-    assert
+    // gtxn 1 XferAsset
+    // gtxn 5 ApplicationID
+    // byte "staking_asset_id"
+    // app_global_get_ex
+    // assert
+    // ==
+    // assert
 
     gtxn 0 Amount
     gtxn 5 ApplicationID

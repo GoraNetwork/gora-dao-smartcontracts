@@ -26,7 +26,7 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "asset_reference",
+                    "name": "staking_asset_reference",
                     "description": "Staking asset ID"
                 },
                 {
