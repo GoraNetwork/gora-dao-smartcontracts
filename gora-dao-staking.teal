@@ -663,10 +663,9 @@ branch_stake_in_proxy:
 	itxn_field TypeEnum
 	method "stake(axfer,account,application,asset,account)void"
 	itxn_field ApplicationArgs // method
-	txn Sender
+	txna Accounts 0 // Staking end user account
 	itxn_field Accounts
-	int 0
-	itob
+	txna Accounts 0 // Staking end user account
 	itxn_field ApplicationArgs //vesting_on_behalf_of
 	byte "proxy_staking_main_app_id"
 	app_global_get
