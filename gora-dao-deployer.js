@@ -3674,7 +3674,7 @@ const GoraDaoDeployer = class {
         let addr = stakingAdminAddr;
         //let account = this[`goraDaoUserAccount${userIndex}`];
         let account = this.goraDaoUserAccount1;
-        let stakeAdminPublicKey = this.algosdk.decodeAddress(stakingAdminAddr);
+        let stakeAdminPublicKey = this.algosdk.decodeAddress(this.goraDaoStakingAdminAccount.addr);
 
         let params = await this.algodClient.getTransactionParams().do();
         let stakingApplication = Number(this.stakingApplicationId);
