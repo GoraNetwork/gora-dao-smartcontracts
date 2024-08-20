@@ -577,10 +577,8 @@ method_config_staking:
 	load 26
 	app_global_put
 
-	txn ApplicationArgs 13 //proxy_staking_vesting_app_id
-	btoi
 	byte "proxy_staking_vesting_app_id"
-	swap
+	global CurrentApplicationID
 	app_global_put
 
 	txn ApplicationArgs 14 //proxy_staking_main_app_id

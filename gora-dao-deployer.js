@@ -99,7 +99,6 @@ const GoraDaoDeployer = class {
         this.stakingApprovalProgData = props.stakingApprovalProgData
         this.stakingClearProgData = props.stakingClearProgData
 
-        this.proxyStakingVestingAppId = props.config.deployer.staking.proxy_staking_vesting_app_id
         this.proxyStakingMainAppId = props.config.deployer.staking.proxy_staking_main_app_id
 
         this.stakingParams = props.config.deployer.staking.staking_params
@@ -3181,7 +3180,7 @@ const GoraDaoDeployer = class {
             "1721224697",//staking_proxy_app_created_at
             "1721224697",//staking_proxy_app_updated_at
             this.stakingProxyParticipationAddress, //staking_proxy_participation_address
-            this.proxyStakingVestingAppId, //proxy_staking_vesting_app_id
+            0,
             this.proxyStakingMainAppId //proxy_staking_main_app_id
 
         ]
