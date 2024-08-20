@@ -259,12 +259,6 @@
                     "description": "Proxied V2 Staking contract's id"
                 }
             ],
-            "boxes": [
-                {
-                    "name": "manager_reference",
-                    "description": "Dynamic box ref per manager account address"
-                }
-            ],
             "returns": {
                 "type": "void"
             }
