@@ -3524,7 +3524,8 @@ const GoraDaoDeployer = class {
         let params = await this.algodClient.getTransactionParams().do();
         const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()));
         let methodStakingOptin = this.getMethodByName("opt_in", stakingContract);
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoStakingAdminAccount);
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoUserAccount1);
+        console.log("Staking User account is: ",this.goraDaoUserAccount1.addr)
 
         //let memberPublicKey = this.algosdk.decodeAddress(stakingAdminAddr)
         const commonParamsStakingOptin = {
@@ -3532,7 +3533,7 @@ const GoraDaoDeployer = class {
             //appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
             //appAccounts: [this.goraDaoAdminAccount.addr],
             //appForeignApps: [Number(this.goraDaoMainApplicationId), proxyStakingApplication],
-            sender: this.goraDaoStakingAdminAccount.addr,
+            sender: this.goraDaoUserAccount1.addr,
             onComplete: 1,
             suggestedParams: params,
             signer: signer,
@@ -3669,10 +3670,10 @@ const GoraDaoDeployer = class {
 
     async stakeProxyStakingContract(userIndex, amount) {
         //let addr = this[`goraDaoUserAccount${userIndex}`].addr;
-        let stakingAdminAddr = this.goraDaoStakingAdminAccount.addr;
+        let stakingAdminAddr = this.goraDaoUserAccount1.addr;
         let addr = stakingAdminAddr;
         //let account = this[`goraDaoUserAccount${userIndex}`];
-        let account = this.goraDaoStakingAdminAccount;
+        let account = this.goraDaoUserAccount1;
         let stakeAdminPublicKey = this.algosdk.decodeAddress(stakingAdminAddr);
 
         let params = await this.algodClient.getTransactionParams().do();
@@ -3703,7 +3704,7 @@ const GoraDaoDeployer = class {
         const commonParamsDao = {
             appID: daoApplication,
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
-            appAccounts: [this.goraDaoStakingAdminAccount.addr, this.stakingApplicationAddress],
+            appAccounts: [this.goraDaoUserAccount1.addr, this.stakingApplicationAddress],
             appForeignApps: [Number(this.stakingApplicationId)],
             sender: addr,
             suggestedParams: params,
