@@ -480,24 +480,14 @@
                     "description": "Payment from Proposer to DAO for Staking fees and initiation MBRs!"
                 },
                 {
-                    "type": "account",
-                    "name": "member_reference",
-                    "description": "DAO member account reference (Staking manager)"
-                },
-                {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "asset_reference",
                     "description": "DAO Staking token ref"
                 },
                 {
-                    "type": "asset",
-                    "name": "asset_reference",
-                    "description": "DAO dao token ref"
-                },
-                {
                     "type": "uint64",
-                    "name": "asset_id",
-                    "description": "DAO Staking token ID"
+                    "name": "asset_reference",
+                    "description": "DAO token ref"
                 },
                 {
                     "type": "string",

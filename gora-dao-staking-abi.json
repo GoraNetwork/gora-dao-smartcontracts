@@ -15,29 +15,19 @@
             "description": "Creates a new Staking contract! Returns the Staking contract ID!",
             "args": [
                 {
-                    "type": "application",
-                    "name": "main_app_id",
-                    "description": "DAO Main App (DAO) ID"
+                    "type": "axfer",
+                    "name": "Staking asset transfer",
+                    "description": ""
                 },
                 {
                     "type": "uint64",
-                    "name": "asset_reference",
+                    "name": "dao_asset_reference",
                     "description": "DAO Main asset (DAO) ID"
                 },
                 {
                     "type": "uint64",
                     "name": "staking_asset_reference",
                     "description": "Staking asset ID"
-                },
-                {
-                    "type": "account",
-                    "name": "manager_reference",
-                    "description": "DAO member account reference (Staking manager)"
-                },
-                {
-                    "type": "account",
-                    "name": "dao_manager_reference",
-                    "description": "DAO manager account reference (DAO Manager)"
                 },
                 {
                     "type": "string",
@@ -307,6 +297,19 @@
             ],
             "returns": {
                 "type": "uint64"
+            }
+        },
+        {
+            "name": "stake",
+            "args": [
+                { "type": "axfer", "name": "asset_pay", "desc": "" },
+                { "type": "account", "name": "vesting_on_behalf_of", "desc": "" },
+                { "type": "application", "name": "main_app_ref", "desc": "" },
+                { "type": "asset", "name": "asset_reference", "desc": "" },
+                { "type": "account", "name": "manager_reference", "desc": "" }
+            ],
+            "returns": {
+                "type": "void"
             }
         },
         {

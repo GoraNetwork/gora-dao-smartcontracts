@@ -2927,7 +2927,9 @@ const GoraDaoDeployer = class {
         const commonParams = {
             appID: Number(this.goraDaoMainApplicationId),
             sender: addr,
-
+            appAccounts: [this.goraDaoStakingAdminAccount.addr, this.goraDaoAdminAccount.addr],
+            appForeignApps: [Number(this.goraDaoMainApplicationId)],
+            appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
             suggestedParams: params,
             signer: signer,
             boxes: [
@@ -2956,8 +2958,6 @@ const GoraDaoDeployer = class {
 
             methodArgs: [
                 tws0,//pay
-                addr,// member account (Staking manager)
-                Number(this.stakingAsset),// Staking asset ref
                 Number(this.goraDaoAsset),// DAO asset ref
                 Number(this.stakingAsset),// Staking asset id
                 "Staking_Test",//title
@@ -3174,10 +3174,10 @@ const GoraDaoDeployer = class {
             "This is a test staking contract for GoraDAO",//staking_description
             "https://develop.gora.fi", //staking_url
             "QmWjvCGPyL9zmA5B84WPqLYF27dL2nFgr1Lw6rMd7CpQPV/images/goranetwork_logo.jpeg",//staking_banner
-            274900373,//staking_proxy_app_id
-            "R2SAMADWJMQ5B4F3R627ICK3AC4O2WMPSNCW7G4EHJT5MYKIHW6H6UAWIM",//staking_proxy_app_address
-            "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",//staking_proxy_app_creator
-            "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",//staking_proxy_app_manager
+            this.stakingParams['staking_proxy_app_id'],//staking_proxy_app_id
+            this.stakingParams['staking_proxy_app_address'],//staking_proxy_app_address
+            this.stakingParams['staking_proxy_app_creator'],//staking_proxy_app_creator
+            this.stakingParams['staking_proxy_app_manager'],//staking_proxy_app_manager
             "1721224697",//staking_proxy_app_created_at
             "1721224697",//staking_proxy_app_updated_at
             this.stakingProxyParticipationAddress, //staking_proxy_participation_address
@@ -3520,21 +3520,20 @@ const GoraDaoDeployer = class {
 
     // This function is used to opt-in to a proxy staking contract
     async optinProxyStakingContract() {
-        let stakingAdminAddr = this.goraDaoStakingAdminAccount.addr;
+        
+      
         let params = await this.algodClient.getTransactionParams().do();
-        let stakingApplication = Number(this.stakingApplicationId);
-        let proxyStakingApplication = Number(this.stakingParams.staking_proxy_app_id);
         const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()));
         let methodStakingOptin = this.getMethodByName("opt_in", stakingContract);
         const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoStakingAdminAccount);
 
         //let memberPublicKey = this.algosdk.decodeAddress(stakingAdminAddr)
         const commonParamsStakingOptin = {
-            appID: proxyStakingApplication,
+            appID: this.stakingParams.staking_proxy_app_id,
             //appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
             //appAccounts: [this.goraDaoAdminAccount.addr],
             //appForeignApps: [Number(this.goraDaoMainApplicationId), proxyStakingApplication],
-            sender: stakingAdminAddr,
+            sender: this.goraDaoStakingAdminAccount.addr,
             onComplete: 1,
             suggestedParams: params,
             signer: signer,
@@ -3545,13 +3544,13 @@ const GoraDaoDeployer = class {
 
         //this.goraDaoMainApplicationId,
         const argsOptin = [
-            this.proxyStakingVestingAppId,
+            this.stakingApplicationId,
         ];
         const atcStakingOptin = new this.algosdk.AtomicTransactionComposer();
         atcStakingOptin.addMethodCall({
             ...commonParamsStakingOptin,
             method: methodStakingOptin,
-            appAccounts: [this.goraDaoMainApplicationAddress],
+            appAccounts: [this.stakingApplicationAddress],
             methodArgs: argsOptin,
         });
 
@@ -3691,9 +3690,9 @@ const GoraDaoDeployer = class {
         let stakerPublicKey = this.algosdk.decodeAddress(addr);
         const commonParamsStakingStake = {
             appID: stakingApplication,
-            appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
-            appAccounts: [this.goraDaoStakingAdminAccount.addr, this.goraDaoMainApplicationAddress, this.stakingParams['staking_proxy_app_address']],
-            appForeignApps: [Number(this.stakingParams['staking_proxy_app_id'])],
+            appForeignAssets: [Number(this.stakingAsset)],
+            appAccounts: [ this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager']],
+            appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']),Number(this.proxyStakingMainAppId)],
             sender: addr,
             suggestedParams: params,
             signer: signer,
@@ -3735,7 +3734,7 @@ const GoraDaoDeployer = class {
         const axferStaking = new this.algosdk.Transaction({
             from: addr,
             to: `${this.stakingApplicationAddress}`,
-            amount: 5,
+            amount: 5000000000,
             assetIndex: Number(this.stakingAsset),
             type: 'axfer',
             ...params
@@ -3790,6 +3789,74 @@ const GoraDaoDeployer = class {
             let returnedResults = this.algosdk.decodeUint64(stakingStakeResults.methodResults[idx].rawReturnValue, "mixed")
             this.logger.info("GoraDAO Staking Contract ABI Exec result = %s", returnedResults);
             await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+
+        }
+    }
+    async stakeDirectProxyStakingContract(userIndex, amount) {
+        let stakingAdminAddr = this.goraDaoStakingAdminAccount.addr;
+        let addr = stakingAdminAddr;
+        let account = this.goraDaoStakingAdminAccount;
+        let params = await this.algodClient.getTransactionParams().do();
+        let proxyStakingApplication = Number(this.stakingParams.staking_proxy_app_id);
+        this.logger.info(`Staking directly into V2 staking contract : ${proxyStakingApplication}`);
+        const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()));
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(account);
+        let methodStakingStake = this.getMethodByName("stake", stakingContract);
+
+ params.fee = 15000
+ params.flatFee = true
+        const commonParamsStakingStake = {
+            appID: Number(this.stakingParams.staking_proxy_app_id),
+            appForeignAssets: [ Number(this.stakingAsset)],
+            appAccounts: [],
+            appForeignApps: [this.proxyStakingMainAppId],
+            sender: addr,
+            suggestedParams: params,
+            signer: signer,
+     
+           
+        }
+ 
+
+
+  
+        const axferStaking = new this.algosdk.Transaction({
+            from: addr,
+            to: "R2SAMADWJMQ5B4F3R627ICK3AC4O2WMPSNCW7G4EHJT5MYKIHW6H6UAWIM",
+            amount: 5,
+            assetIndex: Number(this.stakingAsset),
+            type: 'axfer',
+            ...params
+        })
+
+
+  
+        const tws1 = { txn: axferStaking, signer: signer }
+   
+
+        const argsStaking = [
+            tws1,
+            "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ",//Zero Address
+            this.proxyStakingMainAppId,
+            this.stakingAsset,
+            "DOQUMSMRVTON2QHJXSQBFVB2HIBD3NV52OYR7FTWDFKLMOCPVSKXNLZ7WQ",
+        ]
+        const atcStakingStake = new this.algosdk.AtomicTransactionComposer()
+   
+        this.logger.info('------------------------------')
+        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodStakingStake);
+        atcStakingStake.addMethodCall({
+            method: methodStakingStake,
+            methodArgs: argsStaking,
+      
+            ...commonParamsStakingStake
+        })
+        this.logger.info('------------------------------')
+   
+
+        const stakingStakeResults = await atcStakingStake.execute(this.algodClient, 10);
+        if (stakingStakeResults.methodResults) {
+           console.log(stakingStakeResults.methodResults)
 
         }
     }

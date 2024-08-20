@@ -890,6 +890,7 @@ async function stakingOperations() {
 
                 //await goraDaoDeployer.stakeStakingContract(Number(amount));
                 await goraDaoDeployer.stakeProxyStakingContract(Number(amount));
+                //await goraDaoDeployer.stakeDirectProxyStakingContract(Number(amount));
                 await inquirer.prompt([
                     {
                         type: 'input',

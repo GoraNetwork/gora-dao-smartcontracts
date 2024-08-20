@@ -59,7 +59,7 @@ branch_closeout:
 ///////////////////////////////////////////
 branch_method_router:
 
-	method "create_staking(application,uint64,uint64,address,address,string,string)address"
+	method "create_staking(uint64,uint64,string,string)address"
 	txn ApplicationArgs 0
 	==
 	txn ApplicationID
@@ -167,47 +167,46 @@ method_create_staking:
 	global CurrentApplicationID
 	store 0
 
-	txn ApplicationArgs 1
-	btoi
+	txna Applications 1
 	store 1
 	byte "dao_app_id"
 	load 1
 	app_global_put
 
 
-	txn ApplicationArgs 2
+	txna ApplicationArgs 1
 	btoi
 	store 2
 	byte "dao_asset_id"
 	load 2
 	app_global_put
 
-	txn ApplicationArgs 3
+	txn ApplicationArgs 2
 	btoi
 	store 3
 	byte "staking_asset_id"
 	load 3
 	app_global_put
 
-	txn ApplicationArgs 4
+	txna Accounts 1
 	store 4
 	byte "manager_address"
 	load 4
 	app_global_put
 
-	txn ApplicationArgs 5
+	txna Accounts 2
 	store 5
 	byte "dao_manager_address"
 	load 5
 	app_global_put
 
-	txn ApplicationArgs 6
+	txn ApplicationArgs 3
 	store 6
 	byte "staking_name"
 	load 6
 	app_global_put
 
-	txn ApplicationArgs 7
+	txn ApplicationArgs 4
 	store 7
 	byte "staking_description"
 	load 7
@@ -229,10 +228,6 @@ method_create_staking:
 	int 0
 	app_global_put
 
-
-
-
-branch_finalize_create_staking:
 	byte 0x151f7c75
 	global CurrentApplicationAddress
 	concat
@@ -663,9 +658,13 @@ branch_stake_in_proxy:
 	itxn_field TypeEnum
 	method "stake(axfer,account,application,asset,account)void"
 	itxn_field ApplicationArgs // method
-	txna Accounts 0 // Staking end user account
+	txn Sender // Staking end user account
 	itxn_field Accounts
-	txna Accounts 0 // Staking end user account
+	txna Accounts 2 // staking_proxy_app_manager
+	itxn_field Accounts
+	txna Assets 0 // staking_asset_id
+	itxn_field Assets
+	byte "\x01" // Staking end user account
 	itxn_field ApplicationArgs //vesting_on_behalf_of
 	byte "proxy_staking_main_app_id"
 	app_global_get
@@ -675,9 +674,14 @@ branch_stake_in_proxy:
 	app_global_get
 	itob
 	itxn_field ApplicationArgs //asset_ref
-	byte "staking_proxy_app_manager"
-	app_global_get
+	txna Accounts 2
 	itxn_field ApplicationArgs //manager_reference
+	txna Applications 1
+	itxn_field Applications//staking_proxy_app_id
+	txna Applications 2
+	itxn_field Applications //proxy_staking_main_app_id
+	int 15000
+	itxn_field Fee
 	itxn_submit
 	b branch_staking_stake_finalize
 

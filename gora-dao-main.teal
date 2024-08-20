@@ -181,7 +181,7 @@ branch_method_router:
 	==
 	bnz method_proposal_vote
 
-    method "create_staking(pay,account,asset,asset,uint64,string,string)uint64"
+    method "create_staking(pay,uint64,uint64,string,string)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_staking_create
@@ -576,7 +576,7 @@ branch_proposal_create_final:
     itxn_field LocalNumByteSlice
     txn Sender
     itxn_field Note
-    method "create_proposal(application,uint64,uint64,address,address,string,string)address"
+    method "create_proposal(uint64,uint64,string,string)address"
     itxn_field ApplicationArgs
     byte "proposal_app"
     box_get
@@ -1382,21 +1382,23 @@ method_staking_create:
 
     // Process Transaction args
 
-    // Staking manager address
-    txna Accounts 0
+
+    // DAO asset id
+    txn ApplicationArgs 1
+    btoi
     store 1
 
-    // Staking asset id
-    txn ApplicationArgs 1
+     // Staking asset id
+    txn ApplicationArgs 2
     btoi
     store 2
 
     // Staking title
-    txn ApplicationArgs 2
+    txn ApplicationArgs 3
     store 3
 
     // Staking description
-    txn ApplicationArgs 3
+    txn ApplicationArgs 4
     store 4
 
 
@@ -1446,8 +1448,22 @@ branch_staking_create_final:
     itxn_field LocalNumByteSlice
     txn Sender
     itxn_field Note
-    method "create_staking(application,uint64,uint64,address,address,string,string)address"
+    method "create_staking(uint64,uint64,string,string)address"
     itxn_field ApplicationArgs
+    txn ApplicationArgs 1
+    itxn_field ApplicationArgs
+    txn ApplicationArgs 2
+    itxn_field ApplicationArgs
+    txn ApplicationArgs 3
+    itxn_field ApplicationArgs
+    txn ApplicationArgs 4
+    itxn_field ApplicationArgs
+    txn Accounts 1
+    itxn_field Accounts
+    txn Accounts 2
+    itxn_field Accounts
+    txna Applications 1
+    itxn_field Applications
     byte "staking_app"
     box_get
     bz branch_error
@@ -1467,25 +1483,6 @@ branch_staking_create_final:
     swap
     substring3
     itxn_field ClearStateProgram
-    global CurrentApplicationID
-    itob
-    itxn_field ApplicationArgs
-    byte "dao_asset_id"
-    app_global_get
-	itob
-    itxn_field ApplicationArgs
-    load 2
-    itob
-    itxn_field ApplicationArgs
-    load 1
-    itxn_field ApplicationArgs
-    byte "manager_address"
-	app_global_get
-    itxn_field ApplicationArgs
-    load 3
-    itxn_field ApplicationArgs
-    load 4
-    itxn_field ApplicationArgs
     itxn_submit
     //itxn TxID
     //log
@@ -1523,33 +1520,6 @@ branch_staking_create_final:
 	int 400000
 	itxn_field Amount
 	itxn_submit
-	//itxn TxID
-    //log
-
-    //itxn_begin
-    //method "optin_staking_asset(asset,uint64)uint64"
-    //itxn_field ApplicationArgs
-    //int appl
-	//itxn_field TypeEnum
-    //int NoOp
-    //itxn_field OnCompletion
-    //load 9
-	//itxn_field ApplicationID
-    //global CurrentApplicationAddress
-	//itxn_field Sender
-    //txna Assets 0
-    //itxn_field Assets
-    //txna Assets 1
-    //itxn_field Assets
-    //load 2
-    //itob
-    //dup
-    //itxn_field ApplicationArgs
-    //itxn_field ApplicationArgs
-	//itxn_submit
-
-	//itxn TxID
-    //log
 	itxn LastLog
 	//extract 4 0
     //store 11
@@ -1953,13 +1923,14 @@ method_staking_stake:
     gtxn 4 XferAsset
     ==
     assert
-    // gtxn 1 XferAsset
-    // gtxn 5 ApplicationID
-    // byte "staking_asset_id"
-    // app_global_get_ex
-    // assert
-    // ==
-    // assert
+    
+    gtxn 5 ApplicationID
+    byte "staking_asset_id"
+    app_global_get_ex
+    assert
+    gtxn 1 XferAsset
+    ==
+    assert
 
     gtxn 0 Amount
     gtxn 5 ApplicationID
@@ -1974,7 +1945,7 @@ method_staking_stake:
     byte "staking_min_algo"
     app_global_get_ex
     pop
-    ==
+    >=
     assert
 
     gtxn 1 AssetAmount
@@ -1990,7 +1961,7 @@ method_staking_stake:
     byte "staking_min_token"
     app_global_get_ex
     pop
-    ==
+    >=
     assert
 
     // Checking the asset ref to be DAO asset
