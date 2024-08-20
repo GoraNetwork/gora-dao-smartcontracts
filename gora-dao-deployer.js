@@ -3704,7 +3704,7 @@ const GoraDaoDeployer = class {
         const commonParamsDao = {
             appID: daoApplication,
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
-            appAccounts: [this.goraDaoUserAccount1.addr, this.stakingApplicationAddress],
+            appAccounts: [this.goraDaoStakingAdminAccount.addr, this.stakingApplicationAddress],
             appForeignApps: [Number(this.stakingApplicationId)],
             sender: addr,
             suggestedParams: params,
