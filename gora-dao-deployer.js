@@ -815,6 +815,10 @@ const GoraDaoDeployer = class {
             this.logger.error(err);
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////
+    //////////// GoraDAO Tokens and Assets Operations ////////////
+    
     // Sends GoraDAO Asset to the users
     async sendGoraDaoAssetTransaction(appOnly) {
         let addrFrom = this.goraDaoAdminAccount.addr;
