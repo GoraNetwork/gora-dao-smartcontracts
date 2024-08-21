@@ -890,7 +890,7 @@ async function stakingOperations() {
 
                 //await goraDaoDeployer.stakeStakingContract(Number(amount));
                 let finalAmount = Number(amount) * 1000000000 // e.g. to stake 5 Gora the amount will be 5000000000
-                await goraDaoDeployer.stakeProxyStakingContract(0, Number(finalAmount));
+                await goraDaoDeployer.stakeProxyStakingContract(1, Number(finalAmount));
                 //await goraDaoDeployer.stakeDirectProxyStakingContract(Number(amount));
                 await inquirer.prompt([
                     {
@@ -920,7 +920,7 @@ async function stakingOperations() {
                     },
                 ]);
 
-                await goraDaoDeployer.stakeStakingContract(0, Number(amount));
+                await goraDaoDeployer.stakeStakingContract(1, Number(amount));
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -963,7 +963,7 @@ async function stakingOperations() {
         case 'Opt-in to Proxy Staking':
         case 'Check Opt-in to Proxy Staking':
             try {
-                await goraDaoDeployer.optinProxyStakingContract(0);
+                await goraDaoDeployer.optinProxyStakingContract(1);
                 //await goraDaoDeployer.optinProxyStakingContractTransactionAll();
                 await inquirer.prompt([
                     {
