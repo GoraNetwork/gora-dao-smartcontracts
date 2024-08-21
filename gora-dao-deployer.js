@@ -4,6 +4,7 @@ const base32 = require('hi-base32');
 const fs = require('fs').promises;
 const path = require('path');
 const { on } = require('events');
+const configBase = require('./config_example.json');
 // GoraDAO deployer Class
 const GoraDaoDeployer = class {
     // Class constructor
@@ -221,7 +222,21 @@ const GoraDaoDeployer = class {
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount4.addr);
         this.logger.info('--------------------------GoraDAO Staking User 5 Account DISPENSE-------------------------------------')
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount5.addr);
-
+    }
+    // This function backs up the config json file and resets it
+    async resetConfigFile() {
+        try {
+            // Convert the config object to a JSON string with indentation for readability
+            const configJson = JSON.stringify(this.config, null, 2);
+            // Use fs.promises.writeFile to save the JSON string to config.json
+            await fs.writeFile('config_backup.json', configJson, 'utf8');
+            console.log('Configuration backed up to config_backup.json successfully.');
+            await this.saveConfigToFile(configBase);
+            console.log('Configuration in config.json has been reset successfully.');
+        } catch (error) {
+            console.error('Failed to save configuration back up to config_backup.json:', error);
+        }
+        
 
     }
     // Imports the accounts from Mnemonics

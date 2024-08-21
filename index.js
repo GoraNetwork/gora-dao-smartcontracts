@@ -670,7 +670,7 @@ async function proposalsOperations() {
                 },
             ]);
             break;
-        
+
     }
 
     // Loop back to proposals operations menu unless going back to main menu
@@ -1033,7 +1033,7 @@ async function stakingOperations() {
                 },
             ]);
             break;
-        
+
     }
 
     // Loop back to proposals operations menu unless going back to main menu
@@ -1070,6 +1070,7 @@ async function mainMenu(isInteractive) {
                 choices: [
                     'Tester Accounts Dispense',
                     'Tester Accounts Stats',
+                    'Reset Configurations file',
                     'GoraDAO Operations',
                     'Proposals Operations',
                     'Staking Operations',
@@ -1141,6 +1142,27 @@ async function mainMenu(isInteractive) {
                 // Assuming testAccountDispense is a method in GoraDaoDeployer
                 try {
                     await goraDaoDeployer.testAccountDispense();
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                }
+                break;
+            case 'Reset Configurations file':
+                try {
+                    await goraDaoDeployer.resetConfigFile();
                     await inquirer.prompt([
                         {
                             type: 'input',
