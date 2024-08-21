@@ -126,6 +126,55 @@ const GoraDaoDeployer = class {
         this.trxTransfer = null
 
     }
+     // Running GoraDAO deployer
+     async runDeployer(isInteractive) {
+        // Running deployer account instantiation
+        await this.deployerAccount()
+        if (!isInteractive) {
+            if (this.config.deployer['deployer_report']) await this.deployerReport();
+            // Running deployer DAO main contract operations
+            if (this.config.deployer['create_dao_contracts']) await this.deployMainContract();
+            if (this.config.deployer['update_dao_contracts']) await this.updateMainContract();
+            if (this.config.deployer['create_dao_asset']) await this.createDaoAsset();
+            if (this.config.deployer['create_dao_proposal_asset']) await this.createDaoProposalAsset();
+            if (this.config.deployer['create_dao_staking_asset']) await this.createDaoStakingAsset();
+            if (this.config.deployer['config_dao_contract']) await this.configMainContract();
+            if (this.config.deployer['subscribe_dao_contract']) await this.subscribeDaoContract();
+            if (this.config.deployer['unsubscribe_dao_contract']) await this.unsubscribeDaoContract();
+            if (this.config.deployer['delete_apps']) await this.deleteApps(this.config.deployer.apps_to_delete);
+
+            // Running deployer DAO proposal contract operations
+            if (this.config.deployer['write_proposal_source_box']) await this.writeProposalContractSourceBox();
+            if (this.config.deployer['create_proposal_contracts']) await this.createProposalContract();
+            if (this.config.deployer['update_proposal_contracts']) await this.updateProposalContract();
+            if (this.config.deployer['config_proposal_contracts']) await this.configureProposalContract();
+
+            if (this.config.deployer['activate_proposal_contracts']) await this.activateProposalContract();
+            if (this.config.deployer['participate_proposal_contracts']) await this.participateProposalContract();
+            if (this.config.deployer['withdraw_participate_proposal_contracts']) await this.participationWithdrawProposalContract();
+            if (this.config.deployer['vote_proposal_contracts']) await this.voteProposalContract();
+
+            // Running deployer DAO Staking contract operations
+            if (this.config.deployer['write_staking_source_box']) await this.writeStakingContractSourceBox();
+            if (this.config.deployer['create_staking_contracts']) await this.createStakingContract();
+            if (this.config.deployer['update_staking_contracts']) await this.updateStakingContract();
+            if (this.config.deployer['config_staking_contracts']) await this.configureStakingContract();
+
+            if (this.config.deployer['activate_staking_contracts']) await this.activateStakingContract();
+            // if (this.config.deployer['participate_staking_contracts']) await this.participateStakingContract();
+            // if (this.config.deployer['withdraw_participate_staking_contracts']) await this.participationWithdrawStakingContract();
+            if (this.config.deployer['stake_staking_contracts']) await this.stakeStakingContract();
+            if (this.config.deployer['unstake_staking_contracts']) await this.stakeStakingContract();
+            if (this.config.deployer['optin_proxy_staking_contracts']) await this.optinProxyStakingContract();
+            if (this.config.deployer['stake_proxy_staking_contracts']) await this.stakeProxyStakingContract();
+            if (this.config.deployer['unstake_proxy_staking_contracts']) await this.unstakeProxyStakingContract();
+            process.exit();
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////
+    //////////// GoraDAO Tooling Operations ////////////
+
     // This method saves the configuration object to a JSON file
     async saveConfigToFile(config) {
         try {
@@ -1614,54 +1663,10 @@ const GoraDaoDeployer = class {
         this.logger.info(`GoraDAO Asset ID: ${assetId} written to config file!`);
 
     }
-    // Running GoraDAO deployer
-    async runDeployer(isInteractive) {
-        // Running deployer account instantiation
-        await this.deployerAccount()
-        if (!isInteractive) {
-            if (this.config.deployer['deployer_report']) await this.deployerReport();
-            // Running deployer DAO main contract operations
-            if (this.config.deployer['create_dao_contracts']) await this.deployMainContract();
-            if (this.config.deployer['update_dao_contracts']) await this.updateMainContract();
-            if (this.config.deployer['create_dao_asset']) await this.createDaoAsset();
-            if (this.config.deployer['create_dao_proposal_asset']) await this.createDaoProposalAsset();
-            if (this.config.deployer['create_dao_staking_asset']) await this.createDaoStakingAsset();
-            if (this.config.deployer['config_dao_contract']) await this.configMainContract();
-            if (this.config.deployer['subscribe_dao_contract']) await this.subscribeDaoContract();
-            if (this.config.deployer['unsubscribe_dao_contract']) await this.unsubscribeDaoContract();
-            if (this.config.deployer['delete_apps']) await this.deleteApps(this.config.deployer.apps_to_delete);
+   
 
-            // Running deployer DAO proposal contract operations
-            if (this.config.deployer['write_proposal_source_box']) await this.writeProposalContractSourceBox();
-            if (this.config.deployer['create_proposal_contracts']) await this.createProposalContract();
-            if (this.config.deployer['update_proposal_contracts']) await this.updateProposalContract();
-            if (this.config.deployer['config_proposal_contracts']) await this.configureProposalContract();
-
-            if (this.config.deployer['activate_proposal_contracts']) await this.activateProposalContract();
-            if (this.config.deployer['participate_proposal_contracts']) await this.participateProposalContract();
-            if (this.config.deployer['withdraw_participate_proposal_contracts']) await this.participationWithdrawProposalContract();
-            if (this.config.deployer['vote_proposal_contracts']) await this.voteProposalContract();
-
-            // Running deployer DAO Staking contract operations
-            if (this.config.deployer['write_staking_source_box']) await this.writeStakingContractSourceBox();
-            if (this.config.deployer['create_staking_contracts']) await this.createStakingContract();
-            if (this.config.deployer['update_staking_contracts']) await this.updateStakingContract();
-            if (this.config.deployer['config_staking_contracts']) await this.configureStakingContract();
-
-            if (this.config.deployer['activate_staking_contracts']) await this.activateStakingContract();
-            // if (this.config.deployer['participate_staking_contracts']) await this.participateStakingContract();
-            // if (this.config.deployer['withdraw_participate_staking_contracts']) await this.participationWithdrawStakingContract();
-            if (this.config.deployer['stake_staking_contracts']) await this.stakeStakingContract();
-            if (this.config.deployer['unstake_staking_contracts']) await this.stakeStakingContract();
-            if (this.config.deployer['optin_proxy_staking_contracts']) await this.optinProxyStakingContract();
-            if (this.config.deployer['stake_proxy_staking_contracts']) await this.stakeProxyStakingContract();
-            if (this.config.deployer['unstake_proxy_staking_contracts']) await this.unstakeProxyStakingContract();
-            process.exit();
-        }
-    }
-
+    ////////////////////////////////////////////////////////////////////////
     //////////// GoraDAO Main Contract Operations ////////////
-
 
     // Deploying GoraDAO Main Contract
     async deployMainContract() {
@@ -2857,6 +2862,7 @@ const GoraDaoDeployer = class {
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////
     /////////////// GoraDAO Staking Contract Operations ///////////////
 
     // Only temporary because the actual GoraDao contracts will not be updatable
@@ -3301,7 +3307,7 @@ const GoraDaoDeployer = class {
         await this.saveConfigToFile(this.config)
     }
 
-    // This method is used to stake in a staking contract
+    // This method is used to direct stake in a staking contract
     async stakeStakingContract(userIndex, amount) {
         let addr = this[`goraDaoUserAccount${userIndex}`].addr;
         let account = this[`goraDaoUserAccount${userIndex}`];
@@ -3404,7 +3410,7 @@ const GoraDaoDeployer = class {
         }
     }
 
-    // This method is used to un-stake in a staking contract
+    // This method is used to direct un-stake in a staking contract
     async unstakeStakingContract(userIndex, amount) {
         let addr = this[`goraDaoUserAccount${userIndex}`].addr;
         let account = this[`goraDaoUserAccount${userIndex}`]
@@ -3517,10 +3523,8 @@ const GoraDaoDeployer = class {
         }
     }
 
-    // This function is used to opt-in to a proxy staking contract
+    // This function is used to opt-in to a proxy staking contract (used in proxy staking)
     async optinProxyStakingContract() {
-
-
         let params = await this.algodClient.getTransactionParams().do();
         const stakingContract = new this.algosdk.ABIContract(JSON.parse(this.stakingContract.toString()));
         let methodStakingOptin = this.getMethodByName("opt_in", stakingContract);
@@ -3658,7 +3662,7 @@ const GoraDaoDeployer = class {
         this.config['gora_dao']['proxy_staking_optin_all'] = true;
         await this.saveConfigToFile(this.config)
     }
-
+    // This function is used to stake in a proxy staking contract
     async stakeProxyStakingContract(userIndex, amount) {
         let stakingAddr = this.goraDaoUserAccount1.addr;
         let addr = stakingAddr;
