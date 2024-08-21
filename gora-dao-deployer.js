@@ -126,8 +126,8 @@ const GoraDaoDeployer = class {
         this.trxTransfer = null
 
     }
-     // Running GoraDAO deployer
-     async runDeployer(isInteractive) {
+    // Running GoraDAO deployer
+    async runDeployer(isInteractive) {
         // Running deployer account instantiation
         await this.deployerAccount()
         if (!isInteractive) {
@@ -384,7 +384,6 @@ const GoraDaoDeployer = class {
         const regex = /[^\x00-\x7F]/g;
         return str.match(regex) !== null;
     }
-
     // This is the method to get transaction logs from indexer endpoints
     async printTransactionLogsFromIndexer(txID, confirmedRound) {
         try {
@@ -1240,7 +1239,6 @@ const GoraDaoDeployer = class {
         this.config['gora_dao']['proposal_asa_distributed'] = true;
         await this.saveConfigToFile(this.config)
     }
-
     // Sends the Staking Asset to the users
     async sendStakingAssetTransaction(appOnly) {
         let addrFrom = this.goraDaoAdminAccount.addr;
@@ -1663,7 +1661,6 @@ const GoraDaoDeployer = class {
         this.logger.info(`GoraDAO Asset ID: ${assetId} written to config file!`);
 
     }
-   
 
     ////////////////////////////////////////////////////////////////////////
     //////////// GoraDAO Main Contract Operations ////////////
@@ -1986,7 +1983,6 @@ const GoraDaoDeployer = class {
 
         }
     }
-
     // Create GoraDAO Proposal Asset
     async createDaoProposalAsset() {
         let assetId = 0
@@ -3306,7 +3302,6 @@ const GoraDaoDeployer = class {
         this.config['gora_dao']['staking_is_activated'] = true;
         await this.saveConfigToFile(this.config)
     }
-
     // This method is used to direct stake in a staking contract
     async stakeStakingContract(userIndex, amount) {
         let addr = this[`goraDaoUserAccount${userIndex}`].addr;
@@ -3409,7 +3404,6 @@ const GoraDaoDeployer = class {
 
         }
     }
-
     // This method is used to direct un-stake in a staking contract
     async unstakeStakingContract(userIndex, amount) {
         let addr = this[`goraDaoUserAccount${userIndex}`].addr;
@@ -3522,7 +3516,6 @@ const GoraDaoDeployer = class {
 
         }
     }
-
     // This function is used to opt-in to a proxy staking contract (used in proxy staking)
     async optinProxyStakingContract() {
         let params = await this.algodClient.getTransactionParams().do();
@@ -3569,7 +3562,6 @@ const GoraDaoDeployer = class {
             }
         }
     }
-
     // Opts in all users to the proxied staking contract
     async optinProxyStakingContractTransactionAll() {
         let acc1 = this.goraDaoUserAccount1;
@@ -3785,10 +3777,6 @@ const GoraDaoDeployer = class {
 
         }
     }
-
-    ////////////////////////////////////////////////
-
-
 }
 
 module.exports = GoraDaoDeployer
