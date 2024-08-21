@@ -211,6 +211,17 @@ const GoraDaoDeployer = class {
         this.logger.info('--------------------------GoraDAO Staking Creator Account DISPENSE-------------------------------------')
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoStakingAdminAccount.addr);
 
+        this.logger.info('--------------------------GoraDAO Staking User 1 Account DISPENSE-------------------------------------')
+        this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount1.addr);
+        this.logger.info('--------------------------GoraDAO Staking User 2 Account DISPENSE-------------------------------------')
+        this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount2.addr);
+        this.logger.info('--------------------------GoraDAO Staking User 3 Account DISPENSE-------------------------------------')
+        this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount3.addr);
+        this.logger.info('--------------------------GoraDAO Staking User 4 Account DISPENSE-------------------------------------')
+        this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount4.addr);
+        this.logger.info('--------------------------GoraDAO Staking User 5 Account DISPENSE-------------------------------------')
+        this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount5.addr);
+
 
     }
     // Imports the accounts from Mnemonics
