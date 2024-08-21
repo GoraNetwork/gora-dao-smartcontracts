@@ -36,7 +36,7 @@ props.vestingClearProgData = fs.readFileSync(path.join(__dirname, 'gora-dao-clea
 // GoraDao contract ABIs (Dao main, Proposal and vesting)
 props.daoContract = fs.readFileSync(path.join(__dirname, 'gora-dao-abi.json'));
 props.proposalContract = fs.readFileSync(path.join(__dirname, 'gora-dao-proposal-abi.json'));
-props.stakingContract = fs.readFileSync(path.join(__dirname, 'gora-dao-staking-abi.json'));
+props.goraDaoStakingContractAbi = fs.readFileSync(path.join(__dirname, 'gora-dao-staking-abi.json'));
 props.vestingContract = fs.readFileSync(path.join(__dirname, 'gora-dao-vesting-abi.json'));
 
 // GoraDao Deployer instantiating
@@ -889,7 +889,8 @@ async function stakingOperations() {
                 ]);
 
                 //await goraDaoDeployer.stakeStakingContract(Number(amount));
-                await goraDaoDeployer.stakeProxyStakingContract(Number(amount));
+                let finalAmount = Number(amount) * 1000000000 // e.g. to stake 5 Gora the amount will be 5000000000
+                await goraDaoDeployer.stakeProxyStakingContract(0, Number(finalAmount));
                 //await goraDaoDeployer.stakeDirectProxyStakingContract(Number(amount));
                 await inquirer.prompt([
                     {
@@ -919,7 +920,7 @@ async function stakingOperations() {
                     },
                 ]);
 
-                await goraDaoDeployer.stakeStakingContract(Number(amount));
+                await goraDaoDeployer.stakeStakingContract(0, Number(amount));
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -962,7 +963,7 @@ async function stakingOperations() {
         case 'Opt-in to Proxy Staking':
         case 'Check Opt-in to Proxy Staking':
             try {
-                await goraDaoDeployer.optinProxyStakingContract();
+                await goraDaoDeployer.optinProxyStakingContract(0);
                 //await goraDaoDeployer.optinProxyStakingContractTransactionAll();
                 await inquirer.prompt([
                     {
