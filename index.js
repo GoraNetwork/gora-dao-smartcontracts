@@ -46,7 +46,7 @@ const goraDaoDeployer = new GoraDaoDeployer(props)
 
 async function goraDAOOperations() {
     let choices = []
-    if (!(config['gora_dao']['dao_asa_id'] > 0)) {
+    if (!(config['gora_dao']['dao_asa_id'] > 0) && config['gora_dao']['enforce_gora_token'] === false) {
         choices.push('Create GoraDAO Asset')
     }
     if (config['gora_dao']['dao_dao_deployed'] === true) {
@@ -684,9 +684,10 @@ async function proposalsOperations() {
 }
 async function stakingOperations() {
     let choices = [];
-    if (!(Number(config['gora_dao']['staking_asa_id']) > 0)) {
-        choices.push('Create GoraDAO Staking Asset',)
+    if (!(Number(config['gora_dao']['staking_asa_id']) > 0) && config['gora_dao']['enforce_gora_token'] === false) {
+        choices.push('Create GoraDAO Staking Asset')
     }
+   
     if (config['gora_dao']['dao_staking_deployed'] === false) {
         choices.push('Deploy New Staking')
     } else {
@@ -695,24 +696,26 @@ async function stakingOperations() {
     if (config['gora_dao']['dao_staking_deployed'] === true) {
         choices.push('Configure Staking')
     }
+    if (config['gora_dao']['staking_is_activated'] === false) {
+        choices.push('Activate Staking')
+    } else if (config['gora_dao']['staking_is_activated'] === true) {
+        choices.push('Stake into staking contract')
+        //choices.push('Withdraw stake from staking contract')
+    }
     if (config['gora_dao']['dao_staking_deployed'] === true && config['gora_dao']['staking_asa_distributed'] === false) {
         choices.push('Distribute Staking Asset')
     } else if (config['gora_dao']['dao_staking_deployed'] === true && config['gora_dao']['staking_asa_distributed'] === true) {
         choices.push('Re-Distribute Staking Asset')
         choices.push('Re-Distribute Staking Asset(App only)')
     }
-
-
     if (config['gora_dao']['proxy_staking_is_opted_in'] === false) {
         choices.push('Opt-in to Proxy Staking')
     } else if (config['gora_dao']['proxy_staking_is_opted_in'] === true) {
         choices.push('Check Opt-in to Proxy Staking')
     }
-    if (config['gora_dao']['staking_is_activated'] === false) {
-        choices.push('Activate Staking')
-    } else if (config['gora_dao']['staking_is_activated'] === true) {
-        choices.push('Stake into staking contract')
-        //choices.push('Withdraw stake from staking contract')
+    
+    if (config['gora_dao']['enforce_gora_token'] === true) {
+        choices.push('Create NFT Staking TEST Assets')
     }
 
 
@@ -734,6 +737,34 @@ async function stakingOperations() {
         case 'Create GoraDAO Staking Asset':
             try {
                 await goraDaoDeployer.createDaoStakingAsset();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Create NFT Staking TEST Assets':
+            try {
+                let { qty } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'qty',
+                        message: 'How many testing NFT staking assets you need to create?',
+                    },
+                ]);
+                await goraDaoDeployer.iterativeMintingTestNfts(Number(qty));
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -888,8 +919,8 @@ async function stakingOperations() {
                     },
                 ]);
 
-                //await goraDaoDeployer.stakeStakingContract(Number(amount));
                 let finalAmount = Number(amount) * 1000000000 // e.g. to stake 5 Gora the amount will be 5000000000
+                //await goraDaoDeployer.stakeStakingContract(Number(amount));
                 await goraDaoDeployer.stakeProxyStakingContract(1, Number(finalAmount));
                 //await goraDaoDeployer.stakeDirectProxyStakingContract(Number(amount));
                 await inquirer.prompt([

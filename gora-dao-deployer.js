@@ -236,8 +236,6 @@ const GoraDaoDeployer = class {
         } catch (error) {
             console.error('Failed to save configuration back up to config_backup.json:', error);
         }
-        
-
     }
     // Imports the accounts from Mnemonics
     importAccounts(mnemonicKey) {
@@ -830,6 +828,12 @@ const GoraDaoDeployer = class {
         catch (err) {
             this.logger.error(err);
         }
+    }
+    // This method is used to create a random integer between min and max integers (used for NFT value in NFT Staking)
+    getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -1616,7 +1620,6 @@ const GoraDaoDeployer = class {
     }
     // Create GoraDAO Asset
     async createDaoAsset() {
-
         let assetId = 0
         if (!this.isGoraTokenEnforced) {
             let params = await this.algodClient.getTransactionParams().do();
@@ -1625,9 +1628,9 @@ const GoraDaoDeployer = class {
                 assetName: 'GoraDAO TEST ASSET',
                 assetURL: 'https://gora.io',
                 clawback: this.goraDaoAdminAccount.addr,
+                freeze: this.goraDaoAdminAccount.addr,
                 decimals: 0,
                 defaultFrozen: false,
-                freeze: this.goraDaoAdminAccount.addr,
                 from: this.goraDaoAdminAccount.addr,
                 manager: this.goraDaoAdminAccount.addr,
                 note: new Uint8Array(Buffer.from('GoraDAO TEST Asset')),
@@ -1673,8 +1676,6 @@ const GoraDaoDeployer = class {
             this.logger.info('By config enforcement, The Admin account has explicitly opted in to the Gora Token')
             this.logger.info(`GoraDAO Asset has been explicitly set to Gora Token ID (By config): ${assetId}`);
         }
-
-
         this.config['gora_dao']['dao_asa_id'] = assetId;
         this.goraDaoAsset = assetId;
         await this.saveConfigToFile(this.config)
@@ -2012,10 +2013,10 @@ const GoraDaoDeployer = class {
                 assetMetadataHash: new Uint8Array(32),
                 assetName: 'GoraDAO Proposal TEST ASSET',
                 assetURL: 'https://gora.io',
-                clawback: this.goraDaoProposalAdminAccount.addr,
+                clawback: this.goraDaoAdminAccount.addr,
+                freeze: this.goraDaoAdminAccount.addr,
                 decimals: 0,
                 defaultFrozen: false,
-                freeze: this.goraDaoProposalAdminAccount.addr,
                 from: this.goraDaoProposalAdminAccount.addr,
                 manager: this.goraDaoProposalAdminAccount.addr,
                 note: new Uint8Array(Buffer.from('GoraDAO Proposal TEST Asset')),
@@ -2097,10 +2098,10 @@ const GoraDaoDeployer = class {
                 assetMetadataHash: new Uint8Array(32),
                 assetName: 'GoraDAO Staking TEST ASSET',
                 assetURL: 'https://gora.io',
-                clawback: this.goraDaoStakingAdminAccount.addr,
+                clawback: this.goraDaoAdminAccount.addr,
+                freeze: this.goraDaoAdminAccount.addr,
                 decimals: 0,
                 defaultFrozen: false,
-                freeze: this.goraDaoStakingAdminAccount.addr,
                 from: this.goraDaoStakingAdminAccount.addr,
                 manager: this.goraDaoStakingAdminAccount.addr,
                 note: new Uint8Array(Buffer.from('GoraDAO Staking TEST Asset')),
@@ -2167,13 +2168,10 @@ const GoraDaoDeployer = class {
             this.logger.info('By config enforcement Gora  Token has been sent to Staking creator account successfully')
             this.logger.info(`GoraDAO Staking Asset has explicitly been set to Gora Token (by config values): ${this.goraToken}`);
         }
-
-
         this.config['gora_dao']['staking_asa_id'] = assetId;
         this.stakingAsset = assetId
         await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Staking Asset ID: ${assetId} written to config file!`);
-
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -3589,98 +3587,6 @@ const GoraDaoDeployer = class {
             }
         }
     }
-    // Opts in all users to the proxied staking contract
-    async optinProxyStakingContractTransactionAll() {
-        let acc1 = this.goraDaoUserAccount1;
-        let acc2 = this.goraDaoUserAccount2;
-        let acc3 = this.goraDaoUserAccount3;
-        let acc4 = this.goraDaoUserAccount4;
-        let acc5 = this.goraDaoUserAccount5;
-
-        let proxyStakingApplication = Number(this.stakingParams.staking_proxy_app_id);
-        const goraDaoStakingContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoStakingContractAbi.toString()));
-        let methodStakingOptin = this.getMethodByName("opt_in", goraDaoStakingContractAbi);
-        let params = await this.algodClient.getTransactionParams().do();
-        //this.goraDaoMainApplicationId,
-        const argsOptin = [
-            this.proxyStakingVestingAppId,
-        ];
-        const atcStakingOptin = new this.algosdk.AtomicTransactionComposer();
-        const signerUser1 = this.algosdk.makeBasicAccountTransactionSigner(acc1);
-        atcStakingOptin.addMethodCall({
-            sender: acc1.addr,
-            signer: signerUser1,
-            appID: proxyStakingApplication,
-            onComplete: 1,
-            suggestedParams: params,
-            method: methodStakingOptin,
-            appAccounts: [this.goraDaoMainApplicationAddress],
-            methodArgs: argsOptin,
-        });
-        const signerUser2 = this.algosdk.makeBasicAccountTransactionSigner(acc2);
-        atcStakingOptin.addMethodCall({
-            sender: acc2.addr,
-            signer: signerUser2,
-            appID: proxyStakingApplication,
-            onComplete: 1,
-            suggestedParams: params,
-            method: methodStakingOptin,
-            appAccounts: [this.goraDaoMainApplicationAddress],
-            methodArgs: argsOptin,
-        });
-        const signerUser3 = this.algosdk.makeBasicAccountTransactionSigner(acc3);
-        atcStakingOptin.addMethodCall({
-            sender: acc3.addr,
-            signer: signerUser3,
-            appID: proxyStakingApplication,
-            onComplete: 1,
-            suggestedParams: params,
-            method: methodStakingOptin,
-            appAccounts: [this.goraDaoMainApplicationAddress],
-            methodArgs: argsOptin,
-        });
-        const signerUser4 = this.algosdk.makeBasicAccountTransactionSigner(acc4);
-        atcStakingOptin.addMethodCall({
-            sender: acc4.addr,
-            signer: signerUser4,
-            appID: proxyStakingApplication,
-            onComplete: 1,
-            suggestedParams: params,
-            method: methodStakingOptin,
-            appAccounts: [this.goraDaoMainApplicationAddress],
-            methodArgs: argsOptin,
-        });
-        const signerUser5 = this.algosdk.makeBasicAccountTransactionSigner(acc5);
-        atcStakingOptin.addMethodCall({
-            sender: acc5.addr,
-            signer: signerUser5,
-            appID: proxyStakingApplication,
-            onComplete: 1,
-            suggestedParams: params,
-            method: methodStakingOptin,
-            appAccounts: [this.goraDaoMainApplicationAddress],
-            methodArgs: argsOptin,
-        });
-        try {
-            const stakingOptinResults = await atcStakingOptin.execute(this.algodClient, 10);
-            if (stakingOptinResults) {
-                this.config['gora_dao']['proxy_staking_is_opted_in'] = true;
-                await this.saveConfigToFile(this.config);
-                this.logger.info("All accounts are now opted into the proxy staking contract!");
-            }
-        } catch (error) {
-            if (error.message.indexOf('has already opted in to app') > -1) {
-                this.config['gora_dao']['proxy_staking_is_opted_in'] = true;
-                await this.saveConfigToFile(this.config);
-                this.logger.info("All accounts are already opted into the proxy staking contract!");
-            } else {
-                console.error(error)
-            }
-        }
-
-        this.config['gora_dao']['proxy_staking_optin_all'] = true;
-        await this.saveConfigToFile(this.config)
-    }
     // This function is used to stake in a proxy staking contract
     async stakeProxyStakingContract(userIndex, amount) {
         this.logger.info(`Staking into proxy staking contract ${Number(this.goraDaoStakingApplicationId)} which proxies ${Number(this.stakingParams.staking_proxy_app_id)}`);
@@ -3809,6 +3715,148 @@ const GoraDaoDeployer = class {
 
         }
     }
+    // This function is used to iterate N NFTs minting and save them to config for testing purposes
+    async iterativeMintingTestNfts(assetQuantity) {
+        let assetId = 0
+        let assetArray = []
+        // Get suggested Algorand TXN parameters
+        let params = await this.algodClient.getTransactionParams().do();
+        for (let index = 0; index < assetQuantity; index++) {
+            this.logger.info('------------------------------')
+            this.logger.info(`Creating GoraDAO Testing NFT staking Asset #${index}...`);
+            // Create NFT asset transaction with suggested parameters
+            const atxn = this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
+                assetMetadataHash: new Uint8Array(32),
+                assetName: `GoraDAO Staking Asset #${index}`,
+                assetURL: 'https://gora.io',
+                clawback: this.goraDaoStakingAdminAccount.addr,
+                freeze: this.goraDaoStakingAdminAccount.addr,
+                decimals: 0,
+                defaultFrozen: false,
+                from: this.goraDaoStakingAdminAccount.addr,
+                manager: this.goraDaoStakingAdminAccount.addr,
+                note: new Uint8Array(Buffer.from(`GoraDAO NFT Staking TEST Asset #${index}`)),
+                reserve: this.goraDaoStakingAdminAccount.addr,
+                suggestedParams: { ...params, fee: 1000, flatFee: true, },
+                total: 1,
+                unitName: 'GDNST',
+
+            })
+          
+            let txnId = atxn.txID().toString();
+            let signedTxn = await atxn.signTxn(this.goraDaoStakingAdminAccount.sk);
+            await this.algodClient.sendRawTransaction(signedTxn).do();
+            await this.algosdk.waitForConfirmation(this.algodClient, txnId, 10)
+
+            let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
+            assetId = transactionResponse['asset-index'];
+            let value = this.getRandomInt(5, 10);
+            assetArray.push({
+                asset: assetId,
+                value: value,
+                isLocked: false,
+            })
+            this.logger.info(`GoraDAO Staking TEST created Asset ID: ${assetId} with Gora native Token value: ${value} created!`);
+        }
+
+        this.config['deployer']['nft_staking_test_assets'] = assetArray;
+        await this.saveConfigToFile(this.config)
+        this.logger.info(`GoraDAO Staking Assets array written to config file!`);
+    }
+
+
+    // Opts in all users to the proxied staking contract
+    // async optinProxyStakingContractTransactionAll() {
+    //     let acc1 = this.goraDaoUserAccount1;
+    //     let acc2 = this.goraDaoUserAccount2;
+    //     let acc3 = this.goraDaoUserAccount3;
+    //     let acc4 = this.goraDaoUserAccount4;
+    //     let acc5 = this.goraDaoUserAccount5;
+
+    //     let proxyStakingApplication = Number(this.stakingParams.staking_proxy_app_id);
+    //     const goraDaoStakingContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoStakingContractAbi.toString()));
+    //     let methodStakingOptin = this.getMethodByName("opt_in", goraDaoStakingContractAbi);
+    //     let params = await this.algodClient.getTransactionParams().do();
+    //     //this.goraDaoMainApplicationId,
+    //     const argsOptin = [
+    //         this.proxyStakingVestingAppId,
+    //     ];
+    //     const atcStakingOptin = new this.algosdk.AtomicTransactionComposer();
+    //     const signerUser1 = this.algosdk.makeBasicAccountTransactionSigner(acc1);
+    //     atcStakingOptin.addMethodCall({
+    //         sender: acc1.addr,
+    //         signer: signerUser1,
+    //         appID: proxyStakingApplication,
+    //         onComplete: 1,
+    //         suggestedParams: params,
+    //         method: methodStakingOptin,
+    //         appAccounts: [this.goraDaoMainApplicationAddress],
+    //         methodArgs: argsOptin,
+    //     });
+    //     const signerUser2 = this.algosdk.makeBasicAccountTransactionSigner(acc2);
+    //     atcStakingOptin.addMethodCall({
+    //         sender: acc2.addr,
+    //         signer: signerUser2,
+    //         appID: proxyStakingApplication,
+    //         onComplete: 1,
+    //         suggestedParams: params,
+    //         method: methodStakingOptin,
+    //         appAccounts: [this.goraDaoMainApplicationAddress],
+    //         methodArgs: argsOptin,
+    //     });
+    //     const signerUser3 = this.algosdk.makeBasicAccountTransactionSigner(acc3);
+    //     atcStakingOptin.addMethodCall({
+    //         sender: acc3.addr,
+    //         signer: signerUser3,
+    //         appID: proxyStakingApplication,
+    //         onComplete: 1,
+    //         suggestedParams: params,
+    //         method: methodStakingOptin,
+    //         appAccounts: [this.goraDaoMainApplicationAddress],
+    //         methodArgs: argsOptin,
+    //     });
+    //     const signerUser4 = this.algosdk.makeBasicAccountTransactionSigner(acc4);
+    //     atcStakingOptin.addMethodCall({
+    //         sender: acc4.addr,
+    //         signer: signerUser4,
+    //         appID: proxyStakingApplication,
+    //         onComplete: 1,
+    //         suggestedParams: params,
+    //         method: methodStakingOptin,
+    //         appAccounts: [this.goraDaoMainApplicationAddress],
+    //         methodArgs: argsOptin,
+    //     });
+    //     const signerUser5 = this.algosdk.makeBasicAccountTransactionSigner(acc5);
+    //     atcStakingOptin.addMethodCall({
+    //         sender: acc5.addr,
+    //         signer: signerUser5,
+    //         appID: proxyStakingApplication,
+    //         onComplete: 1,
+    //         suggestedParams: params,
+    //         method: methodStakingOptin,
+    //         appAccounts: [this.goraDaoMainApplicationAddress],
+    //         methodArgs: argsOptin,
+    //     });
+    //     try {
+    //         const stakingOptinResults = await atcStakingOptin.execute(this.algodClient, 10);
+    //         if (stakingOptinResults) {
+    //             this.config['gora_dao']['proxy_staking_is_opted_in'] = true;
+    //             await this.saveConfigToFile(this.config);
+    //             this.logger.info("All accounts are now opted into the proxy staking contract!");
+    //         }
+    //     } catch (error) {
+    //         if (error.message.indexOf('has already opted in to app') > -1) {
+    //             this.config['gora_dao']['proxy_staking_is_opted_in'] = true;
+    //             await this.saveConfigToFile(this.config);
+    //             this.logger.info("All accounts are already opted into the proxy staking contract!");
+    //         } else {
+    //             console.error(error)
+    //         }
+    //     }
+
+    //     this.config['gora_dao']['proxy_staking_optin_all'] = true;
+    //     await this.saveConfigToFile(this.config)
+    // }
 }
 
 module.exports = GoraDaoDeployer

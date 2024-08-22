@@ -5,6 +5,7 @@
     "asc_main_id": 0,
     "asc_main_address": "",
     "gora_testnet_token_id": 227418519,
+    "zero_address": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ",
     "enforce_gora_token": true,
     "asc_testnet_main_id": 715545607,
     "asc_testnet_main_address": "PMCMYIIWLDXSTCEA44V76IG3IYYUVM3G2HLKWM3MFDCMVNH3TFKBKPK7XM",
@@ -153,6 +154,18 @@
         "staking_proxy_app_is_pending": 0,
         "staking_incentives_eligibility": 1
       }
-    }
+    },
+    "nft_staking_test_assets": [
+      {
+        "asset": 716804182,
+        "value": 8,
+        "isLocked": false
+      },
+      {
+        "asset": 716804183,
+        "value": 10,
+        "isLocked": false
+      }
+    ]
   }
 }
