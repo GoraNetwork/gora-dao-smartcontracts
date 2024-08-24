@@ -685,7 +685,7 @@ async function proposalsOperations() {
 }
 async function stakingOperations() {
     let choices = [];
-    if (!(Number(config['gora_dao']['staking_asa_id']) > 0) && config['gora_dao']['enforce_gora_token'] === false) {
+    if (!(Number(config['gora_dao']['staking_asa_id']) > 0)) {
         choices.push('Create GoraDAO Staking Asset')
     }
 
