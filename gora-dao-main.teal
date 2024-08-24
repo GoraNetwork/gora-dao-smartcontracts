@@ -100,7 +100,7 @@ branch_create:
 	int 0
 	app_global_put
 
-	byte "active_stakings_count"
+	byte "total_stakings_amount"
 	int 0
 	app_global_put
 

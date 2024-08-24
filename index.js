@@ -46,7 +46,7 @@ const goraDaoDeployer = new GoraDaoDeployer(props)
 
 async function goraDAOOperations() {
     let choices = []
-    if (!(config['gora_dao']['dao_asa_id'] > 0) && config['gora_dao']['enforce_gora_token'] === false) {
+    if (!(config['gora_dao']['dao_asa_id'] > 0)) {
         choices.push('Create GoraDAO Asset')
     }
     if (config['gora_dao']['dao_dao_deployed'] === true) {
@@ -61,8 +61,9 @@ async function goraDAOOperations() {
         choices.push('Distribute GoraDAO Asset')
     } else if (config['gora_dao']['dao_asa_distributed'] === true) {
         choices.push('Re-Distribute GoraDAO Asset')
-        choices.push('Re-Distribute GoraDAO Asset(APP Only)')
+
     }
+    choices.push('Re-Distribute GoraDAO Asset(APP Only)')
     if (config['gora_dao']['subscribed_to_dao'] === true) {
         choices.push('Unsubscribe from GoraDAO')
     } else {
@@ -687,7 +688,7 @@ async function stakingOperations() {
     if (!(Number(config['gora_dao']['staking_asa_id']) > 0) && config['gora_dao']['enforce_gora_token'] === false) {
         choices.push('Create GoraDAO Staking Asset')
     }
-   
+
     if (config['gora_dao']['dao_staking_deployed'] === false) {
         choices.push('Deploy New Staking')
     } else {
@@ -713,7 +714,7 @@ async function stakingOperations() {
     } else if (config['gora_dao']['proxy_staking_is_opted_in'] === true) {
         choices.push('Check Opt-in to Proxy Staking')
     }
-    
+
     if (config['gora_dao']['enforce_gora_token'] === true) {
         choices.push('Create NFT Staking TEST Assets')
     }
@@ -991,29 +992,29 @@ async function stakingOperations() {
                 ]);
             }
             break;
-        case 'Opt-in to Proxy Staking':
-        case 'Check Opt-in to Proxy Staking':
-            try {
-                await goraDaoDeployer.optinProxyStakingContract(2);
-                //await goraDaoDeployer.optinProxyStakingContractTransactionAll();
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
+        // case 'Opt-in to Proxy Staking':
+        // case 'Check Opt-in to Proxy Staking':
+        //     try {
+        //         await goraDaoDeployer.optinProxyStakingContract(2);
+        //         //await goraDaoDeployer.optinProxyStakingContractTransactionAll();
+        //         await inquirer.prompt([
+        //             {
+        //                 type: 'input',
+        //                 name: 'continue',
+        //                 message: 'Press Enter to go back to menu...',
+        //             },
+        //         ]);
 
-            } catch (error) {
-                console.error('An error occurred:', error);
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            }
+        //     } catch (error) {
+        //         console.error('An error occurred:', error);
+        //         await inquirer.prompt([
+        //             {
+        //                 type: 'input',
+        //                 name: 'continue',
+        //                 message: 'Press Enter to go back to menu...',
+        //             },
+        //         ]);
+        //     }
         case 'Back to Main Menu':
             await mainMenu(true);
             break;
