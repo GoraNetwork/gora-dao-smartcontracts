@@ -10,8 +10,8 @@
     "asc_testnet_main_address": "PMCMYIIWLDXSTCEA44V76IG3IYYUVM3G2HLKWM3MFDCMVNH3TFKBKPK7XM",
     "asc_proposal_id": 0,
     "asc_proposal_address": "",
-    "asc_staking_id": 716403789,
-    "asc_staking_address": "LDSZMTMCM3ANBZ3MQC5RCKJUAL44DKEV6RIQU2XQZ3ER7SH32GGLNYV34Q",
+    "asc_staking_id": 717016856,
+    "asc_staking_address": "Z3XJB6MC4DPKJPZVEOELA5BJJKDPUEHJYRNPWB4TGQBYQMH7PCD5T3GKVU",
     "dao_asa_id": 227418519,
     "proposal_asa_id": 0,
     "staking_asa_id": 227418519,
@@ -26,6 +26,7 @@
     "proposal_is_activated": false,
     "staking_is_activated": true,
     "proxy_staking_optin_all": false,
+    "proxy_staking_is_opted_in": true,
     "asc_vesting_id": 0,
     "asc_vesting_address": "",
     "algo_wallet_address": "",
@@ -38,8 +39,7 @@
     "indexer_remote_token": "",
     "indexer_remote_port": "",
     "algo_dispenser": "https://dispenser.testnet.aws.algodev.network/?account=",
-    "verbose": false,
-    "proxy_staking_is_opted_in": true
+    "verbose": false
   },
   "owner": "LP6QRRBRDTDSP4HF7CSPWJV4AG4QWE437OYHGW7K5Y7DETKCSK5H3HCA7Q",
   "deployer": {

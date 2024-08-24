@@ -264,7 +264,7 @@
             }
         },
         {
-            "name": "staking_stake",
+            "name": "stake",
             "description": "Stakes in Staking contract! Returns the staking member's account address concatenated with staked amount!",
             "args": [
                 {
@@ -294,20 +294,7 @@
             }
         },
         {
-            "name": "stake",
-            "args": [
-                { "type": "axfer", "name": "asset_pay", "desc": "" },
-                { "type": "account", "name": "vesting_on_behalf_of", "desc": "" },
-                { "type": "application", "name": "main_app_ref", "desc": "" },
-                { "type": "asset", "name": "asset_reference", "desc": "" },
-                { "type": "account", "name": "manager_reference", "desc": "" }
-            ],
-            "returns": {
-                "type": "void"
-            }
-        },
-        {
-            "name": "staking_unstake",
+            "name": "unstake",
             "description": "Un-stakes from Staking contract! Returns the staking member's account address concatenated with un-staked amount!",
             "args": [
                 {

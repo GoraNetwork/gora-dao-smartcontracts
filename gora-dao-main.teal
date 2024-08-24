@@ -201,7 +201,7 @@ branch_method_router:
 	==
 	bnz method_activate_staking
 
-    method "staking_stake(pay,axfer)uint64"
+    method "stake(pay,axfer)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_staking_stake
@@ -1372,7 +1372,7 @@ method_staking_create:
     assert
 
     gtxn 0 Amount
-    byte "staking_fee_algo"
+    byte "fee_algo"
     app_global_get
     //dup
     //itob
@@ -1744,13 +1744,13 @@ method_staking_config:
     assert
 
     gtxn 2 Amount
-    byte "staking_fee_algo"
+    byte "fee_algo"
     app_global_get
     >=
     assert
 	
     gtxn 3 AssetAmount
-    byte "staking_fee_token"
+    byte "fee_token"
     app_global_get
     >=
     assert
@@ -1925,7 +1925,7 @@ method_staking_stake:
     assert
     
     gtxn 5 ApplicationID
-    byte "staking_asset_id"
+    byte "asset_id"
     app_global_get_ex
     assert
     gtxn 1 XferAsset
@@ -1934,7 +1934,7 @@ method_staking_stake:
 
     gtxn 0 Amount
     gtxn 5 ApplicationID
-    byte "staking_fee_algo"
+    byte "fee_algo"
     app_global_get_ex
     pop
     ==
@@ -1942,7 +1942,7 @@ method_staking_stake:
 
     gtxn 3 Amount
     gtxn 5 ApplicationID
-    byte "staking_min_algo"
+    byte "min_algo"
     app_global_get_ex
     pop
     >=
@@ -1950,7 +1950,7 @@ method_staking_stake:
 
     gtxn 1 AssetAmount
     gtxn 5 ApplicationID
-    byte "staking_fee_token"
+    byte "fee_token"
     app_global_get_ex
     pop
     ==
@@ -1958,7 +1958,7 @@ method_staking_stake:
 
     gtxn 4 AssetAmount
     gtxn 5 ApplicationID
-    byte "staking_min_token"
+    byte "min_token"
     app_global_get_ex
     pop
     >=
