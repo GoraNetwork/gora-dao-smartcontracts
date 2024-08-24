@@ -697,7 +697,7 @@ async function stakingOperations() {
     if (config['gora_dao']['dao_staking_deployed'] === true) {
         choices.push('Configure Staking')
     }
-    if (config['gora_dao']['staking_is_activated'] === false) {
+    if (config['gora_dao']['staking_is_activated'] === false && config['gora_dao']['dao_staking_deployed'] === true) {
         choices.push('Activate Staking')
     } else if (config['gora_dao']['staking_is_activated'] === true) {
         choices.push('Stake into staking contract')
@@ -709,11 +709,11 @@ async function stakingOperations() {
         choices.push('Re-Distribute Staking Asset')
         choices.push('Re-Distribute Staking Asset(App only)')
     }
-    if (config['gora_dao']['proxy_staking_is_opted_in'] === false) {
-        choices.push('Opt-in to Proxy Staking')
-    } else if (config['gora_dao']['proxy_staking_is_opted_in'] === true) {
-        choices.push('Check Opt-in to Proxy Staking')
-    }
+    // if (config['gora_dao']['proxy_staking_is_opted_in'] === false) {
+    //     choices.push('Opt-in to Proxy Staking')
+    // } else if (config['gora_dao']['proxy_staking_is_opted_in'] === true) {
+    //     choices.push('Check Opt-in to Proxy Staking')
+    // }
 
     if (config['gora_dao']['enforce_gora_token'] === true) {
         choices.push('Create NFT Staking TEST Assets')
