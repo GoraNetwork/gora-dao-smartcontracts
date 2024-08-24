@@ -35,6 +35,10 @@ callsub sub_check_txn
 txn OnCompletion
 int NoOp
 ==
+txn OnCompletion
+int UpdateApplication
+==
+||
 assert
 
 // Checks the number of application args , if 0 then no method it is
