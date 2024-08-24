@@ -2964,7 +2964,7 @@ const GoraDaoDeployer = class {
         const ptxn = new this.algosdk.Transaction({
             from: addr,
             to: this.goraDaoMainApplicationAddress,
-            amount: 500000,
+            amount: 2000000,
             fee: params.minFee,
             ...params
         })
@@ -3063,8 +3063,8 @@ const GoraDaoDeployer = class {
                 Number(this.goraDaoStakingApplicationId),
                 addr,// member account (Staking manager)
                 Number(this.stakingAsset),// Staking asset
-                "Staking_Test_updated",//title
-                "This is an updated test staking for GoraDAO",//description
+                // "Staking_Test_updated",//title
+                // "This is an updated test staking for GoraDAO",//description
                 // 10,//quorum
                 // [2, [100, 100, 52], [80, 80, 60]],//threshold
                 // 12,//total duration

@@ -1597,13 +1597,9 @@ method_staking_update:
     store 1
     // Staking asset id
     txn ApplicationArgs 4
+    btoi
     store 2
-    // Staking title
-    txn ApplicationArgs 5
-    store 3
-    // Staking description
-    txn ApplicationArgs 6
-    store 4
+
 
     // Inner transaction to create the Staking smart contract
     itxn_begin
@@ -1619,7 +1615,7 @@ method_staking_update:
     // itxn 
     txn Sender
     itxn_field Note
-    method "update_staking(application,uint64,uint64,address,address,string,string)address"
+    method "update_staking()address"
     itxn_field ApplicationArgs
     byte "staking_app"
     box_get
@@ -1648,20 +1644,20 @@ method_staking_update:
 	itob
     itxn_field ApplicationArgs
 	// Staking asset id
-    load 2
-    itxn_field ApplicationArgs
+    // load 2
+    // itxn_field ApplicationArgs
 	// Staking manager address
-    load 1
-    itxn_field ApplicationArgs
-    byte "manager_address"
-	app_global_get
-    itxn_field ApplicationArgs
+    // load 1
+    // itxn_field ApplicationArgs
+    // byte "manager_address"
+	// app_global_get
+    // itxn_field ApplicationArgs
 	// Staking title
-    load 3
-    itxn_field ApplicationArgs
-	// Staking description
-    load 4
-    itxn_field ApplicationArgs
+    // load 3
+    // itxn_field ApplicationArgs
+	// // Staking description
+    // load 4
+    // itxn_field ApplicationArgs
     
     
     itxn_submit
