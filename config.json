@@ -4,29 +4,28 @@
     "network": "testnet",
     "asc_main_id": 0,
     "asc_main_address": "",
-    "gora_testnet_token_id": 227418519,
+    "gora_testnet_token_id": 0,
     "enforce_gora_token": true,
-    "asc_testnet_main_id": 715545607,
-    "asc_testnet_main_address": "PMCMYIIWLDXSTCEA44V76IG3IYYUVM3G2HLKWM3MFDCMVNH3TFKBKPK7XM",
+    "asc_testnet_main_id": 0,
+    "asc_testnet_main_address": "",
     "asc_proposal_id": 0,
     "asc_proposal_address": "",
-    "asc_staking_id": 717016856,
-    "asc_staking_address": "Z3XJB6MC4DPKJPZVEOELA5BJJKDPUEHJYRNPWB4TGQBYQMH7PCD5T3GKVU",
-    "dao_asa_id": 227418519,
+    "asc_staking_id": 0,
+    "asc_staking_address": "",
+    "dao_asa_id": 0,
     "proposal_asa_id": 0,
-    "staking_asa_id": 227418519,
-    "dao_dao_deployed": true,
+    "staking_asa_id": 0,
+    "dao_dao_deployed": false,
     "dao_proposal_deployed": false,
-    "dao_staking_deployed": true,
-    "dao_asa_distributed": true,
+    "dao_staking_deployed": false,
+    "dao_asa_distributed": false,
     "proposal_asa_distributed": false,
-    "staking_asa_distributed": true,
+    "staking_asa_distributed": false,
     "subscribed_to_dao": false,
     "participated_to_proposal": false,
     "proposal_is_activated": false,
-    "staking_is_activated": true,
+    "staking_is_activated": false,
     "proxy_staking_optin_all": false,
-    "proxy_staking_is_opted_in": true,
     "asc_vesting_id": 0,
     "asc_vesting_address": "",
     "algo_wallet_address": "",
@@ -39,7 +38,8 @@
     "indexer_remote_token": "",
     "indexer_remote_port": "",
     "algo_dispenser": "https://dispenser.testnet.aws.algodev.network/?account=",
-    "verbose": false
+    "verbose": false,
+    "proxy_staking_is_opted_in": false
   },
   "owner": "LP6QRRBRDTDSP4HF7CSPWJV4AG4QWE437OYHGW7K5Y7DETKCSK5H3HCA7Q",
   "deployer": {
@@ -153,18 +153,6 @@
         "staking_proxy_app_is_pending": 0,
         "staking_incentives_eligibility": 1
       }
-    },
-    "nft_staking_test_assets": [
-      {
-        "asset": 716804182,
-        "value": 8,
-        "isLocked": false
-      },
-      {
-        "asset": 716804183,
-        "value": 10,
-        "isLocked": false
-      }
-    ]
+    }
   }
 }

@@ -2981,7 +2981,7 @@ const GoraDaoDeployer = class {
                 Number(this.goraDaoAsset),// DAO asset ref
                 Number(this.stakingAsset),// Staking asset id
                 "Staking_Test",//title
-                "This is a test staking for GoraDAO",//description
+                "This is a test V3 staking for GoraDAO",//description
                 // 10,//quorum
                 // [2, [100, 100, 52], [80, 80, 60]],//threshold
                 // 12,//total duration
@@ -3147,7 +3147,7 @@ const GoraDaoDeployer = class {
         const ptxnStaking = new this.algosdk.Transaction({
             from: stakingAdminAddr,
             to: this.stakingApplicationAddress,
-            amount: 3000,
+            amount: 500000,
             type: 'pay',
             ...params
         })
@@ -3171,37 +3171,26 @@ const GoraDaoDeployer = class {
         const argsStaking = [
             tws1,
             [
-                1000,// staking_min_algo
-                5, // staking_min_token
-                365, // staking_duration
-                1,// staking_min_duration
-                10,// staking_commission_percentage
-                0,// staking_commission_percentage_algo
-                0,// staking_fee_token
-                0,// staking_fee_algo
-                2,// staking_incentives_percentage
-                2,// staking_incentives_percentage_algo
-                1,// staking_type
-                30,// staking_incentives_duration
-                17,// staking_return_percentage
-                0, // staking_return_percentage_algo
-
-                1,//staking_proxy_app_is_whitelisted
-                0,//staking_proxy_app_is_pending
-                1,//staking_incentives_eligibility
+                1000,// min_algo
+                5, // min_token
+                365, // duration
+                1,// min_duration
+                10,// commission
+                0,// commission_algo
+                0,// fee_token
+                0,// fee_algo
+                2,// incentives_token
+                2,// incentives_algo
+                1,// type
+                30,// incentives_duration
+                17,// return_token
+                0, // return_algo
+                1,//incentives_eligibility
             ],
-            "Test Staking", //staking_name
-            "This is a test staking contract for GoraDAO",//staking_description
+            "Test Staking", //name
+            "This is a test staking contract for GoraDAO",//description
             "https://develop.gora.fi", //staking_url
-            "QmWjvCGPyL9zmA5B84WPqLYF27dL2nFgr1Lw6rMd7CpQPV/images/goranetwork_logo.jpeg",//staking_banner
-            this.stakingParams['staking_proxy_app_id'],//staking_proxy_app_id
-            this.stakingParams['staking_proxy_app_address'],//staking_proxy_app_address
-            this.stakingParams['staking_proxy_app_creator'],//staking_proxy_app_creator
-            this.stakingParams['staking_proxy_app_manager'],//staking_proxy_app_manager
-            "1721224697",//staking_proxy_app_created_at
-            "1721224697",//staking_proxy_app_updated_at
-            this.stakingProxyParticipationAddress, //staking_proxy_participation_address
-            0,
+            "QmWjvCGPyL9zmA5B84WPqLYF27dL2nFgr1Lw6rMd7CpQPV/images/goranetwork_logo.jpeg",//banner
             this.proxyStakingMainAppId //proxy_staking_main_app_id
 
         ]

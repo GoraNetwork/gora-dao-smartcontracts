@@ -15,11 +15,6 @@
             "description": "Creates a new Staking contract! Returns the Staking contract ID!",
             "args": [
                 {
-                    "type": "axfer",
-                    "name": "Staking asset transfer",
-                    "description": ""
-                },
-                {
                     "type": "uint64",
                     "name": "dao_asset_reference",
                     "description": "DAO Main asset (DAO) ID"
@@ -61,43 +56,7 @@
         {
             "name": "update_staking",
             "description": "Updates an existing Staking contract! Returns the Staking contract ID!",
-            "args": [
-                {
-                    "type": "application",
-                    "name": "main_app_id",
-                    "description": "DAO Main App ID"
-                },
-                {
-                    "type": "uint64",
-                    "name": "asset_reference",
-                    "description": "DAO Main asset ID"
-                },
-                {
-                    "type": "uint64",
-                    "name": "asset_reference",
-                    "description": "Staking asset ID"
-                },
-                {
-                    "type": "account",
-                    "name": "manager_reference",
-                    "description": "DAO member account reference (Staking manager)"
-                },
-                {
-                    "type": "account",
-                    "name": "dao_manager_reference",
-                    "description": "DAO manager account reference (DAO manager)"
-                },
-                {
-                    "type": "string",
-                    "name": "staking_name",
-                    "description": "Staking title"
-                },
-                {
-                    "type": "string",
-                    "name": "staking_description",
-                    "description": "Staking description"
-                }
-            ],
+            "args": [],
             "boxes": [
                 {
                     "name": "manager_reference",
@@ -126,74 +85,34 @@
                     "description": "Payment from Staking manager to DAO for fees and Staking configuration MBRs!"
                 },
                 {
-                    "type": "(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64)",
-                    "name": "staking_config_params",
-                    "description": "staking_min_algo, staking_min_token, staking_duration, staking_min_duration, staking_commission_percentage, staking_commission_percentage_algo, staking_fee_token, staking_fee_algo, staking_incentives_percentage,staking_incentives_percentage_algo, staking_type, staking_incentives_duration, staking_return_percentage, staking_return_percentage_algo, staking_proxy_app_is_whitelisted,staking_proxy_app_is_pending,staking_incentives_eligibility"
+                    "type": "(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64)",
+                    "name": "config_params",
+                    "description": "min_algo, min_token, duration, min_duration, commission, commission_algo, fee_token, fee_algo, incentives_token,incentives_algo,type, incentives_duration, return_token, return_algo,incentives_eligibility"
                 },
                 {
                     "type": "string",
-                    "name": "staking_name",
+                    "name": "name",
                     "description": "DAO Staking name"
                 },
                 {
                     "type": "string",
-                    "name": "staking_description",
+                    "name": "description",
                     "description": "DAO Staking description"
                 },
                 {
                     "type": "string",
-                    "name": "staking_url",
+                    "name": "url",
                     "description": "DAO Staking URL"
                 },
                 {
                     "type": "string",
-                    "name": "staking_banner",
+                    "name": "banner",
                     "description": "DAO Staking banner image URL"
                 },
                 {
                     "type": "uint64",
-                    "name": "staking_proxy_app_id",
-                    "description": "DAO Staking app ID"
-                },
-                {
-                    "type": "address",
-                    "name": "staking_proxy_app_address",
-                    "description": "DAO Staking app address"
-                },
-                {
-                    "type": "address",
-                    "name": "staking_proxy_app_creator",
-                    "description": "DAO Staking app creator address"
-                },
-                {
-                    "type": "address",
-                    "name": "staking_proxy_app_manager",
-                    "description": "DAO Staking app manager address"
-                },
-                {
-                    "type": "string",
-                    "name": "staking_proxy_app_created_at",
-                    "description": "DAO Staking app creation timestamp"
-                },
-                {
-                    "type": "string",
-                    "name": "staking_proxy_app_updated_at",
-                    "description": "DAO Staking app update timestamp"
-                },
-                {
-                    "type": "address",
-                    "name": "staking_proxy_participating_address",
-                    "description": "DAO Proxy Staking app participation address"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proxy_staking_vesting_app_id",
-                    "description": "DAO Proxied Staking app vesting APP ID"
-                },
-                {
-                    "type": "uint64",
-                    "name": "proxy_staking_main_app_id",
-                    "description": "DAO Proxied Staking app ID"
+                    "name": "v2_main_app_id",
+                    "description": "V2 main app ID"
                 }
             ],
             "boxes": [
@@ -207,23 +126,57 @@
             }
         },
         {
-            "name": "update_manager_address",
-            "description": "Updates Staking manager address! Should be sent by either owner (creator) or current manager! Returns new manager address",
+            "name": "register_v2",
+            "description": "Registers a v2 Staking contract! Returns the V2 Staking contract ID!",
             "args": [
                 {
                     "type": "pay",
-                    "name": "payment_transaction",
-                    "description": "Payment from Staking manager to DAO for fees!"
+                    "name": "v2_staking_payment_transaction",
+                    "description": "Payment from Staking manager to DAO for fees and Staking configuration MBRs!"
                 },
+                {
+                    "type": "uint64",
+                    "name": "v2_app_id",
+                    "description": "DAO Staking app ID"
+                },
+                {
+                    "type": "uint64",
+                    "name": "v2_vesting_app_id",
+                    "description": "DAO Proxied Staking app vesting APP ID"
+                },
+                {
+                    "type": "address",
+                    "name": "v2_app_address",
+                    "description": "DAO Staking app address"
+                },
+                {
+                    "type": "address",
+                    "name": "v2_app_manager",
+                    "description": "DAO Staking app manager address"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref for staking manager account"
+                },
+                {
+                    "name": "v2_app_id_reference",
+                    "description": "Dynamic box ref for staking manager account"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "update_manager_address",
+            "description": "Updates Staking manager address! Should be sent by current manager! Returns new manager address",
+            "args": [
                 {
                     "type": "application",
                     "name": "main_app_id",
                     "description": "DAO Main application ID"
-                },
-                {
-                    "type": "uint64",
-                    "name": "asset_reference",
-                    "description": "DAO Main asset ID"
                 },
                 {
                     "type": "account",
@@ -255,7 +208,7 @@
             "args": [
                 {
                     "type": "uint64",
-                    "name": "proxy_staking_vesting_app_id",
+                    "name": "v2_staking_vesting_app_id",
                     "description": "Proxied V2 Staking contract's id"
                 }
             ],

@@ -11,30 +11,31 @@
 callsub sub_check_txn
 
 // Checking onCompletion type for delete application call
-txn OnCompletion
-int DeleteApplication
-==
-txn ApplicationID
-int 0
-!=
-&&
-bnz branch_delete
+// txn OnCompletion
+// int DeleteApplication
+// ==
+// txn ApplicationID
+// int 0
+// !=
+// &&
+// bnz branch_delete
 
 // Checking onCompletion type for close out application call
-txn OnCompletion
-int CloseOut
-==
-txn ApplicationID
-int 0
-!=
-&&
-bnz branch_closeout
+// txn OnCompletion
+// int CloseOut
+// !=
+// assert
+
 
 // Checking onCompletion type for optin application call
+// txn OnCompletion
+// int OptIn
+// !=
+// assert
 txn OnCompletion
-int OptIn
+int NoOp
 ==
-bnz branch_error
+assert
 
 // Checks the number of application args , if 0 then no method it is
 txn NumAppArgs
@@ -42,19 +43,6 @@ int 0
 ==
 bz branch_method_router
 b branch_error
-
-///////////////////////////////////////////
-branch_delete:
-
-	callsub sub_check_owner_auth
-	int 1
-	return
-
-branch_closeout:
-
-	callsub sub_check_owner_auth
-	int 1
-	return
 
 ///////////////////////////////////////////
 branch_method_router:
@@ -68,12 +56,12 @@ branch_method_router:
 	&&
 	bnz method_create_staking
 
-	method "update_staking(application,uint64,uint64,address,address,string,string)address"
+	method "update_staking()address"
 	txn ApplicationArgs 0
 	==
 	bnz method_update_staking
 
-	method "config_staking(pay,(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64),string,string,string,string,uint64,address,address,address,string,string,address,uint64,uint64)uint64"
+	method "config_staking(pay,(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64),string,string,string,string,uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_staking
@@ -87,6 +75,7 @@ branch_method_router:
 	txn ApplicationArgs 0
 	==
 	bnz method_activate_staking
+
 
 	// method "optin_staking(uint64)uint64"
 	// txn ApplicationArgs 0
@@ -235,60 +224,7 @@ method_create_staking:
 
 // Handles updating of Staking contract
 method_update_staking:
-	//byte "is_activated"
-	//app_global_get
-	//int 1
-	//!=
-	//assert
-
-	// global CurrentApplicationID
-	// store 0
-
-	// txn ApplicationArgs 1
-	// btoi
-	// store 1
-	// byte "dao_app_id"
-	// load 1
-	// app_global_put
-
-	// txn ApplicationArgs 2
-	// btoi
-	// store 2
-	// byte "dao_asset_id"
-	// load 2
-	// app_global_put
-
-	// txn ApplicationArgs 3
-	// btoi
-	// store 3
-	// byte "asset_id"
-	// load 3
-	// app_global_put
-
-	// txn ApplicationArgs 4
-	// store 4
-	// byte "manager_address"
-	// load 4
-	// app_global_put
-
-	// txn ApplicationArgs 5
-	// store 5
-	// byte "dao_manager_address"
-	// load 5
-	// app_global_put
-
-	// txn ApplicationArgs 6
-	// store 6
-	// byte "name"
-	// load 6
-	// app_global_put
-
-	// txn ApplicationArgs 7
-	// store 7
-	// byte "description"
-	// load 7
-	// app_global_put
-
+	callsub sub_check_owner_auth
 	byte 0x151f7c75
 	global CurrentApplicationAddress
 	concat
@@ -322,8 +258,7 @@ method_activate_staking:
 
 // Handles configuration of Staking
 method_config_staking:
-	byte "participation_count"
-	app_global_del
+	callsub sub_check_manager_auth
 
 	byte "manager_address"
 	txn Sender
@@ -335,7 +270,7 @@ method_config_staking:
 	bz branch_error
 
 	gtxn 0 Amount
-	int 3000
+	int 500000
 	>=
 	assert
 
