@@ -3582,13 +3582,6 @@ const GoraDaoDeployer = class {
         await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Staking Assets array written to config file!`);
     }
-    // This function is used to registering NFT IDs to DAO main contract box for testing purposes
-    // the byte array for each is concat of: uint64 (assetID), uint64 (value), uint64 (isLocked)
-    // Each staking NFT comes under a collection name (e.g gora bots) and each collection has a single box and considering each box can take upto 1024 bytes straight, each collection has
-    // Upon registering each 
-    async saveTestStakingNftsToDaoMainContractBox(){
-
-    }
 
 
     // Opts in all users to the proxied staking contract
