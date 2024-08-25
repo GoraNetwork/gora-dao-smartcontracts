@@ -617,8 +617,6 @@ branch_stake_in_proxy:
 	
 	// Staking V2 Asset Transfer inner transaction: asset_pay
 	itxn_begin
-	// global CurrentApplicationAddress
-	// itxn_field Sender
 	txna Accounts 1
 	itxn_field AssetReceiver
 	int axfer
@@ -627,8 +625,6 @@ branch_stake_in_proxy:
 	itxn_field XferAsset
 	load 6
 	itxn_field AssetAmount
-
-	// Proxied staking V2 Application ABI call for stake
 	itxn_next
 	txna Applications 1
 	itxn_field ApplicationID
@@ -640,13 +636,10 @@ branch_stake_in_proxy:
 	itxn_field TypeEnum
 	method "stake(axfer,account,application,asset,account)void"
 	itxn_field ApplicationArgs // method
-	// txn Sender // Staking end user account
-	// itxn_field Accounts
 	txna Accounts 2 // staking_proxy_app_manager
 	itxn_field Accounts
 	txna Assets 0 // staking_asset_id
 	itxn_field Assets
-	// byte "\x01" // Staking end user account
 	global ZeroAddress
 	itxn_field ApplicationArgs //vesting_on_behalf_of
 	byte "v2_main_app_id"
@@ -876,11 +869,6 @@ method_staking_unstake:
 	btoi
 	store 6 
 
-	int 0
-	dup
-	store 11
-	store 12
-
 
     // Checking staked algo amount box 
 	load 1
@@ -947,29 +935,13 @@ method_staking_unstake:
 	concat
 	box_put
 
-	// Stats update
-
-	byte "staked_amount_algo"
-	app_global_get
-	load 5
-	- // The total staked amount algo
-	byte "staked_amount_algo"
-	swap
-	app_global_put
-
-	byte "staked_amount_token"
-	app_global_get
-	load 6
-	-// The total staked amount token
-	byte "staked_amount_token"
-	swap
-	app_global_put
-
+	
 	byte "type"
 	app_global_get
 	int 0
 	>
 	bnz branch_unstake_from_proxy
+
 branch_staking_unstake_finalize:
 	// Log and return
 	byte 0x151f7c75
@@ -977,6 +949,136 @@ branch_staking_unstake_finalize:
 	itob
 	concat
 	b branch_log_return
+
+branch_withdraw_from_proxy:
+	load 1 //TXN sender
+	txna Assets 0
+	asset_holding_get AssetBalance
+	int 1
+	>=
+	assert
+
+	itxn_begin
+	txna Applications 1
+	itxn_field ApplicationID
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int NoOp
+	itxn_field OnCompletion
+	int appl
+	itxn_field TypeEnum
+	method "withdraw_non_stake(account,asset,application,account)void"
+	itxn_field ApplicationArgs // method
+	global ZeroAddress
+	itxn_field ApplicationArgs //vesting_on_behalf_of
+	byte "asset_id"
+	app_global_get
+	itob
+	itxn_field ApplicationArgs //asset_ref
+	byte "v2_main_app_id"
+	app_global_get
+	itob
+	itxn_field ApplicationArgs //main_app_ref
+	txna Accounts 2
+	itxn_field ApplicationArgs //manager_reference
+	txna Accounts 2 // staking_proxy_app_manager
+	itxn_field Accounts
+	txna Assets 0 // staking_asset_id
+	itxn_field Assets
+	txna Applications 1
+	itxn_field Applications//staking_proxy_app_id
+	txna Applications 2
+	itxn_field Applications //proxy_staking_main_app_id
+	int 15000
+	itxn_field Fee
+	itxn_submit
+	b branch_withdraw_finalize
+
+
+method_withdraw_unstaked:
+	txna Accounts 0 // DAO main account
+	store 0 
+	txn Sender // Staking user account
+	store 1 
+
+	int 0
+	dup
+	store 11
+	store 12
+
+	// Checking the staking activation
+	byte "is_activated"
+	app_global_get
+	bz branch_error_activation
+
+	load 1
+	box_get
+	assert
+
+	store 10 // Staked amounts algos from account box
+	load 10
+	int 0
+	extract_uint64
+	store 11
+	load 11
+	itob
+	log
+	load 10
+	int 8
+	extract_uint64
+	store 12
+	load 12
+	itob
+	log
+
+	load 10
+	int 16
+	extract_uint64
+	store 13
+	load 13
+	itob
+	log
+
+	load 10
+	int 24
+	extract_uint64
+	store 14
+	load 14
+	itob
+	log
+
+	load 1
+	box_del
+	assert
+
+	load 1
+	load 11
+	itob
+	load 12 
+	itob
+	concat
+	load 13
+	itob
+	load 14
+	itob
+	concat
+	concat
+	box_put
+
+	byte "type"
+	app_global_get
+	int 0
+	>
+	bnz branch_withdraw_from_proxy
+
+branch_withdraw_finalize:
+	// Log and return
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
 
 
 // Handles logging the last element on the stack then put a 1 on the top and return (log and approve)

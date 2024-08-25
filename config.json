@@ -22,6 +22,7 @@
     "staking_is_activated": true,
     "staking_asa_distributed": true,
     "staking_is_staked": true,
+    "staking_is_unstaked": true,
     "dao_proposal_deployed": false,
     "proposal_asa_distributed": false,
     "participated_to_proposal": false,

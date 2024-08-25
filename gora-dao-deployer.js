@@ -3491,7 +3491,7 @@ const GoraDaoDeployer = class {
        
         
 
-        // GoraDAO staking ABI call arguments
+        // GoraDAO DAO ABI call arguments
         const argsDao = [
             0,
             Number(amount)
@@ -3535,6 +3535,9 @@ const GoraDaoDeployer = class {
             await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
         }
+        this.config['gora_dao']['staking_is_unstaked'] = true;
+        await this.saveConfigToFile(this.config)
+        this.logger.info(`GoraDAO UnStaking status to config file!`);
     }
     // This function is used to iterate N NFTs minting and save them to config for testing purposes
     async iterativeMintingTestNfts(assetQuantity) {
@@ -3586,6 +3589,95 @@ const GoraDaoDeployer = class {
         this.logger.info(`GoraDAO Staking Assets array written to config file!`);
     }
 
+    async withdrawProxyStakingContract(userIndex, amount) {
+        this.logger.info(`Withdraws unstaked amounts from proxy staking contract ${Number(this.goraDaoStakingApplicationId)} which proxies ${Number(this.stakingParams.staking_proxy_app_id)}`);
+        let params = await this.algodClient.getTransactionParams().do();// Get suggested Algorand TXN parameters
+
+
+
+        const goraDaoMainContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoMainContractAbi.toString()));
+        const goraDaoStakingContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoStakingContractAbi.toString()));
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(this[`goraDaoUserAccount${userIndex}`]);
+
+        let methodStakingWithdraw = this.getMethodByName("withdraw", goraDaoStakingContractAbi);
+        let methodDaoStakingWithdraw = this.getMethodByName("withdraw", goraDaoMainContractAbi);
+
+        let stakeAdminPublicKey = this.algosdk.decodeAddress(this.goraDaoStakingAdminAccount.addr);// Staking admin account PK
+        let stakingUserPublicKey = this.algosdk.decodeAddress(this[`goraDaoUserAccount${userIndex}`].addr);// Connected end user wallet account PK
+
+        // Common parameters for GoraDAO main contract
+        const commonParamsDao = {
+            appID: Number(this.goraDaoMainApplicationId),
+            appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
+            appAccounts: [this.goraDaoStakingAdminAccount.addr, this.stakingApplicationAddress],
+            appForeignApps: [Number(this.goraDaoStakingApplicationId)],
+            sender: this[`goraDaoUserAccount${userIndex}`].addr,
+            suggestedParams: params,
+            signer: signer,
+            boxes: [
+                { appIndex: Number(this.goraDaoMainApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
+            ],
+        }
+        // Common parameters for GoraDAO Staking contract
+        const commonParamsStakingStake = {
+            appID: Number(this.goraDaoStakingApplicationId),
+            appForeignAssets: [Number(this.stakingAsset)],
+            appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager']],
+            appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
+            sender: this[`goraDaoUserAccount${userIndex}`].addr,
+            suggestedParams: params,
+            signer: signer,
+            boxes: [
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: stakingUserPublicKey.publicKey },// Connected end user wallet account
+            ],
+        }
+       
+        
+       
+      
+        // GoraDAO DAO ABI call arguments
+        const argsDao = [];
+        // GoraDAO Staking ABI call arguments
+        const argsStaking = [];
+        // Atomic transaction composer for GoraDAO proxy withdraw
+        const atcStakingWithdraw = new this.algosdk.AtomicTransactionComposer();
+        // Add GoraDAO DAO ABI call for withdraw
+        atcStakingWithdraw.addMethodCall({
+            method: methodDaoStakingWithdraw,
+            methodArgs: argsDao,
+            ...commonParamsDao
+        })
+        this.logger.info('------------------------------')
+        this.logger.info("GoraDAO withdraw Contract ABI Exec method = %s", methodDaoStakingWithdraw);
+
+        // Add GoraDAO Staking ABI call for withdraw
+        atcStakingWithdraw.addMethodCall({
+            method: methodStakingWithdraw,
+            methodArgs: argsStaking,
+            ...commonParamsStakingStake
+        });
+        this.logger.info('------------------------------')
+        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodStakingWithdraw);
+
+        // Execute the atomic transaction
+        const stakingStakeResults = await atcStakingWithdraw.execute(this.algodClient, 10);
+        for (const idx in stakingStakeResults.methodResults) {
+            let txid = stakingStakeResults.methodResults[idx].txID
+
+            //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
+            let confirmedRound = stakingStakeResults.confirmedRound
+
+
+            let returnedResults = this.algosdk.decodeUint64(stakingStakeResults.methodResults[idx].rawReturnValue, "mixed")
+            this.logger.info("GoraDAO Staking Contract ABI Exec result = %s", returnedResults);
+            await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+
+        }
+        this.config['gora_dao']['staking_is_staked'] = true;
+        await this.saveConfigToFile(this.config)
+        this.logger.info(`GoraDAO Staking status to config file!`);
+    }
 
     // Opts in all users to the proxied staking contract
     // async optinProxyStakingContractTransactionAll() {
