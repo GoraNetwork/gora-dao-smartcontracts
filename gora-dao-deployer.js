@@ -3437,6 +3437,9 @@ const GoraDaoDeployer = class {
             await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
         }
+        this.config['gora-dao']['staking_is_staked'] = true;
+        await this.saveConfigToFile(this.config)
+        this.logger.info(`GoraDAO Staking status to config file!`);
     }
 
     // This function is used to stake in a proxy staking contract
