@@ -653,6 +653,69 @@ const GoraDaoDeployer = class {
 
         }
     }
+
+    async printAppLocalState() {
+        if (this.config['gora_dao']['asc_staking_address']) {
+            const urlApp = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/accounts/${this.config['gora_dao']['asc_staking_address']}/applications/${this.stakingParams['staking_proxy_app_id']}`;
+
+            let resApp = await fetch(urlApp, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            let dataApp = await resApp.json()
+            if (dataApp) {
+                if (dataApp["app-local-state"]) {
+                    let gs = dataApp["app-local-state"];
+                    let gsKeys = gs['key-value']
+                    for (let i = 0; i < gsKeys.length; i++) {
+                        let kv = gsKeys[i];
+
+
+
+                        let gsValueDecoded = null;
+                        let keyStr = Buffer.from(
+                            kv.key,
+                            "base64"
+                        ).toString();
+                        this.logger.info('Staking V3 Local State Key: %s', keyStr)
+                        let valueDecoded = []
+                        switch (keyStr) {
+                            case 'lat':
+
+
+
+                                break;
+                            case 'lns':
+
+                                break;
+                            case 'lt':
+
+                                break;
+                            case 'vt':
+
+                                break;
+                            case 'ls':
+
+                                break;
+                            case 'lut':
+
+                                break;
+
+                            default:
+                                break;
+                        }
+
+                        this.logger.info('GoraDAO Staking V3 LocalState Uint64 value: %s', valueDecoded)
+                    }
+                }
+            }
+
+
+        }
+    }
+
     // Prints the created assets for a given account address
     async printCreatedAsset(assetid) {
         let accountInfo = await this.indexerClient.lookupAccountByID(this.goraDaoAdminAccount.addr).do();
@@ -3108,7 +3171,7 @@ const GoraDaoDeployer = class {
         let memberPublicKey = this.algosdk.decodeAddress(stakingAdminAddr)
         const commonParamsStakingSetup = {
             appID: stakingApplication,
-            appForeignAssets: [ Number(this.stakingAsset)],
+            appForeignAssets: [Number(this.stakingAsset)],
             appAccounts: [],
             appForeignApps: [Number(this.goraDaoMainApplicationId), this.stakingParams['staking_proxy_app_id']],
             sender: stakingAdminAddr,
@@ -3310,13 +3373,11 @@ const GoraDaoDeployer = class {
         this.config['gora_dao']['staking_is_activated'] = true;
         await this.saveConfigToFile(this.config)
     }
-   
+
     // This function is used to stake in a proxy staking contract
     async stakeProxyStakingContract(userIndex, amount) {
         this.logger.info(`Staking into proxy staking contract ${Number(this.goraDaoStakingApplicationId)} which proxies ${Number(this.stakingParams.staking_proxy_app_id)}`);
         let params = await this.algodClient.getTransactionParams().do();// Get suggested Algorand TXN parameters
-
-
 
         const goraDaoMainContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoMainContractAbi.toString()));
         const goraDaoStakingContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoStakingContractAbi.toString()));
@@ -3327,7 +3388,12 @@ const GoraDaoDeployer = class {
 
         let stakeAdminPublicKey = this.algosdk.decodeAddress(this.goraDaoStakingAdminAccount.addr);// Staking admin account PK
         let stakingUserPublicKey = this.algosdk.decodeAddress(this[`goraDaoUserAccount${userIndex}`].addr);// Connected end user wallet account PK
-
+        let v2AppIdArray = this.algosdk.encodeUint64(this.stakingParams['staking_proxy_app_id'])
+        let v2AppIdArrayLength = v2AppIdArray.length
+        let stakeUserPublicKeyLength = stakingUserPublicKey.publicKey.length
+        let boxNameRef = new Uint8Array(v2AppIdArrayLength + stakeUserPublicKeyLength)
+        boxNameRef.set(stakingUserPublicKey.publicKey, 0)
+        boxNameRef.set(v2AppIdArray, stakeUserPublicKeyLength)
         // Common parameters for GoraDAO main contract
         const commonParamsDao = {
             appID: Number(this.goraDaoMainApplicationId),
@@ -3352,7 +3418,7 @@ const GoraDaoDeployer = class {
             signer: signer,
             boxes: [
                 { appIndex: Number(this.goraDaoStakingApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: stakingUserPublicKey.publicKey },// Connected end user wallet account
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Connected end user wallet account
             ],
         }
         // Asset transfer transaction to DAO (For future usage with staking Fees! Now it is 0 amount)
@@ -3469,10 +3535,16 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-  
+
                 { appIndex: Number(this.goraDaoMainApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
             ],
         }
+        let v2AppIdArray = this.algosdk.encodeUint64(this.stakingParams['staking_proxy_app_id'])
+        let v2AppIdArrayLength = v2AppIdArray.length
+        let stakeUserPublicKeyLength = stakingUserPublicKey.publicKey.length
+        let boxNameRef = new Uint8Array(v2AppIdArrayLength + stakeUserPublicKeyLength)
+        boxNameRef.set(stakingUserPublicKey.publicKey, 0)
+        boxNameRef.set(v2AppIdArray, stakeUserPublicKeyLength)
         // Common parameters for GoraDAO Staking contract
         const commonParamsStakingStake = {
             appID: Number(this.goraDaoStakingApplicationId),
@@ -3483,13 +3555,13 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Staking admin account
                 { appIndex: Number(this.goraDaoStakingApplicationId), name: stakingUserPublicKey.publicKey },// Connected end user wallet account
             ],
         }
-      
-       
-        
+
+
+
 
         // GoraDAO DAO ABI call arguments
         const argsDao = [
@@ -3564,10 +3636,10 @@ const GoraDaoDeployer = class {
                 suggestedParams: { ...params, fee: 1000, flatFee: true, },
                 total: 1,
                 unitName: `GBOT${index}`,
-        
+
 
             })
-          
+
             let txnId = atxn.txID().toString();
             let signedTxn = await atxn.signTxn(this.goraDaoStakingAdminAccount.sk);
             await this.algodClient.sendRawTransaction(signedTxn).do();
@@ -3618,6 +3690,12 @@ const GoraDaoDeployer = class {
                 { appIndex: Number(this.goraDaoMainApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
             ],
         }
+        let v2AppIdArray = this.algosdk.encodeUint64(this.stakingParams['staking_proxy_app_id'])
+        let v2AppIdArrayLength = v2AppIdArray.length
+        let stakeUserPublicKeyLength = stakingUserPublicKey.publicKey.length
+        let boxNameRef = new Uint8Array(v2AppIdArrayLength + stakeUserPublicKeyLength)
+        boxNameRef.set(stakingUserPublicKey.publicKey, 0)
+        boxNameRef.set(v2AppIdArray, stakeUserPublicKeyLength)
         // Common parameters for GoraDAO Staking contract
         const commonParamsStakingStake = {
             appID: Number(this.goraDaoStakingApplicationId),
@@ -3628,14 +3706,14 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef},// Staking admin account
                 { appIndex: Number(this.goraDaoStakingApplicationId), name: stakingUserPublicKey.publicKey },// Connected end user wallet account
             ],
         }
-       
-        
-       
-      
+
+
+
+
         // GoraDAO DAO ABI call arguments
         const argsDao = [];
         // GoraDAO Staking ABI call arguments
@@ -3677,6 +3755,7 @@ const GoraDaoDeployer = class {
         this.config['gora_dao']['staking_is_staked'] = true;
         await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Staking status to config file!`);
+        await this.printAppLocalState()
     }
 
     async withdrawProxyStakingContract(userIndex) {
@@ -3708,6 +3787,12 @@ const GoraDaoDeployer = class {
                 { appIndex: Number(this.goraDaoMainApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
             ],
         }
+        let v2AppIdArray = this.algosdk.encodeUint64(this.stakingParams['staking_proxy_app_id'])
+        let v2AppIdArrayLength = v2AppIdArray.length
+        let stakeUserPublicKeyLength = stakingUserPublicKey.publicKey.length
+        let boxNameRef = new Uint8Array(v2AppIdArrayLength + stakeUserPublicKeyLength)
+        boxNameRef.set(stakingUserPublicKey.publicKey, 0)
+        boxNameRef.set(v2AppIdArray, stakeUserPublicKeyLength)
         // Common parameters for GoraDAO Staking contract
         const commonParamsStakingStake = {
             appID: Number(this.goraDaoStakingApplicationId),
@@ -3718,14 +3803,14 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Staking admin account
                 { appIndex: Number(this.goraDaoStakingApplicationId), name: stakingUserPublicKey.publicKey },// Connected end user wallet account
             ],
         }
-       
-        
-       
-      
+
+
+
+
         // GoraDAO DAO ABI call arguments
         const argsDao = [];
         // GoraDAO Staking ABI call arguments
@@ -3767,6 +3852,7 @@ const GoraDaoDeployer = class {
         this.config['gora_dao']['staking_is_staked'] = true;
         await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Staking status to config file!`);
+        await this.printAppLocalState()
     }
 
     // Opts in all users to the proxied staking contract

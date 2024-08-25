@@ -604,7 +604,7 @@ branch_optin_staking:
 
 
 branch_user_box:
-	load 1
+	load 21
 	load 5
 	itob
 	load 6
@@ -678,7 +678,14 @@ method_staking_stake:
 	txna Accounts 0 // DAO main account
 	store 0 
 	txn Sender // Staking user account
-	store 1 
+	store 1
+	load 1
+	txna Applications 1
+	itob
+	concat
+	store 21
+	
+
 
 	// Checking the staking activation
 	byte "is_activated"
@@ -717,7 +724,7 @@ method_staking_stake:
 
 
     // Checking staked algo amount box 
-	load 1
+	load 21
 	box_get
 	bz branch_stake_continue
 	store 10
@@ -752,14 +759,14 @@ method_staking_stake:
 	itob
 	log
 
-	load 1
+	load 21
 	box_del
 	assert
 
 
 branch_stake_continue:
 	// Staking finalization and account boxes staking values update
-	load 1
+	load 21
 	load 11
 	load 5
 	+
@@ -863,6 +870,11 @@ method_staking_unstake:
 	store 0 
 	txn Sender // Staking user account
 	store 1 
+	load 1
+	txna Applications 1
+	itob
+	concat
+	store 21
 
 	// Checking the staking activation
 	byte "is_activated"
@@ -884,7 +896,7 @@ method_staking_unstake:
 
 
     // Checking staked algo amount box 
-	load 1
+	load 21
 	box_get
 	assert
 
@@ -920,13 +932,13 @@ method_staking_unstake:
 	itob
 	log
 
-	load 1
+	load 21
 	box_del
 	assert
 
 
 	// Staking finalization and account boxes staking values update
-	load 1
+	load 21
 	load 11
 	load 5
 	-
@@ -963,7 +975,7 @@ branch_staking_unstake_finalize:
 	concat
 	b branch_log_return
 method_manual_process_aggregation:
-load 1 //TXN sender
+	txn Sender
 	txna Assets 0
 	asset_holding_get AssetBalance
 	int 1
@@ -1009,7 +1021,7 @@ load 1 //TXN sender
 	b branch_log_return
 
 branch_withdraw_from_proxy:
-	load 1 //TXN sender
+	txn Sender
 	txna Assets 0
 	asset_holding_get AssetBalance
 	int 1
@@ -1060,6 +1072,11 @@ method_withdraw_unstaked:
 	store 0 
 	txn Sender // Staking user account
 	store 1 
+	load 1
+	txna Applications 1
+	itob
+	concat
+	store 21
 
 	int 0
 	dup
@@ -1071,7 +1088,7 @@ method_withdraw_unstaked:
 	app_global_get
 	bz branch_error_activation
 
-	load 1
+	load 21
 	box_get
 	assert
 
@@ -1107,11 +1124,11 @@ method_withdraw_unstaked:
 	itob
 	log
 
-	load 1
+	load 21
 	box_del
 	assert
 
-	load 1
+	load 21
 	load 11
 	itob
 	load 12 
