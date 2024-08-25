@@ -550,7 +550,7 @@ method_config_staking:
 	global CurrentApplicationAddress
 	txn Applications 2
 	app_opted_in
-	bnz branch_optin_staking
+	bz branch_optin_staking
 branch_optin_finalize:
 	byte 0x151f7c75
 	global CurrentApplicationID
@@ -564,7 +564,7 @@ branch_optin_staking:
 	itxn_field Sender
 	int appl
 	itxn_field TypeEnum
-	int OptIn
+	int 1
 	itxn_field OnCompletion
 
 	method "opt_in(uint64)void"
