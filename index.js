@@ -701,6 +701,10 @@ async function stakingOperations() {
         choices.push('Activate Staking')
     } else if (config['gora_dao']['staking_is_activated'] === true) {
         choices.push('Stake into staking contract')
+        if(config['gora_dao']['staking_is_staked'] === true){
+            choices.push('UnStake from staking contract')
+
+        }
 
         //choices.push('Withdraw stake from staking contract')
     }
@@ -965,6 +969,38 @@ async function stakingOperations() {
                 ]);
             }
             break;
+            case 'UnStake from staking contract':
+                try {
+                    let { amount } = await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'amount',
+                            message: 'What amount you want to stake?',
+                        },
+                    ]);
+    
+                    let finalAmount = Number(amount) * 1000000000 // e.g. to stake 5 Gora the amount will be 5000000000
+                    //await goraDaoDeployer.stakeStakingContract(Number(amount));
+                    await goraDaoDeployer.unstakeProxyStakingContract(2, Number(finalAmount));
+                    //await goraDaoDeployer.stakeDirectProxyStakingContract(Number(amount));
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                }
+                break;
         case 'Withdraw stake from staking contract':
             try {
                 let { amount } = await inquirer.prompt([
