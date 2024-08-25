@@ -46,7 +46,7 @@ const goraDaoDeployer = new GoraDaoDeployer(props)
 
 async function goraDAOOperations() {
     let choices = []
-    choices.push('Create GoraDAO Asset')
+    choices.push('Create GoraDAO Asset');
     if (config['gora_dao']['dao_dao_deployed'] === true) {
         choices.push('Update GoraDAO Contract')
     } else {
