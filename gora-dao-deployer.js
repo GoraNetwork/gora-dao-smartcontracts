@@ -91,6 +91,7 @@ const GoraDaoDeployer = class {
         this.stakingClearProgData = props.stakingClearProgData
 
         this.proxyStakingMainAppId = props.config.deployer.staking.proxy_staking_main_app_id
+        this.proxyStakingVestingAppId = props.config.deployer.staking.proxy_staking_vesting_app_id
 
         this.stakingParams = props.config.deployer.staking.staking_params
         this.goraToken = props.config.gora_dao.gora_testnet_token_id
@@ -3191,7 +3192,8 @@ const GoraDaoDeployer = class {
             "This is a test staking contract for GoraDAO",//description
             "https://develop.gora.fi", //staking_url
             "QmWjvCGPyL9zmA5B84WPqLYF27dL2nFgr1Lw6rMd7CpQPV/images/goranetwork_logo.jpeg",//banner
-            this.proxyStakingMainAppId //proxy_staking_main_app_id
+            this.proxyStakingMainAppId, //proxy_staking_main_app_id
+            this.proxyStakingVestingAppId //proxy_staking_vesting_app_id
 
         ]
         const atcStakingConfig = new this.algosdk.AtomicTransactionComposer()
