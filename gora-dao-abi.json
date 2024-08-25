@@ -692,6 +692,25 @@
             "returns": {
                 "type": "uint64"
             }
+        },
+        
+        {
+            "name": "manual_process_aggregation",
+            "description": "manual_process_aggregation from Staking contract! Returns the staking member's account address concatenated with un-staked amount!",
+            "args": [],
+            "boxes": [
+                {
+                    "name": "member_reference",
+                    "description": "Dynamic box ref for staking contract manager account address"
+                },
+                {
+                    "name": "staking_reference",
+                    "description": "Dynamic box ref for staking contract account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
         }
     ]
 }
