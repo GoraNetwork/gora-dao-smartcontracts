@@ -705,11 +705,11 @@ async function stakingOperations() {
             choices.push('UnStake from staking contract')
 
         }
-        if(config['gora_dao']['staking_is_unstaked'] === true){
+        if (config['gora_dao']['staking_is_unstaked'] === true) {
             choices.push('Withdraw stake from staking contract')
         }
 
-        
+
     }
     if (config['gora_dao']['dao_staking_deployed'] === true && config['gora_dao']['staking_asa_distributed'] === false) {
         choices.push('Distribute Staking Asset')
@@ -1006,8 +1006,6 @@ async function stakingOperations() {
             break;
         case 'Withdraw stake from staking contract':
             try {
-                
-
                 await goraDaoDeployer.withdrawProxyStakingContract(2);
                 await inquirer.prompt([
                     {
