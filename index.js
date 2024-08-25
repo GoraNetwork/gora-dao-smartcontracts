@@ -701,6 +701,7 @@ async function stakingOperations() {
         choices.push('Activate Staking')
     } else if (config['gora_dao']['staking_is_activated'] === true) {
         choices.push('Stake into staking contract')
+
         //choices.push('Withdraw stake from staking contract')
     }
     if (config['gora_dao']['dao_staking_deployed'] === true && config['gora_dao']['staking_asa_distributed'] === false) {

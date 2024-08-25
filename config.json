@@ -17,6 +17,7 @@
     "staking_asa_id": 227418519,
     "dao_dao_deployed": true,
     "dao_proposal_deployed": false,
+    "staking_is_activated": true,
     "dao_staking_deployed": true,
     "dao_asa_distributed": true,
     "proposal_asa_distributed": false,
@@ -24,7 +25,7 @@
     "subscribed_to_dao": false,
     "participated_to_proposal": false,
     "proposal_is_activated": false,
-    "staking_is_activated": true,
+ 
     "proxy_staking_optin_all": false,
     "proxy_staking_is_opted_in": false,
     "asc_vesting_id": 0,
