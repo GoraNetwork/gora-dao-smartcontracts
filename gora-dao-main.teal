@@ -208,6 +208,11 @@ branch_method_router:
 	==
 	bnz method_staking_stake
 
+    method "unstake(uint64,uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_unstake
+
 	b branch_error
 
 sub_check_txn:
@@ -2019,6 +2024,20 @@ method_staking_stake:
 	&&
 	assert
 
+    byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+method_staking_unstake:
+    gtxn 1 ApplicationID
+    byte "dao_app_id"
+    app_global_get_ex
+    pop
+    global CurrentApplicationID
+    ==
+    assert
     byte 0x151f7c75
 	global CurrentApplicationID
 	itob

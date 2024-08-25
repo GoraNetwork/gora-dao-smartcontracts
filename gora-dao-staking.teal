@@ -809,7 +809,7 @@ branch_unstake_from_proxy:
 	txna Accounts 2 // staking_proxy_app_manager
 	itxn_field ApplicationArgs //manager_reference
 
-
+	txna Accounts 2
 	itxn_field Accounts
 	txna Assets 0 // staking_asset_id
 	itxn_field Assets
@@ -836,24 +836,17 @@ method_staking_unstake:
 	app_global_get
 	bz branch_error_activation
 
-	// Checking the asset ref to be Staking asset ID
-    byte "asset_id"
-    app_global_get
-	dup
-    gtxn 1 XferAsset
-    ==
-    assert
-	gtxn 4 XferAsset
-	==
-	assert
+	
 
 	// Checking staking minimum participation algos
-	gtxn 3 Amount // The staked amount algo
+	txn ApplicationArgs 1 // The staked amount algo
+	btoi
 	store 5 
 	
 
 	// Checking staking minimum participation tokens
-    gtxn 4 AssetAmount // The staked amount token
+    txn ApplicationArgs 2 // The staked amount token
+	btoi
 	store 6 
 
 	int 0
