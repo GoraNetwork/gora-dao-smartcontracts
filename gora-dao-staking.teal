@@ -599,7 +599,7 @@ branch_stake_in_proxy:
 	txna Assets 1
 	asset_holding_get AssetBalance
 	int 1
-	==
+	>=
 	assert
 	
 	// Staking V2 Asset Transfer inner transaction: asset_pay
