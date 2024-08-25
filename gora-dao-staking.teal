@@ -634,12 +634,7 @@ branch_stake_in_proxy:
 	itob
 	concat
 	box_put
-
-
 	
-	
-	
-
 	global CurrentApplicationAddress
 	txna Applications 1
 	app_opted_in
