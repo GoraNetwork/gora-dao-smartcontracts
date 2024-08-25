@@ -595,7 +595,7 @@ branch_stake_in_proxy:
 	app_opted_in
 	bz branch_optin_staking
 
-	global CurrentApplicationAddress
+	txn Sender
 	txn Assets 1
 	asset_holding_get AssetBalance
 	int 1
