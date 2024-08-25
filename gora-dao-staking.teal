@@ -629,15 +629,16 @@ branch_stake_in_proxy:
 	itxn_field TypeEnum
 	method "stake(axfer,account,application,asset,account)void"
 	itxn_field ApplicationArgs // method
-	txn Sender // Staking end user account
-	itxn_field Accounts
+	// txn Sender // Staking end user account
+	// itxn_field Accounts
 	txna Accounts 2 // staking_proxy_app_manager
 	itxn_field Accounts
 	txna Assets 0 // staking_asset_id
 	itxn_field Assets
-	byte "\x01" // Staking end user account
+	// byte "\x01" // Staking end user account
+	global ZeroAddress
 	itxn_field ApplicationArgs //vesting_on_behalf_of
-	byte "proxy_staking_main_app_id"
+	byte "v2_main_app_id"
 	app_global_get
 	itob
 	itxn_field ApplicationArgs //main_app_ref
@@ -790,7 +791,7 @@ branch_unstake_from_proxy:
 	itxn_field Accounts
 	txna Assets 0 // staking_asset_id
 	itxn_field Assets
-	byte "proxy_staking_main_app_id"
+	byte "v2_main_app_id"
 	app_global_get
 	itob
 	itxn_field ApplicationArgs //main_app_ref
@@ -801,9 +802,9 @@ branch_unstake_from_proxy:
 	txna Accounts 2
 	itxn_field ApplicationArgs //manager_reference
 	txna Applications 1
-	itxn_field Applications//staking_proxy_app_id
+	itxn_field Applications//v2_app_id
 	txna Applications 2
-	itxn_field Applications //proxy_staking_main_app_id
+	itxn_field Applications //v2_main_app_id
 	int 2000
 	itxn_field Fee
 	itxn_submit
