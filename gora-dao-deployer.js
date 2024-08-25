@@ -3589,7 +3589,7 @@ const GoraDaoDeployer = class {
         this.logger.info(`GoraDAO Staking Assets array written to config file!`);
     }
 
-    async withdrawProxyStakingContract(userIndex, amount) {
+    async withdrawProxyStakingContract(userIndex) {
         this.logger.info(`Withdraws unstaked amounts from proxy staking contract ${Number(this.goraDaoStakingApplicationId)} which proxies ${Number(this.stakingParams.staking_proxy_app_id)}`);
         let params = await this.algodClient.getTransactionParams().do();// Get suggested Algorand TXN parameters
 

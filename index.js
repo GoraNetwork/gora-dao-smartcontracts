@@ -1006,15 +1006,9 @@ async function stakingOperations() {
             break;
         case 'Withdraw stake from staking contract':
             try {
-                let { amount } = await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'amount',
-                        message: 'What amount you want to stake?',
-                    },
-                ]);
+                
 
-                await goraDaoDeployer.withdrawProxyStakingContract(2, Number(amount));
+                await goraDaoDeployer.withdrawProxyStakingContract(2);
                 await inquirer.prompt([
                     {
                         type: 'input',
