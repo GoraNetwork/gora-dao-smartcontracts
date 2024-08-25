@@ -550,7 +550,7 @@ method_config_staking:
 	global CurrentApplicationAddress
 	txna Applications 2
 	app_opted_in
-	bz branch_optin_staking
+	bz branch_optin_config
 
 branch_optin_finalize:
 	byte 0x151f7c75
@@ -581,7 +581,7 @@ sub_optin_v2:
 	itxn_submit
 	retsub
 
-branch_optin_staking:
+branch_optin_config:
 	callsub sub_optin_v2
 	b branch_optin_finalize
 
