@@ -96,6 +96,13 @@ branch_method_router:
 	==
 	bnz method_staking_unstake
 
+	method "withdraw()uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_withdraw_unstaked
+
+	
+
 
 
 	b branch_error
