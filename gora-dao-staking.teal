@@ -91,7 +91,7 @@ branch_method_router:
 	==
 	bnz method_staking_stake
 
-    method "unstake()uint64"
+    method "unstake(uint64,uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_staking_unstake
@@ -824,7 +824,7 @@ branch_unstake_from_proxy:
 	itxn_field Fee
 	itxn_submit
 	b branch_staking_unstake_finalize
-	
+
 method_staking_unstake:
 	txna Accounts 0 // DAO main account
 	store 0 
