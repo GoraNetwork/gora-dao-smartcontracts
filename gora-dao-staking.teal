@@ -785,8 +785,7 @@ branch_staking_stake_finalize:
 branch_unstake_from_proxy:
 	// Proxied staking V2 Application ABI call for unstake
 	itxn_begin
-	byte "proxy_app_id"
-	app_global_get
+	txna Applications 1
 	itxn_field ApplicationID
 	global CurrentApplicationAddress
 	itxn_field Sender
@@ -796,12 +795,9 @@ branch_unstake_from_proxy:
 	itxn_field TypeEnum
 	method "unstake(uint64,application,asset,account)void"
 	itxn_field ApplicationArgs // method
-	txn Sender // Staking end user account
-	itxn_field Accounts
-	txna Accounts 2 // staking_proxy_app_manager
-	itxn_field Accounts
-	txna Assets 0 // staking_asset_id
-	itxn_field Assets
+	load 6
+	itob
+	itxn_field ApplicationArgs 
 	byte "v2_main_app_id"
 	app_global_get
 	itob
@@ -810,16 +806,25 @@ branch_unstake_from_proxy:
 	app_global_get
 	itob
 	itxn_field ApplicationArgs //asset_ref
-	txna Accounts 2
+	txna Accounts 2 // staking_proxy_app_manager
 	itxn_field ApplicationArgs //manager_reference
+
+
+	itxn_field Accounts
+	txna Assets 0 // staking_asset_id
+	itxn_field Assets
+	
+
 	txna Applications 1
 	itxn_field Applications//v2_app_id
+
 	txna Applications 2
 	itxn_field Applications //v2_main_app_id
 	int 2000
 	itxn_field Fee
 	itxn_submit
 	b branch_staking_unstake_finalize
+	
 method_staking_unstake:
 	txna Accounts 0 // DAO main account
 	store 0 
