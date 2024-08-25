@@ -1,0 +1,111 @@
+? Select the operation to perform: Staking Operations
+? Select a staking operation: Stake into staking contract
+? What amount you want to stake? 5
+[GoraDAO: ] [2024-08-25T21:14:41.676Z] [info]: Staking into proxy staking contract 717654145 which proxies 378620949
+[GoraDAO: ] [2024-08-25T21:14:42.085Z] [info]: ------------------------------
+[GoraDAO: ] [2024-08-25T21:14:42.085Z] [info]: GoraDAO Staking Contract ABI Exec method = ABIMethod {
+  name: 'stake',
+  description: undefined,
+  args: [Array],
+  returns: [Object]
+}
+[GoraDAO: ] [2024-08-25T21:14:42.088Z] [info]: ------------------------------
+[GoraDAO: ] [2024-08-25T21:14:42.088Z] [info]: GoraDAO Contract ABI Exec method = ABIMethod {
+  name: 'stake',
+  description: undefined,
+  args: [Array],
+  returns: [Object]
+}
+An error occurred: URLTokenBaseHTTPError: Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction UCDZ3CMELPY7QIM5P5GDVV236OSKB6I2FOP6ENMWG2D7XLYC2LKA: logic eval error: inner tx 1 failed: logic eval error: byte math would have negative result. Details: app=378620949, pc=3035, opcodes=load 37; itob; b-. Details: app=717654145, pc=1241, opcodes=intc 7 // 15000; itxn_field Fee; itxn_submit
+    at URLTokenBaseHTTPClient.checkHttpError (/Users/mg/Documents/GitHub/GoraNetwork/gora-dao-smartcontracts/node_modules/algosdk/dist/cjs/client/urlTokenBaseHTTPClient.js:91:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async URLTokenBaseHTTPClient.formatFetchResponse (/Users/mg/Documents/GitHub/GoraNetwork/gora-dao-smartcontracts/node_modules/algosdk/dist/cjs/client/urlTokenBaseHTTPClient.js:98:9)
+    at async HTTPClient.post (/Users/mg/Documents/GitHub/GoraNetwork/gora-dao-smartcontracts/node_modules/algosdk/dist/cjs/client/client.js:201:25)
+    at async SendRawTransaction.do (/Users/mg/Documents/GitHub/GoraNetwork/gora-dao-smartcontracts/node_modules/algosdk/dist/cjs/client/v2/algod/sendRawTransaction.js:52:21)
+    at async AtomicTransactionComposer.submit (/Users/mg/Documents/GitHub/GoraNetwork/gora-dao-smartcontracts/node_modules/algosdk/dist/cjs/composer.js:395:9)
+    at async AtomicTransactionComposer.execute (/Users/mg/Documents/GitHub/GoraNetwork/gora-dao-smartcontracts/node_modules/algosdk/dist/cjs/composer.js:465:23)
+    at async GoraDaoDeployer.stakeProxyStakingContract (/Users/mg/Documents/GitHub/GoraNetwork/gora-dao-smartcontracts/gora-dao-deployer.js:3493:37)
+    at async stakingOperations (/Users/mg/Documents/GitHub/GoraNetwork/gora-dao-smartcontracts/index.js:953:17)
+    at async mainMenu (/Users/mg/Documents/GitHub/GoraNetwork/gora-dao-smartcontracts/index.js:1276:17) {
+  response: {
+    body: {
+      data: [Object],
+      message: 'TransactionPool.Remember: transaction UCDZ3CMELPY7QIM5P5GDVV236OSKB6I2FOP6ENMWG2D7XLYC2LKA: logic eval error: inner tx 1 failed: logic eval error: byte math would have negative result. Details: app=378620949, pc=3035, opcodes=load 37; itob; b-. Details: app=717654145, pc=1241, opcodes=intc 7 // 15000; itxn_field Fee; itxn_submit'
+    },
+    status: 400,
+    headers: {
+      '1849': 'content-length',
+      '*': 'access-control-allow-origin',
+      'h3=":443"; ma=86400': 'alt-svc',
+      DYNAMIC: 'cf-cache-status',
+      '8b8e97de0c00246e-ADB': 'cf-ray',
+      'keep-alive': 'connection',
+      'application/json; charset=UTF-8': 'content-type',
+      'Sun, 25 Aug 2024 21:14:42 GMT': 'date',
+      cloudflare: 'server',
+      '__cflb=02DiuHntYjfonL9cqTH1kTo7WKEo2ELFLxqo1ePuWvHd6; SameSite=Lax; path=/; expires=Mon, 26-Aug-24 20:14:42 GMT; HttpOnly': 'set-cookie',
+      Origin: 'vary',
+      '0.05': 'x-and-dl'
+    },
+    text: '{"data":{"app-index":717654145,"eval-states":[{},{},{"scratch":["VFjIlhwi9SIj39Mttg8KKqZYTC/THGODzLFivxF862I="],"logs":["FR98dQAAAAAqwTgX"]},{},{},{"scratch":["vM9XLYF+FQRttVf72RK9WGfsfcmAwgUxOoll0V6WJfk=","vM9XLYF+FQRttVf72RK9WGfsfcmAwgUxOoll0V6WJfk=",0,0,0,1000,5000000000,0,0,0,"AAAAAAAAC7gAAAADfhHWAAAAAAAAAAAAAAAAAAAAAAA=",3000,15000000000,0,0,0,0,0,0,0,0,"vM9XLYF+FQRttVf72RK9WGfsfcmAwgUxOoll0V6WJfkAAAAAFpFMFQ=="],"stack":[17500000008],"logs":["AAAAAAAAC7g=","AAAAA34R1gA=","AAAAAAAAAAA=","AAAAAAAAAAA="]}],"group-index":5,"inner-attrs":{"app-index":378620949,"eval-states":[{},{"scratch":["Z5/jpso1j+r1fg5bat8pk9MpOH1VFKrg4ke/MdUVN/Y=",0,0,0,0,0,0,0,0,0,0,0,0,219,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5000000000,"AAAAAAAAAAA=",0,5000000000],"stack":[0,0,0,0,219,"",0,0,0,0,"","","",0,0,0,0,0,0,"","","",0,0,"",0,0,0,0,0,0,"",0,0,"","","",0,"","","","AAAAAGbLnVQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==","","AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=","","AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=","AAAAAAAAAFgAAAAAApOcHwAAAAAAAAAK",88,87,"","","AAAAAGbLnVQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEqBfIAgA==","AAAAAAAAAFgAAAAAApOcHwAAAAAAAAAK",88,87,"","AAAAAGbLnVQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",0,0,0,0,0,0,"AAAAAAAAAFgAAAAAApOcHwAAAAAAAAAK",88,0,0,0,0,"",0,0,"","","","AAAAASoF8gA="]}],"group-index":1,"pc":3035},"inner-msg":"logic eval error: byte math would have negative result. Details: app=378620949, pc=3035, opcodes=load 37; itob; b-","pc":1241},"message":"TransactionPool.Remember: transaction UCDZ3CMELPY7QIM5P5GDVV236OSKB6I2FOP6ENMWG2D7XLYC2LKA: logic eval error: inner tx 1 failed: logic eval error: byte math would have negative result. Details: app=378620949, pc=3035, opcodes=load 37; itob; b-. Details: app=717654145, pc=1241, opcodes=intc 7 // 15000; itxn_field Fee; itxn_submit"}\n',
+    ok: false
+  },
+  status: 400
+}
+? Press Enter to go back to menu... 
+? Select a staking operation: Stake into staking contract
+? What amount you want to stake? 5
+[GoraDAO: ] [2024-08-25T21:20:23.237Z] [info]: Staking into proxy staking contract 717654145 which proxies 378620949
+[GoraDAO: ] [2024-08-25T21:20:23.613Z] [info]: ------------------------------
+[GoraDAO: ] [2024-08-25T21:20:23.613Z] [info]: GoraDAO Staking Contract ABI Exec method = ABIMethod {
+  name: 'stake',
+  description: undefined,
+  args: [Array],
+  returns: [Object]
+}
+[GoraDAO: ] [2024-08-25T21:20:23.615Z] [info]: ------------------------------
+[GoraDAO: ] [2024-08-25T21:20:23.615Z] [info]: GoraDAO Contract ABI Exec method = ABIMethod {
+  name: 'stake',
+  description: undefined,
+  args: [Array],
+  returns: [Object]
+}
+[GoraDAO: ] [2024-08-25T21:20:27.000Z] [info]: GoraDAO Staking Contract ABI Exec result = 717305879
+[GoraDAO: ] [2024-08-25T21:20:27.364Z] [info]:  TXN log [0]:uint64:  717305879
+[GoraDAO: ] [2024-08-25T21:20:27.365Z] [info]: GoraDAO Staking Contract ABI Exec result = 717654145
+[GoraDAO: ] [2024-08-25T21:20:27.531Z] [info]:  TXN log [0]:uint64:  3000
+[GoraDAO: ] [2024-08-25T21:20:27.532Z] [info]:  TXN log [1]:uint64:  15000000000
+[GoraDAO: ] [2024-08-25T21:20:27.532Z] [info]:  TXN log [2]:uint64:  0
+[GoraDAO: ] [2024-08-25T21:20:27.533Z] [info]:  TXN log [3]:uint64:  0
+[GoraDAO: ] [2024-08-25T21:20:27.533Z] [info]:  TXN log [4]:uint64:  717654145
+Configuration saved to config.json successfully.
+[GoraDAO: ] [2024-08-25T21:20:27.538Z] [info]: GoraDAO Staking status to config file!
+? Press Enter to go back to menu... 
+? Select a staking operation: UnStake from staking contract
+? What amount you want to stake? 5
+[GoraDAO: ] [2024-08-25T21:20:33.549Z] [info]: Staking into proxy staking contract 717654145 which proxies 378620949
+[GoraDAO: ] [2024-08-25T21:20:33.829Z] [info]: ------------------------------
+[GoraDAO: ] [2024-08-25T21:20:33.830Z] [info]: GoraDAO Staking Contract ABI Exec method = ABIMethod {
+  name: 'unstake',
+  description: undefined,
+  args: [Array],
+  returns: [Object]
+}
+[GoraDAO: ] [2024-08-25T21:20:33.831Z] [info]: ------------------------------
+[GoraDAO: ] [2024-08-25T21:20:33.831Z] [info]: GoraDAO Contract ABI Exec method = ABIMethod {
+  name: 'unstake',
+  description: undefined,
+  args: [Array],
+  returns: [Object]
+}
+[GoraDAO: ] [2024-08-25T21:20:37.961Z] [info]: GoraDAO Staking Contract ABI Exec result = 717305879
+[GoraDAO: ] [2024-08-25T21:20:38.293Z] [info]:  TXN log [0]:uint64:  717305879
+[GoraDAO: ] [2024-08-25T21:20:38.294Z] [info]: GoraDAO Staking Contract ABI Exec result = 717654145
+[GoraDAO: ] [2024-08-25T21:20:38.456Z] [info]:  TXN log [0]:uint64:  4000
+[GoraDAO: ] [2024-08-25T21:20:38.456Z] [info]:  TXN log [1]:uint64:  20000000000
+[GoraDAO: ] [2024-08-25T21:20:38.457Z] [info]:  TXN log [2]:uint64:  0
+[GoraDAO: ] [2024-08-25T21:20:38.457Z] [info]:  TXN log [3]:uint64:  0
+[GoraDAO: ] [2024-08-25T21:20:38.457Z] [info]:  TXN log [4]:uint64:  717654145
+Configuration saved to config.json successfully.
+[GoraDAO: ] [2024-08-25T21:20:38.460Z] [info]: GoraDAO UnStaking status to config file!
+? Press Enter to go back to menu... 
