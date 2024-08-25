@@ -558,7 +558,7 @@ branch_optin_finalize:
 	itob
 	concat
 	b branch_log_return
-	
+
 sub_optin_v2:
 	itxn_begin
 	global CurrentApplicationAddress
@@ -594,6 +594,14 @@ branch_stake_in_proxy:
 	txn Applications 1
 	app_opted_in
 	bz branch_optin_staking
+
+	global CurrentApplicationAddress
+	txn Assets 0
+	asset_holding_get AssetBalance
+	int 1
+	==
+	assert
+	
 	// Staking V2 Asset Transfer inner transaction: asset_pay
 	itxn_begin
 	// global CurrentApplicationAddress
