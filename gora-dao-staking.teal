@@ -587,15 +587,65 @@ branch_optin_config:
 
 branch_optin_staking:
 	callsub sub_optin_v2
+	b branch_stake_in_proxy
+
+
+branch_user_box:
+	load 1
+	load 5
+	itob
+	load 6
+	itob
+	concat
+	box_put
 	
+		
+
 
 branch_stake_in_proxy:
+	load 1 //TXN sender
+	box_get
+	bz branch_user_box
+	dup
+	int 0
+	extract_uint64
+	store 13
+	int 8
+	extract_uint64
+	store 14
+
+	load 13
+	load 5
+	+
+	store 15
+	load 14
+	load 6
+	+
+	store 16
+
+	load 1
+	box_del
+	assert
+
+	load 1
+	load 15
+	itob
+	load 16
+	itob
+	concat
+	box_put
+
+
+	
+	
+	
+
 	global CurrentApplicationAddress
 	txna Applications 1
 	app_opted_in
 	bz branch_optin_staking
 
-	txn Sender
+	load 1 //TXN sender
 	txna Assets 1
 	asset_holding_get AssetBalance
 	int 1
