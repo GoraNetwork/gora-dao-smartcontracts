@@ -166,7 +166,36 @@ const GoraDaoDeployer = class {
 
     ////////////////////////////////////////////////////////////////////////
     //////////// GoraDAO Tooling Operations ////////////
-
+    extractUint64(uint8Array, offset = 0) {
+        // Ensure that the Uint8Array has enough bytes to extract a uint64
+        if (uint8Array.length < offset + 8) {
+          throw new Error("Uint8Array does not have enough bytes to extract a uint64.");
+        }
+      
+        // Extract the 8 bytes from the Uint8Array starting from the offset
+        const uint64 = BigInt.asUintN(64,
+          (BigInt(uint8Array[offset + 0]) << 56n) |
+          (BigInt(uint8Array[offset + 1]) << 48n) |
+          (BigInt(uint8Array[offset + 2]) << 40n) |
+          (BigInt(uint8Array[offset + 3]) << 32n) |
+          (BigInt(uint8Array[offset + 4]) << 24n) |
+          (BigInt(uint8Array[offset + 5]) << 16n) |
+          (BigInt(uint8Array[offset + 6]) << 8n) |
+          BigInt(uint8Array[offset + 7])
+        );
+      
+        return uint64;
+      }
+       extractBoolean(uint8Array, offset = 0) {
+        // Ensure that the Uint8Array has enough bytes to extract a boolean (1 byte)
+        if (uint8Array.length < offset + 1) {
+          throw new Error("Uint8Array does not have enough bytes to extract a boolean.");
+        }
+      
+        // Extract the byte at the given offset and determine the boolean value
+        const byteValue = uint8Array[offset];
+        return byteValue !== 0; // true if non-zero, false if zero
+      }
     // This method saves the configuration object to a JSON file
     async saveConfigToFile(config) {
         try {
@@ -654,9 +683,9 @@ const GoraDaoDeployer = class {
         }
     }
 
-    async printAppLocalState() {
+    async printAppLocalState(account) {
         if (this.config['gora_dao']['asc_staking_address']) {
-            const urlApp = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/accounts/${this.config['gora_dao']['asc_staking_address']}/applications/${this.stakingParams['staking_proxy_app_id']}`;
+            const urlApp = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/accounts/${account}/applications/${this.stakingParams['staking_proxy_app_id']}`;
 
             let resApp = await fetch(urlApp, {
                 method: "GET",
@@ -680,9 +709,23 @@ const GoraDaoDeployer = class {
                             "base64"
                         ).toString();
                         this.logger.info('Staking V3 Local State Key: %s', keyStr)
-                        let valueDecoded = []
+                        let valueDecoded = new Uint8Array(Buffer.from(kv.value.bytes, "base64"));
                         switch (keyStr) {
                             case 'lat':
+                                let val0 = this.extractUint64(valueDecoded, 0)
+                                console.log(val0)
+                                let val1 = this.extractUint64(valueDecoded, 8)
+                                console.log(val1)
+                                let val2 = this.extractUint64(valueDecoded, 16)
+                                console.log(val2)
+                                let val3 = this.extractUint64(valueDecoded, 24)
+                                console.log(val3)
+                                let val4 = this.extractUint64(valueDecoded, 32)
+                                console.log(val4)
+                                let val5 = this.extractUint64(valueDecoded, 40)
+                                console.log(val5)
+                                let val6 = this.extractBoolean(valueDecoded, 48)
+                                console.log(val6)
 
 
 
@@ -707,7 +750,7 @@ const GoraDaoDeployer = class {
                                 break;
                         }
 
-                        this.logger.info('GoraDAO Staking V3 LocalState Uint64 value: %s', valueDecoded)
+                        
                     }
                 }
             }
@@ -3755,7 +3798,8 @@ const GoraDaoDeployer = class {
         this.config['gora_dao']['staking_is_staked'] = true;
         await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Staking status to config file!`);
-        await this.printAppLocalState()
+        await this.printAppLocalState(this.config['gora_dao']['asc_staking_address'])
+        await this.printAppLocalState(this.config['owner'])
     }
 
     async withdrawProxyStakingContract(userIndex) {
@@ -3852,7 +3896,8 @@ const GoraDaoDeployer = class {
         this.config['gora_dao']['staking_is_staked'] = true;
         await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Staking status to config file!`);
-        await this.printAppLocalState()
+        await this.printAppLocalState(this.config['gora_dao']['asc_staking_address'])
+        await this.printAppLocalState(this.config['owner'])
     }
 
     // Opts in all users to the proxied staking contract
