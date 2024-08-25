@@ -974,6 +974,39 @@ branch_withdraw_from_proxy:
 	itxn_field OnCompletion
 	int appl
 	itxn_field TypeEnum
+	method "manual_process_aggregation(asset,application,account)void"
+	itxn_field ApplicationArgs // method
+	byte "asset_id"
+	app_global_get
+	itob
+	itxn_field ApplicationArgs //asset_ref
+	byte "v2_main_app_id"
+	app_global_get
+	itob
+	itxn_field ApplicationArgs //main_app_ref
+	txna Accounts 2
+	itxn_field ApplicationArgs //manager_reference
+	txna Accounts 2 // staking_proxy_app_manager
+	itxn_field Accounts
+	txna Assets 0 // staking_asset_id
+	itxn_field Assets
+	txna Applications 1
+	itxn_field Applications//staking_proxy_app_id
+	txna Applications 2
+	itxn_field Applications //proxy_staking_main_app_id
+	int 2000
+	itxn_field Fee
+	itxn_submit
+
+	itxn_begin
+	txna Applications 1
+	itxn_field ApplicationID
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int NoOp
+	itxn_field OnCompletion
+	int appl
+	itxn_field TypeEnum
 	method "withdraw_non_stake(account,asset,application,account)void"
 	itxn_field ApplicationArgs // method
 	global ZeroAddress
