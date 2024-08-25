@@ -87,7 +87,7 @@
                 {
                     "type": "(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64)",
                     "name": "config_params",
-                    "description": "min_algo, min_token, duration, min_duration, commission, commission_algo, fee_token, fee_algo, incentives_token,incentives_algo,type, incentives_duration, return_token, return_algo,incentives_eligibility"
+                    "description": "min_algo, min_token, duration, min_duration, commission_token, commission_algo, fee_token, fee_algo, incentives_token,incentives_algo,type, incentives_duration, return_token, return_algo,incentives_eligibility"
                 },
                 {
                     "type": "string",
