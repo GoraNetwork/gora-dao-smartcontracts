@@ -606,7 +606,7 @@ branch_stake_in_proxy:
 	itxn_begin
 	// global CurrentApplicationAddress
 	// itxn_field Sender
-	byte "proxy_app_address"
+	txna Accounts 1
 	app_global_get
 	itxn_field AssetReceiver
 	int axfer
@@ -618,7 +618,7 @@ branch_stake_in_proxy:
 
 	// Proxied staking V2 Application ABI call for stake
 	itxn_next
-	byte "proxy_app_id"
+	txna Applications 1
 	app_global_get
 	itxn_field ApplicationID
 	global CurrentApplicationAddress
