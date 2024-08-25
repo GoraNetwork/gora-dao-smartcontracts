@@ -705,6 +705,7 @@ async function stakingOperations() {
     }
     if (config['gora_dao']['dao_staking_deployed'] === true && config['gora_dao']['staking_asa_distributed'] === false) {
         choices.push('Distribute Staking Asset')
+        choices.push('Distribute Staking Asset(App only)')
     } else if (config['gora_dao']['dao_staking_deployed'] === true && config['gora_dao']['staking_asa_distributed'] === true) {
         choices.push('Re-Distribute Staking Asset')
         choices.push('Re-Distribute Staking Asset(App only)')
@@ -868,6 +869,27 @@ async function stakingOperations() {
                 ]);
             }
             break;
+            case 'Distribute Staking Asset(App only)':
+                try {
+                    await goraDaoDeployer.sendStakingAssetTransaction(true);
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                }
+                break;
         case 'Re-Distribute Staking Asset(App only)':
             try {
                 await goraDaoDeployer.sendStakingAssetTransaction(true);
