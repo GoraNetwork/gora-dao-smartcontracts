@@ -169,33 +169,33 @@ const GoraDaoDeployer = class {
     extractUint64(uint8Array, offset = 0) {
         // Ensure that the Uint8Array has enough bytes to extract a uint64
         if (uint8Array.length < offset + 8) {
-          throw new Error("Uint8Array does not have enough bytes to extract a uint64.");
+            throw new Error("Uint8Array does not have enough bytes to extract a uint64.");
         }
-      
+
         // Extract the 8 bytes from the Uint8Array starting from the offset
         const uint64 = BigInt.asUintN(64,
-          (BigInt(uint8Array[offset + 0]) << 56n) |
-          (BigInt(uint8Array[offset + 1]) << 48n) |
-          (BigInt(uint8Array[offset + 2]) << 40n) |
-          (BigInt(uint8Array[offset + 3]) << 32n) |
-          (BigInt(uint8Array[offset + 4]) << 24n) |
-          (BigInt(uint8Array[offset + 5]) << 16n) |
-          (BigInt(uint8Array[offset + 6]) << 8n) |
-          BigInt(uint8Array[offset + 7])
+            (BigInt(uint8Array[offset + 0]) << 56n) |
+            (BigInt(uint8Array[offset + 1]) << 48n) |
+            (BigInt(uint8Array[offset + 2]) << 40n) |
+            (BigInt(uint8Array[offset + 3]) << 32n) |
+            (BigInt(uint8Array[offset + 4]) << 24n) |
+            (BigInt(uint8Array[offset + 5]) << 16n) |
+            (BigInt(uint8Array[offset + 6]) << 8n) |
+            BigInt(uint8Array[offset + 7])
         );
-      
+
         return uint64;
-      }
-       extractBoolean(uint8Array, offset = 0) {
+    }
+    extractBoolean(uint8Array, offset = 0) {
         // Ensure that the Uint8Array has enough bytes to extract a boolean (1 byte)
         if (uint8Array.length < offset + 1) {
-          throw new Error("Uint8Array does not have enough bytes to extract a boolean.");
+            throw new Error("Uint8Array does not have enough bytes to extract a boolean.");
         }
-      
+
         // Extract the byte at the given offset and determine the boolean value
         const byteValue = uint8Array[offset];
         return byteValue !== 0; // true if non-zero, false if zero
-      }
+    }
     // This method saves the configuration object to a JSON file
     async saveConfigToFile(config) {
         try {
@@ -708,49 +708,72 @@ const GoraDaoDeployer = class {
                             kv.key,
                             "base64"
                         ).toString();
+                        let val0, val1, val2, val3, val4, val5, val6 = 0
                         this.logger.info('Staking V3 Local State Key: %s', keyStr)
                         let valueDecoded = new Uint8Array(Buffer.from(kv.value.bytes, "base64"));
                         switch (keyStr) {
                             case 'lat':
-                                let val0 = this.extractUint64(valueDecoded, 0)
+                                val0 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 0):0
                                 console.log(val0)
-                                let val1 = this.extractUint64(valueDecoded, 8)
+                                val1 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 8):0
                                 console.log(val1)
-                                let val2 = this.extractUint64(valueDecoded, 16)
+                                val2 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 16):0
                                 console.log(val2)
-                                let val3 = this.extractUint64(valueDecoded, 24)
+                                val3 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 24):0
                                 console.log(val3)
-                                let val4 = this.extractUint64(valueDecoded, 32)
+                                val4 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 32):0
                                 console.log(val4)
-                                let val5 = this.extractUint64(valueDecoded, 40)
+                                val5 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 40):0
                                 console.log(val5)
-                                let val6 = this.extractBoolean(valueDecoded, 48)
+                                val6 = valueDecoded.length > 0 ?this.extractBoolean(valueDecoded, 48):0
                                 console.log(val6)
 
 
 
                                 break;
                             case 'lns':
+                                val0 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 0):0
+                                console.log(val0)
+                                val1 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 8):0
+                                console.log(val1)
+                                val2 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 16):0
+                                console.log(val2)
+                                val3 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 24):0
+                                console.log(val3)
 
                                 break;
                             case 'lt':
-
+                                val0 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 0):0
+                                console.log(val0)
                                 break;
                             case 'vt':
+                                val0 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 0):0
+                                console.log(val0)
+                                val1 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 8):0
+                                console.log(val1)
 
                                 break;
                             case 'ls':
+                                val0 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 0):0
+                                console.log(val0)
+                                val1 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 8):0
+                                console.log(val1)
+                                val2 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 16):0
+                                console.log(val2)
+                                val3 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 24):0
+                                console.log(val3)
 
                                 break;
                             case 'lut':
-
+                                val0 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 0):0
+                                console.log(val0)
                                 break;
 
                             default:
                                 break;
                         }
 
-                        
+
                     }
                 }
             }
@@ -3749,7 +3772,7 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef},// Staking admin account
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Staking admin account
                 { appIndex: Number(this.goraDaoStakingApplicationId), name: stakingUserPublicKey.publicKey },// Connected end user wallet account
             ],
         }
