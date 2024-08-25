@@ -166,6 +166,29 @@ const GoraDaoDeployer = class {
 
     ////////////////////////////////////////////////////////////////////////
     //////////// GoraDAO Tooling Operations ////////////
+    extractUint40(uint8Array, offset = 0) {
+        // Ensure that the Uint8Array has enough bytes to extract a 5-byte number (40 bits)
+        if (uint8Array.length < offset + 5) {
+            throw new Error("Uint8Array does not have enough bytes to extract a 5-byte number.");
+        }
+
+        // Extract the 5 bytes from the Uint8Array starting from the offset
+        const uint40 = BigInt.asUintN(40,
+            (BigInt(uint8Array[offset + 0]) << 32n) |
+            (BigInt(uint8Array[offset + 1]) << 24n) |
+            (BigInt(uint8Array[offset + 2]) << 16n) |
+            (BigInt(uint8Array[offset + 3]) << 8n) |
+            BigInt(uint8Array[offset + 4])
+        );
+
+        // Convert to a regular Number if within safe range
+        const MAX_SAFE_INTEGER = BigInt(Number.MAX_SAFE_INTEGER);
+        if (uint40 <= MAX_SAFE_INTEGER) {
+            return Number(uint40); // Return as a regular number
+        } else {
+            throw new Error("Value exceeds safe range for JavaScript Number.");
+        }
+    }
     extractUint64(uint8Array, offset = 0) {
         // Ensure that the Uint8Array has enough bytes to extract a uint64
         if (uint8Array.length < offset + 8) {
@@ -713,59 +736,66 @@ const GoraDaoDeployer = class {
                         let valueDecoded = new Uint8Array(Buffer.from(kv.value.bytes, "base64"));
                         switch (keyStr) {
                             case 'lat':
-                                val0 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 0):0
+                                val0 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 0) : 0
                                 console.log(val0)
-                                val1 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 8):0
+                                val1 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 8) : 0
                                 console.log(val1)
-                                val2 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 16):0
+                                val2 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 16) : 0
                                 console.log(val2)
-                                val3 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 24):0
+                                val3 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 24) : 0
                                 console.log(val3)
-                                val4 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 32):0
+                                val4 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 32) : 0
                                 console.log(val4)
-                                val5 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 40):0
+                                val5 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 40) : 0
                                 console.log(val5)
-                                val6 = valueDecoded.length > 0 ?this.extractBoolean(valueDecoded, 48):0
+                                val6 = valueDecoded.length > 0 ? this.extractBoolean(valueDecoded, 48) : 0
                                 console.log(val6)
 
 
 
                                 break;
                             case 'lns':
-                                val0 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 0):0
+                                val0 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 0) : 0
                                 console.log(val0)
-                                val1 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 8):0
+                                val1 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 8) : 0
                                 console.log(val1)
-                                val2 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 16):0
+                                val2 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 16) : 0
                                 console.log(val2)
-                                val3 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 24):0
+                                val3 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 24) : 0
                                 console.log(val3)
 
                                 break;
                             case 'lt':
-                                val0 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 0):0
+                                val0 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 0) : 0
                                 console.log(val0)
                                 break;
                             case 'vt':
-                                val0 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 0):0
+                                val0 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 0) : 0
                                 console.log(val0)
-                                val1 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 8):0
+                                val1 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 8) : 0
                                 console.log(val1)
 
                                 break;
                             case 'ls':
-                                val0 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 0):0
-                                console.log(val0)
-                                val1 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 8):0
-                                console.log(val1)
-                                val2 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 16):0
-                                console.log(val2)
-                                val3 = valueDecoded.length > 0 ?this.extractUint64(valueDecoded, 24):0
-                                console.log(val3)
+                                if (valueDecoded.length === 32) {
+                                    val0 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 0) : 0
+                                    console.log(val0)
+                                    val1 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 8) : 0
+                                    console.log(val1)
+                                    val2 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 16) : 0
+                                    console.log(val2)
+                                    val3 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 24) : 0
+                                    console.log(val3)
+                                } else if (valueDecoded.length < 8) {
+                                    val0 = valueDecoded.length > 0 ? this.extractUint40(valueDecoded, 0) : 0
+                                    console.log(val0)
+
+                                }
+
 
                                 break;
                             case 'lut':
-                                val0 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 0):0
+                                val0 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 0) : 0
                                 console.log(val0)
                                 break;
 
