@@ -154,6 +154,28 @@
         "staking_proxy_app_is_pending": 0,
         "staking_incentives_eligibility": 1
       }
-    }
+    },
+    "nft_staking_test_assets": [
+      {
+        "asset": 717475413,
+        "value": 10,
+        "isLocked": false
+      },
+      {
+        "asset": 717475417,
+        "value": 6,
+        "isLocked": false
+      },
+      {
+        "asset": 717475427,
+        "value": 5,
+        "isLocked": false
+      },
+      {
+        "asset": 717475430,
+        "value": 6,
+        "isLocked": false
+      }
+    ]
   }
 }
