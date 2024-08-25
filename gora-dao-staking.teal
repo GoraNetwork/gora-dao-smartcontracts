@@ -564,7 +564,7 @@ branch_optin_staking:
 	itxn_field Sender
 	int appl
 	itxn_field TypeEnum
-	int NoOp
+	int OptIn
 	itxn_field OnCompletion
 
 	method "opt_in(uint64)void"
