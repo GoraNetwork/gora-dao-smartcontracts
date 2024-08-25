@@ -575,6 +575,7 @@ branch_optin_staking:
 
 	byte "v2_vesting_app_id"
 	app_global_get
+	itob
 	itxn_field ApplicationArgs
 	itxn_submit
 	b branch_optin_finalize
