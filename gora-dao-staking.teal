@@ -709,7 +709,7 @@ method_staking_stake:
 	load 1
 	box_get
 	bz branch_stake_continue
-	store 10 // Staked amounts algos from account box
+	store 10
 	load 10
 	int 0
 	extract_uint64
