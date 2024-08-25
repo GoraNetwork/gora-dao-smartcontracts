@@ -1006,6 +1006,7 @@ async function stakingOperations() {
             break;
         case 'Withdraw stake from staking contract':
             try {
+                await goraDaoDeployer.manualAggregationProxyStakingContract(2);
                 await goraDaoDeployer.withdrawProxyStakingContract(2);
                 await inquirer.prompt([
                     {
