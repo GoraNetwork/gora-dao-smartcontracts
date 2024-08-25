@@ -3310,54 +3310,7 @@ const GoraDaoDeployer = class {
         this.config['gora_dao']['staking_is_activated'] = true;
         await this.saveConfigToFile(this.config)
     }
-    // This function is used to opt-in to a proxy staking contract (used in proxy staking)
-    // async optinProxyStakingContract(userIndex) {
-    //     let params = await this.algodClient.getTransactionParams().do();// Get suggested Algorand TXN parameters
-    //     const goraDaoStakingContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoStakingContractAbi.toString()));// GoraDAO Staking contract ABI for V2 staking optin
-    //     let methodStakingOptin = this.getMethodByName("opt_in", goraDaoStakingContractAbi);// GoraDAO Staking method for V2 staking optin
-    //     const signer = this.algosdk.makeBasicAccountTransactionSigner(this[`goraDaoUserAccount${userIndex}`]);// Staking user signer
-    //     console.log("Staking User account is: ", this[`goraDaoUserAccount${userIndex}`].addr)
-    //     // Common parameters for V2 Staking contract optin
-    //     const commonParamsStakingOptin = {
-    //         appID: this.stakingParams.staking_proxy_app_id,
-    //         sender: this[`goraDaoUserAccount${userIndex}`].addr,
-    //         onComplete: 1,
-    //         suggestedParams: params,
-    //         signer: signer,
-    //     }
-    //     // Arguments for V2 Staking contract optin
-    //     const argsOptin = [
-    //         this.goraDaoStakingApplicationId,
-    //     ];
-    //     // Atomic transaction composer for V2 Staking contract optin
-    //     const atcStakingOptin = new this.algosdk.AtomicTransactionComposer();
-    //     // Add V2 Staking contract optin method call
-    //     atcStakingOptin.addMethodCall({
-    //         ...commonParamsStakingOptin,
-    //         method: methodStakingOptin,
-    //         appAccounts: [this.stakingApplicationAddress],
-    //         methodArgs: argsOptin,
-    //     });
-    //     this.logger.info('------------------------------');
-    //     this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodStakingOptin);
-    //     try {
-    //         // Execute the atomic transaction
-    //         const stakingOptinResults = await atcStakingOptin.execute(this.algodClient, 10);
-    //         if (stakingOptinResults) {
-    //             this.config['gora_dao']['proxy_staking_is_opted_in'] = true;
-    //             await this.saveConfigToFile(this.config);
-    //             this.logger.info("Staking account is now opted into the proxy staking contract!");
-    //         }
-    //     } catch (error) {
-    //         if (error.message.indexOf('has already opted in to app') > -1) {
-    //             this.config['gora_dao']['proxy_staking_is_opted_in'] = true;
-    //             await this.saveConfigToFile(this.config);
-    //             this.logger.info("Staking account is already opted into the proxy staking contract!");
-    //         } else {
-    //             console.error(error)
-    //         }
-    //     }
-    // }
+   
     // This function is used to stake in a proxy staking contract
     async stakeProxyStakingContract(userIndex, amount) {
         this.logger.info(`Staking into proxy staking contract ${Number(this.goraDaoStakingApplicationId)} which proxies ${Number(this.stakingParams.staking_proxy_app_id)}`);
@@ -3592,7 +3545,7 @@ const GoraDaoDeployer = class {
             // Create NFT asset transaction with suggested parameters
             const atxn = this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
                 assetMetadataHash: new Uint8Array(32),
-                assetName: `GoraDAO Staking Asset #${index}`,
+                assetName: `GoraBots#${index}`,
                 assetURL: 'https://gora.io',
                 clawback: this.goraDaoStakingAdminAccount.addr,
                 freeze: this.goraDaoStakingAdminAccount.addr,
@@ -3604,7 +3557,8 @@ const GoraDaoDeployer = class {
                 reserve: this.goraDaoStakingAdminAccount.addr,
                 suggestedParams: { ...params, fee: 1000, flatFee: true, },
                 total: 1,
-                unitName: 'GDNST',
+                unitName: `GBOT${index}`,
+        
 
             })
           
