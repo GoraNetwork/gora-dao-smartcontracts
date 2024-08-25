@@ -732,7 +732,7 @@ const GoraDaoDeployer = class {
                             "base64"
                         ).toString();
                         let val0, val1, val2, val3, val4, val5, val6 = 0
-                        this.logger.info('Staking V3 Local State Key: %s', keyStr)
+                        this.logger.info('Staking V2 Local State Key: %s', keyStr)
                         let valueDecoded = new Uint8Array(Buffer.from(kv.value.bytes, "base64"));
                         switch (keyStr) {
                             case 'lat':
