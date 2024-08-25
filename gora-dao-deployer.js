@@ -3108,11 +3108,9 @@ const GoraDaoDeployer = class {
         let memberPublicKey = this.algosdk.decodeAddress(stakingAdminAddr)
         const commonParamsStakingSetup = {
             appID: stakingApplication,
-            appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
-            appAccounts: [
-                this.goraDaoAdminAccount.addr,
-            ],
-            appForeignApps: [Number(this.goraDaoMainApplicationId)],
+            appForeignAssets: [ Number(this.stakingAsset)],
+            appAccounts: [],
+            appForeignApps: [Number(this.goraDaoMainApplicationId), this.stakingParams['staking_proxy_app_id']],
             sender: stakingAdminAddr,
             suggestedParams: params,
             signer: signer,
@@ -3126,7 +3124,7 @@ const GoraDaoDeployer = class {
         }
         const commonParamsDaoSetup = {
             appID: daoApplication,
-            appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
+            appForeignAssets: [Number(this.stakingAsset)],//Number(this.goraDaoAsset)
             appForeignApps: [Number(this.goraDaoStakingApplicationId)],
             appAccounts: [this.goraDaoAdminAccount.addr],
             sender: stakingAdminAddr,

@@ -541,19 +541,24 @@ method_config_staking:
 	itxn_field AssetReceiver
 	int 0
 	itxn_field AssetAmount
-	txna Assets 1
+	txna Assets 0
 	itxn_field XferAsset
 	itxn_submit
 	itxn TxID
     log
 
+	global CurrentApplicationAddress
+	txn Applications 2
+	app_opted_in
+	bnz branch_optin_staking
+branch_optin_finalize:
 	byte 0x151f7c75
 	global CurrentApplicationID
 	itob
 	concat
 	b branch_log_return
 
-sub_optin_staking:
+branch_optin_staking:
 	itxn_begin
 	global CurrentApplicationAddress
 	itxn_field Sender
@@ -564,12 +569,17 @@ sub_optin_staking:
 
 	method "opt_in(uint64)void"
 	itxn_field ApplicationArgs
+
 	txn Applications 2
 	itxn_field ApplicationID
-	txn ApplicationArgs 1
+
+	byte "v2_vesting_app_id"
+	app_global_get
 	itxn_field ApplicationArgs
 	itxn_submit
-	retsub
+	b branch_optin_finalize
+
+
 branch_stake_in_proxy:
 	// Staking V2 Asset Transfer inner transaction: asset_pay
 	itxn_begin

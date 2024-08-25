@@ -1816,7 +1816,7 @@ branch_finalize_config_staking:
 	itxn_field AssetReceiver
 	int 0
 	itxn_field AssetAmount
-	txna Assets 1
+	txna Assets 0
 	itxn_field XferAsset
 	itxn_submit
 	itxn TxID
