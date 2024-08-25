@@ -619,7 +619,6 @@ branch_stake_in_proxy:
 	// Proxied staking V2 Application ABI call for stake
 	itxn_next
 	txna Applications 1
-	app_global_get
 	itxn_field ApplicationID
 	global CurrentApplicationAddress
 	itxn_field Sender
