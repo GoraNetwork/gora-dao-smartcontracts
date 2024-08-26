@@ -46,6 +46,9 @@ const goraDaoDeployer = new GoraDaoDeployer(props)
 
 async function goraDAOOperations() {
     let choices = []
+    if (!(Number(config['gora_dao']['dao_asa_id']) > 0)) {
+        choices.push('Create GoraDAO Staking Asset')
+    }
     choices.push('Create GoraDAO Asset');
     if (config['gora_dao']['dao_dao_deployed'] === true) {
         choices.push('Update GoraDAO Contract')
@@ -709,6 +712,7 @@ async function stakingOperations() {
 
 
     }
+    choices.push('Register Staking NFTs')
     if (config['gora_dao']['dao_staking_deployed'] === true && config['gora_dao']['staking_asa_distributed'] === false) {
         choices.push('Distribute Staking Asset')
         choices.push('Distribute Staking Asset(App only)')
@@ -745,6 +749,33 @@ async function stakingOperations() {
         case 'Create GoraDAO Staking Asset':
             try {
                 await goraDaoDeployer.createDaoStakingAsset();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Register Staking NFTs':
+            try {
+                let nftArray = props.config['deployer']['nft_staking_test_assets'];
+                for (let index = 0; index < nftArray.length; index++) {
+                    const nft = nftArray[index];
+                    await goraDaoDeployer.registerStakingNFT(nft.asset, nft.value);
+                    
+                }
+                
                 await inquirer.prompt([
                     {
                         type: 'input',
