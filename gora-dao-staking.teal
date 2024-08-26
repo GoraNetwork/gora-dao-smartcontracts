@@ -562,6 +562,8 @@ method_config_staking:
 
 	global CurrentApplicationAddress
 	txna Applications 2
+	store 22
+	load 22
 	app_opted_in
 	bz branch_optin_config
 
@@ -584,7 +586,7 @@ sub_optin_v2:
 	method "opt_in(uint64)void"
 	itxn_field ApplicationArgs
 
-	txna Applications 2
+	load 22
 	itxn_field ApplicationID
 
 	byte "v2_vesting_app_id"
@@ -618,6 +620,8 @@ branch_user_box:
 branch_stake_in_proxy:
 	global CurrentApplicationAddress
 	txna Applications 1
+	store 22
+	load 22
 	app_opted_in
 	bz branch_optin_staking
 
