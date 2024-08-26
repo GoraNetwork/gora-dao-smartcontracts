@@ -84,7 +84,7 @@ branch_method_router:
 	==
 	bnz method_manual_process_aggregation
 
-	method "register_nft(asset,uint64)uint64"
+	method "register_nft(uint64,uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_register_nft

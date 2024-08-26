@@ -307,7 +307,7 @@
             "description": "Register staking NFT!",
             "args": [
                 {
-                    "type": "asset",
+                    "type": "uint64",
                     "name": "staking_nft",
                     "description": "The staking NFT asset"
                 },

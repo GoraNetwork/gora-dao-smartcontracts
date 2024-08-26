@@ -3506,7 +3506,7 @@ const GoraDaoDeployer = class {
         atcStakingNft.addMethodCall({
             ...commonParamsStakingNft,
             method: methodStakingNft,
-            appAccounts: [this.goraDaoMainApplicationAddress],
+        
             methodArgs: argsStakingNft,
 
         })
