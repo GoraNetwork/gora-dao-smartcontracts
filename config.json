@@ -130,8 +130,8 @@
       "staking_params": {
         "staking_min_algo": 0,
         "staking_min_token": 25,
-        "staking_duration": 3600,
-        "staking_min_duration": 3600,
+        "staking_duration": 2592000,
+        "staking_min_duration": 2592000,
         "staking_commission_percentage": 10,
         "staking_commission_percentage_algo": 0,
         "staking_fee_token": 0,
