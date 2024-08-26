@@ -255,6 +255,11 @@
                     "type": "uint64",
                     "name": "amount_token",
                     "description": "Token Amount to be un-staked"
+                },
+                {
+                    "type": "uint64",
+                    "name": "NFT_ID",
+                    "description": "NFT ASA ID to unstake"
                 }
             ],
             "boxes": [

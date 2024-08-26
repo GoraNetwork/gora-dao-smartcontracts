@@ -69,7 +69,7 @@ branch_method_router:
 	==
 	bnz method_staking_stake
 
-    method "unstake(uint64,uint64)uint64"
+    method "unstake(uint64,uint64,uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_staking_unstake
@@ -382,13 +382,13 @@ method_config_staking:
 	app_global_put
 	//log
 
-	load 0
-	int 88
-	extract_uint64 //staking_incentives_duration
-	store 11
-	byte "incentives_duration"
-	load 11
-	app_global_put
+	// load 0
+	// int 88
+	// extract_uint64 //staking_incentives_duration
+	// store 11
+	// byte "incentives_duration"
+	// load 11
+	// app_global_put
 	//log
 
 	load 0
@@ -409,13 +409,13 @@ method_config_staking:
 	app_global_put
 	//log
 
-	load 0
-	int 112
-	extract_uint64 //staking_incentives_eligibility
-	store 27
-	byte "incentives_eligibility"
-	load 27
-	app_global_put
+	// load 0
+	// int 112
+	// extract_uint64 //staking_incentives_eligibility
+	// store 27
+	// byte "incentives_eligibility"
+	// load 27
+	// app_global_put
 	//log
 
 	txn ApplicationArgs 2 //staking_name
@@ -616,8 +616,7 @@ method_staking_stake:
 	int 0
 	==
 	assert
-	// txn ApplicationArgs 1
-	// box_del
+
 	
 	
 
@@ -782,6 +781,10 @@ branch_unstake_from_proxy:
 	method "unstake(uint64,application,asset,account)void"
 	itxn_field ApplicationArgs // method
 	load 6
+	load 24
+	int 1000000000
+	*
+	+
 	itob
 	itxn_field ApplicationArgs 
 	byte base64 AQ==
@@ -823,7 +826,32 @@ method_staking_unstake:
 	app_global_get
 	bz branch_error_activation
 
+	txn ApplicationArgs 3
+	box_get
+	assert
+	store 23
+	load 23
+	int 0
+	extract_uint64
+	store 24
+	txn ApplicationArgs 3
+	load 24
+	itob
+	int 0
+	itob
+	concat
+	box_put
+
 	
+	
+	// load 23
+	// int 8
+	// extract_uint64
+	// store 25
+	// load 25
+	// int 1
+	// ==
+	// assert
 
 	// Checking staking minimum participation algos
 	txn ApplicationArgs 1 // The staked amount algo
