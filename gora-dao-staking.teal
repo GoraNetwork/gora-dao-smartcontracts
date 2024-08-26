@@ -825,7 +825,7 @@ method_staking_unstake:
 	byte "is_activated"
 	app_global_get
 	bz branch_error_activation
-
+	// NFT Box
 	txn ApplicationArgs 3
 	box_get
 	assert
@@ -915,6 +915,8 @@ method_staking_unstake:
 	itob
 	load 12
 	load 6
+	load 24
+	+
 	-
 	itob
 	concat
@@ -924,6 +926,8 @@ method_staking_unstake:
 	itob
 	load 14
 	load 6
+	load 24
+	+
 	+
 	itob
 	concat
