@@ -127,6 +127,7 @@
     "staking": {
       "proxy_staking_main_app_id": 253775752,
       "proxy_staking_vesting_app_id": 259104850,
+      "proxy_staking_main_app_address": "MFSARDKZCVWI4C4U7C665BHZG3KZM3QFNNKHP2QJS3LWZVIXA5TKY2L6XQ",
       "staking_params": {
         "staking_min_algo": 0,
         "staking_min_token": 25,

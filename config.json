@@ -125,6 +125,7 @@
     },
     "staking": {
       "proxy_staking_main_app_id": 253775752,
+      "proxy_staking_main_app_address": "MFSARDKZCVWI4C4U7C665BHZG3KZM3QFNNKHP2QJS3LWZVIXA5TKY2L6XQ",
       "proxy_staking_vesting_app_id": 259104850,
       "staking_params": {
         "staking_min_algo": 0,
@@ -142,11 +143,11 @@
         "staking_return_percentage": 10,
         "staking_return_percentage_algo": 0,
         "staking_proxy_app_id": 378620949,
+        "staking_proxy_app_address": "5X2SL2BGXYWVFYCFETDQINXVJ3QLC6B3LBQOYDRMUH5RY2ZPODAGEFOJDE",
         "staking_name": "Gessic!",
         "staking_description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. .",
         "staking_url": "https://www.gessic.com",
         "staking_banner": "QmWjvCGPyL9zmA5B84WPqLYF27dL2nFgr1Lw6rMd7CpQPV/images/goranetwork_logo.jpeg",
-        "staking_proxy_app_address": "5X2SL2BGXYWVFYCFETDQINXVJ3QLC6B3LBQOYDRMUH5RY2ZPODAGEFOJDE",
         "staking_proxy_app_creator": "3PM4WZZXURFR5QNBJ7X52XOV7RE3P4X3EY44W2GTFNZ45NT624XPMR5YIM",
         "staking_proxy_app_manager": "3PM4WZZXURFR5QNBJ7X52XOV7RE3P4X3EY44W2GTFNZ45NT624XPMR5YIM",
         "staking_proxy_app_participating_address": "QBEIQVLTHF4IGFMVANBK2V72T56ZRAII2GHQZBT7JLEZTPWPOBYJSQWBMQ",

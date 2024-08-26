@@ -1112,7 +1112,6 @@ branch_nft_box:
 
 	byte 0x151f7c75
 	txn ApplicationArgs 1
-	itob
 	concat
 	b branch_log_return
 
