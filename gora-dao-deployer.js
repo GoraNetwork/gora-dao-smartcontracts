@@ -3567,8 +3567,8 @@ const GoraDaoDeployer = class {
         // Common parameters for GoraDAO Staking contract
         const commonParamsStakingStake = {
             appID: Number(this.goraDaoStakingApplicationId),
-            appForeignAssets: [Number(this.stakingAsset),717475430],// The second item is the NFT ASA ID used for NFT staking
-            appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager']],
+            appForeignAssets: [Number(this.stakingAsset)],// The second item is the NFT ASA ID used for NFT staking
+            appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager'], "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ"],
             appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
             sender: this[`goraDaoUserAccount${userIndex}`].addr,
             suggestedParams: params,
@@ -3625,6 +3625,7 @@ const GoraDaoDeployer = class {
         const argsStaking = [
             tws2,
             tws3,
+            717475430,// NFT ASA ID
         ];
         // Atomic transaction composer for GoraDAO proxy Staking
         const atcStakingStake = new this.algosdk.AtomicTransactionComposer();
@@ -3957,7 +3958,7 @@ const GoraDaoDeployer = class {
         const commonParamsStakingStake = {
             appID: Number(this.goraDaoStakingApplicationId),
             appForeignAssets: [Number(this.stakingAsset)],
-            appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager']],
+            appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager'],"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ"],
             appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
             sender: this[`goraDaoUserAccount${userIndex}`].addr,
             suggestedParams: params,

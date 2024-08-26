@@ -64,7 +64,7 @@ branch_method_router:
 	// ==
 	// bnz method_optin_staking
 
-	method "stake(pay,axfer)uint64"
+	method "stake(pay,axfer,uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_staking_stake
@@ -551,32 +551,38 @@ branch_stake_in_proxy:
 	itxn_next
 	txna Applications 1
 	itxn_field ApplicationID
-	global CurrentApplicationAddress
-	itxn_field Sender
-	int NoOp
-	itxn_field OnCompletion
+	// global CurrentApplicationAddress
+	// itxn_field Sender
+	// int NoOp
+	// itxn_field OnCompletion
 	int appl
 	itxn_field TypeEnum
 	method "stake(axfer,account,application,asset,account)void"
 	itxn_field ApplicationArgs // method
+	byte base64 AQ==
+	itxn_field ApplicationArgs //vesting_on_behalf_of
+	// byte "v2_main_app_id"
+	// app_global_get
+	// itob
+	byte base64 AQ==
+	itxn_field ApplicationArgs //main_app_ref
+	// byte "asset_id"
+	// app_global_get
+	// itob
+	byte base64 AA==
+	itxn_field ApplicationArgs //asset_ref
+	byte base64 Ag==
+	itxn_field ApplicationArgs //manager_reference
+
+	global ZeroAddress
+	itxn_field Accounts
+
 	txna Accounts 2 // staking_proxy_app_manager
 	itxn_field Accounts
 	txna Assets 0 // staking_asset_id
 	itxn_field Assets
-	global ZeroAddress
-	itxn_field ApplicationArgs //vesting_on_behalf_of
-	byte "v2_main_app_id"
-	app_global_get
-	itob
-	itxn_field ApplicationArgs //main_app_ref
-	byte "asset_id"
-	app_global_get
-	itob
-	itxn_field ApplicationArgs //asset_ref
-	txna Accounts 2
-	itxn_field ApplicationArgs //manager_reference
-	txna Applications 1
-	itxn_field Applications//staking_proxy_app_id
+	// txna Applications 1
+	// itxn_field Applications//staking_proxy_app_id
 	txna Applications 2
 	itxn_field Applications //proxy_staking_main_app_id
 	int 15000
@@ -748,15 +754,11 @@ branch_unstake_from_proxy:
 	load 6
 	itob
 	itxn_field ApplicationArgs 
-	byte "v2_main_app_id"
-	app_global_get
-	itob
+	byte base64 AQ==
 	itxn_field ApplicationArgs //main_app_ref
-	byte "asset_id"
-	app_global_get
-	itob
+	byte base64 AA==
 	itxn_field ApplicationArgs //asset_ref
-	txna Accounts 2 // staking_proxy_app_manager
+	byte base64 AQ== // staking_proxy_app_manager
 	itxn_field ApplicationArgs //manager_reference
 
 	txna Accounts 2
@@ -903,22 +905,16 @@ method_manual_process_aggregation:
 	itxn_field TypeEnum
 	method "manual_process_aggregation(asset,application,account)void"
 	itxn_field ApplicationArgs // method
-	byte "asset_id"
-	app_global_get
-	itob
+	byte base64 AA==
 	itxn_field ApplicationArgs //asset_ref
-	byte "v2_main_app_id"
-	app_global_get
-	itob
+	byte base64 AQ==
 	itxn_field ApplicationArgs //main_app_ref
-	txna Accounts 2
+	byte base64 AQ==
 	itxn_field ApplicationArgs //manager_reference
 	txna Accounts 2 // staking_proxy_app_manager
 	itxn_field Accounts
 	txna Assets 0 // staking_asset_id
 	itxn_field Assets
-	txna Applications 1
-	itxn_field Applications//staking_proxy_app_id
 	txna Applications 2
 	itxn_field Applications //proxy_staking_main_app_id
 	int 2000
@@ -949,24 +945,22 @@ branch_withdraw_from_proxy:
 	itxn_field TypeEnum
 	method "withdraw_non_stake(account,asset,application,account)void"
 	itxn_field ApplicationArgs // method
-	global ZeroAddress
+	byte base64 AQ==
 	itxn_field ApplicationArgs //vesting_on_behalf_of
-	byte "asset_id"
-	app_global_get
-	itob
+	byte base64 AA==
 	itxn_field ApplicationArgs //asset_ref
-	byte "v2_main_app_id"
-	app_global_get
-	itob
+	byte base64 AQ==
 	itxn_field ApplicationArgs //main_app_ref
-	txna Accounts 2
+	byte base64 Ag==
 	itxn_field ApplicationArgs //manager_reference
+
+	global ZeroAddress
+	itxn_field Accounts
 	txna Accounts 2 // staking_proxy_app_manager
 	itxn_field Accounts
 	txna Assets 0 // staking_asset_id
 	itxn_field Assets
-	txna Applications 1
-	itxn_field Applications//staking_proxy_app_id
+
 	txna Applications 2
 	itxn_field Applications //proxy_staking_main_app_id
 	int 15000

@@ -220,6 +220,11 @@
                     "type": "axfer",
                     "name": "stake_axfer_transaction",
                     "description": "Axfer from Staking participant for staking token!"
+                },
+                {
+                    "type": "uint64",
+                    "name": "nft asa ID",
+                    "description": "The staking NFT asset ID"
                 }
                 
             ],
