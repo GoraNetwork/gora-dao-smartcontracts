@@ -935,8 +935,6 @@ branch_withdraw_from_proxy:
 	>=
 	assert
 
-	
-
 	itxn_begin
 	txna Applications 1
 	itxn_field ApplicationID
