@@ -79,10 +79,7 @@ branch_method_router:
 	==
 	bnz method_withdraw_unstaked
 
-	method "manual_process_aggregation()uint64"
-	txn ApplicationArgs 0
-	==
-	bnz method_manual_process_aggregation
+	
 
 	method "register_nft(uint64,uint64)uint64"
 	txn ApplicationArgs 0
@@ -886,7 +883,9 @@ branch_staking_unstake_finalize:
 	itob
 	concat
 	b branch_log_return
-method_manual_process_aggregation:
+
+
+branch_withdraw_from_proxy:
 	txn Sender
 	txna Assets 0
 	asset_holding_get AssetBalance
@@ -920,19 +919,6 @@ method_manual_process_aggregation:
 	int 2000
 	itxn_field Fee
 	itxn_submit
-	byte 0x151f7c75
-	global CurrentApplicationID
-	itob
-	concat
-	b branch_log_return
-
-branch_withdraw_from_proxy:
-	txn Sender
-	txna Assets 0
-	asset_holding_get AssetBalance
-	int 1
-	>=
-	assert
 
 	itxn_begin
 	txna Applications 1
