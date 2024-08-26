@@ -109,3 +109,33 @@ Configuration saved to config.json successfully.
 Configuration saved to config.json successfully.
 [GoraDAO: ] [2024-08-25T21:20:38.460Z] [info]: GoraDAO UnStaking status to config file!
 ? Press Enter to go back to menu... 
+
+
+
+
+
+/////////////////// HAPPENED AGAIN 
+
+
+'TransactionPool.Remember: transaction V7OJTJFVGW5MMFWMJOUIHO374VZZQIZ2J3WOWSL4QI7MV2JIZ6EA: logic eval error: inner tx 0 failed: logic eval error: byte math would have negative result. Details: app=378620949, pc=3035, opcodes=load 37; itob; b-. Details: app=717654145, pc=1517, opcodes=intc 8 // 2000; itxn_field Fee; itxn_submit'
+    },
+    status: 400,
+    headers: {
+      '1768': 'content-length',
+      '*': 'access-control-allow-origin',
+      'h3=":443"; ma=86400': 'alt-svc',
+      DYNAMIC: 'cf-cache-status',
+      '8b945adf38d92463-ADB': 'cf-ray',
+      'keep-alive': 'connection',
+      'application/json; charset=UTF-8': 'content-type',
+      'Mon, 26 Aug 2024 14:01:38 GMT': 'date',
+      cloudflare: 'server',
+      '__cflb=02DiuHntYjfonL9cqTH1kTo7WKEo2ELFLxj77Xm6gVdXz; SameSite=Lax; path=/; expires=Tue, 27-Aug-24 13:01:38 GMT; HttpOnly': 'set-cookie',
+      Origin: 'vary',
+      '0.05': 'x-and-dl'
+    },
+    text: '{"data":{"app-index":717654145,"eval-states":[{"logs":["FR98dQAAAAAqwTgX"]},{"scratch":["vM9XLYF+FQRttVf72RK9WGfsfcmAwgUxOoll0V6WJfk=","vM9XLYF+FQRttVf72RK9WGfsfcmAwgUxOoll0V6WJfk=",0,0,0,0,6000000000,0,0,0,"AAAAAAAAQmgAAAAN+EdYAAAAAAAAAAAAAAAABg24hAA=",17000,60000000000,0,26000000000,0,0,0,0,0,0,"vM9XLYF+FQRttVf72RK9WGfsfcmAwgUxOoll0V6WJfkAAAAAFpFMFQ=="],"logs":["AAAAAAAAQmg=","AAAADfhHWAA=","AAAAAAAAAAA=","AAAABg24hAA="]}],"group-index":1,"inner-attrs":{"app-index":378620949,"eval-states":[{"scratch":["Z5/jpso1j+r1fg5bat8pk9MpOH1VFKrg4ke/MdUVN/Y=",0,0,0,0,0,0,0,0,0,0,0,0,0,6000000000,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5000000000,"AAAAAAAAAAA=",0,5000000000],"stack":[6000000000,1,0,1,"AAAAAAAAAAAAAAAAD3GgUg==",0,"",0,0,"",0,0,0,0,0,0,"",0,0,"","","",0,"","","","AAAAAGbMiqMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==","","AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=","","AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=","AAAAAAAAAIkAAAAAApPzGQAAAAAAAAAK",137,136,"","","AAAAAGbMiqMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEqBfIAgA==","AAAAAAAAAIkAAAAAApPzGQAAAAAAAAAK",137,136,"","AAAAAGbMiqMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",0,0,0,0,0,0,"AAAAAAAAAIkAAAAAApPzGQAAAAAAAAAK",137,0,0,0,0,"",0,0,"","","","AAAAASoF8gA="]}],"group-index":0,"pc":3035},"inner-msg":"logic eval error: byte math would have negative result. Details: app=378620949, pc=3035, opcodes=load 37; itob; b-","pc":1517},"message":"TransactionPool.Remember: transaction V7OJTJFVGW5MMFWMJOUIHO374VZZQIZ2J3WOWSL4QI7MV2JIZ6EA: logic eval error: inner tx 0 failed: logic eval error: byte math would have negative result. Details: app=378620949, pc=3035, opcodes=load 37; itob; b-. Details: app=717654145, pc=1517, opcodes=intc 8 // 2000; itxn_field Fee; itxn_submit"}\n',
+    ok: false
+  },
+  status: 400
+}

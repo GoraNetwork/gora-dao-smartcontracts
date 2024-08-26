@@ -3330,9 +3330,9 @@ const GoraDaoDeployer = class {
             tws1,
             [
                 1000,// min_algo
-                5, // min_token
-                365, // duration
-                1,// min_duration
+                0, // min_token
+                2592000, // duration
+                2592000,// min_duration
                 10,// commission
                 0,// commission_algo
                 0,// fee_token
@@ -3574,8 +3574,9 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
+                // { appIndex: Number(this.goraDaoStakingApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
                 { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Connected end user wallet account
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(717475413) },// Connected end user wallet account
             ],
         }
         // Asset transfer transaction to DAO (For future usage with staking Fees! Now it is 0 amount)
@@ -3625,7 +3626,7 @@ const GoraDaoDeployer = class {
         const argsStaking = [
             tws2,
             tws3,
-            717475430,// NFT ASA ID
+            717475413,// NFT ASA ID
         ];
         // Atomic transaction composer for GoraDAO proxy Staking
         const atcStakingStake = new this.algosdk.AtomicTransactionComposer();

@@ -597,6 +597,28 @@ method_staking_stake:
 	itob
 	concat
 	store 21
+
+	txn ApplicationArgs 1
+	box_get
+	assert
+	store 23
+	load 23
+	int 0
+	extract_uint64
+	store 24
+	
+	
+	load 23
+	int 8
+	extract_uint64
+	store 25
+	load 25
+	int 0
+	==
+	assert
+	// txn ApplicationArgs 1
+	// box_del
+	
 	
 
 
@@ -623,7 +645,18 @@ method_staking_stake:
 
 	// Checking staking minimum participation tokens
     gtxn 4 AssetAmount // The staked amount token
+	load 24
+	int 1000000000
+	*
+	+
 	store 6 
+	txn ApplicationArgs 1
+	load 24
+	itob
+	int 1
+	itob
+	concat
+	box_put
 
 	int 0
 	dup
