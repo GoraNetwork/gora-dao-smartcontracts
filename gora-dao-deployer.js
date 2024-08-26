@@ -3475,12 +3475,10 @@ const GoraDaoDeployer = class {
         let stakingAdminAddr = this.goraDaoStakingAdminAccount.addr;
         let params = await this.algodClient.getTransactionParams().do();
         let stakingApplication = Number(this.goraDaoStakingApplicationId)
-        let daoApplication = Number(this.goraDaoMainApplicationId)
-        const goraDaoMainContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoMainContractAbi.toString()))
         const goraDaoStakingContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoStakingContractAbi.toString()))
         const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoStakingAdminAccount)
-        let methodStakingNft= this.getMethodByName("activate_staking", goraDaoStakingContractAbi)
-        let methodDaoStakingNft = this.getMethodByName("activate_staking", goraDaoMainContractAbi)
+        let methodStakingNft= this.getMethodByName("register_nft", goraDaoStakingContractAbi)
+
 
         let memberPublicKey = this.algosdk.decodeAddress(stakingAdminAddr)
         const commonParamsStakingNft = {
@@ -3511,8 +3509,7 @@ const GoraDaoDeployer = class {
             methodArgs: argsStakingNft,
 
         })
-        this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodDaoStakingNft);
+  
         
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodStakingNft);
