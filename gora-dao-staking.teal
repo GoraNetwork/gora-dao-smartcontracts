@@ -10,28 +10,6 @@
 //Check TXN first
 callsub sub_check_txn
 
-// Checking onCompletion type for delete application call
-// txn OnCompletion
-// int DeleteApplication
-// ==
-// txn ApplicationID
-// int 0
-// !=
-// &&
-// bnz branch_delete
-
-// Checking onCompletion type for close out application call
-// txn OnCompletion
-// int CloseOut
-// !=
-// assert
-
-
-// Checking onCompletion type for optin application call
-// txn OnCompletion
-// int OptIn
-// !=
-// assert
 txn OnCompletion
 int NoOp
 ==
@@ -105,12 +83,6 @@ branch_method_router:
 	txn ApplicationArgs 0
 	==
 	bnz method_manual_process_aggregation
-	
-
-	
-
-
-
 	b branch_error
 
 ///////////////////////////////////////////
@@ -423,24 +395,6 @@ method_config_staking:
 	byte "return_algo"
 	load 13
 	app_global_put
-	//log
-
-	// load 0
-	// int 112
-	// extract_uint64 //staking_proxy_app_is_whitelisted
-	// store 24
-	// byte "is_whitelisted"
-	// load 24
-	// app_global_put
-	//log
-
-	// load 0
-	// int 120
-	// extract_uint64 //staking_proxy_app_is_pending
-	// store 25
-	// byte "proxy_app_is_pending"
-	// load 25
-	// app_global_put
 	//log
 
 	load 0
