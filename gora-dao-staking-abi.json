@@ -290,24 +290,6 @@
             }
         },
         {
-            "name": "manual_process_aggregation",
-            "description": "manual_process_aggregation from V2!",
-            "args": [],
-            "boxes": [
-                {
-                    "name": "manager_reference",
-                    "description": "Dynamic box ref per member account address"
-                },
-                {
-                    "name": "staking_account",
-                    "description": "Dynamic box per staking account (as key) and staking amount (as value)"
-                }
-            ],
-            "returns": {
-                "type": "uint64"
-            }
-        },
-        {
             "name": "register_nft",
             "description": "Register staking NFT!",
             "args": [
