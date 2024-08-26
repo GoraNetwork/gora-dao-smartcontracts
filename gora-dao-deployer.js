@@ -3491,6 +3491,7 @@ const GoraDaoDeployer = class {
             signer: signer,
             boxes: [
                 { appIndex: Number(stakingApplication), name: memberPublicKey.publicKey },
+                { appIndex: Number(stakingApplication), name: this.algosdk.encodeUint64(asaId) },
             ],
         }
       

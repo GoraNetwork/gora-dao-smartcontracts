@@ -83,6 +83,13 @@ branch_method_router:
 	txn ApplicationArgs 0
 	==
 	bnz method_manual_process_aggregation
+
+	method "register_nft(asset,uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_register_nft
+
+	
 	b branch_error
 
 ///////////////////////////////////////////
@@ -203,6 +210,14 @@ method_create_staking:
 	app_global_put
 
 	byte "staked_amount_token"
+	int 0
+	app_global_put
+
+	byte "staked_nft_count"
+	int 0
+	app_global_put
+
+	byte "staked_nft_value"
 	int 0
 	app_global_put
 
@@ -506,20 +521,8 @@ branch_optin_config:
 branch_optin_staking:
 	callsub sub_optin_v2
 	b branch_stake_in_proxy
-
-
-branch_user_box:
-	load 21
-	load 5
-	itob
-	load 6
-	itob
-	concat
-	box_put
 	
 		
-
-
 branch_stake_in_proxy:
 	global CurrentApplicationAddress
 	txna Applications 1
@@ -1061,6 +1064,59 @@ branch_withdraw_finalize:
 	concat
 	b branch_log_return
 
+method_register_nft:
+	callsub sub_check_manager_auth
+	byte "staked_nft_count"
+	dup
+	app_global_get
+	int 1
+	+
+	app_global_put
+
+	byte "staked_nft_value"
+	dup
+	app_global_get
+	txn ApplicationArgs 2
+	btoi
+	+
+	app_global_put
+
+	txn ApplicationArgs 1
+	store 0
+
+	txn ApplicationArgs 2
+	int 0
+	itob
+	concat
+	store 1
+
+	load 0
+	box_get
+	bnz branch_nft_box
+	load 0
+	load 1
+	box_put
+
+
+
+	
+
+branch_nft_box:
+	load 0
+	box_del
+	assert
+	load 0
+	load 1
+	box_put
+	
+
+	byte 0x151f7c75
+	txn ApplicationArgs 1
+	itob
+	concat
+	b branch_log_return
+
+	
 
 
 // Handles logging the last element on the stack then put a 1 on the top and return (log and approve)
