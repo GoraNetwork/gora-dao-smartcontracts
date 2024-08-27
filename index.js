@@ -1001,10 +1001,17 @@ async function stakingOperations() {
                         message: 'What amount you want to stake?',
                     },
                 ]);
+                let { nftId } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'nftId',
+                        message: 'What is the NFT ID to stake?',
+                    },
+                ]);
 
                 let finalAmount = Number(amount) * 1000000000 // e.g. to stake 5 Gora the amount will be 5000000000
                 //await goraDaoDeployer.stakeStakingContract(Number(amount));
-                await goraDaoDeployer.stakeProxyStakingContract(2, Number(finalAmount));
+                await goraDaoDeployer.stakeProxyStakingContract(2, Number(finalAmount), Number(nftId));
                 await goraDaoDeployer.printStakingUserBox();
                 
                 //await goraDaoDeployer.stakeDirectProxyStakingContract(Number(amount));
@@ -1035,10 +1042,17 @@ async function stakingOperations() {
                         message: 'What amount you want to unstake?',
                     },
                 ]);
+                let { nftId } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'nftId',
+                        message: 'What is the NFT ID to stake?',
+                    },
+                ]);
 
                 let finalAmount = Number(amount) * 1000000000 // e.g. to stake 5 Gora the amount will be 5000000000
                 //await goraDaoDeployer.stakeStakingContract(Number(amount));
-                await goraDaoDeployer.unstakeProxyStakingContract(2, Number(finalAmount));
+                await goraDaoDeployer.unstakeProxyStakingContract(2, Number(finalAmount), Number(nftId));
                 await goraDaoDeployer.printStakingUserBox();
                 //await goraDaoDeployer.stakeDirectProxyStakingContract(Number(amount));
                 await inquirer.prompt([

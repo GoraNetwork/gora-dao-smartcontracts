@@ -3579,7 +3579,7 @@ const GoraDaoDeployer = class {
     }
 
     // This function is used to stake in a proxy staking contract
-    async stakeProxyStakingContract(userIndex, amount) {
+    async stakeProxyStakingContract(userIndex, amount, nftId) {
         this.logger.info(`Staking into proxy staking contract ${Number(this.goraDaoStakingApplicationId)} which proxies ${Number(this.stakingParams.staking_proxy_app_id)}`);
         let params = await this.algodClient.getTransactionParams().do();// Get suggested Algorand TXN parameters
 
@@ -3623,7 +3623,7 @@ const GoraDaoDeployer = class {
             boxes: [
                 // { appIndex: Number(this.goraDaoStakingApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
                 { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Connected end user wallet account
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(717793982) },// Staked NFT ref
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId) },// Staked NFT ref
             ],
         }
         // Asset transfer transaction to DAO (For future usage with staking Fees! Now it is 0 amount)
@@ -3673,7 +3673,7 @@ const GoraDaoDeployer = class {
         const argsStaking = [
             tws2,
             tws3,
-            717793982,// NFT ASA ID
+            nftId,// NFT ASA ID
         ];
         // Atomic transaction composer for GoraDAO proxy Staking
         const atcStakingStake = new this.algosdk.AtomicTransactionComposer();
@@ -3715,7 +3715,7 @@ const GoraDaoDeployer = class {
     }
 
     // This function is used to stake in a proxy staking contract
-    async unstakeProxyStakingContract(userIndex, amount) {
+    async unstakeProxyStakingContract(userIndex, amount, nftId) {
         this.logger.info(`Staking into proxy staking contract ${Number(this.goraDaoStakingApplicationId)} which proxies ${Number(this.stakingParams.staking_proxy_app_id)}`);
         let params = await this.algodClient.getTransactionParams().do();// Get suggested Algorand TXN parameters
 
@@ -3763,7 +3763,7 @@ const GoraDaoDeployer = class {
             boxes: [
                 { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Staking admin account
                 { appIndex: Number(this.goraDaoStakingApplicationId), name: stakingUserPublicKey.publicKey },// Connected end user wallet account
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(717793982) },// Staked NFT ref
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId) },// Staked NFT ref
             ],
         }
 
@@ -3779,7 +3779,7 @@ const GoraDaoDeployer = class {
         const argsStaking = [
             0,
             amount,
-            717793982,// NFT ASA ID
+            nftId,// NFT ASA ID
         ];
         // Atomic transaction composer for GoraDAO proxy Staking
         const atcStakingStake = new this.algosdk.AtomicTransactionComposer();
