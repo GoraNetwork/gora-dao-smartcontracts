@@ -310,13 +310,13 @@ method_config_staking:
 	app_global_put
 	//log
 
-	load 0
-	int 24
-	extract_uint64 //staking_min_duration
-	store 4
-	byte "min_duration"
-	load 4
-	app_global_put
+	// load 0
+	// int 24
+	// extract_uint64 //staking_min_duration
+	// store 4
+	// byte "min_duration"
+	// load 4
+	// app_global_put
 	//log
 
 	load 0
