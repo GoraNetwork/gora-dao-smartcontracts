@@ -4010,6 +4010,7 @@ const GoraDaoDeployer = class {
         const signer = this.algosdk.makeBasicAccountTransactionSigner(this[`goraDaoUserAccount${userIndex}`]);
 
         let methodStakingWithdraw = this.getMethodByName("withdraw", goraDaoStakingContractAbi);
+        let methodDStakingUserClaim = this.getMethodByName("user_claim", goraDaoStakingContractAbi);
         let methodDaoStakingWithdraw = this.getMethodByName("withdraw", goraDaoMainContractAbi);
 
         let stakeAdminPublicKey = this.algosdk.decodeAddress(this.goraDaoStakingAdminAccount.addr);// Staking admin account PK
@@ -4070,6 +4071,11 @@ const GoraDaoDeployer = class {
         // Add GoraDAO Staking ABI call for withdraw
         atcStakingWithdraw.addMethodCall({
             method: methodStakingWithdraw,
+            methodArgs: argsStaking,
+            ...commonParamsStakingStake
+        });
+        atcStakingWithdraw.addMethodCall({
+            method: methodDStakingUserClaim,
             methodArgs: argsStaking,
             ...commonParamsStakingStake
         });

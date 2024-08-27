@@ -706,9 +706,10 @@ async function stakingOperations() {
             choices.push('UnStake from staking contract')
 
         }
-        if (config['gora_dao']['staking_is_unstaked'] === true) {
-            choices.push('Withdraw stake from staking contract')
-        }
+        choices.push('Withdraw stake from staking contract')
+        // if (config['gora_dao']['staking_is_unstaked'] === true) {
+        //     choices.push('Withdraw stake from staking contract')
+        // }
 
 
     }

@@ -1150,11 +1150,23 @@ method_user_claim:
 	global LatestTimestamp
 	load 44
 	-
+	store 33
+	load 33
 	byte "duration"
 	app_global_get
 	>=
 	assert
 
+	int 17
+	load 6
+	*
+	int 100
+	/
+	int 31536000
+	/
+	load 33
+	*
+	store 39
 
 
 	txna Assets 1
@@ -1183,7 +1195,7 @@ method_user_claim:
 	itxn_field TypeEnum
 	txna Assets 0
 	itxn_field XferAsset
-	load 6
+	load 39
 	itxn_field AssetAmount
 	itxn_submit
 	b branch_withdraw_finalize
