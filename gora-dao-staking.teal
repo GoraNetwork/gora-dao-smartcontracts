@@ -1157,16 +1157,16 @@ method_user_claim:
 	>=
 	assert
 
-	int 17
-	load 6
-	*
-	int 100
-	/
-	int 31536000
-	/
-	load 33
-	*
-	store 39
+	// int 17
+	// load 6
+	// *
+	// int 100
+	// /
+	// int 31536000
+	// /
+	// load 33
+	// *
+	// store 39
 
 
 	txn ApplicationArgs 1
@@ -1194,7 +1194,7 @@ method_user_claim:
 	itxn_field TypeEnum
 	txna Assets 0
 	itxn_field XferAsset
-	load 39
+	load 14
 	itxn_field AssetAmount
 	itxn_submit
 	b branch_withdraw_finalize
