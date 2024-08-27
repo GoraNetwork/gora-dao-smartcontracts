@@ -772,6 +772,8 @@ const GoraDaoDeployer = class {
                 console.log(val1)
                 let val2 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 16) : 0
                 console.log(val2)
+                let val3 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 24) : 0
+                console.log(val3)
          
          
                 this.logger.info(boxData.round)

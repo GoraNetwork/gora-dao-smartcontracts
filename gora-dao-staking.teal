@@ -648,6 +648,7 @@ method_staking_stake:
 	*
 	+
 	store 6 
+
 	txn ApplicationArgs 1
 	load 24
 	itob
@@ -655,6 +656,9 @@ method_staking_stake:
 	itob
 	concat
 	txna Applications 1
+	itob
+	concat
+	global LatestTimestamp
 	itob
 	concat
 	box_put
@@ -840,6 +844,17 @@ method_staking_unstake:
 	==
 	assert
 
+	global LatestTimestamp
+	load 23
+	int 24
+	extract_uint64
+	-
+	byte "duration"
+	app_global_get
+	>
+	assert
+
+
 	load 23
 	int 16
 	extract_uint64
@@ -847,6 +862,9 @@ method_staking_unstake:
 	txn ApplicationArgs 3
 	load 24
 	itob
+	int 0
+	itob
+	concat
 	int 0
 	itob
 	concat
@@ -1146,6 +1164,9 @@ method_register_nft:
 	store 0
 
 	txn ApplicationArgs 2
+	int 0
+	itob
+	concat
 	int 0
 	itob
 	concat
