@@ -3684,7 +3684,7 @@ const GoraDaoDeployer = class {
         const ptxnStaking = new this.algosdk.Transaction({
             from: this[`goraDaoUserAccount${userIndex}`].addr,
             to: this.stakingApplicationAddress,
-            amount: 1000,
+            amount: 0,
             type: 'pay',
             ...params
         });
