@@ -705,6 +705,53 @@ const GoraDaoDeployer = class {
 
         }
     }
+    base64UrlEncode(base64String) {
+        return base64String
+            .replace(/\+/g, '-')  // Replace + with -
+            .replace(/\//g, '_')  // Replace / with _
+            .replace(/=+$/, '');  // Remove trailing =
+    }
+    async printStakingUserBox() {
+        if (this.algosdk.isValidAddress(this.goraDaoStakingAdminAccount.addr)) {
+            let delegatorAddress = this.goraDaoUserAccount2.addr;
+            let delegatorPublicKey = this.algosdk.decodeAddress(delegatorAddress);
+
+            let v2AppIdArray = this.algosdk.encodeUint64(this.stakingParams['staking_proxy_app_id'])
+            let v2AppIdArrayLength = v2AppIdArray.length
+            let stakeUserPublicKeyLength = delegatorPublicKey.publicKey.length
+            let boxNameRef = new Uint8Array(v2AppIdArrayLength + stakeUserPublicKeyLength)
+            boxNameRef.set(delegatorPublicKey.publicKey, 0)
+            boxNameRef.set(v2AppIdArray, stakeUserPublicKeyLength)
+            const base64boxNameRef = Buffer.from(boxNameRef).toString('base64');
+            const encodedBase64boxNameRef = encodeURIComponent(base64boxNameRef)
+            const urlApp = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/applications/${this.config.gora_dao['asc_staking_id']}/box?name=b64:${encodedBase64boxNameRef}`;
+
+            let resApp = await fetch(urlApp, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            let boxData = await resApp.json()
+            if (boxData) {
+                this.logger.info(boxData.name)
+                let valueDecoded = new Uint8Array(Buffer.from(boxData.value, "base64"));
+                let val0 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 0) : 0
+                console.log(val0)
+                let val1 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 8) : 0
+                console.log(val1)
+                let val2 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 16) : 0
+                console.log(val2)
+                let val3 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 24) : 0
+                console.log(val3)
+         
+                this.logger.info(boxData.round)
+
+            }
+
+
+        }
+    }
 
     async printAppLocalState(account) {
         if (this.config['gora_dao']['asc_staking_address']) {
@@ -3470,20 +3517,20 @@ const GoraDaoDeployer = class {
         await this.saveConfigToFile(this.config)
     }
 
-     // This function is used to register a staking NFT into a V3 staking contract
-     async registerStakingNFT(asaId, value) {
+    // This function is used to register a staking NFT into a V3 staking contract
+    async registerStakingNFT(asaId, value) {
         let stakingAdminAddr = this.goraDaoStakingAdminAccount.addr;
         let params = await this.algodClient.getTransactionParams().do();
         let stakingApplication = Number(this.goraDaoStakingApplicationId)
         const goraDaoStakingContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoStakingContractAbi.toString()))
         const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoStakingAdminAccount)
-        let methodStakingNft= this.getMethodByName("register_nft", goraDaoStakingContractAbi)
+        let methodStakingNft = this.getMethodByName("register_nft", goraDaoStakingContractAbi)
 
 
         let memberPublicKey = this.algosdk.decodeAddress(stakingAdminAddr)
         const commonParamsStakingNft = {
             appID: stakingApplication,
-            appForeignAssets: [ Number(this.stakingAsset), asaId],
+            appForeignAssets: [Number(this.stakingAsset), asaId],
             appAccounts: [this.goraDaoAdminAccount.addr],
             appForeignApps: [Number(this.goraDaoMainApplicationId)],
             sender: stakingAdminAddr,
@@ -3494,24 +3541,24 @@ const GoraDaoDeployer = class {
                 { appIndex: Number(stakingApplication), name: this.algosdk.encodeUint64(asaId) },
             ],
         }
-      
-     
+
+
         //this.goraDaoMainApplicationId,
         const argsStakingNft = [
             asaId,
             value
         ];
-        const atcStakingNft= new this.algosdk.AtomicTransactionComposer()
+        const atcStakingNft = new this.algosdk.AtomicTransactionComposer()
 
         atcStakingNft.addMethodCall({
             ...commonParamsStakingNft,
             method: methodStakingNft,
-        
+
             methodArgs: argsStakingNft,
 
         })
-  
-        
+
+
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodStakingNft);
         const stakingNftResults = await atcStakingNft.execute(this.algodClient, 10);
@@ -3716,7 +3763,7 @@ const GoraDaoDeployer = class {
             boxes: [
                 { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Staking admin account
                 { appIndex: Number(this.goraDaoStakingApplicationId), name: stakingUserPublicKey.publicKey },// Connected end user wallet account
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(717793992)},// Staked NFT ref
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(717793992) },// Staked NFT ref
             ],
         }
 
@@ -3961,7 +4008,7 @@ const GoraDaoDeployer = class {
         const commonParamsStakingStake = {
             appID: Number(this.goraDaoStakingApplicationId),
             appForeignAssets: [Number(this.stakingAsset)],
-            appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager'],"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ"],
+            appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager'], "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ"],
             appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
             sender: this[`goraDaoUserAccount${userIndex}`].addr,
             suggestedParams: params,

@@ -733,6 +733,7 @@ async function stakingOperations() {
 
 
 
+    choices.push('Print Staking User Box')
     choices.push('Help')
     choices.push('Back to Main Menu')
 
@@ -969,6 +970,28 @@ async function stakingOperations() {
                 ]);
             }
             break;
+            case 'Print Staking User Box':
+            try {
+                await goraDaoDeployer.printStakingUserBox();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+            
         case 'Stake into staking contract':
             try {
                 let { amount } = await inquirer.prompt([

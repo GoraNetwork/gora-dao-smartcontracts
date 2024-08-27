@@ -908,6 +908,7 @@ method_staking_unstake:
 
 
 	// Staking finalization and account boxes staking values update
+
 	load 21
 	load 11
 	load 5
@@ -919,7 +920,7 @@ method_staking_unstake:
 	+
 	-
 	itob
-	concat
+	concat	
 	load 13
 	load 5
 	+
@@ -930,7 +931,7 @@ method_staking_unstake:
 	+
 	+
 	itob
-	concat
+	concat 
 	concat
 	box_put
 
