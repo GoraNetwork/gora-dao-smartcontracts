@@ -774,9 +774,9 @@ async function stakingOperations() {
                 for (let index = 0; index < nftArray.length; index++) {
                     const nft = nftArray[index];
                     await goraDaoDeployer.registerStakingNFT(nft.asset, nft.value);
-                    
+
                 }
-                
+
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -970,7 +970,7 @@ async function stakingOperations() {
                 ]);
             }
             break;
-            case 'Print Staking User Box':
+        case 'Print Staking User Box':
             try {
                 await goraDaoDeployer.printStakingUserBox();
                 await inquirer.prompt([
@@ -991,7 +991,7 @@ async function stakingOperations() {
                 ]);
             }
             break;
-            
+
         case 'Stake into staking contract':
             try {
                 let { amount } = await inquirer.prompt([
@@ -1005,6 +1005,8 @@ async function stakingOperations() {
                 let finalAmount = Number(amount) * 1000000000 // e.g. to stake 5 Gora the amount will be 5000000000
                 //await goraDaoDeployer.stakeStakingContract(Number(amount));
                 await goraDaoDeployer.stakeProxyStakingContract(2, Number(finalAmount));
+                await goraDaoDeployer.printStakingUserBox();
+                
                 //await goraDaoDeployer.stakeDirectProxyStakingContract(Number(amount));
                 await inquirer.prompt([
                     {
@@ -1030,13 +1032,14 @@ async function stakingOperations() {
                     {
                         type: 'input',
                         name: 'amount',
-                        message: 'What amount you want to stake?',
+                        message: 'What amount you want to unstake?',
                     },
                 ]);
 
                 let finalAmount = Number(amount) * 1000000000 // e.g. to stake 5 Gora the amount will be 5000000000
                 //await goraDaoDeployer.stakeStakingContract(Number(amount));
                 await goraDaoDeployer.unstakeProxyStakingContract(2, Number(finalAmount));
+                await goraDaoDeployer.printStakingUserBox();
                 //await goraDaoDeployer.stakeDirectProxyStakingContract(Number(amount));
                 await inquirer.prompt([
                     {

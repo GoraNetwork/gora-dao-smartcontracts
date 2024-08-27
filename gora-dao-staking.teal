@@ -598,6 +598,7 @@ method_staking_stake:
 	concat
 	store 21
 
+	// NFT Box read
 	txn ApplicationArgs 1
 	box_get
 	assert
@@ -605,21 +606,19 @@ method_staking_stake:
 	load 23
 	int 0
 	extract_uint64
-	store 24
+	store 24 // NFT Staking value
 	
 	
 	load 23
 	int 8
 	extract_uint64
-	store 25
+	store 25 // NFT Staking isLocked
 	load 25
 	int 0
 	==
-	assert
+	assert 
 
 	
-	
-
 
 	// Checking the staking activation
 	byte "is_activated"
@@ -642,7 +641,7 @@ method_staking_stake:
 	store 5 
 	
 
-	// Checking staking minimum participation tokens
+	// The delegator+V2AppID box write
     gtxn 4 AssetAmount // The staked amount token
 	load 24
 	int 1000000000
@@ -781,10 +780,6 @@ branch_unstake_from_proxy:
 	method "unstake(uint64,application,asset,account)void"
 	itxn_field ApplicationArgs // method
 	load 6
-	load 24
-	int 1000000000
-	*
-	+
 	itob
 	itxn_field ApplicationArgs 
 	byte base64 AQ==
@@ -819,7 +814,7 @@ method_staking_unstake:
 	txna Applications 1
 	itob
 	concat
-	store 21
+	store 21 // The Delegator+V2AppID box key
 
 	// Checking the staking activation
 	byte "is_activated"
@@ -834,6 +829,14 @@ method_staking_unstake:
 	int 0
 	extract_uint64
 	store 24
+
+	load 23
+	int 8
+	extract_uint64
+	int 1
+	==
+	assert
+	
 	txn ApplicationArgs 3
 	load 24
 	itob
@@ -842,26 +845,20 @@ method_staking_unstake:
 	concat
 	box_put
 
-	
-	
-	// load 23
-	// int 8
-	// extract_uint64
-	// store 25
-	// load 25
-	// int 1
-	// ==
-	// assert
 
-	// Checking staking minimum participation algos
-	txn ApplicationArgs 1 // The staked amount algo
+
+	txn ApplicationArgs 1 // The unstaked amount algo
 	btoi
 	store 5 
 	
 
-	// Checking staking minimum participation tokens
-    txn ApplicationArgs 2 // The staked amount token
+
+    txn ApplicationArgs 2 // The token amount to unstake
 	btoi
+	load 24
+	int 1000000000
+	*
+	+
 	store 6 
 
 
