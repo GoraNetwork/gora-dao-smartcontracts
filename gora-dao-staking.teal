@@ -86,6 +86,11 @@ branch_method_router:
 	==
 	bnz method_register_nft
 
+	method "user_claim()uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_register_nft
+
 
 
 	
@@ -292,7 +297,7 @@ method_config_staking:
 	byte "min_algo"
 	load 1
 	app_global_put
-	//log
+
 
 	load 0
 	int 8
@@ -301,7 +306,7 @@ method_config_staking:
 	byte "min_token"
 	load 2
 	app_global_put
-	//log
+
 
 	load 0
 	int 16
@@ -310,7 +315,7 @@ method_config_staking:
 	byte "duration"
 	load 3
 	app_global_put
-	//log
+
 
 	load 0
 	int 24
@@ -319,7 +324,7 @@ method_config_staking:
 	byte "min_duration"
 	load 4
 	app_global_put
-	//log
+
 
 	load 0
 	int 32
@@ -328,7 +333,7 @@ method_config_staking:
 	byte "commission_token"
 	load 5
 	app_global_put
-	//log
+
 
 	load 0
 	int 40
@@ -337,7 +342,7 @@ method_config_staking:
 	byte "commission_algo"
 	load 6
 	app_global_put
-	//log
+
 
 	load 0
 	int 48
@@ -346,7 +351,7 @@ method_config_staking:
 	byte "fee_token"
 	load 7
 	app_global_put
-	//log
+
 
 	load 0
 	int 56
@@ -355,7 +360,7 @@ method_config_staking:
 	byte "fee_algo"
 	load 8
 	app_global_put
-	//log
+
 
 	// load 0
 	// int 64
@@ -364,7 +369,7 @@ method_config_staking:
 	// byte "incentives_token"
 	// load 9
 	// app_global_put
-	//log
+
 
 	// load 0
 	// int 72
@@ -373,7 +378,7 @@ method_config_staking:
 	// byte "incentives_algo"
 	// load 26
 	// app_global_put
-	//log
+
 
 	load 0
 	int 80
@@ -382,7 +387,7 @@ method_config_staking:
 	byte "type"
 	load 10
 	app_global_put
-	//log
+
 
 	// load 0
 	// int 88
@@ -391,7 +396,7 @@ method_config_staking:
 	// byte "incentives_duration"
 	// load 11
 	// app_global_put
-	//log
+
 
 	load 0
 	int 96
@@ -400,7 +405,7 @@ method_config_staking:
 	byte "return_token"
 	load 12
 	app_global_put
-	//log
+
 
 	load 0
 	int 104
@@ -409,7 +414,7 @@ method_config_staking:
 	byte "return_algo"
 	load 13
 	app_global_put
-	//log
+
 
 	// load 0
 	// int 112
@@ -418,21 +423,21 @@ method_config_staking:
 	// byte "incentives_eligibility"
 	// load 27
 	// app_global_put
-	//log
+
 
 	txn ApplicationArgs 2 //staking_name
 	store 14
 	byte "name"
 	load 14
 	app_global_put
-	//log
+
 
 	txn ApplicationArgs 3 //staking_description
 	store 15
 	byte "description"
 	load 15
 	app_global_put
-	//log
+
 
 	// txn ApplicationArgs 4 //staking_url
 	// store 16
@@ -474,8 +479,8 @@ method_config_staking:
 	txna Assets 0
 	itxn_field XferAsset
 	itxn_submit
-	itxn TxID
-    log
+	//itxn TxID
+
 
 	global CurrentApplicationAddress
 	txna Applications 2
@@ -685,32 +690,24 @@ method_staking_stake:
 	int 0
 	extract_uint64
 	store 11
-	load 11
-	itob
-	log
+
 	load 10
 	int 8
 	extract_uint64
 	store 12
-	load 12
-	itob
-	log
+
 
 	load 10
 	int 16
 	extract_uint64
 	store 13
-	load 13
-	itob
-	log
+
 
 	load 10
 	int 24
 	extract_uint64
 	store 14
-	load 14
-	itob
-	log
+	
 
 	load 21
 	box_del
@@ -813,7 +810,31 @@ branch_unstake_from_proxy:
 	itxn_field Fee
 	itxn_submit
 	b branch_staking_unstake_finalize
+branch_unstake_without_rewards:
+	load 21	
+	load 11
+	load 5
+	-
+	itob
+	load 12
+	load 6
+	-
+	itob
+	concat	
+	load 13
+	itob
+	load 14
+	itob
+	concat 
+	concat
+	box_put
 
+	byte "type"
+	app_global_get
+	int 0
+	>
+	bnz branch_unstake_from_proxy
+	b branch_staking_unstake_finalize
 method_staking_unstake:
 	txna Accounts 0 // DAO main account
 	store 0 
@@ -850,6 +871,8 @@ method_staking_unstake:
 	load 23
 	int 24
 	extract_uint64
+	store 30
+	load 30
 	-
 	byte "min_duration"
 	app_global_get
@@ -857,9 +880,7 @@ method_staking_unstake:
 	assert
 
 
-	load 23
-	int 16
-	extract_uint64
+	
 	
 	txn ApplicationArgs 3
 	load 24
@@ -902,39 +923,52 @@ method_staking_unstake:
 	int 0
 	extract_uint64
 	store 11
-	load 11
-	itob
-	log
+	
 	load 10
 	int 8
 	extract_uint64
 	store 12
-	load 12
-	itob
-	log
+
 
 	load 10
 	int 16
 	extract_uint64
 	store 13
-	load 13
-	itob
-	log
+
 
 	load 10
 	int 24
 	extract_uint64
 	store 14
-	load 14
-	itob
-	log
+	
 
 	load 21
 	box_del
 	assert
 
+	global LatestTimestamp
+	load 30
+	-
+	store 33
+	load 33
+	byte "duration"
+	app_global_get
+	>=
+	bnz branch_unstake_without_rewards
 
-	// Staking finalization and account boxes staking values update
+	
+branch_unstake_with_rewards:
+	//Calc rewards
+	int 17
+	load 6
+	*
+	int 100
+	/
+	int 31536000
+	/
+	load 33
+	*
+	store 39
 
 	load 21
 	load 11
@@ -950,9 +984,7 @@ method_staking_unstake:
 	load 5
 	+
 	itob
-	load 14
-	load 6
-	+
+	load 39
 	itob
 	concat 
 	concat
@@ -1041,7 +1073,48 @@ branch_withdraw_from_proxy:
 	int 15000
 	itxn_field Fee
 	itxn_submit
+	b branch_withdraw_finalize
 
+sub_user_claim:
+	txn Sender // Staking user account
+	store 1 
+	load 1
+	txna Applications 1
+	itob
+	concat
+	store 21 // The Delegator+V2AppID box key
+
+	 // Checking staked algo amount box 
+	load 21
+	box_get
+	assert
+
+	store 10 // Staked amounts algos from account box
+	load 10
+	int 0
+	extract_uint64
+	store 11
+
+	load 10
+	int 8
+	extract_uint64
+	store 12
+	
+	load 10
+	int 16
+	extract_uint64
+	store 13
+	
+
+	load 10
+	int 24
+	extract_uint64
+	store 14
+	
+
+	load 21
+	box_del
+	assert
 	// itxn_begin
 	// txn Sender
 	// itxn_field AssetReceiver
@@ -1052,8 +1125,6 @@ branch_withdraw_from_proxy:
 	// load 6
 	// itxn_field AssetAmount
 	// itxn_submit
-	b branch_withdraw_finalize
-
 
 method_withdraw_unstaked:
 	txna Accounts 0 // DAO main account
@@ -1085,32 +1156,23 @@ method_withdraw_unstaked:
 	int 0
 	extract_uint64
 	store 11 // Staked Algos
-	load 11
-	itob
-	log
+	
 	load 10
 	int 8
 	extract_uint64
 	store 12 // Staked tokens
-	load 12
-	itob
-	log
+
 
 	load 10
 	int 16
 	extract_uint64
 	store 13 //Unstaked Algos
-	load 13
-	itob
-	log
-
+	
 	load 10
 	int 24
 	extract_uint64
 	store 14 // Unstaked tokens
-	load 14
-	itob
-	log
+
 
 	load 21
 	box_del
