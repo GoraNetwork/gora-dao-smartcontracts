@@ -4056,7 +4056,8 @@ const GoraDaoDeployer = class {
         // GoraDAO DAO ABI call arguments
         const argsDao = [];
         // GoraDAO Staking ABI call arguments
-        const argsStaking = [717793992];
+        const argsStaking = [];// NFT ASA ID for claiming its rewards without unstaking
+        const claimStaking = [717793992];// NFT ASA ID for claiming its rewards without unstaking
         // Atomic transaction composer for GoraDAO proxy withdraw
         const atcStakingWithdraw = new this.algosdk.AtomicTransactionComposer();
         // Add GoraDAO DAO ABI call for withdraw
@@ -4076,7 +4077,7 @@ const GoraDaoDeployer = class {
         });
         atcStakingWithdraw.addMethodCall({
             method: methodDStakingUserClaim,
-            methodArgs: argsStaking,
+            methodArgs: claimStaking,
             ...commonParamsStakingStake
         });
         this.logger.info('------------------------------')

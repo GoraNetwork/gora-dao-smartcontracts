@@ -1169,8 +1169,7 @@ method_user_claim:
 	store 39
 
 
-	txna Assets 1
-	itob
+	txn ApplicationArgs 1
 	load 41
 	itob
 	load 42
