@@ -1112,6 +1112,8 @@ method_user_claim:
 	store 14
 	
 
+	
+
 	load 21
 	load 11
 	itob
@@ -1147,6 +1149,30 @@ method_user_claim:
 	extract_uint64
 	store 44
 
+	load 14
+	store 45
+
+	global CreatorAddress
+	gtxn 0 ApplicationID
+	==
+	gtxna 1 ApplicationArgs 0
+	method "withdraw()uint64"
+	==
+	&&
+	global GroupSize
+	int 3
+	==
+	&&
+	bnz branch_user_claim_finalize
+
+	txn Sender
+	txn ApplicationArgs 1
+	btoi
+	asset_holding_get
+	int 1
+	==
+	assert
+
 	global LatestTimestamp
 	load 44
 	-
@@ -1157,16 +1183,16 @@ method_user_claim:
 	>=
 	assert
 
-	// int 17
-	// load 6
-	// *
-	// int 100
-	// /
-	// int 31536000
-	// /
-	// load 33
-	// *
-	// store 39
+	int 17
+	load 6
+	*
+	int 100
+	/
+	int 31536000
+	/
+	load 33
+	*
+	store 39
 
 
 	txn ApplicationArgs 1
@@ -1183,10 +1209,15 @@ method_user_claim:
 	concat
 	box_put
 
+	load 14
+	load 39
+	+
+	store 45
+
+
+branch_user_claim_finalize:	
 
 	
-
-
 	itxn_begin
 	txn Sender
 	itxn_field AssetReceiver
@@ -1194,7 +1225,7 @@ method_user_claim:
 	itxn_field TypeEnum
 	txna Assets 0
 	itxn_field XferAsset
-	load 14
+	load 45
 	itxn_field AssetAmount
 	itxn_submit
 	b branch_withdraw_finalize
