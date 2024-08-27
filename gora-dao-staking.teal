@@ -1152,13 +1152,7 @@ method_user_claim:
 	load 14
 	store 45
 
-	global CurrentApplicationID
-	gtxn 1 ApplicationID
-	==
-	gtxna 1 ApplicationArgs 0
-	method "withdraw()uint64"
-	==
-	&&
+	
 	global GroupSize
 	int 3
 	==
@@ -1216,7 +1210,14 @@ method_user_claim:
 
 
 branch_user_claim_finalize:	
-
+	global CurrentApplicationID
+	gtxn 1 ApplicationID
+	==
+	gtxna 1 ApplicationArgs 0
+	method "withdraw()uint64"
+	==
+	&&
+	assert
 	
 	itxn_begin
 	txn Sender

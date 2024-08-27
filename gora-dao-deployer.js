@@ -4106,6 +4106,73 @@ const GoraDaoDeployer = class {
         //await this.printAppLocalState(this.config['owner'])
     }
 
+    async userClaimProxyStakingContract(userIndex, nftId) {
+        this.logger.info(`Withdraws unstaked amounts from proxy staking contract ${Number(this.goraDaoStakingApplicationId)} which proxies ${Number(this.stakingParams.staking_proxy_app_id)}`);
+        let params = await this.algodClient.getTransactionParams().do();// Get suggested Algorand TXN parameters
+        const goraDaoStakingContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoStakingContractAbi.toString()));
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(this[`goraDaoUserAccount${userIndex}`]);
+        let methodDStakingUserClaim = this.getMethodByName("user_claim", goraDaoStakingContractAbi);
+        let stakingUserPublicKey = this.algosdk.decodeAddress(this[`goraDaoUserAccount${userIndex}`].addr);// Connected end user wallet account PK
+        let v2AppIdArray = this.algosdk.encodeUint64(this.stakingParams['staking_proxy_app_id'])
+        let v2AppIdArrayLength = v2AppIdArray.length
+        let stakeUserPublicKeyLength = stakingUserPublicKey.publicKey.length
+        let boxNameRef = new Uint8Array(v2AppIdArrayLength + stakeUserPublicKeyLength)
+        boxNameRef.set(stakingUserPublicKey.publicKey, 0)
+        boxNameRef.set(v2AppIdArray, stakeUserPublicKeyLength)
+        // Common parameters for GoraDAO Staking contract
+        const commonParamsStakingStake = {
+            appID: Number(this.goraDaoStakingApplicationId),
+            appForeignAssets: [Number(this.stakingAsset)],
+            appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager'], "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ"],
+            appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
+            sender: this[`goraDaoUserAccount${userIndex}`].addr,
+            suggestedParams: params,
+            signer: signer,
+            boxes: [
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Staking admin account
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId)},// NFT_ASA_ID
+            ],
+        }
+
+
+
+
+        const claimStaking = [nftId];// NFT ASA ID for claiming its rewards without unstaking
+        // Atomic transaction composer for GoraDAO proxy withdraw
+        const atcStakingWithdraw = new this.algosdk.AtomicTransactionComposer();
+
+  
+        atcStakingWithdraw.addMethodCall({
+            method: methodDStakingUserClaim,
+            methodArgs: claimStaking,
+            ...commonParamsStakingStake
+        });
+        this.logger.info('------------------------------')
+        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodDStakingUserClaim);
+
+        // Execute the atomic transaction
+        const stakingStakeResults = await atcStakingWithdraw.execute(this.algodClient, 10);
+        for (const idx in stakingStakeResults.methodResults) {
+            let txid = stakingStakeResults.methodResults[idx].txID
+
+            //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
+            let confirmedRound = stakingStakeResults.confirmedRound
+
+
+            let returnedResults = this.algosdk.decodeUint64(stakingStakeResults.methodResults[idx].rawReturnValue, "mixed")
+            this.logger.info("GoraDAO Staking Contract ABI Exec result = %s", returnedResults);
+            await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+
+        }
+        this.config['gora_dao']['staking_is_staked'] = true;
+        await this.saveConfigToFile(this.config)
+        this.logger.info(`GoraDAO Staking status to config file!`);
+        this.logger.info(`Local Stats for V3 App address on V2 contract!`);
+        await this.printAppLocalState(this.config['gora_dao']['asc_staking_address'])
+        //this.logger.info(`Local Stats for owner Test wallet on V2 contract!`);
+        //await this.printAppLocalState(this.config['owner'])
+    }
+
     // Opts in all users to the proxied staking contract
     // async optinProxyStakingContractTransactionAll() {
     //     let acc1 = this.goraDaoUserAccount1;

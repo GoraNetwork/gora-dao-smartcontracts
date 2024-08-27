@@ -707,6 +707,7 @@ async function stakingOperations() {
 
         }
         choices.push('Withdraw stake from staking contract')
+        choices.push('User claim from staking contract')
         // if (config['gora_dao']['staking_is_unstaked'] === true) {
         //     choices.push('Withdraw stake from staking contract')
         // }
@@ -974,7 +975,7 @@ async function stakingOperations() {
         case 'Print Staking User Box':
             try {
                 await goraDaoDeployer.printStakingUserBox();
-     
+
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -1016,7 +1017,7 @@ async function stakingOperations() {
                 await goraDaoDeployer.stakeProxyStakingContract(2, Number(finalAmount), Number(nftId));
                 await goraDaoDeployer.printStakingUserBox();
                 await goraDaoDeployer.printStakingNFTBox(nftId);
-                
+
                 //await goraDaoDeployer.stakeDirectProxyStakingContract(Number(amount));
                 await inquirer.prompt([
                     {
@@ -1082,7 +1083,38 @@ async function stakingOperations() {
                 // await goraDaoDeployer.manualAggregationProxyStakingContract(2);
                 await goraDaoDeployer.withdrawProxyStakingContract(2);
                 await goraDaoDeployer.printStakingUserBox();
-     
+
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'User claim from staking contract':
+            try {
+                let { nftId } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'nftId',
+                        message: 'What is the NFT ID to stake?',
+                    },
+                ]);
+                // await goraDaoDeployer.manualAggregationProxyStakingContract(2);
+                await goraDaoDeployer.userClaimProxyStakingContract(2,Number(nftId));
+                await goraDaoDeployer.printStakingUserBox();
+
                 await inquirer.prompt([
                     {
                         type: 'input',
