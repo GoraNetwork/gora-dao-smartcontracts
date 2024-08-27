@@ -1156,7 +1156,7 @@ method_user_claim:
 	global GroupSize
 	int 3
 	==
-	&&
+	
 	bnz branch_user_claim_finalize
 
 	txn Sender
