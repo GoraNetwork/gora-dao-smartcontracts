@@ -1098,7 +1098,7 @@ method_withdraw_unstaked:
 	concat
 	load 13
 	itob
-	int 0
+	load 14
 	itob
 	concat
 	concat
