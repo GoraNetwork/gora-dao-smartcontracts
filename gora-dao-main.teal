@@ -1461,10 +1461,12 @@ branch_staking_create_final:
     itxn_field GlobalNumByteSlice
     int 30
     itxn_field GlobalNumUint
-    int 5
+    int 0
     itxn_field LocalNumUint
-    int 3
+    int 0
     itxn_field LocalNumByteSlice
+    int 1
+    itxn_field ExtraProgramPages
     txn Sender
     itxn_field Note
     method "create_staking(uint64,uint64,string,string)address"

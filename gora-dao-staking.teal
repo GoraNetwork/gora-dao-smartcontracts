@@ -432,18 +432,18 @@ method_config_staking:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 4 //staking_url
-	store 16
-	byte "url"
-	load 16
-	app_global_put
-	//log
+	// txn ApplicationArgs 4 //staking_url
+	// store 16
+	// byte "url"
+	// load 16
+	// app_global_put
+	// //log
 
-	txn ApplicationArgs 5 //staking_banner
-	store 17
-	byte "banner"
-	load 17
-	app_global_put
+	// txn ApplicationArgs 5 //staking_banner
+	// store 17
+	// byte "banner"
+	// load 17
+	// app_global_put
 	//log
 
 	
@@ -1091,6 +1091,7 @@ method_withdraw_unstaked:
 	assert
 
 	load 21
+
 	load 11
 	itob
 	load 12 
