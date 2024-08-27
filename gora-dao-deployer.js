@@ -3404,7 +3404,7 @@ const GoraDaoDeployer = class {
         const argsStaking = [
             tws1,
             [
-                1000,// min_algo
+                0,// min_algo
                 0, // min_token
                 2592000, // duration
                 2592000,// min_duration
