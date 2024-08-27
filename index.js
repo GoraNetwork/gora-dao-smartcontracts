@@ -1082,7 +1082,7 @@ async function stakingOperations() {
                 // await goraDaoDeployer.manualAggregationProxyStakingContract(2);
                 await goraDaoDeployer.withdrawProxyStakingContract(2);
                 await goraDaoDeployer.printStakingUserBox();
-                await goraDaoDeployer.printStakingNFTBox(nftId);
+     
                 await inquirer.prompt([
                     {
                         type: 'input',
