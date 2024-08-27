@@ -3408,7 +3408,7 @@ const GoraDaoDeployer = class {
             [
                 0,// min_algo
                 0, // min_token
-                60, // duration
+                300, // duration
                 2592000,// min_duration
                 10,// commission
                 0,// commission_algo
