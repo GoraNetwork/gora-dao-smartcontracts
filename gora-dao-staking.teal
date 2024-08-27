@@ -163,12 +163,12 @@ method_create_staking:
 	app_global_put
 
 
-	txna ApplicationArgs 1
-	btoi
-	store 2
-	byte "dao_asset_id"
-	load 2
-	app_global_put
+	// txna ApplicationArgs 1
+	// btoi
+	// store 2
+	// byte "dao_asset_id"
+	// load 2
+	// app_global_put
 
 	txn ApplicationArgs 2
 	btoi
@@ -183,23 +183,23 @@ method_create_staking:
 	load 4
 	app_global_put
 
-	txna Accounts 2
-	store 5
-	byte "dao_manager_address"
-	load 5
-	app_global_put
+	// txna Accounts 2
+	// store 5
+	// byte "dao_manager_address"
+	// load 5
+	// app_global_put
 
-	txn ApplicationArgs 3
-	store 6
-	byte "name"
-	load 6
-	app_global_put
+	// txn ApplicationArgs 3
+	// store 6
+	// byte "name"
+	// load 6
+	// app_global_put
 
-	txn ApplicationArgs 4
-	store 7
-	byte "description"
-	load 7
-	app_global_put
+	// txn ApplicationArgs 4
+	// store 7
+	// byte "description"
+	// load 7
+	// app_global_put
 
 	byte "stakings_count"
 	int 0
