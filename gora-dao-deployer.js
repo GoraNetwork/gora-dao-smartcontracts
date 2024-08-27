@@ -752,7 +752,35 @@ const GoraDaoDeployer = class {
 
         }
     }
+    async printStakingNFTBox(asaId) {
+        if (this.algosdk.isValidAddress(this.goraDaoStakingAdminAccount.addr)) {
+            const urlApp = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/applications/${this.config.gora_dao['asc_staking_id']}/box?name=int:${asaId}`;
 
+            let resApp = await fetch(urlApp, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            let boxData = await resApp.json()
+            if (boxData) {
+                this.logger.info(boxData.name)
+                let valueDecoded = new Uint8Array(Buffer.from(boxData.value, "base64"));
+                let val0 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 0) : 0
+                console.log(val0)
+                let val1 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 8) : 0
+                console.log(val1)
+                let val2 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 16) : 0
+                console.log(val2)
+         
+         
+                this.logger.info(boxData.round)
+
+            }
+
+
+        }
+    }
     async printAppLocalState(account) {
         if (this.config['gora_dao']['asc_staking_address']) {
             const urlApp = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/accounts/${account}/applications/${this.stakingParams['staking_proxy_app_id']}`;

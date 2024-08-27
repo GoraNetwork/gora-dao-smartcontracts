@@ -973,6 +973,7 @@ async function stakingOperations() {
         case 'Print Staking User Box':
             try {
                 await goraDaoDeployer.printStakingUserBox();
+     
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -1013,6 +1014,7 @@ async function stakingOperations() {
                 //await goraDaoDeployer.stakeStakingContract(Number(amount));
                 await goraDaoDeployer.stakeProxyStakingContract(2, Number(finalAmount), Number(nftId));
                 await goraDaoDeployer.printStakingUserBox();
+                await goraDaoDeployer.printStakingNFTBox(nftId);
                 
                 //await goraDaoDeployer.stakeDirectProxyStakingContract(Number(amount));
                 await inquirer.prompt([
@@ -1054,6 +1056,7 @@ async function stakingOperations() {
                 //await goraDaoDeployer.stakeStakingContract(Number(amount));
                 await goraDaoDeployer.unstakeProxyStakingContract(2, Number(finalAmount), Number(nftId));
                 await goraDaoDeployer.printStakingUserBox();
+                await goraDaoDeployer.printStakingNFTBox(nftId);
                 //await goraDaoDeployer.stakeDirectProxyStakingContract(Number(amount));
                 await inquirer.prompt([
                     {
@@ -1078,6 +1081,7 @@ async function stakingOperations() {
                 // await goraDaoDeployer.manualAggregationProxyStakingContract(2);
                 await goraDaoDeployer.withdrawProxyStakingContract(2);
                 await goraDaoDeployer.printStakingUserBox();
+                await goraDaoDeployer.printStakingNFTBox(nftId);
                 await inquirer.prompt([
                     {
                         type: 'input',
