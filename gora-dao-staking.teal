@@ -913,8 +913,6 @@ method_staking_unstake:
 	itob
 	load 12
 	load 6
-	load 24
-	+
 	-
 	itob
 	concat	
@@ -924,8 +922,6 @@ method_staking_unstake:
 	itob
 	load 14
 	load 6
-	load 24
-	+
 	+
 	itob
 	concat 
