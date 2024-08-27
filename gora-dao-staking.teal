@@ -86,7 +86,7 @@ branch_method_router:
 	==
 	bnz method_register_nft
 
-	method "user_claim()uint64"
+	method "user_claim(uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_user_claim
@@ -1126,8 +1126,7 @@ method_user_claim:
 	concat
 	box_put
 
-	txna Assets 1
-	itob
+	txn ApplicationArgs 1
 	box_get
 	assert
 	store 40

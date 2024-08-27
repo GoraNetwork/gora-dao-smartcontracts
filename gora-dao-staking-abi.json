@@ -325,7 +325,13 @@
         }, {
             "name": "user_claim",
             "description": "Claims pending rewards!",
-            "args": [],
+            "args": [
+                {
+                    "type": "uint64",
+                    "name": "NFT_ASA_ID",
+                    "description": "NFT ASA ID"
+                }
+            ],
             "boxes": [
                 {
                     "name": "staking_account",

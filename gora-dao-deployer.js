@@ -4056,7 +4056,7 @@ const GoraDaoDeployer = class {
         // GoraDAO DAO ABI call arguments
         const argsDao = [];
         // GoraDAO Staking ABI call arguments
-        const argsStaking = [];
+        const argsStaking = [717793992];
         // Atomic transaction composer for GoraDAO proxy withdraw
         const atcStakingWithdraw = new this.algosdk.AtomicTransactionComposer();
         // Add GoraDAO DAO ABI call for withdraw
