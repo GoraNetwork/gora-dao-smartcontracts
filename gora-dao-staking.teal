@@ -1168,7 +1168,7 @@ method_user_claim:
 	txn Sender
 	txn ApplicationArgs 1
 	btoi
-	asset_holding_get
+	asset_holding_get AssetBalance
 	int 1
 	==
 	assert
