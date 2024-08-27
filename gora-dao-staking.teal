@@ -89,7 +89,7 @@ branch_method_router:
 	method "user_claim()uint64"
 	txn ApplicationArgs 0
 	==
-	bnz method_register_nft
+	bnz method_user_claim
 
 
 
@@ -326,22 +326,22 @@ method_config_staking:
 	app_global_put
 
 
-	load 0
-	int 32
-	extract_uint64 //staking_commission_percentage
-	store 5
-	byte "commission_token"
-	load 5
-	app_global_put
+	// load 0
+	// int 32
+	// extract_uint64 //staking_commission_percentage
+	// store 5
+	// byte "commission_token"
+	// load 5
+	// app_global_put
 
 
-	load 0
-	int 40
-	extract_uint64 //staking_commission_percentage_algo
-	store 6
-	byte "commission_algo"
-	load 6
-	app_global_put
+	// load 0
+	// int 40
+	// extract_uint64 //staking_commission_percentage_algo
+	// store 6
+	// byte "commission_algo"
+	// load 6
+	// app_global_put
 
 
 	load 0
@@ -398,22 +398,22 @@ method_config_staking:
 	// app_global_put
 
 
-	load 0
-	int 96
-	extract_uint64 //staking_return_percentage
-	store 12
-	byte "return_token"
-	load 12
-	app_global_put
+	// load 0
+	// int 96
+	// extract_uint64 //staking_return_percentage
+	// store 12
+	// byte "return_token"
+	// load 12
+	// app_global_put
 
 
-	load 0
-	int 104
-	extract_uint64 //staking_return_percentage_algo
-	store 13
-	byte "return_algo"
-	load 13
-	app_global_put
+	// load 0
+	// int 104
+	// extract_uint64 //staking_return_percentage_algo
+	// store 13
+	// byte "return_algo"
+	// load 13
+	// app_global_put
 
 
 	// load 0
@@ -425,18 +425,18 @@ method_config_staking:
 	// app_global_put
 
 
-	txn ApplicationArgs 2 //staking_name
-	store 14
-	byte "name"
-	load 14
-	app_global_put
+	// txn ApplicationArgs 2 //staking_name
+	// store 14
+	// byte "name"
+	// load 14
+	// app_global_put
 
 
-	txn ApplicationArgs 3 //staking_description
-	store 15
-	byte "description"
-	load 15
-	app_global_put
+	// txn ApplicationArgs 3 //staking_description
+	// store 15
+	// byte "description"
+	// load 15
+	// app_global_put
 
 
 	// txn ApplicationArgs 4 //staking_url
@@ -954,7 +954,7 @@ method_staking_unstake:
 	byte "duration"
 	app_global_get
 	>=
-	bnz branch_unstake_without_rewards
+	bz branch_unstake_without_rewards
 
 	
 branch_unstake_with_rewards:
@@ -1075,7 +1075,7 @@ branch_withdraw_from_proxy:
 	itxn_submit
 	b branch_withdraw_finalize
 
-sub_user_claim:
+method_user_claim:
 	txn Sender // Staking user account
 	store 1 
 	load 1
@@ -1113,18 +1113,81 @@ sub_user_claim:
 	
 
 	load 21
-	box_del
+	load 11
+	itob
+	load 12
+	itob
+	concat
+	int 0
+	itob
+	int 0
+	itob
+	concat
+	box_put
+
+	txna Assets 1
+	itob
+	box_get
 	assert
-	// itxn_begin
-	// txn Sender
-	// itxn_field AssetReceiver
-	// int axfer
-	// itxn_field TypeEnum
-	// txna Assets 0
-	// itxn_field XferAsset
-	// load 6
-	// itxn_field AssetAmount
-	// itxn_submit
+	store 40
+	load 40
+	int 0
+	extract_uint64
+	store 41
+	load 40
+	int 8
+	extract_uint64
+	store 42
+	load 40
+	int 16
+	extract_uint64
+	store 43
+	load 40
+	int 24
+	extract_uint64
+	store 44
+
+	global LatestTimestamp
+	load 44
+	-
+	byte "duration"
+	app_global_get
+	>=
+	assert
+
+
+
+	txna Assets 1
+	itob
+	load 41
+	itob
+	load 42
+	itob
+	concat
+	load 43
+	itob
+	global LatestTimestamp
+	itob
+	concat
+	concat
+	box_put
+
+
+	
+
+
+	itxn_begin
+	txn Sender
+	itxn_field AssetReceiver
+	int axfer
+	itxn_field TypeEnum
+	txna Assets 0
+	itxn_field XferAsset
+	load 6
+	itxn_field AssetAmount
+	itxn_submit
+	b branch_withdraw_finalize
+	
 
 method_withdraw_unstaked:
 	txna Accounts 0 // DAO main account
