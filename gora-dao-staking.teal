@@ -1016,16 +1016,16 @@ branch_withdraw_from_proxy:
 	itxn_field Fee
 	itxn_submit
 
-	itxn_begin
-	txn Sender
-	itxn_field AssetReceiver
-	int axfer
-	itxn_field TypeEnum
-	txna Assets 0
-	itxn_field XferAsset
-	load 6
-	itxn_field AssetAmount
-	itxn_submit
+	// itxn_begin
+	// txn Sender
+	// itxn_field AssetReceiver
+	// int axfer
+	// itxn_field TypeEnum
+	// txna Assets 0
+	// itxn_field XferAsset
+	// load 6
+	// itxn_field AssetAmount
+	// itxn_submit
 	b branch_withdraw_finalize
 
 
