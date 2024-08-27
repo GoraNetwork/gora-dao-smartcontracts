@@ -654,6 +654,9 @@ method_staking_stake:
 	int 1
 	itob
 	concat
+	txna Applications 1
+	itob
+	concat
 	box_put
 
 	int 0
@@ -836,9 +839,15 @@ method_staking_unstake:
 	int 1
 	==
 	assert
+
+	load 23
+	int 16
+	extract_uint64
 	
 	txn ApplicationArgs 3
 	load 24
+	itob
+	int 0
 	itob
 	int 0
 	itob
@@ -1136,6 +1145,9 @@ method_register_nft:
 	store 0
 
 	txn ApplicationArgs 2
+	int 0
+	itob
+	concat
 	int 0
 	itob
 	concat
