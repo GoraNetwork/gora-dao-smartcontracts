@@ -86,6 +86,8 @@ branch_method_router:
 	==
 	bnz method_register_nft
 
+
+
 	
 	b branch_error
 
@@ -310,13 +312,13 @@ method_config_staking:
 	app_global_put
 	//log
 
-	// load 0
-	// int 24
-	// extract_uint64 //staking_min_duration
-	// store 4
-	// byte "min_duration"
-	// load 4
-	// app_global_put
+	load 0
+	int 24
+	extract_uint64 //staking_min_duration
+	store 4
+	byte "min_duration"
+	load 4
+	app_global_put
 	//log
 
 	load 0
@@ -849,7 +851,7 @@ method_staking_unstake:
 	int 24
 	extract_uint64
 	-
-	byte "duration"
+	byte "min_duration"
 	app_global_get
 	>
 	assert
