@@ -1651,7 +1651,7 @@ const GoraDaoDeployer = class {
             appAddrTo, // to 
             undefined, // closeRemainderTo
             undefined, // note
-            amount, // amount 
+            amount * 1000000000, // amount 
             undefined,// Note
             this.stakingAsset, // assetID
             params,
