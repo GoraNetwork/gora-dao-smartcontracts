@@ -4046,7 +4046,7 @@ const GoraDaoDeployer = class {
             signer: signer,
             boxes: [
                 { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Staking admin account
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: stakingUserPublicKey.publicKey },// Connected end user wallet account
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(717793992)},// NFT_ASA_ID
             ],
         }
 

@@ -1123,6 +1123,7 @@ method_user_claim:
 	int 0
 	itob
 	concat
+	concat
 	box_put
 
 	txna Assets 1
