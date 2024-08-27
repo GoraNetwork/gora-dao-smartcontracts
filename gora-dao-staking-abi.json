@@ -322,6 +322,19 @@
             "returns": {
                 "type": "uint64"
             }
+        }, {
+            "name": "user_claim",
+            "description": "Claims pending rewards!",
+            "args": [],
+            "boxes": [
+                {
+                    "name": "staking_account",
+                    "description": "Dynamic box per staking account (as key) and staking amount (as value)"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
         }
     ]
 }
