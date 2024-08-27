@@ -3988,7 +3988,7 @@ const GoraDaoDeployer = class {
         // Common parameters for GoraDAO main contract
         const commonParamsDao = {
             appID: Number(this.goraDaoMainApplicationId),
-            appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
+            appForeignAssets: [Number(this.stakingAsset)],
             appAccounts: [this.goraDaoStakingAdminAccount.addr, this.stakingApplicationAddress],
             appForeignApps: [Number(this.goraDaoStakingApplicationId)],
             sender: this[`goraDaoUserAccount${userIndex}`].addr,

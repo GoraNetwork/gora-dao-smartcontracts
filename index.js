@@ -1063,6 +1063,7 @@ async function stakingOperations() {
             try {
                 // await goraDaoDeployer.manualAggregationProxyStakingContract(2);
                 await goraDaoDeployer.withdrawProxyStakingContract(2);
+                await goraDaoDeployer.printStakingUserBox();
                 await inquirer.prompt([
                     {
                         type: 'input',

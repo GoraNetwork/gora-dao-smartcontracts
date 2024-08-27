@@ -355,22 +355,22 @@ method_config_staking:
 	app_global_put
 	//log
 
-	load 0
-	int 64
-	extract_uint64 //staking_incentives_percentage
-	store 9
-	byte "incentives_token"
-	load 9
-	app_global_put
+	// load 0
+	// int 64
+	// extract_uint64 //staking_incentives_percentage
+	// store 9
+	// byte "incentives_token"
+	// load 9
+	// app_global_put
 	//log
 
-	load 0
-	int 72
-	extract_uint64 //staking_incentives_percentage_algo
-	store 26
-	byte "incentives_algo"
-	load 26
-	app_global_put
+	// load 0
+	// int 72
+	// extract_uint64 //staking_incentives_percentage_algo
+	// store 26
+	// byte "incentives_algo"
+	// load 26
+	// app_global_put
 	//log
 
 	load 0
@@ -1015,6 +1015,17 @@ branch_withdraw_from_proxy:
 	int 15000
 	itxn_field Fee
 	itxn_submit
+
+	itxn_begin
+	txn Sender
+	itxn_field AssetReceiver
+	int axfer
+	itxn_field TypeEnum
+	txna Assets 0
+	itxn_field XferAsset
+	load 6
+	itxn_field AssetAmount
+	itxn_submit
 	b branch_withdraw_finalize
 
 
@@ -1043,18 +1054,18 @@ method_withdraw_unstaked:
 	box_get
 	assert
 
-	store 10 // Staked amounts algos from account box
+	store 10 // Delegator+V2AppId box 
 	load 10
 	int 0
 	extract_uint64
-	store 11
+	store 11 // Staked Algos
 	load 11
 	itob
 	log
 	load 10
 	int 8
 	extract_uint64
-	store 12
+	store 12 // Staked tokens
 	load 12
 	itob
 	log
@@ -1062,7 +1073,7 @@ method_withdraw_unstaked:
 	load 10
 	int 16
 	extract_uint64
-	store 13
+	store 13 //Unstaked Algos
 	load 13
 	itob
 	log
@@ -1070,7 +1081,7 @@ method_withdraw_unstaked:
 	load 10
 	int 24
 	extract_uint64
-	store 14
+	store 14 // Unstaked tokens
 	load 14
 	itob
 	log
@@ -1087,7 +1098,7 @@ method_withdraw_unstaked:
 	concat
 	load 13
 	itob
-	load 14
+	int 0
 	itob
 	concat
 	concat
