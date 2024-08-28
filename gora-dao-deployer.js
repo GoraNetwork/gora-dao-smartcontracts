@@ -3863,14 +3863,14 @@ const GoraDaoDeployer = class {
                 assetMetadataHash: new Uint8Array(32),
                 assetName: `GoraBots#${index}`,
                 assetURL: 'https://gora.io',
-                clawback: this.goraDaoStakingAdminAccount.addr,
-                freeze: this.goraDaoStakingAdminAccount.addr,
+                clawback: this.goraDaoUserAccount2.addr,
+                freeze: this.goraDaoUserAccount2.addr,
                 decimals: 0,
                 defaultFrozen: false,
-                from: this.goraDaoStakingAdminAccount.addr,
-                manager: this.goraDaoStakingAdminAccount.addr,
+                from: this.goraDaoUserAccount2.addr,
+                manager: this.goraDaoUserAccount2.addr,
                 note: new Uint8Array(Buffer.from(`GoraDAO NFT Staking TEST Asset #${index}`)),
-                reserve: this.goraDaoStakingAdminAccount.addr,
+                reserve: this.goraDaoUserAccount2.addr,
                 suggestedParams: { ...params, fee: 1000, flatFee: true, },
                 total: 1,
                 unitName: `GBOT${index}`,
@@ -3879,7 +3879,7 @@ const GoraDaoDeployer = class {
             })
 
             let txnId = atxn.txID().toString();
-            let signedTxn = await atxn.signTxn(this.goraDaoStakingAdminAccount.sk);
+            let signedTxn = await atxn.signTxn(this.goraDaoUserAccount2.sk);
             await this.algodClient.sendRawTransaction(signedTxn).do();
             await this.algosdk.waitForConfirmation(this.algodClient, txnId, 10)
 
