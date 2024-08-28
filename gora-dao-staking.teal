@@ -536,7 +536,7 @@ branch_stake_in_proxy:
 	bz branch_optin_staking
 
 	load 1 //TXN sender
-	txn applicationArgs 1
+	txn ApplicationArgs 1
 	btoi
 	asset_holding_get AssetBalance
 	int 1
