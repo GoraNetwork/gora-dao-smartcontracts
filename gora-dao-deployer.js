@@ -4125,6 +4125,7 @@ const GoraDaoDeployer = class {
         let params = await this.algodClient.getTransactionParams().do();// Get suggested Algorand TXN parameters
         const goraDaoStakingContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoStakingContractAbi.toString()));
         const signer = this.algosdk.makeBasicAccountTransactionSigner(this[`goraDaoUserAccount${userIndex}`]);
+        const goraDaoMainContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoMainContractAbi.toString()));
         let methodDStakingUserClaim = this.getMethodByName("user_claim", goraDaoStakingContractAbi);
         let stakingUserPublicKey = this.algosdk.decodeAddress(this[`goraDaoUserAccount${userIndex}`].addr);// Connected end user wallet account PK
         let v2AppIdArray = this.algosdk.encodeUint64(this.stakingParams['staking_proxy_app_id'])

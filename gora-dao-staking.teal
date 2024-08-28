@@ -1073,6 +1073,16 @@ branch_withdraw_from_proxy:
 	itxn_submit
 	b branch_withdraw_finalize
 
+branch_user_claim_nft:
+	global CurrentApplicationID
+	gtxn 1 ApplicationID
+	==
+	gtxna 1 ApplicationArgs 0
+	method "withdraw()uint64"
+	==
+	&&
+	assert
+	b branch_user_claim_finalize
 method_user_claim:
 	txn Sender // Staking user account
 	store 1 
@@ -1152,11 +1162,10 @@ method_user_claim:
 	store 45
 
 	
-	global GroupSize
-	int 3
+	txn GroupIndex
+	int 2
 	==
-	
-	bnz branch_user_claim_finalize
+	bnz branch_user_claim_nft
 
 	
 
@@ -1211,16 +1220,8 @@ method_user_claim:
 
 
 branch_user_claim_finalize:	
-	global CurrentApplicationID
-	gtxn 1 ApplicationID
-	==
-	gtxna 1 ApplicationArgs 0
-	method "withdraw()uint64"
-	==
-	&&
-	assert
 	
-	
+
 	itxn_begin
 	txn Sender
 	itxn_field AssetReceiver
