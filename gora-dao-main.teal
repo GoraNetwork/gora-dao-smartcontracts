@@ -1991,6 +1991,14 @@ method_staking_stake:
     ==
     assert
 
+    txn Sender
+	gtxna 1 ApplicationArgs 1
+	btoi
+	asset_holding_get AssetBalance
+	int 1
+	>=
+	assert
+
     // Checking the pay and axfer txns
 	gtxn 0 RekeyTo
     global ZeroAddress
@@ -2049,6 +2057,16 @@ method_staking_unstake:
     global CurrentApplicationID
     ==
     assert
+
+    txn Sender
+	gtxna 1 ApplicationArgs 3
+	btoi
+	asset_holding_get AssetBalance
+	int 1
+	>=
+	assert
+
+
     byte 0x151f7c75
 	global CurrentApplicationID
 	itob

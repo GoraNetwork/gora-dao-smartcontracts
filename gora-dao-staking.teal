@@ -535,13 +535,7 @@ branch_stake_in_proxy:
 	app_opted_in
 	bz branch_optin_staking
 
-	load 1 //TXN sender
-	txn ApplicationArgs 1
-	btoi
-	asset_holding_get AssetBalance
-	int 1
-	>=
-	assert
+
 	
 	// Staking V2 Asset Transfer inner transaction: asset_pay
 	itxn_begin
@@ -1012,12 +1006,12 @@ branch_staking_unstake_finalize:
 
 
 branch_withdraw_from_proxy:
-	txn Sender
-	txna Assets 0
-	asset_holding_get AssetBalance
-	int 1
-	>=
-	assert
+	// txn Sender
+	// txna Assets 0
+	// asset_holding_get AssetBalance
+	// int 1
+	// >=
+	// assert
 
 	itxn_begin
 	txna Applications 1

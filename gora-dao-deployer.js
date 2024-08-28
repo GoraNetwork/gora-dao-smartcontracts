@@ -3631,9 +3631,9 @@ const GoraDaoDeployer = class {
         // Common parameters for GoraDAO main contract
         const commonParamsDao = {
             appID: Number(this.goraDaoMainApplicationId),
-            appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
+            appForeignAssets: [ Number(this.stakingAsset), nftId],
             appAccounts: [this.goraDaoStakingAdminAccount.addr, this.stakingApplicationAddress],
-            appForeignApps: [Number(this.goraDaoStakingApplicationId),Number(this.proxyStakingMainAppId)],
+            appForeignApps: [Number(this.goraDaoStakingApplicationId)],
             sender: this[`goraDaoUserAccount${userIndex}`].addr,
             suggestedParams: params,
             signer: signer,
@@ -3644,7 +3644,7 @@ const GoraDaoDeployer = class {
         // Common parameters for GoraDAO Staking contract
         const commonParamsStakingStake = {
             appID: Number(this.goraDaoStakingApplicationId),
-            appForeignAssets: [Number(this.stakingAsset), nftId],// The second item is the NFT ASA ID used for NFT staking
+            appForeignAssets: [Number(this.stakingAsset)],// The second item is the NFT ASA ID used for NFT staking
             appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager'], "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ"],
             appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
             sender: this[`goraDaoUserAccount${userIndex}`].addr,
@@ -4036,10 +4036,24 @@ const GoraDaoDeployer = class {
         boxNameRef.set(stakingUserPublicKey.publicKey, 0)
         boxNameRef.set(v2AppIdArray, stakeUserPublicKeyLength)
         // Common parameters for GoraDAO Staking contract
-        const commonParamsStakingStake = {
+        const commonParamsStakingWithdraw = {
             appID: Number(this.goraDaoStakingApplicationId),
-            appForeignAssets: [Number(this.stakingAsset)],
+            appForeignAssets: [Number(this.stakingAsset),nftId],
             appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager'], "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ"],
+            appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
+            sender: this[`goraDaoUserAccount${userIndex}`].addr,
+            suggestedParams: params,
+            signer: signer,
+            boxes: [
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Staking admin account
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId)},// NFT_ASA_ID
+            ],
+        }
+
+        const commonParamsStakingClaim = {
+            appID: Number(this.goraDaoStakingApplicationId),
+            appForeignAssets: [Number(this.stakingAsset),nftId],
+            appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager']],
             appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
             sender: this[`goraDaoUserAccount${userIndex}`].addr,
             suggestedParams: params,
@@ -4073,12 +4087,12 @@ const GoraDaoDeployer = class {
         atcStakingWithdraw.addMethodCall({
             method: methodStakingWithdraw,
             methodArgs: argsStaking,
-            ...commonParamsStakingStake
+            ...commonParamsStakingWithdraw
         });
         atcStakingWithdraw.addMethodCall({
             method: methodDStakingUserClaim,
             methodArgs: claimStaking,
-            ...commonParamsStakingStake
+            ...commonParamsStakingClaim
         });
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Contract ABI Exec method = %s", methodStakingWithdraw);
