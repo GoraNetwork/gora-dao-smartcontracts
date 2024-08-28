@@ -1125,7 +1125,8 @@ method_user_claim:
 	concat
 	concat
 	box_put
-
+	
+	// NFT_Box
 	txn ApplicationArgs 1
 	box_get
 	assert
@@ -1157,14 +1158,7 @@ method_user_claim:
 	
 	bnz branch_user_claim_finalize
 
-	global CurrentApplicationID
-	gtxn 1 ApplicationID
-	==
-	gtxna 1 ApplicationArgs 0
-	method "withdraw()uint64"
-	==
-	&&
-	assert
+	
 
 	txn Sender
 	txn ApplicationArgs 1
@@ -1217,6 +1211,14 @@ method_user_claim:
 
 
 branch_user_claim_finalize:	
+	global CurrentApplicationID
+	gtxn 1 ApplicationID
+	==
+	gtxna 1 ApplicationArgs 0
+	method "withdraw()uint64"
+	==
+	&&
+	assert
 	
 	
 	itxn_begin
