@@ -1006,12 +1006,7 @@ branch_staking_unstake_finalize:
 
 
 branch_withdraw_from_proxy:
-	// txn Sender
-	// txna Assets 0
-	// asset_holding_get AssetBalance
-	// int 1
-	// >=
-	// assert
+	
 
 	itxn_begin
 	txna Applications 1

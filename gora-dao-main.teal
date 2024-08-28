@@ -1992,7 +1992,7 @@ method_staking_stake:
     assert
 
     txn Sender
-	gtxna 1 ApplicationArgs 1
+	gtxna 6 ApplicationArgs 1
 	btoi
 	asset_holding_get AssetBalance
 	int 1
