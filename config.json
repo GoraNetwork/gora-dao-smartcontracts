@@ -160,28 +160,28 @@
     },
     "nft_staking_test_assets": [
       {
-        "asset": 717793978,
+        "asset": 718207645,
         "value": 9,
         "isLocked": false
       },
       {
-        "asset": 717793980,
+        "asset": 718207646,
+        "value": 8,
+        "isLocked": false
+      },
+      {
+        "asset": 718207677,
         "value": 6,
         "isLocked": false
       },
       {
-        "asset": 717793981,
-        "value": 8,
+        "asset": 718207678,
+        "value": 6,
         "isLocked": false
       },
       {
-        "asset": 717793982,
-        "value": 8,
-        "isLocked": false
-      },
-      {
-        "asset": 717793992,
-        "value": 7,
+        "asset": 718207688,
+        "value": 6,
         "isLocked": false
       }
     ]
