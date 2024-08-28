@@ -588,7 +588,9 @@ branch_stake_in_proxy:
 	itxn_field Assets
 	// txna Applications 1
 	// itxn_field Applications//staking_proxy_app_id
-	txna Applications 2
+	// txna Applications 2
+	byte "v2_main_app_id"
+	app_global_get
 	itxn_field Applications //proxy_staking_main_app_id
 	int 15000
 	itxn_field Fee
@@ -805,7 +807,9 @@ branch_unstake_from_proxy:
 	txna Applications 1
 	itxn_field Applications//v2_app_id
 
-	txna Applications 2
+	// txna Applications 2
+	byte "v2_main_app_id"
+	app_global_get
 	itxn_field Applications //v2_main_app_id
 	int 2000
 	itxn_field Fee
@@ -1036,7 +1040,9 @@ branch_withdraw_from_proxy:
 	itxn_field Accounts
 	txna Assets 0 // staking_asset_id
 	itxn_field Assets
-	txna Applications 2
+	// txna Applications 2
+	byte "v2_main_app_id"
+	app_global_get
 	itxn_field Applications //proxy_staking_main_app_id
 	int 2000
 	itxn_field Fee
@@ -1069,7 +1075,9 @@ branch_withdraw_from_proxy:
 	txna Assets 0 // staking_asset_id
 	itxn_field Assets
 
-	txna Applications 2
+	// txna Applications 2
+	byte "v2_main_app_id"
+	app_global_get
 	itxn_field Applications //proxy_staking_main_app_id
 	int 15000
 	itxn_field Fee
