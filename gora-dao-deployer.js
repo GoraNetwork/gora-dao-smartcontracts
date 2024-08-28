@@ -3764,7 +3764,7 @@ const GoraDaoDeployer = class {
         // Common parameters for GoraDAO main contract
         const commonParamsDao = {
             appID: Number(this.goraDaoMainApplicationId),
-            appForeignAssets: [Number(this.goraDaoAsset), Number(this.stakingAsset)],
+            appForeignAssets: [Number(this.stakingAsset), nftId],
             appAccounts: [this.goraDaoStakingAdminAccount.addr, this.stakingApplicationAddress],
             appForeignApps: [Number(this.goraDaoStakingApplicationId)],
             sender: this[`goraDaoUserAccount${userIndex}`].addr,
@@ -4019,7 +4019,7 @@ const GoraDaoDeployer = class {
         // Common parameters for GoraDAO main contract
         const commonParamsDao = {
             appID: Number(this.goraDaoMainApplicationId),
-            appForeignAssets: [Number(this.stakingAsset)],
+            appForeignAssets: [Number(this.stakingAsset),nftId],
             appAccounts: [this.goraDaoStakingAdminAccount.addr, this.stakingApplicationAddress],
             appForeignApps: [Number(this.goraDaoStakingApplicationId)],
             sender: this[`goraDaoUserAccount${userIndex}`].addr,
@@ -4038,7 +4038,7 @@ const GoraDaoDeployer = class {
         // Common parameters for GoraDAO Staking contract
         const commonParamsStakingWithdraw = {
             appID: Number(this.goraDaoStakingApplicationId),
-            appForeignAssets: [Number(this.stakingAsset),nftId],
+            appForeignAssets: [Number(this.stakingAsset)],
             appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager'], "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ"],
             appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
             sender: this[`goraDaoUserAccount${userIndex}`].addr,
