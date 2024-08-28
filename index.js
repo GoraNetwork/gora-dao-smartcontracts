@@ -1081,7 +1081,14 @@ async function stakingOperations() {
         case 'Withdraw stake from staking contract':
             try {
                 // await goraDaoDeployer.manualAggregationProxyStakingContract(2);
-                await goraDaoDeployer.withdrawProxyStakingContract(2);
+                let { nftId } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'nftId',
+                        message: 'What is the NFT ID to withdraw rewards for?',
+                    },
+                ]);
+                await goraDaoDeployer.withdrawProxyStakingContract(2,Number(nftId));
                 await goraDaoDeployer.printStakingUserBox();
 
                 await inquirer.prompt([

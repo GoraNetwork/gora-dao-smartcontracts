@@ -3999,7 +3999,7 @@ const GoraDaoDeployer = class {
     //     await this.printAppLocalState(this.config['owner'])
     // }
 
-    async withdrawProxyStakingContract(userIndex) {
+    async withdrawProxyStakingContract(userIndex, nftId) {
         this.logger.info(`Withdraws unstaked amounts from proxy staking contract ${Number(this.goraDaoStakingApplicationId)} which proxies ${Number(this.stakingParams.staking_proxy_app_id)}`);
         let params = await this.algodClient.getTransactionParams().do();// Get suggested Algorand TXN parameters
 
@@ -4046,7 +4046,7 @@ const GoraDaoDeployer = class {
             signer: signer,
             boxes: [
                 { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Staking admin account
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(717793992)},// NFT_ASA_ID
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId)},// NFT_ASA_ID
             ],
         }
 
@@ -4057,7 +4057,7 @@ const GoraDaoDeployer = class {
         const argsDao = [];
         // GoraDAO Staking ABI call arguments
         const argsStaking = [];// NFT ASA ID for claiming its rewards without unstaking
-        const claimStaking = [717793992];// NFT ASA ID for claiming its rewards without unstaking
+        const claimStaking = [nftId];// NFT ASA ID for claiming its rewards without unstaking
         // Atomic transaction composer for GoraDAO proxy withdraw
         const atcStakingWithdraw = new this.algosdk.AtomicTransactionComposer();
         // Add GoraDAO DAO ABI call for withdraw
