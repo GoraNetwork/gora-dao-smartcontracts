@@ -820,7 +820,7 @@ branch_unstake_without_rewards:
 	-
 	itob
 	concat	
-	int 0
+	load 13
 	itob
 	load 14
 	itob
