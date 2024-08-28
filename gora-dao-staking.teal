@@ -1157,6 +1157,7 @@ method_user_claim:
 	int 24
 	extract_uint64
 	store 44
+	
 
 	load 14
 	store 45
@@ -1185,6 +1186,15 @@ method_user_claim:
 	byte "duration"
 	app_global_get
 	>=
+	load 44
+	int 1000
+	>
+	&&
+	assert
+
+	load 42
+	int 1
+	==
 	assert
 
 	int 17
