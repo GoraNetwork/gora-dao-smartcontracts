@@ -989,7 +989,7 @@ method_user_claim:
 
 	byte "return_token"
 	app_global_get
-	load 6
+	load 41
 	*
 	int 100
 	/
