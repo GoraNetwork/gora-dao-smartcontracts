@@ -398,13 +398,13 @@ method_config_staking:
 	// app_global_put
 
 
-	// load 0
-	// int 96
-	// extract_uint64 //staking_return_percentage
-	// store 12
-	// byte "return_token"
-	// load 12
-	// app_global_put
+	load 0
+	int 96
+	extract_uint64 //staking_return_percentage
+	store 12
+	byte "return_token"
+	load 12
+	app_global_put
 
 
 	// load 0
@@ -958,7 +958,8 @@ method_staking_unstake:
 	
 branch_unstake_with_rewards:
 	//Calc rewards
-	int 17
+	byte "return_token"
+	app_global_get
 	load 6
 	*
 	int 100
@@ -1197,7 +1198,8 @@ method_user_claim:
 	==
 	assert
 
-	int 17
+	byte "return_token"
+	app_global_get
 	load 6
 	*
 	int 100
