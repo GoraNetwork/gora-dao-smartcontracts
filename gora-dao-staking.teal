@@ -730,14 +730,14 @@ method_staking_unstake:
 	
 	
 	txn ApplicationArgs 3
-	load 24
+	load 24 // NFT_Value
 	itob
-	int 0
+	int 0 // NFT_IsLocked
 	itob
 	concat
-	int 0
+	int 0 // Validator_AppID
 	itob
-	int 0
+	int 0 // Timestamp
 	itob
 	concat
 	concat
@@ -874,6 +874,7 @@ method_user_claim:
 	box_get
 	assert
 
+	//The Delegator+V2AppID
 	store 10 // The Delegator+V2AppID box content
 	load 10
 	int 0
@@ -896,21 +897,9 @@ method_user_claim:
 	extract_uint64
 	store 14
 	
-	 // The Delegator+V2AppID box 
-	load 21
-	load 11
-	itob
-	load 12
-	itob
-	concat
-	int 0
-	itob
-	int 0
-	itob
-	concat
-	concat
-	box_put
 	
+
+
 	// NFT_Box read
 	txn ApplicationArgs 1
 	box_get
@@ -919,19 +908,41 @@ method_user_claim:
 	load 40 // NFT_Box content
 	int 0
 	extract_uint64
-	store 41
+	store 41 // NFT Staking value
 	load 40
 	int 8
 	extract_uint64
-	store 42
+	store 42 // NFT Staking isLocked
 	load 40
 	int 16
 	extract_uint64
-	store 43
+	store 43 // NFT Validator AppID
 	load 40
 	int 24
 	extract_uint64
-	store 44
+	store 44 // NFT Timestamp
+
+	
+
+
+	 // The Delegator+V2AppID box 
+	load 21
+	load 11
+	itob
+	load 12
+	itob
+	concat
+	load 13
+	itob
+	load 14
+	load 41
+	-
+	itob
+	concat
+	concat
+	box_put
+	
+	
 	
 
 	load 14
@@ -1025,71 +1036,6 @@ method_withdraw_unstaked:
 	byte "is_activated"
 	app_global_get
 	bz branch_error_activation
-
-	// txna Accounts 0 // DAO main account
-	// store 0 
-
-	// txn Sender // Staking user account
-	// store 1 
-	// load 1
-	// txna Applications 1
-	// itob
-	// concat
-	// store 21 // Delegator+V2AppId
-
-	// int 0
-	// dup
-	// store 11
-	// store 12
-
-	
-
-	// load 21
-	// box_get
-	// assert
-	// // Delegator+V2AppId box 
-	// store 10 
-	// load 10
-	// int 0
-	// extract_uint64
-	// store 11 // Staked Algos
-	
-	// load 10
-	// int 8
-	// extract_uint64
-	// store 12 // Staked tokens
-
-
-	// load 10
-	// int 16
-	// extract_uint64
-	// store 13 //Unstaked Algos
-	
-	// load 10
-	// int 24
-	// extract_uint64
-	// store 14 // Unstaked tokens
-
-	// // Delegator+V2AppId box 
-	// load 21
-	// box_del
-	// assert
-
-	// // Delegator+V2AppId box 
-	// load 21
-
-	// load 11
-	// itob
-	// load 12 
-	// itob
-	// concat
-	// load 13
-	// itob
-	// load 14
-	// itob
-	// concat
-	// concat
-	// box_put
 
 
 branch_withdraw_finalize:
