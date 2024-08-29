@@ -1128,9 +1128,6 @@ method_user_claim:
 	extract_uint64
 	store 14
 	
-
-	
-
 	load 21
 	load 11
 	itob
