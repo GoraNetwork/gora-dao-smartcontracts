@@ -489,7 +489,7 @@ method_config_staking:
 	// app_opted_in
 	// bz branch_optin_config
 
-		byte 0x151f7c75
+	byte 0x151f7c75
 	global CurrentApplicationID
 	itob
 	concat
@@ -775,7 +775,7 @@ branch_staking_stake_finalize:
 	concat
 	b branch_log_return
 
-branch_unstake_from_proxy:
+//branch_unstake_from_proxy:
 	// // Proxied staking V2 Application ABI call for unstake
 	// itxn_begin
 	// txna Applications 1
@@ -814,7 +814,7 @@ branch_unstake_from_proxy:
 	// int 2000
 	// itxn_field Fee
 	// itxn_submit
-	b branch_staking_unstake_finalize
+	//b branch_staking_unstake_finalize
 branch_unstake_without_rewards:
 	load 21	
 	load 11
@@ -991,6 +991,10 @@ branch_unstake_with_rewards:
 	+
 	itob
 	load 39
+	load 24
+	int 1000000000
+	*
+	+
 	itob
 	concat 
 	concat
