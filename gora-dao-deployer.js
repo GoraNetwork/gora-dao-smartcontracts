@@ -4027,7 +4027,7 @@ const GoraDaoDeployer = class {
         await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Staking status to config file!`);
         this.logger.info(`Local Stats for V3 App address on V2 contract!`);
-        await this.printAppLocalState(this.config['gora_dao']['asc_staking_address'])
+       // await this.printAppLocalState(this.config['gora_dao']['asc_staking_address'])
         //this.logger.info(`Local Stats for owner Test wallet on V2 contract!`);
         //await this.printAppLocalState(this.config['owner'])
     }
@@ -4095,7 +4095,7 @@ const GoraDaoDeployer = class {
         await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Staking status to config file!`);
         this.logger.info(`Local Stats for V3 App address on V2 contract!`);
-        await this.printAppLocalState(this.config['gora_dao']['asc_staking_address'])
+        //await this.printAppLocalState(this.config['gora_dao']['asc_staking_address'])
         //this.logger.info(`Local Stats for owner Test wallet on V2 contract!`);
         //await this.printAppLocalState(this.config['owner'])
     }
