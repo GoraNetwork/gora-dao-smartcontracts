@@ -20,8 +20,8 @@
     "subscribed_to_dao": false,
     "dao_staking_deployed": true,
     "staking_is_activated": true,
-    "staking_is_staked": false,
-    "staking_is_unstaked": false,
+    "staking_is_staked": true,
+    "staking_is_unstaked": true,
     "staking_asa_distributed": true,
     "dao_proposal_deployed": false,
     "proposal_is_activated": false,
@@ -160,253 +160,18 @@
     },
     "nft_staking_test_assets": [
       {
-        "asset": 718248693,
-        "value": 9,
+        "asset": 718450819,
+        "value": 6,
         "isLocked": false
       },
       {
-        "asset": 718248694,
+        "asset": 718450820,
         "value": 10,
         "isLocked": false
       },
       {
-        "asset": 718248695,
-        "value": 8,
-        "isLocked": false
-      },
-      {
-        "asset": 718248735,
-        "value": 10,
-        "isLocked": false
-      },
-      {
-        "asset": 718248736,
+        "asset": 718450821,
         "value": 7,
-        "isLocked": false
-      },
-      {
-        "asset": 718248737,
-        "value": 5,
-        "isLocked": false
-      },
-      {
-        "asset": 718248769,
-        "value": 9,
-        "isLocked": false
-      },
-      {
-        "asset": 718248779,
-        "value": 5,
-        "isLocked": false
-      },
-      {
-        "asset": 718248780,
-        "value": 7,
-        "isLocked": false
-      },
-      {
-        "asset": 718248811,
-        "value": 5,
-        "isLocked": false
-      },
-      {
-        "asset": 718248813,
-        "value": 6,
-        "isLocked": false
-      },
-      {
-        "asset": 718248823,
-        "value": 5,
-        "isLocked": false
-      },
-      {
-        "asset": 718248824,
-        "value": 5,
-        "isLocked": false
-      },
-      {
-        "asset": 718248825,
-        "value": 9,
-        "isLocked": false
-      },
-      {
-        "asset": 718248856,
-        "value": 8,
-        "isLocked": false
-      },
-      {
-        "asset": 718248866,
-        "value": 6,
-        "isLocked": false
-      },
-      {
-        "asset": 718248867,
-        "value": 8,
-        "isLocked": false
-      },
-      {
-        "asset": 718248868,
-        "value": 6,
-        "isLocked": false
-      },
-      {
-        "asset": 718248900,
-        "value": 8,
-        "isLocked": false
-      },
-      {
-        "asset": 718248910,
-        "value": 6,
-        "isLocked": false
-      },
-      {
-        "asset": 718248942,
-        "value": 7,
-        "isLocked": false
-      },
-      {
-        "asset": 718248943,
-        "value": 10,
-        "isLocked": false
-      },
-      {
-        "asset": 718248944,
-        "value": 10,
-        "isLocked": false
-      },
-      {
-        "asset": 718248954,
-        "value": 7,
-        "isLocked": false
-      },
-      {
-        "asset": 718248955,
-        "value": 9,
-        "isLocked": false
-      },
-      {
-        "asset": 718248986,
-        "value": 5,
-        "isLocked": false
-      },
-      {
-        "asset": 718248987,
-        "value": 10,
-        "isLocked": false
-      },
-      {
-        "asset": 718248997,
-        "value": 8,
-        "isLocked": false
-      },
-      {
-        "asset": 718248998,
-        "value": 6,
-        "isLocked": false
-      },
-      {
-        "asset": 718249030,
-        "value": 5,
-        "isLocked": false
-      },
-      {
-        "asset": 718249031,
-        "value": 8,
-        "isLocked": false
-      },
-      {
-        "asset": 718249072,
-        "value": 8,
-        "isLocked": false
-      },
-      {
-        "asset": 718249073,
-        "value": 8,
-        "isLocked": false
-      },
-      {
-        "asset": 718249074,
-        "value": 9,
-        "isLocked": false
-      },
-      {
-        "asset": 718249081,
-        "value": 8,
-        "isLocked": false
-      },
-      {
-        "asset": 718249092,
-        "value": 10,
-        "isLocked": false
-      },
-      {
-        "asset": 718249124,
-        "value": 5,
-        "isLocked": false
-      },
-      {
-        "asset": 718249126,
-        "value": 10,
-        "isLocked": false
-      },
-      {
-        "asset": 718249128,
-        "value": 6,
-        "isLocked": false
-      },
-      {
-        "asset": 718249139,
-        "value": 6,
-        "isLocked": false
-      },
-      {
-        "asset": 718249172,
-        "value": 10,
-        "isLocked": false
-      },
-      {
-        "asset": 718249174,
-        "value": 10,
-        "isLocked": false
-      },
-      {
-        "asset": 718249216,
-        "value": 10,
-        "isLocked": false
-      },
-      {
-        "asset": 718249219,
-        "value": 7,
-        "isLocked": false
-      },
-      {
-        "asset": 718249220,
-        "value": 5,
-        "isLocked": false
-      },
-      {
-        "asset": 718249221,
-        "value": 6,
-        "isLocked": false
-      },
-      {
-        "asset": 718249231,
-        "value": 10,
-        "isLocked": false
-      },
-      {
-        "asset": 718249262,
-        "value": 7,
-        "isLocked": false
-      },
-      {
-        "asset": 718249263,
-        "value": 7,
-        "isLocked": false
-      },
-      {
-        "asset": 718249264,
-        "value": 5,
         "isLocked": false
       }
     ]

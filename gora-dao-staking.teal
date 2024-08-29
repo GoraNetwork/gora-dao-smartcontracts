@@ -869,12 +869,12 @@ method_user_claim:
 	concat
 	store 21 // The Delegator+V2AppID box key
 
-	 // Checking staked algo amount box 
+	 // The Delegator+V2AppID box read 
 	load 21
 	box_get
 	assert
 
-	store 10 // Staked amounts algos from account box
+	store 10 // The Delegator+V2AppID box content
 	load 10
 	int 0
 	extract_uint64
@@ -896,6 +896,7 @@ method_user_claim:
 	extract_uint64
 	store 14
 	
+	 // The Delegator+V2AppID box 
 	load 21
 	load 11
 	itob
@@ -910,12 +911,12 @@ method_user_claim:
 	concat
 	box_put
 	
-	// NFT_Box
+	// NFT_Box read
 	txn ApplicationArgs 1
 	box_get
 	assert
 	store 40
-	load 40
+	load 40 // NFT_Box content
 	int 0
 	extract_uint64
 	store 41
@@ -942,8 +943,6 @@ method_user_claim:
 	==
 	bnz branch_user_claim_nft
 
-	
-
 	txn Sender
 	txn ApplicationArgs 1
 	btoi
@@ -956,6 +955,7 @@ method_user_claim:
 	load 44
 	-
 	store 33
+	
 	load 33
 	byte "duration"
 	app_global_get
@@ -983,7 +983,7 @@ method_user_claim:
 	*
 	store 39
 
-
+	// NFT_Box
 	txn ApplicationArgs 1
 	load 41
 	itob
@@ -1021,71 +1021,75 @@ branch_user_claim_finalize:
 	
 
 method_withdraw_unstaked:
-	txna Accounts 0 // DAO main account
-	store 0 
-	txn Sender // Staking user account
-	store 1 
-	load 1
-	txna Applications 1
-	itob
-	concat
-	store 21
-
-	int 0
-	dup
-	store 11
-	store 12
-
 	// Checking the staking activation
 	byte "is_activated"
 	app_global_get
 	bz branch_error_activation
 
-	load 21
-	box_get
-	assert
+	// txna Accounts 0 // DAO main account
+	// store 0 
 
-	store 10 // Delegator+V2AppId box 
-	load 10
-	int 0
-	extract_uint64
-	store 11 // Staked Algos
+	// txn Sender // Staking user account
+	// store 1 
+	// load 1
+	// txna Applications 1
+	// itob
+	// concat
+	// store 21 // Delegator+V2AppId
+
+	// int 0
+	// dup
+	// store 11
+	// store 12
+
 	
-	load 10
-	int 8
-	extract_uint64
-	store 12 // Staked tokens
 
-
-	load 10
-	int 16
-	extract_uint64
-	store 13 //Unstaked Algos
+	// load 21
+	// box_get
+	// assert
+	// // Delegator+V2AppId box 
+	// store 10 
+	// load 10
+	// int 0
+	// extract_uint64
+	// store 11 // Staked Algos
 	
-	load 10
-	int 24
-	extract_uint64
-	store 14 // Unstaked tokens
+	// load 10
+	// int 8
+	// extract_uint64
+	// store 12 // Staked tokens
 
 
-	load 21
-	box_del
-	assert
+	// load 10
+	// int 16
+	// extract_uint64
+	// store 13 //Unstaked Algos
+	
+	// load 10
+	// int 24
+	// extract_uint64
+	// store 14 // Unstaked tokens
 
-	load 21
+	// // Delegator+V2AppId box 
+	// load 21
+	// box_del
+	// assert
 
-	load 11
-	itob
-	load 12 
-	itob
-	concat
-	load 13
-	itob
-	load 14
-	itob
-	concat
-	concat
-	box_put
+	// // Delegator+V2AppId box 
+	// load 21
+
+	// load 11
+	// itob
+	// load 12 
+	// itob
+	// concat
+	// load 13
+	// itob
+	// load 14
+	// itob
+	// concat
+	// concat
+	// box_put
 
 
 branch_withdraw_finalize:
