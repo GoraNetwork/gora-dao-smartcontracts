@@ -3408,8 +3408,8 @@ const GoraDaoDeployer = class {
             [
                 0,// min_algo
                 0, // min_token
-                600, // duration
-                300,// min_duration
+                60, // duration
+                2,// min_duration
                 0,// commission
                 0,// commission_algo
                 0,// fee_token
@@ -3677,7 +3677,7 @@ const GoraDaoDeployer = class {
         const axferStaking = new this.algosdk.Transaction({
             from: this[`goraDaoUserAccount${userIndex}`].addr,
             to: `${this.stakingApplicationAddress}`,
-            amount: amount,
+            amount: 0,
             assetIndex: Number(this.stakingAsset),
             type: 'axfer',
             ...params

@@ -10,18 +10,18 @@
     "asc_testnet_main_address": "5UTBL5ELUVHMLHSLC64VS6DAZT2OWTVMFT6E6CTFVCKXS2ZGU3C7YWACHM",
     "asc_proposal_id": 0,
     "asc_proposal_address": "",
-    "asc_staking_id": 0,
-    "asc_staking_address": "",
+    "asc_staking_id": 718407745,
+    "asc_staking_address": "A7SPOSZDS3WBAKIJOLBSQTN7UNHCMKDD25Q2FWMBAQ3VNGRTTHP3RBZN44",
     "dao_asa_id": 227418519,
     "proposal_asa_id": 0,
     "staking_asa_id": 227418519,
     "dao_dao_deployed": true,
     "dao_asa_distributed": true,
     "subscribed_to_dao": false,
-    "dao_staking_deployed": false,
-    "staking_is_activated": false,
-    "staking_is_staked": false,
-    "staking_is_unstaked": false,
+    "dao_staking_deployed": true,
+    "staking_is_activated": true,
+    "staking_is_staked": true,
+    "staking_is_unstaked": true,
     "staking_asa_distributed": true,
     "dao_proposal_deployed": false,
     "proposal_asa_distributed": false,
@@ -160,18 +160,28 @@
     },
     "nft_staking_test_assets": [
       {
-        "asset": 718237342,
-        "value": 6,
+        "asset": 718421948,
+        "value": 5,
         "isLocked": false
       },
       {
-        "asset": 718237373,
-        "value": 6,
+        "asset": 718421959,
+        "value": 5,
         "isLocked": false
       },
       {
-        "asset": 718237389,
-        "value": 10,
+        "asset": 718421964,
+        "value": 5,
+        "isLocked": false
+      },
+      {
+        "asset": 718421968,
+        "value": 5,
+        "isLocked": false
+      },
+      {
+        "asset": 718422016,
+        "value": 6,
         "isLocked": false
       }
     ]
