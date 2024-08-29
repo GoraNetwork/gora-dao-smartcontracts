@@ -527,7 +527,7 @@ method_config_staking:
 // 	b branch_stake_in_proxy
 	
 		
-branch_stake_in_proxy:
+//branch_stake_in_proxy:
 	// global CurrentApplicationAddress
 	// txna Applications 1
 	// store 22
@@ -589,7 +589,7 @@ branch_stake_in_proxy:
 	// int 15000
 	// itxn_field Fee
 	// itxn_submit
-	b branch_staking_stake_finalize
+	//b branch_staking_stake_finalize
 
 method_staking_stake:
 	txna Accounts 0 // DAO main account
