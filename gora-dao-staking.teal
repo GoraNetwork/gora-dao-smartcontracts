@@ -991,9 +991,7 @@ branch_unstake_with_rewards:
 	+
 	itob
 	load 39
-	load 24
-	int 1000000000
-	*
+	load 14
 	+
 	itob
 	concat 
