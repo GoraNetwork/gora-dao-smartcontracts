@@ -840,6 +840,11 @@ branch_unstake_with_rewards:
 	concat
 	box_put
 
+	// load 39
+	// store 45
+
+	// b branch_user_claim_finalize
+
 
 branch_staking_unstake_finalize:
 	// Log and return
