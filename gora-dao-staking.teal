@@ -152,7 +152,7 @@ sub_check_manager_auth:
 
 // Handles creation of Staking contract
 method_create_staking:
-
+	callsub sub_check_owner_auth
 	global CurrentApplicationID
 	store 0
 
@@ -864,14 +864,7 @@ branch_user_claim_nft:
 	==
 	&&
 	assert
-	// load 41
-	// int 0
-	// ==
-	// assert
-	// load 42
-	// int 0
-	// ==
-	// assert
+
 	load 42
 	int 0
 	==
