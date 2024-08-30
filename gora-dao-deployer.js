@@ -744,7 +744,7 @@ const GoraDaoDeployer = class {
                 console.log(val2)
                 let val3 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 24) : 0
                 console.log(val3)
-         
+
                 this.logger.info(boxData.round)
 
             }
@@ -774,8 +774,8 @@ const GoraDaoDeployer = class {
                 console.log(val2)
                 let val3 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 24) : 0
                 console.log(val3)
-         
-         
+
+
                 this.logger.info(boxData.round)
 
             }
@@ -3607,9 +3607,24 @@ const GoraDaoDeployer = class {
         this.config['gora_dao']['staking_is_activated'] = true;
         await this.saveConfigToFile(this.config)
     }
+    getFirst4BytesOfSHA512_256(input) {
+        // Create a SHA-512/256 hash object
+        const hash = crypto.createHash('sha512-256');
 
+        // Update the hash with the input string
+        hash.update(input);
+
+        // Calculate the hash in hexadecimal format
+        const fullHashHex = hash.digest('hex');
+
+        // Convert the first 4 bytes (8 hex characters) to a Uint8Array
+        const first4BytesHex = fullHashHex.slice(0, 8);
+        const first4Bytes = Uint8Array.from(Buffer.from(first4BytesHex, 'hex'));
+
+        return first4Bytes;
+    }
     // This function is used to stake in a proxy staking contract
-    async stakeProxyStakingContract(userIndex, amount, nftId) {
+    async stakeProxyStakingContract(userIndex, amount, nftIds) {
         this.logger.info(`Staking into proxy staking contract ${Number(this.goraDaoStakingApplicationId)} which proxies ${Number(this.stakingParams.staking_proxy_app_id)}`);
         let params = await this.algodClient.getTransactionParams().do();// Get suggested Algorand TXN parameters
 
@@ -3628,124 +3643,133 @@ const GoraDaoDeployer = class {
         let boxNameRef = new Uint8Array(v2AppIdArrayLength + stakeUserPublicKeyLength)
         boxNameRef.set(stakingUserPublicKey.publicKey, 0)
         boxNameRef.set(v2AppIdArray, stakeUserPublicKeyLength)
-        // Common parameters for GoraDAO main contract
-        const commonParamsDao = {
-            appID: Number(this.goraDaoMainApplicationId),
-            appForeignAssets: [ Number(this.stakingAsset), nftId],
-            appAccounts: [this.goraDaoStakingAdminAccount.addr, this.stakingApplicationAddress],
-            appForeignApps: [Number(this.goraDaoStakingApplicationId)],
-            sender: this[`goraDaoUserAccount${userIndex}`].addr,
-            suggestedParams: params,
-            signer: signer,
-            boxes: [
-                { appIndex: Number(this.goraDaoMainApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
-            ],
-        }
-        // Common parameters for GoraDAO Staking contract
-        const commonParamsStakingStake = {
-            appID: Number(this.goraDaoStakingApplicationId),
-            appForeignAssets: [Number(this.stakingAsset)],
-            appAccounts: [ ],
-            appForeignApps: [Number(this.stakingParams['staking_proxy_app_id'])],
-            sender: this[`goraDaoUserAccount${userIndex}`].addr,
-            suggestedParams: params,
-            signer: signer,
-            boxes: [
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Delegator+V2 App ID Ref
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId) },// Staked NFT ref
-            ],
-        }
-        // Asset transfer transaction to DAO (For future usage with staking Fees! Now it is 0 amount)
-        const axferDao = new this.algosdk.Transaction({
-            from: this[`goraDaoUserAccount${userIndex}`].addr,
-            to: `${this.goraDaoMainApplicationAddress}`,
-            amount: 0,
-            assetIndex: Number(this.stakingAsset),
-            type: 'axfer',
-            ...params
-        })
-        // Pay transaction to DAO (For future usage with staking Fees! Now it is 0 amount)
-        const ptxnDao = new this.algosdk.Transaction({
-            from: this[`goraDaoUserAccount${userIndex}`].addr,
-            to: this.goraDaoMainApplicationAddress,
-            amount: 0,
-            type: 'pay',
-            ...params
-        })
-        // Asset transfer transaction to Staking contract
-        const axferStaking = new this.algosdk.Transaction({
-            from: this[`goraDaoUserAccount${userIndex}`].addr,
-            to: `${this.stakingApplicationAddress}`,
-            amount: 0,
-            assetIndex: Number(this.stakingAsset),
-            type: 'axfer',
-            ...params
-        });
-        // Pay transaction to Staking contract
-        const ptxnStaking = new this.algosdk.Transaction({
-            from: this[`goraDaoUserAccount${userIndex}`].addr,
-            to: this.stakingApplicationAddress,
-            amount: 0,
-            type: 'pay',
-            ...params
-        });
-        const tws0 = { txn: ptxnDao, signer: signer }
-        const tws1 = { txn: axferDao, signer: signer }
-        const tws2 = { txn: ptxnStaking, signer: signer }
-        const tws3 = { txn: axferStaking, signer: signer }
-        // GoraDAO staking ABI call arguments
-        const argsDao = [
-            tws0,
-            tws1,
-        ];
-        // GoraDAO Staking ABI call arguments
-        const argsStaking = [
-            tws2,
-            tws3,
-            nftId,// NFT ASA ID
-        ];
-        // Atomic transaction composer for GoraDAO proxy Staking
-        const atcStakingStake = new this.algosdk.AtomicTransactionComposer();
-        // Add GoraDAO DAO ABI call for staking
-        atcStakingStake.addMethodCall({
-            method: methodDaoStakingStake,
-            methodArgs: argsDao,
-            ...commonParamsDao
-        })
-        this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodDaoStakingStake);
-
-        // Add GoraDAO Staking ABI call for staking
-        atcStakingStake.addMethodCall({
-            method: methodStakingStake,
-            methodArgs: argsStaking,
-            ...commonParamsStakingStake
-        });
-        this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodStakingStake);
-
-        // Execute the atomic transaction
-        const stakingStakeResults = await atcStakingStake.execute(this.algodClient, 10);
-        for (const idx in stakingStakeResults.methodResults) {
-            let txid = stakingStakeResults.methodResults[idx].txID
-
-            //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
-            let confirmedRound = stakingStakeResults.confirmedRound
-
-
-            let returnedResults = this.algosdk.decodeUint64(stakingStakeResults.methodResults[idx].rawReturnValue, "mixed")
-            this.logger.info("GoraDAO Staking Contract ABI Exec result = %s", returnedResults);
-            await this.printTransactionLogsFromIndexer(txid, confirmedRound)
-
-        }
-        this.config['gora_dao']['staking_is_staked'] = true;
-        for (let index = 0; index < this.config['deployer']['nft_staking_test_assets'].length; index++) {
-            if (this.config['deployer']['nft_staking_test_assets'][index].asset == nftId) {
-                this.config['deployer']['nft_staking_test_assets'][index].isLocked = true;
+        let NftTxnGroupsArray = []
+        for (let index = 0; index < nftIds.length; index++) {
+            const nftId = nftIds[index];
+            // Common parameters for GoraDAO main contract
+            const commonParamsDao = {
+                appID: Number(this.goraDaoMainApplicationId),
+                appForeignAssets: [Number(this.stakingAsset), nftId],
+                appAccounts: [this.goraDaoStakingAdminAccount.addr, this.stakingApplicationAddress],
+                appForeignApps: [Number(this.goraDaoStakingApplicationId)],
+                sender: this[`goraDaoUserAccount${userIndex}`].addr,
+                suggestedParams: params,
+                signer: signer,
+                boxes: [
+                    { appIndex: Number(this.goraDaoMainApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
+                ],
             }
+            // Common parameters for GoraDAO Staking contract
+            const commonParamsStakingStake = {
+                appID: Number(this.goraDaoStakingApplicationId),
+                appForeignAssets: [Number(this.stakingAsset)],
+                appAccounts: [],
+                appForeignApps: [Number(this.stakingParams['staking_proxy_app_id'])],
+                sender: this[`goraDaoUserAccount${userIndex}`].addr,
+                suggestedParams: params,
+                signer: signer,
+                boxes: [
+                    { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Delegator+V2 App ID Ref
+                    { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId) },// Staked NFT ref
+                ],
+            }
+            // Asset transfer transaction to DAO (For future usage with staking Fees! Now it is 0 amount)
+            const axferDao = new this.algosdk.Transaction({
+                from: this[`goraDaoUserAccount${userIndex}`].addr,
+                to: `${this.goraDaoMainApplicationAddress}`,
+                amount: 0,
+                assetIndex: Number(this.stakingAsset),
+                type: 'axfer',
+                ...params
+            })
+            // Pay transaction to DAO (For future usage with staking Fees! Now it is 0 amount)
+            const ptxnDao = new this.algosdk.Transaction({
+                from: this[`goraDaoUserAccount${userIndex}`].addr,
+                to: this.goraDaoMainApplicationAddress,
+                amount: 0,
+                type: 'pay',
+                ...params
+            })
+            // Asset transfer transaction to Staking contract
+            const axferStaking = new this.algosdk.Transaction({
+                from: this[`goraDaoUserAccount${userIndex}`].addr,
+                to: `${this.stakingApplicationAddress}`,
+                amount: 0,
+                assetIndex: Number(this.stakingAsset),
+                type: 'axfer',
+                ...params
+            });
+            // Pay transaction to Staking contract
+            const ptxnStaking = new this.algosdk.Transaction({
+                from: this[`goraDaoUserAccount${userIndex}`].addr,
+                to: this.stakingApplicationAddress,
+                amount: 0,
+                type: 'pay',
+                ...params
+            });
+            const tws0 = { txn: ptxnDao, signer: signer }
+            const tws1 = { txn: axferDao, signer: signer }
+            const tws2 = { txn: ptxnStaking, signer: signer }
+            const tws3 = { txn: axferStaking, signer: signer }
+            // GoraDAO staking ABI call arguments
+            const argsDao = [
+                tws0,
+                tws1,
+            ];
+            // GoraDAO Staking ABI call arguments
+            const argsStaking = [
+                tws2,
+                tws3,
+                nftId,// NFT ASA ID
+            ];
+            // Atomic transaction composer for GoraDAO proxy Staking
+            const atcStakingStake = new this.algosdk.AtomicTransactionComposer();
+            // Add GoraDAO DAO ABI call for staking
+            atcStakingStake.addMethodCall({
+                method: methodDaoStakingStake,
+                methodArgs: argsDao,
+                ...commonParamsDao
+            })
+            //getFirst4BytesOfSHA512_256
+            this.logger.info('------------------------------')
+            this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", `${methodDaoStakingStake.name}(${methodDaoStakingStake.args.map(item => item.type)})${methodDaoStakingStake.returns.type}`);
+
+            // Add GoraDAO Staking ABI call for staking
+            atcStakingStake.addMethodCall({
+                method: methodStakingStake,
+                methodArgs: argsStaking,
+                ...commonParamsStakingStake
+            });
+
+            this.logger.info('------------------------------')
+            this.logger.info("GoraDAO Contract ABI Exec method = %s", methodStakingStake);
+            NftTxnGroupsArray.push([...atcStakingStake.transactions])
+            //Execute the atomic transaction
+            const stakingStakeResults = await atcStakingStake.execute(this.algodClient, 10);
+            for (const idx in stakingStakeResults.methodResults) {
+                let txid = stakingStakeResults.methodResults[idx].txID
+    
+                //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
+                let confirmedRound = stakingStakeResults.confirmedRound
+    
+    
+                let returnedResults = this.algosdk.decodeUint64(stakingStakeResults.methodResults[idx].rawReturnValue, "mixed")
+                this.logger.info("GoraDAO Staking Contract ABI Exec result = %s", returnedResults);
+                await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+    
+            }
+            this.config['gora_dao']['staking_is_staked'] = true;
+            for (let index = 0; index < this.config['deployer']['nft_staking_test_assets'].length; index++) {
+                if (this.config['deployer']['nft_staking_test_assets'][index].asset == nftId) {
+                    this.config['deployer']['nft_staking_test_assets'][index].isLocked = true;
+                }
+            }
+            await this.saveConfigToFile(this.config)
+            this.logger.info(`GoraDAO Staking status to config file!`);
         }
-        await this.saveConfigToFile(this.config)
-        this.logger.info(`GoraDAO Staking status to config file!`);
+        this.logger.info('------------------------------')
+
+      
     }
 
     // This function is used to stake in a proxy staking contract
@@ -3838,7 +3862,7 @@ const GoraDaoDeployer = class {
         const claimStaking = [nftId];
         const commonParamsStakingClaim = {
             appID: Number(this.goraDaoStakingApplicationId),
-            appForeignAssets: [Number(this.stakingAsset),nftId],
+            appForeignAssets: [Number(this.stakingAsset), nftId],
             appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager']],
             appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
             sender: this[`goraDaoUserAccount${userIndex}`].addr,
@@ -3846,7 +3870,7 @@ const GoraDaoDeployer = class {
             signer: signer,
             boxes: [
                 { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Staking admin account
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId)},// NFT_ASA_ID
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId) },// NFT_ASA_ID
             ],
         }
         atcStakingStake.addMethodCall({
@@ -3869,7 +3893,7 @@ const GoraDaoDeployer = class {
 
         }
         this.config['gora_dao']['staking_is_unstaked'] = true;
-  
+
         for (let index = 0; index < this.config['deployer']['nft_staking_test_assets'].length; index++) {
             if (this.config['deployer']['nft_staking_test_assets'][index].asset == nftId) {
                 this.config['deployer']['nft_staking_test_assets'][index].isLocked = false;
@@ -4075,7 +4099,7 @@ const GoraDaoDeployer = class {
             signer: signer,
             boxes: [
                 { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Staking admin account
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId)},// NFT_ASA_ID
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId) },// NFT_ASA_ID
             ],
         }
 
@@ -4086,7 +4110,7 @@ const GoraDaoDeployer = class {
         // Atomic transaction composer for GoraDAO proxy withdraw
         const atcStakingWithdraw = new this.algosdk.AtomicTransactionComposer();
 
-  
+
         atcStakingWithdraw.addMethodCall({
             method: methodDStakingUserClaim,
             methodArgs: claimStaking,
