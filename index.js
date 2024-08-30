@@ -706,7 +706,7 @@ async function stakingOperations() {
             choices.push('UnStake from staking contract')
 
         }
-        choices.push('Withdraw stake from staking contract')
+        //choices.push('Withdraw stake from staking contract')
         choices.push('User claim from staking contract')
         // if (config['gora_dao']['staking_is_unstaked'] === true) {
         //     choices.push('Withdraw stake from staking contract')
@@ -1078,37 +1078,37 @@ async function stakingOperations() {
                 ]);
             }
             break;
-        case 'Withdraw stake from staking contract':
-            try {
-                // await goraDaoDeployer.manualAggregationProxyStakingContract(2);
-                let { nftId } = await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'nftId',
-                        message: 'What is the NFT ID to withdraw rewards for?',
-                    },
-                ]);
-                await goraDaoDeployer.withdrawProxyStakingContract(2,Number(nftId));
-                await goraDaoDeployer.printStakingUserBox();
+        // case 'Withdraw stake from staking contract':
+        //     try {
+        //         // await goraDaoDeployer.manualAggregationProxyStakingContract(2);
+        //         let { nftId } = await inquirer.prompt([
+        //             {
+        //                 type: 'input',
+        //                 name: 'nftId',
+        //                 message: 'What is the NFT ID to withdraw rewards for?',
+        //             },
+        //         ]);
+        //         await goraDaoDeployer.withdrawProxyStakingContract(2,Number(nftId));
+        //         await goraDaoDeployer.printStakingUserBox();
 
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            } catch (error) {
-                console.error('An error occurred:', error);
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            }
-            break;
+        //         await inquirer.prompt([
+        //             {
+        //                 type: 'input',
+        //                 name: 'continue',
+        //                 message: 'Press Enter to go back to menu...',
+        //             },
+        //         ]);
+        //     } catch (error) {
+        //         console.error('An error occurred:', error);
+        //         await inquirer.prompt([
+        //             {
+        //                 type: 'input',
+        //                 name: 'continue',
+        //                 message: 'Press Enter to go back to menu...',
+        //             },
+        //         ]);
+        //     }
+        //     break;
         case 'User claim from staking contract':
             try {
                 let { nftId } = await inquirer.prompt([
