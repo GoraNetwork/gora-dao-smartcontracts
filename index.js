@@ -1059,7 +1059,7 @@ async function stakingOperations() {
                 //await goraDaoDeployer.stakeStakingContract(Number(amount));
                 await goraDaoDeployer.unstakeProxyStakingContract(2, Number(finalAmount), Number(nftId));
                 await goraDaoDeployer.printStakingUserBox();
-                await goraDaoDeployer.printStakingNFTBox(nftId);
+                //await goraDaoDeployer.printStakingNFTBox(nftId);
                 //await goraDaoDeployer.stakeDirectProxyStakingContract(Number(amount));
                 await inquirer.prompt([
                     {
@@ -1122,7 +1122,7 @@ async function stakingOperations() {
                 // await goraDaoDeployer.manualAggregationProxyStakingContract(2);
                 await goraDaoDeployer.userClaimProxyStakingContract(2,Number(nftId));
                 await goraDaoDeployer.printStakingUserBox();
-                await goraDaoDeployer.printStakingNFTBox(nftId);
+                //await goraDaoDeployer.printStakingNFTBox(nftId);
 
                 await inquirer.prompt([
                     {
