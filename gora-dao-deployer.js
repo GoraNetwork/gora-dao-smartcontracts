@@ -3644,15 +3644,14 @@ const GoraDaoDeployer = class {
         // Common parameters for GoraDAO Staking contract
         const commonParamsStakingStake = {
             appID: Number(this.goraDaoStakingApplicationId),
-            appForeignAssets: [Number(this.stakingAsset)],// The second item is the NFT ASA ID used for NFT staking
-            appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager'], "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ"],
-            appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
+            appForeignAssets: [Number(this.stakingAsset)],
+            appAccounts: [ ],
+            appForeignApps: [Number(this.stakingParams['staking_proxy_app_id'])],
             sender: this[`goraDaoUserAccount${userIndex}`].addr,
             suggestedParams: params,
             signer: signer,
             boxes: [
-                // { appIndex: Number(this.goraDaoStakingApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Connected end user wallet account
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Delegator+V2 App ID Ref
                 { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId) },// Staked NFT ref
             ],
         }

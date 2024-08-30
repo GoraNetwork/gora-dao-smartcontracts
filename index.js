@@ -1121,6 +1121,7 @@ async function stakingOperations() {
                 // await goraDaoDeployer.manualAggregationProxyStakingContract(2);
                 await goraDaoDeployer.userClaimProxyStakingContract(2,Number(nftId));
                 await goraDaoDeployer.printStakingUserBox();
+                await goraDaoDeployer.printStakingNFTBox(nftId);
 
                 await inquirer.prompt([
                     {
