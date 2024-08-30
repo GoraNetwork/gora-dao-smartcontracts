@@ -1014,7 +1014,8 @@ async function stakingOperations() {
 
                 let finalAmount = Number(amount) * 1000000000 // e.g. to stake 5 Gora the amount will be 5000000000
                 //await goraDaoDeployer.stakeStakingContract(Number(amount));
-                await goraDaoDeployer.stakeProxyStakingContract(2, Number(finalAmount), [nftId.split(',')]);
+                let nftArray = nftId.split(',');
+                await goraDaoDeployer.stakeProxyStakingContract(2, Number(finalAmount), nftArray);
                 await goraDaoDeployer.printStakingUserBox();
                 await goraDaoDeployer.printStakingNFTBox(nftId);
 
