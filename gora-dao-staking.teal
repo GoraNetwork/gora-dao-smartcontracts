@@ -864,6 +864,19 @@ branch_user_claim_nft:
 	==
 	&&
 	assert
+	// load 41
+	// int 0
+	// ==
+	// assert
+	// load 42
+	// int 0
+	// ==
+	// assert
+	load 42
+	int 0
+	==
+	assert
+	
 	b branch_user_claim_finalize
 method_user_claim:
 	txn Sender // Staking user account
@@ -927,10 +940,7 @@ method_user_claim:
 	extract_uint64
 	store 44 // NFT Timestamp
 
-	
-
-
-	 // The Delegator+V2AppID box 
+	// The Delegator+V2AppID box 
 	load 21
 	load 11
 	itob
@@ -939,16 +949,11 @@ method_user_claim:
 	concat
 	load 13
 	itob
-	load 14
-	load 41
-	-
+	int 0
 	itob
 	concat
 	concat
 	box_put
-	
-	
-	
 
 	load 14
 	store 45
@@ -987,9 +992,11 @@ method_user_claim:
 	==
 	assert
 
+	load 41
+	int 1000000000
+	*
 	byte "return_token"
 	app_global_get
-	load 41
 	*
 	int 100
 	/
@@ -1019,6 +1026,8 @@ method_user_claim:
 	+
 	store 45
 
+	
+
 
 branch_user_claim_finalize:	
 	
@@ -1041,6 +1050,7 @@ method_withdraw_unstaked:
 	byte "is_activated"
 	app_global_get
 	bz branch_error_activation
+	
 
 
 branch_withdraw_finalize:

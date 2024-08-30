@@ -167,7 +167,7 @@
       {
         "asset": 718450820,
         "value": 10,
-        "isLocked": true
+        "isLocked": false
       },
       {
         "asset": 718450821,
