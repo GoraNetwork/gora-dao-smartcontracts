@@ -3835,7 +3835,26 @@ const GoraDaoDeployer = class {
         });
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Contract ABI Exec method = %s", methodStakingStake);
-
+        let methodDStakingUserClaim = this.getMethodByName("user_claim", goraDaoStakingContractAbi);
+        const claimStaking = [nftId];
+        const commonParamsStakingClaim = {
+            appID: Number(this.goraDaoStakingApplicationId),
+            appForeignAssets: [Number(this.stakingAsset),nftId],
+            appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager']],
+            appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
+            sender: this[`goraDaoUserAccount${userIndex}`].addr,
+            suggestedParams: params,
+            signer: signer,
+            boxes: [
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Staking admin account
+                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId)},// NFT_ASA_ID
+            ],
+        }
+        atcStakingStake.addMethodCall({
+            method: methodDStakingUserClaim,
+            methodArgs: claimStaking,
+            ...commonParamsStakingClaim
+        });
         // Execute the atomic transaction
         const stakingStakeResults = await atcStakingStake.execute(this.algodClient, 10);
         for (const idx in stakingStakeResults.methodResults) {

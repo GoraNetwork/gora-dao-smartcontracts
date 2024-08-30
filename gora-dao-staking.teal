@@ -859,10 +859,14 @@ branch_user_claim_nft:
 	global CurrentApplicationID
 	gtxn 1 ApplicationID
 	==
+	assert
 	gtxna 1 ApplicationArgs 0
 	method "withdraw()uint64"
 	==
-	&&
+	gtxna 1 ApplicationArgs 0
+	method "unstake(uint64,uint64,uint64)uint64"
+	==
+	||
 	assert
 
 	load 42
