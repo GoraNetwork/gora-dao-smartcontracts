@@ -3662,7 +3662,7 @@ const GoraDaoDeployer = class {
             // Common parameters for GoraDAO Staking contract
             const commonParamsStakingStake = {
                 appID: Number(this.goraDaoStakingApplicationId),
-                appForeignAssets: [Number(this.stakingAsset)],
+                appForeignAssets: [Number(this.stakingAsset), nftId],
                 appAccounts: [],
                 appForeignApps: [Number(this.stakingParams['staking_proxy_app_id'])],
                 sender: this[`goraDaoUserAccount${userIndex}`].addr,
@@ -3745,19 +3745,19 @@ const GoraDaoDeployer = class {
             this.logger.info("GoraDAO Contract ABI Exec method = %s", methodStakingStake);
             NftTxnGroupsArray.push([...atcStakingStake.transactions])
             //Execute the atomic transaction
-            //const stakingStakeResults = await atcStakingStake.execute(this.algodClient, 10);
-            // for (const idx in stakingStakeResults.methodResults) {
-            //     let txid = stakingStakeResults.methodResults[idx].txID
+            const stakingStakeResults = await atcStakingStake.execute(this.algodClient, 10);
+            for (const idx in stakingStakeResults.methodResults) {
+                let txid = stakingStakeResults.methodResults[idx].txID
     
-            //     //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
-            //     let confirmedRound = stakingStakeResults.confirmedRound
+                //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
+                let confirmedRound = stakingStakeResults.confirmedRound
     
     
-            //     let returnedResults = this.algosdk.decodeUint64(stakingStakeResults.methodResults[idx].rawReturnValue, "mixed")
-            //     this.logger.info("GoraDAO Staking Contract ABI Exec result = %s", returnedResults);
-            //     await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+                let returnedResults = this.algosdk.decodeUint64(stakingStakeResults.methodResults[idx].rawReturnValue, "mixed")
+                this.logger.info("GoraDAO Staking Contract ABI Exec result = %s", returnedResults);
+                await this.printTransactionLogsFromIndexer(txid, confirmedRound)
     
-            // }
+            }
             this.config['gora_dao']['staking_is_staked'] = true;
             for (let index = 0; index < this.config['deployer']['nft_staking_test_assets'].length; index++) {
                 if (this.config['deployer']['nft_staking_test_assets'][index].asset == nftId) {
