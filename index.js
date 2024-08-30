@@ -1017,7 +1017,7 @@ async function stakingOperations() {
                 let nftArray = nftId.split(',');
                 await goraDaoDeployer.stakeProxyStakingContract(2, Number(finalAmount), nftArray);
                 await goraDaoDeployer.printStakingUserBox();
-                await goraDaoDeployer.printStakingNFTBox(nftId);
+                //await goraDaoDeployer.printStakingNFTBox(nftId);
 
                 //await goraDaoDeployer.stakeDirectProxyStakingContract(Number(amount));
                 await inquirer.prompt([
