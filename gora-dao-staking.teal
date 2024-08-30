@@ -704,12 +704,12 @@ method_staking_unstake:
 	store 23
 	load 23
 	int 0
-	extract_uint64
+	extract_uint64 // NFT_Value
 	store 24
 
 	load 23
 	int 8
-	extract_uint64
+	extract_uint64 // NFT_IsLocked
 	int 1
 	==
 	assert
@@ -717,7 +717,7 @@ method_staking_unstake:
 	global LatestTimestamp
 	load 23
 	int 24
-	extract_uint64
+	extract_uint64 // NFT_Timestamp
 	store 30
 	load 30
 	-
