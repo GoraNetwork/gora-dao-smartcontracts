@@ -3766,15 +3766,19 @@ const GoraDaoDeployer = class {
             }
             await this.saveConfigToFile(this.config)
             this.logger.info(`GoraDAO Staking status to config file!`);
+            await this.printStakingNFTBox(nftId);
         }
+       
         this.logger.info('------------------------------')
 
       
     }
 
     // This function is used to stake in a proxy staking contract
-    async unstakeProxyStakingContract(userIndex, amount, nftId) {
-        this.logger.info(`Staking into proxy staking contract ${Number(this.goraDaoStakingApplicationId)} which proxies ${Number(this.stakingParams.staking_proxy_app_id)}`);
+    async unstakeProxyStakingContract(userIndex, amount, nftIds) {
+        for (let index = 0; index < nftIds.length; index++) {
+            const nftId = Number(nftIds[index]);
+            this.logger.info(`Staking into proxy staking contract ${Number(this.goraDaoStakingApplicationId)} which proxies ${Number(this.stakingParams.staking_proxy_app_id)}`);
         let params = await this.algodClient.getTransactionParams().do();// Get suggested Algorand TXN parameters
 
 
@@ -3902,6 +3906,10 @@ const GoraDaoDeployer = class {
 
         await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO UnStaking status to config file!`);
+        await this.printStakingNFTBox(nftId)
+            
+        }
+        
     }
     // This function is used to iterate N NFTs minting and save them to config for testing purposes
     async iterativeMintingTestNfts(assetQuantity) {
