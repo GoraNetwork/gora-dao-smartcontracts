@@ -753,7 +753,7 @@ const GoraDaoDeployer = class {
         }
     }
     async printStakingNFTBox(asaId) {
-        if (this.algosdk.isValidAddress(this.goraDaoStakingAdminAccount.addr)) {
+        if (this.algosdk.isValidAddress(this.goraDaoStakingAdminAccount.addr) && Number(asaId)> 1000) {
             const urlApp = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/applications/${this.config.gora_dao['asc_staking_id']}/box?name=int:${asaId}`;
 
             let resApp = await fetch(urlApp, {
