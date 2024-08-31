@@ -57,7 +57,7 @@ const GoraDaoDeployer = class {
         // GoraDAO Main Application Address
         this.goraDaoMainApplicationAddress = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_main_address : props.config.gora_dao.asc_main_address
         // GoraDAO Main Asset ID
-        this.goraDaoAsset = props.config.gora_dao.dao_asa_id
+        this.goraDaoAsset = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.dao_testnet_asa_id : props.config.gora_dao.dao_asa_id
 
 
         this.proposalApplicationId = props.config.gora_dao.network === 'testnet' ? props.config.asc_testnet_proposal_id : props.config.gora_dao.asc_proposal_id // GoraDAO Proposal application ID
