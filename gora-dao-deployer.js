@@ -60,9 +60,9 @@ const GoraDaoDeployer = class {
         this.goraDaoAsset = props.config.gora_dao.dao_asa_id
 
 
-        this.proposalApplicationId = props.config.gora_dao.asc_proposal_id // GoraDAO Proposal application ID
-        this.proposalApplicationAddress = props.config.gora_dao.asc_proposal_address // GoraDAO Proposal application Address
-        this.proposalAsset = props.config.gora_dao.proposal_asa_id // GoraDAO Proposal Asset ID
+        this.proposalApplicationId = props.config.gora_dao.network === 'testnet' ? props.config.asc_testnet_proposal_id : props.config.gora_dao.asc_proposal_id // GoraDAO Proposal application ID
+        this.proposalApplicationAddress = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_proposal_address: props.config.gora_dao.asc_proposal_address // GoraDAO Proposal application Address
+        this.proposalAsset = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.proposal_testnet_asa_id : props.config.gora_dao.proposal_asa_id // GoraDAO Proposal Asset ID
 
         // GoraDao Main contracts
         this.goraDaoMainContractAbi = props.daoContract
@@ -81,9 +81,9 @@ const GoraDaoDeployer = class {
 
         // GoraDao Staking contracts
 
-        this.goraDaoStakingApplicationId = props.config.gora_dao.asc_staking_id // GoraDAO Staking application ID
-        this.stakingApplicationAddress = props.config.gora_dao.asc_staking_address // GoraDAO Staking application Address
-        this.stakingAsset = props.config.gora_dao.staking_asa_id // GoraDAO Staking Asset ID
+        this.goraDaoStakingApplicationId = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_staking_id : props.config.gora_dao.asc_staking_id // GoraDAO Staking application ID
+        this.stakingApplicationAddress = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_staking_address : props.config.gora_dao.asc_staking_address // GoraDAO Staking application Address
+        this.stakingAsset = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.staking_testnet_asa_id : props.config.gora_dao.staking_asa_id // GoraDAO Staking Asset ID
 
         // GoraDao Staking contracts ABI and TEAL source
         this.goraDaoStakingContractAbi = props.goraDaoStakingContractAbi
@@ -93,10 +93,10 @@ const GoraDaoDeployer = class {
         this.proxyStakingMainAppId = props.config.deployer.staking.proxy_staking_main_app_id
         this.proxyStakingVestingAppId = props.config.deployer.staking.proxy_staking_vesting_app_id
 
-        this.stakingParams = props.config.deployer.staking.staking_params
-        this.goraToken = props.config.gora_dao.gora_testnet_token_id
+        this.stakingParams = props.config.gora_dao.network === 'testnet' ? props.config.deployer.staking_testnet.staking_params : props.config.deployer.staking.staking_params
+        this.goraToken = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.gora_testnet_token_id : props.config.gora_dao.gora_token_id
         this.isGoraTokenEnforced = props.config.gora_dao.enforce_gora_token
-        this.stakingProxyParticipationAddress = props.config.deployer.staking.staking_params.staking_proxy_app_participating_address
+        
 
         // Global Variables attached to class instance object
 

@@ -5,16 +5,24 @@
     "asc_main_id": 0,
     "asc_main_address": "",
     "gora_testnet_token_id": 227418519,
+    "gora_token_id": 0,
     "enforce_gora_token": true,
     "asc_testnet_main_id": 0,
     "asc_testnet_main_address": "",
     "asc_proposal_id": 0,
+    "asc_testnet_proposal_id": 0,
     "asc_proposal_address": "",
+    "asc_testnet_proposal_address": "",
     "asc_staking_id": 0,
     "asc_staking_address": "",
+    "asc_testnet_staking_id": 0,
+    "asc_testnet_staking_address": "",
     "dao_asa_id": 0,
+    "dao_testnet_asa_id": 0,
     "proposal_asa_id": 0,
+    "proposal_testnet_asa_id": 0,
     "staking_asa_id": 0,
+    "staking_testnet_asa_id": 0,
     "dao_dao_deployed": false,
     "dao_asa_distributed": false,
     "subscribed_to_dao": false,
@@ -42,7 +50,6 @@
     "indexer_remote_port": "",
     "algo_dispenser": "https://dispenser.testnet.aws.algodev.network/?account=",
     "verbose": false
-
   },
   "owner": "LP6QRRBRDTDSP4HF7CSPWJV4AG4QWE437OYHGW7K5Y7DETKCSK5H3HCA7Q",
   "deployer": {
@@ -124,7 +131,7 @@
       "participation_token": 1000000,
       "vote_stake": 1500000
     },
-    "staking": {
+    "staking_testnet": {
       "proxy_staking_main_app_id": 253775752,
       "proxy_staking_vesting_app_id": 259104850,
       "proxy_staking_main_app_address": "MFSARDKZCVWI4C4U7C665BHZG3KZM3QFNNKHP2QJS3LWZVIXA5TKY2L6XQ",
@@ -158,6 +165,23 @@
         "staking_proxy_app_is_pending": 0,
         "staking_incentives_eligibility": 1
       }
-    }
+    },
+    "nft_staking_test_assets": [
+      {
+        "asset": 718614536,
+        "value": 6,
+        "isLocked": true
+      },
+      {
+        "asset": 718614568,
+        "value": 9,
+        "isLocked": true
+      },
+      {
+        "asset": 718614569,
+        "value": 9,
+        "isLocked": true
+      }
+    ]
   }
 }
