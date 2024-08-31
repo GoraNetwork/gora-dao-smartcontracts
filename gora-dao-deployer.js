@@ -763,7 +763,7 @@ const GoraDaoDeployer = class {
                 },
             })
             let boxData = await resApp.json()
-            if (boxData) {
+            if (boxData && !(boxData.error)) {
                 this.logger.info(boxData.name)
                 let valueDecoded = new Uint8Array(Buffer.from(boxData.value, "base64"));
                 let val0 = valueDecoded.length > 0 ? this.extractUint64(valueDecoded, 0) : 0
@@ -3766,7 +3766,7 @@ const GoraDaoDeployer = class {
             }
             await this.saveConfigToFile(this.config)
             this.logger.info(`GoraDAO Staking status to config file!`);
-            await this.printStakingNFTBox(nftId);
+            //await this.printStakingNFTBox(nftId);
         }
        
         this.logger.info('------------------------------')
@@ -3906,7 +3906,7 @@ const GoraDaoDeployer = class {
 
         await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO UnStaking status to config file!`);
-        await this.printStakingNFTBox(nftId)
+        //await this.printStakingNFTBox(nftId)
             
         }
         
