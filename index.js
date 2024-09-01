@@ -1051,7 +1051,7 @@ let amount = 0
                     {
                         type: 'input',
                         name: 'nftId',
-                        message: 'What is the NFT ID to stake?',
+                        message: 'What is the NFT ID to unstake?',
                     },
                 ]);
                 let amount = 0
@@ -1062,7 +1062,7 @@ let amount = 0
                 //await goraDaoDeployer.printStakingUserBox();
           
               
-                await delay(4000)
+                await delay(5000)
 
                 await inquirer.prompt([
                     {
