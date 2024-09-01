@@ -7,6 +7,8 @@ const { on } = require('events');
 const configBase = require('./config_example.json');
 const crypto = require('crypto');
 const { send } = require('process');
+const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
+
 // GoraDAO deployer Class
 const GoraDaoDeployer = class {
     // Class constructor
@@ -3795,6 +3797,7 @@ const GoraDaoDeployer = class {
     }
     // This function is used to stake in a proxy staking contract
     async unstakeProxyStakingContract(userIndex, amount, nftIds) {
+
         let parentTxnGroupsArray = []
         for (let index = 0; index < nftIds.length; index++) {
             const nftId = Number(nftIds[index]);
@@ -3942,12 +3945,13 @@ const GoraDaoDeployer = class {
 
 
             this.logger.info('Sending Unstake Transaction Group');
-            parentTxnGroupsArray.push(this.concatArrays(txnGroupFinal))
+             parentTxnGroupsArray.push(this.concatArrays(txnGroupFinal))
+            //parentTxnGroupsArray.push(txnGroupFinal)
 
-            const { txId } = await this.algodClient.sendRawTransaction(txnGroupFinal).do();
+            // const { txId } = await this.algodClient.sendRawTransaction(txnGroupFinal).do();
 
-            const waitForTxn = await this.algosdk.waitForConfirmation(this.algodClient, txId, 5);
-            this.logger.info(`Transaction ${txId} confirmed in round ${waitForTxn['confirmed-round']}.`);
+            // const waitForTxn = await this.algosdk.waitForConfirmation(this.algodClient, txId, 5);
+            // this.logger.info(`Transaction ${txId} confirmed in round ${waitForTxn['confirmed-round']}.`);
 
 
             this.config['gora_dao']['staking_is_unstaked'] = true;
@@ -3963,7 +3967,20 @@ const GoraDaoDeployer = class {
             //await this.printStakingNFTBox(nftId)
 
         }
-       // await this.algodClient.sendRawTransaction(this.concatArrays(parentTxnGroupsArray)).do();
+    
+        const that = this
+        let executeTxn = async (txnGroup)=>{
+            const { txId } = await that.algodClient.sendRawTransaction(txnGroup).do();
+            const waitForTxn = await that.algosdk.waitForConfirmation(that.algodClient, txId, 5);
+            that.logger.info(`Transaction ${txId} confirmed in round ${waitForTxn['confirmed-round']}.`);
+
+           
+        }
+        
+        parentTxnGroupsArray.forEach((txnGroup) => 
+             executeTxn(txnGroup))
+           
+        // await this.algodClient.sendRawTransaction(this.concatArrays(parentTxnGroupsArray)).do();
 
     }
     // This function is used to iterate N NFTs minting and save them to config for testing purposes
