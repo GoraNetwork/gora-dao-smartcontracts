@@ -683,6 +683,13 @@ branch_unstake_without_rewards:
 	b branch_staking_unstake_finalize
 
 method_staking_unstake:
+	txn Sender
+	txn ApplicationArgs 3
+	btoi // The NFT ID uint64
+	asset_holding_get AssetBalance
+	int 1
+	>=
+	assert
 	txna Accounts 0 // DAO main account
 	store 0 
 	txn Sender // Staking user account

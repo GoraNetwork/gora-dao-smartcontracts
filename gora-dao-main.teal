@@ -2058,13 +2058,7 @@ method_staking_unstake:
     ==
     assert
 
-    txn Sender
-	gtxna 1 ApplicationArgs 3
-	btoi // The NFT ID uint64
-	asset_holding_get AssetBalance
-	int 1
-	>=
-	assert
+    
 
 
     byte 0x151f7c75

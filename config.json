@@ -17,7 +17,7 @@
     "asc_staking_address": "",
     "asc_testnet_staking_id": 718248288,
     "asc_testnet_staking_address": "45YOV2QJRGAIUAYC54JQGQQCSRA4V65ZJ5RDG4MEJHHGOBWLYXXWNZVOWU",
-    "dao_asa_id": 0,
+    "dao_asa_id": 227418519,
     "dao_testnet_asa_id": 227418519,
     "proposal_asa_id": 0,
     "proposal_testnet_asa_id": 0,
@@ -180,7 +180,7 @@
       {
         "asset": 718614569,
         "value": 9,
-        "isLocked": true
+        "isLocked": false
       }
     ]
   }
