@@ -3778,6 +3778,7 @@ const GoraDaoDeployer = class {
 
     // This function is used to stake in a proxy staking contract
     async unstakeProxyStakingContract(userIndex, amount, nftIds) {
+        let parentTxnGroupsArray = []
         for (let index = 0; index < nftIds.length; index++) {
             const nftId = Number(nftIds[index]);
             this.logger.info(`Staking into proxy staking contract ${Number(this.goraDaoStakingApplicationId)} which proxies ${Number(this.stakingParams.staking_proxy_app_id)}`);
@@ -3924,7 +3925,7 @@ const GoraDaoDeployer = class {
             
      
             this.logger.info('Sending Unstake Transaction Group'); 
-           
+            parentTxnGroupsArray.push(txnGroupFinal)
               
             const { txId } = await this.algodClient.sendRawTransaction(txnGroupFinal).do();
 
