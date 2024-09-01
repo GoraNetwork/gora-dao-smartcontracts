@@ -5,6 +5,8 @@ const fs = require('fs').promises;
 const path = require('path');
 const { on } = require('events');
 const configBase = require('./config_example.json');
+const crypto = require('crypto');
+const { send } = require('process');
 // GoraDAO deployer Class
 const GoraDaoDeployer = class {
     // Class constructor
@@ -61,7 +63,7 @@ const GoraDaoDeployer = class {
 
 
         this.proposalApplicationId = props.config.gora_dao.network === 'testnet' ? props.config.asc_testnet_proposal_id : props.config.gora_dao.asc_proposal_id // GoraDAO Proposal application ID
-        this.proposalApplicationAddress = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_proposal_address: props.config.gora_dao.asc_proposal_address // GoraDAO Proposal application Address
+        this.proposalApplicationAddress = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_proposal_address : props.config.gora_dao.asc_proposal_address // GoraDAO Proposal application Address
         this.proposalAsset = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.proposal_testnet_asa_id : props.config.gora_dao.proposal_asa_id // GoraDAO Proposal Asset ID
 
         // GoraDao Main contracts
@@ -96,7 +98,7 @@ const GoraDaoDeployer = class {
         this.stakingParams = props.config.gora_dao.network === 'testnet' ? props.config.deployer.staking_testnet.staking_params : props.config.deployer.staking.staking_params
         this.goraToken = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.gora_testnet_token_id : props.config.gora_dao.gora_token_id
         this.isGoraTokenEnforced = props.config.gora_dao.enforce_gora_token
-        
+
 
         // Global Variables attached to class instance object
 
@@ -753,7 +755,7 @@ const GoraDaoDeployer = class {
         }
     }
     async printStakingNFTBox(asaId) {
-        if (this.algosdk.isValidAddress(this.goraDaoStakingAdminAccount.addr) && Number(asaId)> 1000) {
+        if (this.algosdk.isValidAddress(this.goraDaoStakingAdminAccount.addr) && Number(asaId) > 1000) {
             const urlApp = `${this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['algod_testnet_remote_server'] : this.config.gora_dao['algod_remote_server']}/v2/applications/${this.config.gora_dao['asc_staking_id']}/box?name=int:${asaId}`;
 
             let resApp = await fetch(urlApp, {
@@ -3730,7 +3732,7 @@ const GoraDaoDeployer = class {
                 methodArgs: argsDao,
                 ...commonParamsDao
             })
-            //getFirst4BytesOfSHA512_256
+    
             this.logger.info('------------------------------')
             this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", `${methodDaoStakingStake.name}(${methodDaoStakingStake.args.map(item => item.type)})${methodDaoStakingStake.returns.type}`);
 
@@ -3748,15 +3750,15 @@ const GoraDaoDeployer = class {
             const stakingStakeResults = await atcStakingStake.execute(this.algodClient, 10);
             for (const idx in stakingStakeResults.methodResults) {
                 let txid = stakingStakeResults.methodResults[idx].txID
-    
+
                 //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
                 let confirmedRound = stakingStakeResults.confirmedRound
-    
-    
+
+
                 let returnedResults = this.algosdk.decodeUint64(stakingStakeResults.methodResults[idx].rawReturnValue, "mixed")
                 this.logger.info("GoraDAO Staking Contract ABI Exec result = %s", returnedResults);
                 await this.printTransactionLogsFromIndexer(txid, confirmedRound)
-    
+
             }
             this.config['gora_dao']['staking_is_staked'] = true;
             for (let index = 0; index < this.config['deployer']['nft_staking_test_assets'].length; index++) {
@@ -3768,10 +3770,10 @@ const GoraDaoDeployer = class {
             this.logger.info(`GoraDAO Staking status to config file!`);
             //await this.printStakingNFTBox(nftId);
         }
-       
+
         this.logger.info('------------------------------')
 
-      
+
     }
 
     // This function is used to stake in a proxy staking contract
@@ -3779,137 +3781,171 @@ const GoraDaoDeployer = class {
         for (let index = 0; index < nftIds.length; index++) {
             const nftId = Number(nftIds[index]);
             this.logger.info(`Staking into proxy staking contract ${Number(this.goraDaoStakingApplicationId)} which proxies ${Number(this.stakingParams.staking_proxy_app_id)}`);
-        let params = await this.algodClient.getTransactionParams().do();// Get suggested Algorand TXN parameters
+            let params = await this.algodClient.getTransactionParams().do();// Get suggested Algorand TXN parameters
 
 
 
-        const goraDaoMainContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoMainContractAbi.toString()));
-        const goraDaoStakingContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoStakingContractAbi.toString()));
-        const signer = this.algosdk.makeBasicAccountTransactionSigner(this[`goraDaoUserAccount${userIndex}`]);
+            const goraDaoMainContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoMainContractAbi.toString()));
+            const goraDaoStakingContractAbi = new this.algosdk.ABIContract(JSON.parse(this.goraDaoStakingContractAbi.toString()));
+            const signer = this.algosdk.makeBasicAccountTransactionSigner(this[`goraDaoUserAccount${userIndex}`]);
 
-        let methodStakingStake = this.getMethodByName("unstake", goraDaoStakingContractAbi);
-        let methodDaoStakingStake = this.getMethodByName("unstake", goraDaoMainContractAbi);
+            let methodDaoStakingUnstake = this.getMethodByName("unstake", goraDaoMainContractAbi);
+            let methodStakingUnstake = this.getMethodByName("unstake", goraDaoStakingContractAbi);
 
-        let stakeAdminPublicKey = this.algosdk.decodeAddress(this.goraDaoStakingAdminAccount.addr);// Staking admin account PK
-        let stakingUserPublicKey = this.algosdk.decodeAddress(this[`goraDaoUserAccount${userIndex}`].addr);// Connected end user wallet account PK
+            let stakeAdminPublicKey = this.algosdk.decodeAddress(this.goraDaoStakingAdminAccount.addr);// Staking admin account PK
+            let stakingUserPublicKey = this.algosdk.decodeAddress(this[`goraDaoUserAccount${userIndex}`].addr);// Connected end user wallet account PK
 
-        // Common parameters for GoraDAO main contract
-        const commonParamsDao = {
-            appID: Number(this.goraDaoMainApplicationId),
-            appForeignAssets: [Number(this.stakingAsset), nftId],
-            appAccounts: [this.goraDaoStakingAdminAccount.addr, this.stakingApplicationAddress],
-            appForeignApps: [Number(this.goraDaoStakingApplicationId)],
-            sender: this[`goraDaoUserAccount${userIndex}`].addr,
-            suggestedParams: params,
-            signer: signer,
-            boxes: [
+            // Common parameters for GoraDAO main contract
+            const commonParamsDao = {
+                appID: Number(this.goraDaoMainApplicationId),
+                appForeignAssets: [Number(this.stakingAsset), nftId],
+                appAccounts: [this.goraDaoStakingAdminAccount.addr, this.stakingApplicationAddress],
+                appForeignApps: [Number(this.goraDaoStakingApplicationId)],
+                sender: this[`goraDaoUserAccount${userIndex}`].addr,
+                suggestedParams: params,
+                signer: signer,
+                boxes: [
 
-                { appIndex: Number(this.goraDaoMainApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
-            ],
-        }
-        let v2AppIdArray = this.algosdk.encodeUint64(this.stakingParams['staking_proxy_app_id'])
-        let v2AppIdArrayLength = v2AppIdArray.length
-        let stakeUserPublicKeyLength = stakingUserPublicKey.publicKey.length
-        let boxNameRef = new Uint8Array(v2AppIdArrayLength + stakeUserPublicKeyLength)
-        boxNameRef.set(stakingUserPublicKey.publicKey, 0)
-        boxNameRef.set(v2AppIdArray, stakeUserPublicKeyLength)
-        // Common parameters for GoraDAO Staking contract
-        const commonParamsStakingStake = {
-            appID: Number(this.goraDaoStakingApplicationId),
-            appForeignAssets: [Number(this.stakingAsset)],
-            appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager']],
-            appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
-            sender: this[`goraDaoUserAccount${userIndex}`].addr,
-            suggestedParams: params,
-            signer: signer,
-            boxes: [
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Staking admin account
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: stakingUserPublicKey.publicKey },// Connected end user wallet account
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId) },// Staked NFT ref
-            ],
-        }
-
-
-
-
-        // GoraDAO DAO ABI call arguments
-        const argsDao = [
-            0,
-            0
-        ];
-        // GoraDAO Staking ABI call arguments
-        const argsStaking = [
-            0,
-            0,
-            nftId,// NFT ASA ID
-        ];
-        // Atomic transaction composer for GoraDAO proxy Staking
-        const atcStakingStake = new this.algosdk.AtomicTransactionComposer();
-        // Add GoraDAO DAO ABI call for staking
-        atcStakingStake.addMethodCall({
-            method: methodDaoStakingStake,
-            methodArgs: argsDao,
-            ...commonParamsDao
-        })
-        this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", methodDaoStakingStake);
-
-        // Add GoraDAO Staking ABI call for staking
-        atcStakingStake.addMethodCall({
-            method: methodStakingStake,
-            methodArgs: argsStaking,
-            ...commonParamsStakingStake
-        });
-        this.logger.info('------------------------------')
-        this.logger.info("GoraDAO Contract ABI Exec method = %s", methodStakingStake);
-        let methodDStakingUserClaim = this.getMethodByName("user_claim", goraDaoStakingContractAbi);
-        const claimStaking = [nftId];
-        const commonParamsStakingClaim = {
-            appID: Number(this.goraDaoStakingApplicationId),
-            appForeignAssets: [Number(this.stakingAsset), nftId],
-            appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager']],
-            appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
-            sender: this[`goraDaoUserAccount${userIndex}`].addr,
-            suggestedParams: params,
-            signer: signer,
-            boxes: [
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Staking admin account
-                { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId) },// NFT_ASA_ID
-            ],
-        }
-        atcStakingStake.addMethodCall({
-            method: methodDStakingUserClaim,
-            methodArgs: claimStaking,
-            ...commonParamsStakingClaim
-        });
-        // Execute the atomic transaction
-        const stakingStakeResults = await atcStakingStake.execute(this.algodClient, 10);
-        for (const idx in stakingStakeResults.methodResults) {
-            let txid = stakingStakeResults.methodResults[idx].txID
-
-            //if (Number(idx) === 0) this.logger.info(`actual results update txn ID: ${txid}`)
-            let confirmedRound = stakingStakeResults.confirmedRound
-
-
-            let returnedResults = this.algosdk.decodeUint64(stakingStakeResults.methodResults[idx].rawReturnValue, "mixed")
-            this.logger.info("GoraDAO Staking Contract ABI Exec result = %s", returnedResults);
-            await this.printTransactionLogsFromIndexer(txid, confirmedRound)
-
-        }
-        this.config['gora_dao']['staking_is_unstaked'] = true;
-
-        for (let index = 0; index < this.config['deployer']['nft_staking_test_assets'].length; index++) {
-            if (this.config['deployer']['nft_staking_test_assets'][index].asset == nftId) {
-                this.config['deployer']['nft_staking_test_assets'][index].isLocked = false;
+                    { appIndex: Number(this.goraDaoMainApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
+                ],
             }
+            
+
+
+
+            let methodDaoUnstakeFullName = `${methodDaoStakingUnstake.name}(${methodDaoStakingUnstake.args.map(item => item.type)})${methodDaoStakingUnstake.returns.type}`;
+            let methodDaoUnstakeArg = this.getFirst4BytesOfSHA512_256(methodDaoUnstakeFullName);
+            const daoUnstakeArgs = [
+                methodDaoUnstakeArg,
+                this.algosdk.encodeUint64(0),
+                this.algosdk.encodeUint64(0),
+            ];
+            const txnDaoUnstake = this.algosdk.makeApplicationCallTxnFromObject({
+                accounts: commonParamsDao.appAccounts,
+                appArgs: daoUnstakeArgs,
+                appIndex: commonParamsDao.appID,
+                from: commonParamsDao.sender,
+                foreignApps: commonParamsDao.appForeignApps,
+                foreignAssets: commonParamsDao.appForeignAssets,
+                note: new Uint8Array(Buffer.from(`Unstaking NFT ${nftId}`)),
+                boxes: commonParamsDao.boxes,
+                suggestedParams: commonParamsDao.suggestedParams,
+
+
+            })
+            this.logger.info('------------------------------')
+         
+
+
+
+            let v2AppIdArray = this.algosdk.encodeUint64(this.stakingParams['staking_proxy_app_id'])
+            let v2AppIdArrayLength = v2AppIdArray.length
+            let stakeUserPublicKeyLength = stakingUserPublicKey.publicKey.length
+            let boxNameRef = new Uint8Array(v2AppIdArrayLength + stakeUserPublicKeyLength)
+            boxNameRef.set(stakingUserPublicKey.publicKey, 0)
+            boxNameRef.set(v2AppIdArray, stakeUserPublicKeyLength)
+            // Common parameters for GoraDAO Staking contract
+            const commonParamsStakingUnstake = {
+                appID: Number(this.goraDaoStakingApplicationId),
+                appForeignAssets: [Number(this.stakingAsset)],
+                appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager']],
+                appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
+                sender: this[`goraDaoUserAccount${userIndex}`].addr,
+                suggestedParams: params,
+                signer: signer,
+                boxes: [
+                    { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Staking admin account
+                    { appIndex: Number(this.goraDaoStakingApplicationId), name: stakingUserPublicKey.publicKey },// Connected end user wallet account
+                    { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId) },// Staked NFT ref
+                ],
+            }
+            let methodStakingUnstakeFullName = `${methodStakingUnstake.name}(${methodStakingUnstake.args.map(item => item.type)})${methodStakingUnstake.returns.type}`;
+            let methodStakingUnstakeArg = this.getFirst4BytesOfSHA512_256(methodStakingUnstakeFullName);
+            const stakingUnstakeArgs = [
+                methodStakingUnstakeArg,
+                this.algosdk.encodeUint64(0),
+                this.algosdk.encodeUint64(0),
+                this.algosdk.encodeUint64(nftId),
+            ];
+            const txnStakingUnstake = this.algosdk.makeApplicationCallTxnFromObject({
+                accounts: commonParamsStakingUnstake.appAccounts,
+                appArgs: stakingUnstakeArgs,
+                appIndex: commonParamsStakingUnstake.appID,
+                foreignApps: commonParamsStakingUnstake.appForeignApps,
+                foreignAssets: commonParamsStakingUnstake.appForeignAssets,
+                note: new Uint8Array(Buffer.from(`Unstaking NFT ${nftId}`)),
+                boxes: commonParamsStakingUnstake.boxes,
+                from: commonParamsStakingUnstake.sender,
+                suggestedParams: commonParamsStakingUnstake.suggestedParams
+            })
+            // Add GoraDAO Staking ABI call for staking
+          
+            this.logger.info('------------------------------')
+             let methodDStakingUserClaim = this.getMethodByName("user_claim", goraDaoStakingContractAbi);
+    
+            const commonParamsStakingClaim = {
+                appID: Number(this.goraDaoStakingApplicationId),
+                appForeignAssets: [Number(this.stakingAsset), nftId],
+                appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager']],
+                appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
+                sender: this[`goraDaoUserAccount${userIndex}`].addr,
+                suggestedParams: params,
+                signer: signer,
+                boxes: [
+                    { appIndex: Number(this.goraDaoStakingApplicationId), name: boxNameRef },// Staking admin account
+                    { appIndex: Number(this.goraDaoStakingApplicationId), name: this.algosdk.encodeUint64(nftId) },// NFT_ASA_ID
+                ],
+            }
+            let methodStakingClaimFullName = `${methodDStakingUserClaim.name}(${methodDStakingUserClaim.args.map(item => item.type)})${methodDStakingUserClaim.returns.type}`;
+            let methodStakingClaimArg = this.getFirst4BytesOfSHA512_256(methodStakingClaimFullName);
+            const stakingClaimArgs = [
+                methodStakingClaimArg,
+                this.algosdk.encodeUint64(nftId),
+            ];
+            const txnStakingClaim = this.algosdk.makeApplicationCallTxnFromObject({
+                accounts: commonParamsStakingClaim.appAccounts,
+                appArgs: stakingClaimArgs,
+                appIndex: commonParamsStakingClaim.appID,
+                foreignApps: commonParamsStakingClaim.appForeignApps,
+                foreignAssets: commonParamsStakingClaim.appForeignAssets,
+                note: new Uint8Array(Buffer.from(`Claiming Rewards for NFT ${nftId}`)),
+                boxes: commonParamsStakingClaim.boxes,
+                from: commonParamsStakingClaim.sender,
+                suggestedParams: commonParamsStakingClaim.suggestedParams
+            })
+
+            const txnGroup = [txnDaoUnstake, txnStakingUnstake, txnStakingClaim]
+            this.algosdk.assignGroupID(txnGroup)
+            const txnGroupFinal = [
+                txnGroup[0].signTxn(this.goraDaoUserAccount2.sk),
+                txnGroup[1].signTxn(this.goraDaoUserAccount2.sk),
+                txnGroup[2].signTxn(this.goraDaoUserAccount2.sk)
+            ]
+            
+     
+            this.logger.info('Sending Unstake Transaction Group'); 
+           
+              
+            const { txId } = await this.algodClient.sendRawTransaction(txnGroupFinal).do();
+
+            const waitForTxn = await this.algosdk.waitForConfirmation(this.algodClient, txId, 5);
+            this.logger.info(`Transaction ${txId} confirmed in round ${waitForTxn['confirmed-round']}.`);
+           
+        
+            this.config['gora_dao']['staking_is_unstaked'] = true;
+
+            for (let index = 0; index < this.config['deployer']['nft_staking_test_assets'].length; index++) {
+                if (this.config['deployer']['nft_staking_test_assets'][index].asset == nftId) {
+                    this.config['deployer']['nft_staking_test_assets'][index].isLocked = false;
+                }
+            }
+
+            await this.saveConfigToFile(this.config)
+            this.logger.info(`GoraDAO UnStaking status to config file!`);
+            //await this.printStakingNFTBox(nftId)
+
         }
 
-        await this.saveConfigToFile(this.config)
-        this.logger.info(`GoraDAO UnStaking status to config file!`);
-        //await this.printStakingNFTBox(nftId)
-            
-        }
-        
     }
     // This function is used to iterate N NFTs minting and save them to config for testing purposes
     async iterativeMintingTestNfts(assetQuantity) {
