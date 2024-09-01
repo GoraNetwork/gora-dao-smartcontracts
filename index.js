@@ -974,7 +974,7 @@ async function stakingOperations() {
             break;
         case 'Print Staking User Box':
             try {
-               // await goraDaoDeployer.printStakingUserBox();
+                // await goraDaoDeployer.printStakingUserBox();
 
                 await inquirer.prompt([
                     {
@@ -997,13 +997,13 @@ async function stakingOperations() {
 
         case 'Stake into staking contract':
             try {
-                let { amount } = await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'amount',
-                        message: 'What amount you want to stake?',
-                    },
-                ]);
+                // let { amount } = await inquirer.prompt([
+                //     {
+                //         type: 'input',
+                //         name: 'amount',
+                //         message: 'What amount you want to stake?',
+                //     },
+                // ]);
                 let { nftId } = await inquirer.prompt([
                     {
                         type: 'input',
@@ -1011,13 +1011,13 @@ async function stakingOperations() {
                         message: 'What is the NFT ID to stake?',
                     },
                 ]);
-
+let amount = 0
                 let finalAmount = Number(amount) * 1000000000 // e.g. to stake 5 Gora the amount will be 5000000000
                 //await goraDaoDeployer.stakeStakingContract(Number(amount));
                 let nftArray = nftId.split(',');
                 await goraDaoDeployer.stakeProxyStakingContract(2, Number(finalAmount), nftArray);
                 //await goraDaoDeployer.printStakingUserBox();
-                
+
 
                 //await goraDaoDeployer.stakeDirectProxyStakingContract(Number(amount));
                 await inquirer.prompt([
@@ -1040,13 +1040,13 @@ async function stakingOperations() {
             break;
         case 'UnStake from staking contract':
             try {
-                let { amount } = await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'amount',
-                        message: 'What amount you want to unstake?',
-                    },
-                ]);
+                // let { amount } = await inquirer.prompt([
+                //     {
+                //         type: 'input',
+                //         name: 'amount',
+                //         message: 'What amount you want to unstake?',
+                //     },
+                // ]);
                 let { nftId } = await inquirer.prompt([
                     {
                         type: 'input',
@@ -1054,13 +1054,16 @@ async function stakingOperations() {
                         message: 'What is the NFT ID to stake?',
                     },
                 ]);
-
+                let amount = 0
                 let finalAmount = Number(amount) * 1000000000 // e.g. to stake 5 Gora the amount will be 5000000000
                 //await goraDaoDeployer.stakeStakingContract(Number(amount));
                 let nftArray = nftId.split(',');
                 await goraDaoDeployer.unstakeProxyStakingContract(2, Number(finalAmount), nftArray);
                 //await goraDaoDeployer.printStakingUserBox();
-               
+          
+              
+                await delay(4000)
+
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -1120,7 +1123,7 @@ async function stakingOperations() {
                     },
                 ]);
                 // await goraDaoDeployer.manualAggregationProxyStakingContract(2);
-                await goraDaoDeployer.userClaimProxyStakingContract(2,Number(nftId));
+                await goraDaoDeployer.userClaimProxyStakingContract(2, Number(nftId));
                 //await goraDaoDeployer.printStakingUserBox();
                 //await goraDaoDeployer.printStakingNFTBox(nftId);
 
@@ -1247,6 +1250,9 @@ async function stakingOperations() {
     if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu') {
         await stakingOperations();
     }
+}
+async function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 async function mainMenu(isInteractive) {
     // Run deployer for account preparation and loading Mnemonics

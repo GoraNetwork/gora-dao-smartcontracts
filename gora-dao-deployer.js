@@ -3795,6 +3795,9 @@ const GoraDaoDeployer = class {
 
         return result;
     }
+    async  delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
     // This function is used to stake in a proxy staking contract
     async unstakeProxyStakingContract(userIndex, amount, nftIds) {
 
