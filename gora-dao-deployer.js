@@ -3775,7 +3775,18 @@ const GoraDaoDeployer = class {
 
 
     }
-
+     concatArrays(array) {
+        const size = array.reduce((sum, arr) => sum + arr.length, 0);
+        const c = new Uint8Array(size);
+      
+        let offset = 0;
+        for (let i = 0; i < array.length; i++) {
+          c.set(array[i], offset);
+          offset += array[i].length;
+        }
+      
+        return c;
+      }
     // This function is used to stake in a proxy staking contract
     async unstakeProxyStakingContract(userIndex, amount, nftIds) {
         let parentTxnGroupsArray = []
@@ -3925,12 +3936,12 @@ const GoraDaoDeployer = class {
             
      
             this.logger.info('Sending Unstake Transaction Group'); 
-            parentTxnGroupsArray.push(txnGroupFinal)
+            parentTxnGroupsArray.push(this.concatArrays(txnGroupFinal))
               
-            const { txId } = await this.algodClient.sendRawTransaction(txnGroupFinal).do();
+            // const { txId } = await this.algodClient.sendRawTransaction(txnGroupFinal).do();
 
-            const waitForTxn = await this.algosdk.waitForConfirmation(this.algodClient, txId, 5);
-            this.logger.info(`Transaction ${txId} confirmed in round ${waitForTxn['confirmed-round']}.`);
+            // const waitForTxn = await this.algosdk.waitForConfirmation(this.algodClient, txId, 5);
+            // this.logger.info(`Transaction ${txId} confirmed in round ${waitForTxn['confirmed-round']}.`);
            
         
             this.config['gora_dao']['staking_is_unstaked'] = true;
@@ -3946,6 +3957,7 @@ const GoraDaoDeployer = class {
             //await this.printStakingNFTBox(nftId)
 
         }
+        await this.algodClient.sendRawTransaction(parentTxnGroupsArray).do();
 
     }
     // This function is used to iterate N NFTs minting and save them to config for testing purposes
