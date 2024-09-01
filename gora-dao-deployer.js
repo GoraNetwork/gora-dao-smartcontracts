@@ -3732,7 +3732,7 @@ const GoraDaoDeployer = class {
                 methodArgs: argsDao,
                 ...commonParamsDao
             })
-    
+
             this.logger.info('------------------------------')
             this.logger.info("GoraDAO Staking Contract ABI Exec method = %s", `${methodDaoStakingStake.name}(${methodDaoStakingStake.args.map(item => item.type)})${methodDaoStakingStake.returns.type}`);
 
@@ -3775,18 +3775,24 @@ const GoraDaoDeployer = class {
 
 
     }
-     concatArrays(array) {
-        const size = array.reduce((sum, arr) => sum + arr.length, 0);
-        const c = new Uint8Array(size);
-      
+    concatArrays(arrays) {
+        // Calculate the total length of the concatenated array
+        let totalLength = arrays.reduce((acc, curr) => acc + curr.length, 0);
+
+        // Create a new Uint8Array with the total length
+        let result = new Uint8Array(totalLength);
+
+        // Track the position where the next array will be placed
         let offset = 0;
-        for (let i = 0; i < array.length; i++) {
-          c.set(array[i], offset);
-          offset += array[i].length;
+
+        // Iterate over the input arrays and copy their contents into the result array
+        for (let array of arrays) {
+            result.set(array, offset);
+            offset += array.length;
         }
-      
-        return c;
-      }
+
+        return result;
+    }
     // This function is used to stake in a proxy staking contract
     async unstakeProxyStakingContract(userIndex, amount, nftIds) {
         let parentTxnGroupsArray = []
@@ -3821,7 +3827,7 @@ const GoraDaoDeployer = class {
                     { appIndex: Number(this.goraDaoMainApplicationId), name: stakeAdminPublicKey.publicKey },// Staking admin account
                 ],
             }
-            
+
 
 
 
@@ -3846,7 +3852,7 @@ const GoraDaoDeployer = class {
 
             })
             this.logger.info('------------------------------')
-         
+
 
 
 
@@ -3860,8 +3866,8 @@ const GoraDaoDeployer = class {
             const commonParamsStakingUnstake = {
                 appID: Number(this.goraDaoStakingApplicationId),
                 appForeignAssets: [Number(this.stakingAsset), nftId],
-                appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager']],
-                appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
+                appAccounts: [this.stakingParams['staking_proxy_app_address']],
+                appForeignApps: [Number(this.stakingParams['staking_proxy_app_id'])],
                 sender: this[`goraDaoUserAccount${userIndex}`].addr,
                 suggestedParams: params,
                 signer: signer,
@@ -3891,10 +3897,10 @@ const GoraDaoDeployer = class {
                 suggestedParams: commonParamsStakingUnstake.suggestedParams
             })
             // Add GoraDAO Staking ABI call for staking
-          
+
             this.logger.info('------------------------------')
-             let methodDStakingUserClaim = this.getMethodByName("user_claim", goraDaoStakingContractAbi);
-    
+            let methodDStakingUserClaim = this.getMethodByName("user_claim", goraDaoStakingContractAbi);
+
             const commonParamsStakingClaim = {
                 appID: Number(this.goraDaoStakingApplicationId),
                 appForeignAssets: [Number(this.stakingAsset), nftId],
@@ -3926,24 +3932,24 @@ const GoraDaoDeployer = class {
                 suggestedParams: commonParamsStakingClaim.suggestedParams
             })
 
-            const txnGroup = [txnDaoUnstake, txnStakingUnstake, txnStakingClaim]
-            this.algosdk.assignGroupID(txnGroup)
+            let txnGroup = [txnDaoUnstake, txnStakingUnstake, txnStakingClaim]
+            txnGroup = this.algosdk.assignGroupID(txnGroup)
             const txnGroupFinal = [
                 txnGroup[0].signTxn(this.goraDaoUserAccount2.sk),
                 txnGroup[1].signTxn(this.goraDaoUserAccount2.sk),
                 txnGroup[2].signTxn(this.goraDaoUserAccount2.sk)
             ]
-            
-     
-            this.logger.info('Sending Unstake Transaction Group'); 
-            parentTxnGroupsArray.push(this.concatArrays(txnGroupFinal))
-              
-            // const { txId } = await this.algodClient.sendRawTransaction(txnGroupFinal).do();
 
-            // const waitForTxn = await this.algosdk.waitForConfirmation(this.algodClient, txId, 5);
-            // this.logger.info(`Transaction ${txId} confirmed in round ${waitForTxn['confirmed-round']}.`);
-           
-        
+
+            this.logger.info('Sending Unstake Transaction Group');
+            parentTxnGroupsArray.push(this.concatArrays(txnGroupFinal))
+
+            const { txId } = await this.algodClient.sendRawTransaction(txnGroupFinal).do();
+
+            const waitForTxn = await this.algosdk.waitForConfirmation(this.algodClient, txId, 5);
+            this.logger.info(`Transaction ${txId} confirmed in round ${waitForTxn['confirmed-round']}.`);
+
+
             this.config['gora_dao']['staking_is_unstaked'] = true;
 
             for (let index = 0; index < this.config['deployer']['nft_staking_test_assets'].length; index++) {
@@ -3957,7 +3963,7 @@ const GoraDaoDeployer = class {
             //await this.printStakingNFTBox(nftId)
 
         }
-        await this.algodClient.sendRawTransaction(parentTxnGroupsArray).do();
+       // await this.algodClient.sendRawTransaction(this.concatArrays(parentTxnGroupsArray)).do();
 
     }
     // This function is used to iterate N NFTs minting and save them to config for testing purposes
