@@ -205,19 +205,19 @@
       {
         "asset": 2275218836,
         "value": 9,
-        "isLocked": false,
+        "isLocked": true,
         "sentTo": "LP6QRRBRDTDSP4HF7CSPWJV4AG4QWE437OYHGW7K5Y7DETKCSK5H3HCA7Q"
       },
       {
         "asset": 2275218894,
         "value": 5,
-        "isLocked": false,
+        "isLocked": true,
         "sentTo": "LP6QRRBRDTDSP4HF7CSPWJV4AG4QWE437OYHGW7K5Y7DETKCSK5H3HCA7Q"
       },
       {
         "asset": 2275218998,
         "value": 5,
-        "isLocked": false,
+        "isLocked": true,
         "sentTo": "LP6QRRBRDTDSP4HF7CSPWJV4AG4QWE437OYHGW7K5Y7DETKCSK5H3HCA7Q"
       },
       {

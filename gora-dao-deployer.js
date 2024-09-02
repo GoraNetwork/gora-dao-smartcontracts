@@ -1616,8 +1616,8 @@ const GoraDaoDeployer = class {
         await this.saveConfigToFile(this.config)
     }
     async sendStakingNFTtoWalletAddress(walletAddress, nftId) {
-        let addrFromStaking = this.goraDaoStakingAdminAccount.addr;
-        let amount = 0;
+        let addrFromStaking = this.goraDaoUserAccount2.addr;
+        let amount = 1;
         let params = await this.algodClient.getTransactionParams().do();
         // Axfer transactions to 
         const txnSendToWallet = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
@@ -1632,7 +1632,7 @@ const GoraDaoDeployer = class {
             undefined
         );
         // Sign the transaction
-        const txnSendToWalletSigned = txnSendToWallet.signTxn(this.goraDaoStakingAdminAccount.sk);
+        const txnSendToWalletSigned = txnSendToWallet.signTxn(this.goraDaoUserAccount2.sk);
         const signedSendToWalletTxnResponse = await await this.algodClient.sendRawTransaction(txnSendToWalletSigned).do();
         this.logger.info(`Transaction ID: ${signedSendToWalletTxnResponse.txId}`);
         // Wait for confirmation
