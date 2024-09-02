@@ -892,7 +892,7 @@ async function stakingOperations() {
             break;
         case 'Distribute Staking Asset':
             try {
-                await goraDaoDeployer.sendStakingAssetTransaction();
+                await goraDaoDeployer.sendStakingAssetTransaction(false,2);
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -913,7 +913,7 @@ async function stakingOperations() {
             break;
         case 'Distribute Staking Asset(App only)':
             try {
-                await goraDaoDeployer.sendStakingAssetTransaction(true);
+                await goraDaoDeployer.sendStakingAssetTransaction(true,2);
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -934,7 +934,7 @@ async function stakingOperations() {
             break;
         case 'Re-Distribute Staking Asset(App only)':
             try {
-                await goraDaoDeployer.sendStakingAssetTransaction(true);
+                await goraDaoDeployer.sendStakingAssetTransaction(true,2);
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -955,7 +955,7 @@ async function stakingOperations() {
             break;
         case 'Re-Distribute Staking Asset':
             try {
-                await goraDaoDeployer.sendStakingAssetTransaction();
+                await goraDaoDeployer.sendStakingAssetTransaction(false,2);
                 await inquirer.prompt([
                     {
                         type: 'input',

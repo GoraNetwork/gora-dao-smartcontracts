@@ -3278,9 +3278,9 @@ const GoraDaoDeployer = class {
                 0, // return_algo
                 1,//incentives_eligibility
             ],
-            "Test Staking", //name
-            "This is a test staking contract for GoraDAO",//description
-            "https://develop.gora.fi", //staking_url
+            "GoraBots Staking", //name
+            "GoraDAO Staking contract for GoraBots NFT Staking",//description
+            "https://gora.fi", //staking_url
             "QmWjvCGPyL9zmA5B84WPqLYF27dL2nFgr1Lw6rMd7CpQPV/images/goranetwork_logo.jpeg",//banner
             this.proxyStakingMainAppId, //proxy_staking_main_app_id
             this.proxyStakingVestingAppId //proxy_staking_vesting_app_id
