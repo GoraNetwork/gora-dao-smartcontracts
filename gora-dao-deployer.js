@@ -3942,7 +3942,7 @@ const GoraDaoDeployer = class {
                 appID: Number(this.goraDaoStakingApplicationId),
                 appForeignAssets: [Number(this.stakingAsset), nftId],
                 appAccounts: [this.stakingParams['staking_proxy_app_address'], this.stakingParams['staking_proxy_app_manager']],
-                appForeignApps: [Number(this.stakingParams['staking_proxy_app_id']), Number(this.proxyStakingMainAppId)],
+                appForeignApps: [Number(this.stakingParams['staking_proxy_app_id'])],
                 sender: this[`goraDaoUserAccount${userIndex}`].addr,
                 suggestedParams: params,
                 signer: signer,
