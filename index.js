@@ -1263,13 +1263,21 @@ async function mainMenu(isInteractive) {
                 type: 'list',
                 name: 'action',
                 message: 'Select the operation to perform:',
-                choices: [
+                choices: config['gora_dao']['dao_dao_deployed']==='true'?[
                     'Tester Accounts Dispense',
                     'Tester Accounts Stats',
                     'Reset Configurations file',
                     'GoraDAO Operations',
                     'Proposals Operations',
                     'Staking Operations',
+                    'Tester Accounts Recreate (optional! be careful!)',
+                    'Help',
+                    'Exit'
+                ]:[
+                    'Tester Accounts Dispense',
+                    'Tester Accounts Stats',
+                    'Reset Configurations file',
+                    'GoraDAO Operations',
                     'Tester Accounts Recreate (optional! be careful!)',
                     'Help',
                     'Exit'
