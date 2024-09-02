@@ -336,6 +336,7 @@ async function goraDAOOperations() {
 }
 async function proposalsOperations() {
     let choices = [];
+   
     if (!(Number(config['gora_dao']['proposal_asa_id']) > 0)) {
         choices.push('Create GoraDAO Proposals Asset',)
     }
@@ -676,11 +677,11 @@ async function proposalsOperations() {
     }
 
     // Loop back to proposals operations menu unless going back to main menu
-    if (answers.proposalOperation && answers.proposalOperation !== 'Back to Main Menu') {
+    if (answers.proposalOperation && answers.proposalOperation !== 'Back to Main Menu' && config['gora_dao']['dao_dao_deployed'] === true) {
         await proposalsOperations();
     }
     // Loop back to staking operations menu unless going back to main menu
-    if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu') {
+    if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu' && config['gora_dao']['dao_dao_deployed'] === true) {
         await stakingOperations();
     }
 }
@@ -1229,11 +1230,11 @@ async function stakingOperations() {
     }
 
     // Loop back to proposals operations menu unless going back to main menu
-    if (answers.proposalOperation && answers.proposalOperation !== 'Back to Main Menu') {
+    if (answers.proposalOperation && answers.proposalOperation !== 'Back to Main Menu' && config['gora_dao']['dao_dao_deployed'] === true) {
         await proposalsOperations();
     }
     // Loop back to Stakings operations menu unless going back to main menu
-    if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu') {
+    if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu' &&  config['gora_dao']['dao_dao_deployed'] === true) {
         await stakingOperations();
     }
 }
