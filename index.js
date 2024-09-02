@@ -735,6 +735,7 @@ async function stakingOperations() {
 
 
 
+    choices.push('Send NFT to Wallet Address')
     choices.push('Print Staking User Box')
     choices.push('Help')
     choices.push('Back to Main Menu')
@@ -1113,6 +1114,45 @@ async function stakingOperations() {
                 ]);
             }
             break;
+            case 'Send NFT to Wallet Address':
+            try {
+                let { nftId } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'nftId',
+                        message: 'What is the NFT ID to stake?',
+                    },
+                ]);
+                let { walletAddress } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'walletAddress',
+                        message: 'What is wallet address to send NFT to?',
+                    },
+                ]);
+            
+                await goraDaoDeployer.sendStakingNFTtoWalletAddress(walletAddress, Number(nftId));
+           
+
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+            
         case 'Activate Staking':
             try {
                 await goraDaoDeployer.activateStakingContract();
