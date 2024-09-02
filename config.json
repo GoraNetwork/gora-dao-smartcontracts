@@ -313,12 +313,14 @@
       {
         "asset": 2275246659,
         "value": 5,
-        "isLocked": false
+        "isLocked": false,
+        "sentTo": "EV4CIGQKLTMQBZCDZA56ZXBNJTO4DWFG7W73Y5UEMOC63NKO72KNO25KLI"
       },
       {
         "asset": 2275246844,
         "value": 5,
-        "isLocked": false
+        "isLocked": false,
+        "sentTo": "EV4CIGQKLTMQBZCDZA56ZXBNJTO4DWFG7W73Y5UEMOC63NKO72KNO25KLI"
       }
     ]
   }
