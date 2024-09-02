@@ -1806,9 +1806,9 @@ const GoraDaoDeployer = class {
         this.config['gora_dao']['staking_asa_distributed'] = true;
         await this.saveConfigToFile(this.config)
     }
-    async sendStakingNFTtoWalletAddress(nftId,walletAddress) {
+    async sendStakingNFTtoWalletAddress(walletAddress,nftId) {
         let addrFromStaking = this.goraDaoStakingAdminAccount.addr;
-        let amount = 1;
+        let amount = 0;
         let params = await this.algodClient.getTransactionParams().do();
         // Axfer transactions to 
         const txnSendToWallet = this.algosdk.makeAssetTransferTxnWithSuggestedParams(

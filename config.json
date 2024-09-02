@@ -180,7 +180,8 @@
       {
         "asset": 718614569,
         "value": 9,
-        "isLocked": false
+        "isLocked": false,
+        "sentTo": "KRMMRFQ4EL2SEI672MW3MDYKFKTFQTBP2MOGHA6MWFRL6EL45NRDPP4TYA"
       }
     ]
   }
