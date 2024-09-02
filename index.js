@@ -994,7 +994,6 @@ async function stakingOperations() {
                 ]);
             }
             break;
-
         case 'Stake into staking contract':
             try {
                 // let { amount } = await inquirer.prompt([
@@ -1011,7 +1010,7 @@ async function stakingOperations() {
                         message: 'What is the NFT ID to stake?',
                     },
                 ]);
-let amount = 0
+                let amount = 0
                 let finalAmount = Number(amount) * 1000000000 // e.g. to stake 5 Gora the amount will be 5000000000
                 //await goraDaoDeployer.stakeStakingContract(Number(amount));
                 let nftArray = nftId.split(',');
@@ -1060,8 +1059,8 @@ let amount = 0
                 let nftArray = nftId.split(',');
                 await goraDaoDeployer.unstakeProxyStakingContract(2, Number(finalAmount), nftArray);
                 //await goraDaoDeployer.printStakingUserBox();
-          
-              
+
+
                 await delay(5000)
 
                 await inquirer.prompt([
@@ -1082,37 +1081,6 @@ let amount = 0
                 ]);
             }
             break;
-        // case 'Withdraw stake from staking contract':
-        //     try {
-        //         // await goraDaoDeployer.manualAggregationProxyStakingContract(2);
-        //         let { nftId } = await inquirer.prompt([
-        //             {
-        //                 type: 'input',
-        //                 name: 'nftId',
-        //                 message: 'What is the NFT ID to withdraw rewards for?',
-        //             },
-        //         ]);
-        //         await goraDaoDeployer.withdrawProxyStakingContract(2,Number(nftId));
-        //         await goraDaoDeployer.printStakingUserBox();
-
-        //         await inquirer.prompt([
-        //             {
-        //                 type: 'input',
-        //                 name: 'continue',
-        //                 message: 'Press Enter to go back to menu...',
-        //             },
-        //         ]);
-        //     } catch (error) {
-        //         console.error('An error occurred:', error);
-        //         await inquirer.prompt([
-        //             {
-        //                 type: 'input',
-        //                 name: 'continue',
-        //                 message: 'Press Enter to go back to menu...',
-        //             },
-        //         ]);
-        //     }
-        //     break;
         case 'User claim from staking contract':
             try {
                 let { nftId } = await inquirer.prompt([
@@ -1166,29 +1134,6 @@ let amount = 0
                 ]);
             }
             break;
-        // case 'Opt-in to Proxy Staking':
-        // case 'Check Opt-in to Proxy Staking':
-        //     try {
-        //         await goraDaoDeployer.optinProxyStakingContract(2);
-        //         //await goraDaoDeployer.optinProxyStakingContractTransactionAll();
-        //         await inquirer.prompt([
-        //             {
-        //                 type: 'input',
-        //                 name: 'continue',
-        //                 message: 'Press Enter to go back to menu...',
-        //             },
-        //         ]);
-
-        //     } catch (error) {
-        //         console.error('An error occurred:', error);
-        //         await inquirer.prompt([
-        //             {
-        //                 type: 'input',
-        //                 name: 'continue',
-        //                 message: 'Press Enter to go back to menu...',
-        //             },
-        //         ]);
-        //     }
         case 'Back to Main Menu':
             await mainMenu(true);
             break;

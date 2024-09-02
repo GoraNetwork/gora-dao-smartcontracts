@@ -1806,6 +1806,37 @@ const GoraDaoDeployer = class {
         this.config['gora_dao']['staking_asa_distributed'] = true;
         await this.saveConfigToFile(this.config)
     }
+    async sendStakingNFTtoWalletAddress(nftId,walletAddress) {
+        let addrFromStaking = this.goraDaoStakingAdminAccount.addr;
+        let amount = 1;
+        let params = await this.algodClient.getTransactionParams().do();
+        // Axfer transactions to 
+        const txnSendToWallet = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            addrFromStaking, // from
+            walletAddress, // to 
+            undefined, // closeRemainderTo
+            undefined, // note
+            amount, // amount 
+            undefined,// Note
+            nftId, // assetID
+            params,
+            undefined
+        );
+        // Sign the transaction
+        const txnSendToWalletSigned = txnSendToWallet.signTxn(this.goraDaoStakingAdminAccount.sk);
+        const signedSendToWalletTxnResponse = await await this.algodClient.sendRawTransaction(txnSendToWalletSigned).do();
+        this.logger.info(`Transaction ID: ${signedSendToWalletTxnResponse.txId}`);
+        // Wait for confirmation
+        const confirmedSignedSendToWalletTxn = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToWalletTxnResponse.txId, 5);
+        this.logger.info(`Transaction ${signedSendToWalletTxnResponse.txId} confirmed in round ${confirmedSignedSendToWalletTxn['confirmed-round']}.`);
+        this.logger.info('GoraDAO Asset has been sent to The GoraDAO App successfully')
+        for (let index = 0; index < this.config['deployer']['nft_staking_test_assets'].length; index++) {
+            if (this.config['deployer']['nft_staking_test_assets'][index].asset == nftId) {
+                this.config['deployer']['nft_staking_test_assets'][index].sentTo = walletAddress;
+            }
+        }
+        await this.saveConfigToFile(this.config)
+    }
     // Send all ALGOs from the local accounts to the target account and delete the accounts mnemonic files
     async sendAllAlgosAndDeleteMnemonics() {
         // Define mnemonic files and their corresponding keys in this object
