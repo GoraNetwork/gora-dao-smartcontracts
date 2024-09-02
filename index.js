@@ -1116,18 +1116,19 @@ async function stakingOperations() {
             break;
             case 'Send NFT to Wallet Address':
             try {
-                let { nftId } = await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'nftId',
-                        message: 'What is the NFT ID to stake?',
-                    },
-                ]);
+                
                 let { walletAddress } = await inquirer.prompt([
                     {
                         type: 'input',
                         name: 'walletAddress',
                         message: 'What is wallet address to send NFT to?',
+                    },
+                ]);
+                let { nftId } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'nftId',
+                        message: 'What is the NFT ID to be sent?',
                     },
                 ]);
             
