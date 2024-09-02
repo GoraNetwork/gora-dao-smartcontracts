@@ -223,7 +223,7 @@ async function goraDAOOperations() {
         case 'Subscribe to GoraDAO':
             try {
                 // Subscribing Gora Proposal account to DAO
-                await goraDaoDeployer.subscribeDaoContract('proposal');
+               //await goraDaoDeployer.subscribeDaoContract('proposal');
                 // Subscribing Gora Staking account to DAO
                 await goraDaoDeployer.subscribeDaoContract('staking');
                 await inquirer.prompt([
@@ -677,11 +677,11 @@ async function proposalsOperations() {
     }
 
     // Loop back to proposals operations menu unless going back to main menu
-    if (answers.proposalOperation && answers.proposalOperation !== 'Back to Main Menu' && config['gora_dao']['dao_dao_deployed'] === true) {
+    if (answers.proposalOperation && answers.proposalOperation !== 'Back to Main Menu' ) {
         await proposalsOperations();
     }
     // Loop back to staking operations menu unless going back to main menu
-    if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu' && config['gora_dao']['dao_dao_deployed'] === true) {
+    if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu' ) {
         await stakingOperations();
     }
 }
@@ -1230,11 +1230,11 @@ async function stakingOperations() {
     }
 
     // Loop back to proposals operations menu unless going back to main menu
-    if (answers.proposalOperation && answers.proposalOperation !== 'Back to Main Menu' && config['gora_dao']['dao_dao_deployed'] === true) {
+    if (answers.proposalOperation && answers.proposalOperation !== 'Back to Main Menu' ) {
         await proposalsOperations();
     }
     // Loop back to Stakings operations menu unless going back to main menu
-    if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu' &&  config['gora_dao']['dao_dao_deployed'] === true) {
+    if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu' ) {
         await stakingOperations();
     }
 }

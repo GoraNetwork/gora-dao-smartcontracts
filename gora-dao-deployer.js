@@ -1087,7 +1087,7 @@ const GoraDaoDeployer = class {
         let addrToProposer = this.goraDaoProposalAdminAccount.addr;
         let addrToStaking = this.goraDaoStakingAdminAccount.addr;
         let appAddrTo = this.config.gora_dao.asc_testnet_main_address;
-        let amount = 30;
+        let amount = 25;
         let params = await this.algodClient.getTransactionParams().do();
         const txnOptinProposer = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
             addrToProposer, // from
@@ -1838,8 +1838,14 @@ const GoraDaoDeployer = class {
         this.logger.info("GoraNetwork Main Application Address: %s funded!", this.goraDaoMainApplicationAddress);
         this.logger.info('------------------------------')
 
-        this.config['gora_dao']['asc_testnet_main_id'] = appId;
-        this.config['gora_dao']['asc_testnet_main_address'] = this.goraDaoMainApplicationAddress;
+        if (this.config['gora_dao']['network'] == 'testnet') {
+            this.config['gora_dao']['asc_testnet_main_id'] = appId;
+            this.config['gora_dao']['asc_testnet_main_address'] = this.goraDaoMainApplicationAddress;
+
+        } else {
+            this.config['gora_dao']['asc_main_id'] = appId;
+            this.config['gora_dao']['asc_main_address'] = this.goraDaoMainApplicationAddress;
+        }
         this.config['gora_dao']['dao_dao_deployed'] = true;
         this.goraDaoMainApplicationId = appId
         this.goraDaoMainApplicationAddress = this.algosdk.getApplicationAddress(Number(appId));
