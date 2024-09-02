@@ -94,10 +94,10 @@ const GoraDaoDeployer = class {
         this.stakingApprovalProgData = props.stakingApprovalProgData
         this.stakingClearProgData = props.stakingClearProgData
 
-        this.proxyStakingMainAppId = props.config.gora_dao.network === 'testnet' ? props.config.deployer.staking_testnet.proxy_staking_main_app_id : props.config.deployer.staking.proxy_staking_main_app_id
-        this.proxyStakingVestingAppId = props.config.gora_dao.network === 'testnet' ? props.config.deployer.staking_testnet.proxy_staking_vesting_app_id : props.config.deployer.staking.proxy_staking_vesting_app_id
+        this.proxyStakingMainAppId = props.config.gora_dao.network === 'testnet' ? props.config.deployer.staking_testnet.proxy_staking_main_app_id : props.config.deployer.staking_mainnet.proxy_staking_main_app_id
+        this.proxyStakingVestingAppId = props.config.gora_dao.network === 'testnet' ? props.config.deployer.staking_testnet.proxy_staking_vesting_app_id : props.config.deployer.staking_mainnet.proxy_staking_vesting_app_id
 
-        this.stakingParams = props.config.gora_dao.network === 'testnet' ? props.config.deployer.staking_testnet.staking_params : props.config.deployer.staking.staking_params
+        this.stakingParams = props.config.gora_dao.network === 'testnet' ? props.config.deployer.staking_testnet.staking_params : props.config.deployer.staking_mainnet.staking_params
         this.goraToken = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.gora_testnet_token_id : props.config.gora_dao.gora_token_id
         this.isGoraTokenEnforced = props.config.gora_dao.enforce_gora_token
 
