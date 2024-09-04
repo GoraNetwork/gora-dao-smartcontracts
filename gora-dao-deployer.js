@@ -1086,7 +1086,7 @@ const GoraDaoDeployer = class {
         let addrFrom = this.goraDaoAdminAccount.addr;
         let addrToProposer = this.goraDaoProposalAdminAccount.addr;
         let addrToStaking = this.goraDaoStakingAdminAccount.addr;
-        let appAddrTo = this.config.gora_dao.asc_testnet_main_address;
+        let appAddrTo = this.config.gora_dao.network === "testnet"?config.gora_dao.asc_testnet_main_address: config.gora_dao.asc_main_address;
         let amount = 25;
         let params = await this.algodClient.getTransactionParams().do();
         const txnOptinProposer = this.algosdk.makeAssetTransferTxnWithSuggestedParams(

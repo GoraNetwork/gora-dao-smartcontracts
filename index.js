@@ -223,7 +223,7 @@ async function goraDAOOperations() {
         case 'Subscribe to GoraDAO':
             try {
                 // Subscribing Gora Proposal account to DAO
-               //await goraDaoDeployer.subscribeDaoContract('proposal');
+                //await goraDaoDeployer.subscribeDaoContract('proposal');
                 // Subscribing Gora Staking account to DAO
                 await goraDaoDeployer.subscribeDaoContract('staking');
                 await inquirer.prompt([
@@ -336,7 +336,7 @@ async function goraDAOOperations() {
 }
 async function proposalsOperations() {
     let choices = [];
-   
+
     if (!(Number(config['gora_dao']['proposal_asa_id']) > 0)) {
         choices.push('Create GoraDAO Proposals Asset',)
     }
@@ -677,11 +677,11 @@ async function proposalsOperations() {
     }
 
     // Loop back to proposals operations menu unless going back to main menu
-    if (answers.proposalOperation && answers.proposalOperation !== 'Back to Main Menu' ) {
+    if (answers.proposalOperation && answers.proposalOperation !== 'Back to Main Menu') {
         await proposalsOperations();
     }
     // Loop back to staking operations menu unless going back to main menu
-    if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu' ) {
+    if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu') {
         await stakingOperations();
     }
 }
@@ -709,6 +709,7 @@ async function stakingOperations() {
         }
         //choices.push('Withdraw stake from staking contract')
         choices.push('User claim from staking contract')
+        choices.push('Demo Dynamic Rewards Claim evert 5 seconds')
         // if (config['gora_dao']['staking_is_unstaked'] === true) {
         //     choices.push('Withdraw stake from staking contract')
         // }
@@ -892,7 +893,7 @@ async function stakingOperations() {
             break;
         case 'Distribute Staking Asset':
             try {
-                await goraDaoDeployer.sendStakingAssetTransaction(false,2);
+                await goraDaoDeployer.sendStakingAssetTransaction(false, 2);
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -913,7 +914,7 @@ async function stakingOperations() {
             break;
         case 'Distribute Staking Asset(App only)':
             try {
-                await goraDaoDeployer.sendStakingAssetTransaction(true,2);
+                await goraDaoDeployer.sendStakingAssetTransaction(true, 2);
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -934,7 +935,7 @@ async function stakingOperations() {
             break;
         case 'Re-Distribute Staking Asset(App only)':
             try {
-                await goraDaoDeployer.sendStakingAssetTransaction(true,2);
+                await goraDaoDeployer.sendStakingAssetTransaction(true, 2);
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -955,7 +956,7 @@ async function stakingOperations() {
             break;
         case 'Re-Distribute Staking Asset':
             try {
-                await goraDaoDeployer.sendStakingAssetTransaction(false,2);
+                await goraDaoDeployer.sendStakingAssetTransaction(false, 2);
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -1093,6 +1094,7 @@ async function stakingOperations() {
                     },
                 ]);
                 // await goraDaoDeployer.manualAggregationProxyStakingContract(2);
+
                 await goraDaoDeployer.userClaimProxyStakingContract(2, Number(nftId));
                 //await goraDaoDeployer.printStakingUserBox();
                 //await goraDaoDeployer.printStakingNFTBox(nftId);
@@ -1115,26 +1117,27 @@ async function stakingOperations() {
                 ]);
             }
             break;
-            case 'Send NFT to Wallet Address':
+        case 'Demo Dynamic Rewards Claim evert 5 seconds':
             try {
-                
-                let { walletAddress } = await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'walletAddress',
-                        message: 'What is wallet address to send NFT to?',
-                    },
-                ]);
                 let { nftId } = await inquirer.prompt([
                     {
                         type: 'input',
                         name: 'nftId',
-                        message: 'What is the NFT ID to be sent?',
+                        message: 'What is the NFT ID to claim rewards for?',
                     },
                 ]);
-            
-                await goraDaoDeployer.sendStakingNFTtoWalletAddress(walletAddress, Number(nftId));
-           
+                let counter = 0;
+                // await goraDaoDeployer.manualAggregationProxyStakingContract(2);
+                while (counter < 100) {
+                    await goraDaoDeployer.userClaimProxyStakingContract(2, Number(nftId));
+                    console.log('Claimed rewards for NFT ID: ', nftId);
+                    console.log('Waiting 5 seconds before next claim...');
+                    await delay(5000)
+                    counter++;
+                }
+
+                //await goraDaoDeployer.printStakingUserBox();
+                //await goraDaoDeployer.printStakingNFTBox(nftId);
 
                 await inquirer.prompt([
                     {
@@ -1154,7 +1157,46 @@ async function stakingOperations() {
                 ]);
             }
             break;
-            
+        case 'Send NFT to Wallet Address':
+            try {
+
+                let { walletAddress } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'walletAddress',
+                        message: 'What is wallet address to send NFT to?',
+                    },
+                ]);
+                let { nftId } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'nftId',
+                        message: 'What is the NFT ID to be sent?',
+                    },
+                ]);
+
+                await goraDaoDeployer.sendStakingNFTtoWalletAddress(walletAddress, Number(nftId));
+
+
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+
         case 'Activate Staking':
             try {
                 await goraDaoDeployer.activateStakingContract();
@@ -1230,11 +1272,11 @@ async function stakingOperations() {
     }
 
     // Loop back to proposals operations menu unless going back to main menu
-    if (answers.proposalOperation && answers.proposalOperation !== 'Back to Main Menu' ) {
+    if (answers.proposalOperation && answers.proposalOperation !== 'Back to Main Menu') {
         await proposalsOperations();
     }
     // Loop back to Stakings operations menu unless going back to main menu
-    if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu' ) {
+    if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu') {
         await stakingOperations();
     }
 }
@@ -1263,7 +1305,7 @@ async function mainMenu(isInteractive) {
                 type: 'list',
                 name: 'action',
                 message: 'Select the operation to perform:',
-                choices: config['gora_dao']['dao_dao_deployed']===true?[
+                choices: config['gora_dao']['dao_dao_deployed'] === true ? [
                     'Tester Accounts Dispense',
                     'Tester Accounts Stats',
                     'Reset Configurations file',
@@ -1273,7 +1315,7 @@ async function mainMenu(isInteractive) {
                     'Tester Accounts Recreate (optional! be careful!)',
                     'Help',
                     'Exit'
-                ]:[
+                ] : [
                     'Tester Accounts Dispense',
                     'Tester Accounts Stats',
                     'Reset Configurations file',

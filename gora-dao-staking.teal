@@ -1034,8 +1034,6 @@ method_user_claim:
 
 
 branch_user_claim_finalize:	
-	
-
 	itxn_begin
 	txn Sender
 	itxn_field AssetReceiver

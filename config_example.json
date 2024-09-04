@@ -1,28 +1,28 @@
 {
   "gora_dao": {
     "host": "",
-    "network": "testnet",
+    "network": "mainnet",
     "asc_main_id": 0,
     "asc_main_address": "",
-    "gora_testnet_token_id": 227418519,
+    "gora_testnet_token_id": 0,
     "gora_token_id": 0,
     "enforce_gora_token": true,
     "asc_testnet_main_id": 0,
     "asc_testnet_main_address": "",
     "asc_proposal_id": 0,
-    "asc_testnet_proposal_id": 0,
     "asc_proposal_address": "",
+    "asc_testnet_proposal_id": 0,
     "asc_testnet_proposal_address": "",
     "asc_staking_id": 0,
     "asc_staking_address": "",
     "asc_testnet_staking_id": 0,
     "asc_testnet_staking_address": "",
-    "dao_asa_id": 0,
-    "dao_testnet_asa_id": 0,
+    "dao_asa_id": 1138500612,
+    "dao_testnet_asa_id": 227418519,
     "proposal_asa_id": 0,
     "proposal_testnet_asa_id": 0,
-    "staking_asa_id": 0,
-    "staking_testnet_asa_id": 0,
+    "staking_asa_id": 1138500612,
+    "staking_testnet_asa_id": 227418519,
     "dao_dao_deployed": false,
     "dao_asa_distributed": false,
     "subscribed_to_dao": false,
@@ -92,45 +92,6 @@
     "num_local_byte": 2,
     "num_global_int": 15,
     "num_global_byte": 15,
-    "proposal": {
-      "proposalName": "proposal_name",
-      "proposalBanner": "proposal_banner",
-      "proposalDesc": "proposal_desc",
-      "proposalTimezone": "proposal_timezone",
-      "proposalAuthor": "proposal_author",
-      "proposalNfd": "proposal_nfd",
-      "proposalUrl": "proposal_url",
-      "proposalPdf": "proposal_pdf",
-      "proposalEmail": "proposal_email",
-      "start": 1661863665,
-      "end": 1661863665,
-      "amount": 10000000,
-      "threshold": 3,
-      "vesting_recurrence": 1,
-      "vesting_period": 2000,
-      "vesting_idle": 1000,
-      "thresholds": [
-        [
-          100,
-          100,
-          52
-        ],
-        [
-          80,
-          70,
-          70
-        ],
-        [
-          60,
-          50,
-          70
-        ]
-      ],
-      "min_participation_token": 1000,
-      "min_participation_balance": 3000000,
-      "participation_token": 1000000,
-      "vote_stake": 1500000
-    },
     "staking_testnet": {
       "proxy_staking_main_app_id": 253775752,
       "proxy_staking_vesting_app_id": 259104850,
@@ -166,22 +127,40 @@
         "staking_incentives_eligibility": 1
       }
     },
-    "nft_staking_test_assets": [
-      {
-        "asset": 718614536,
-        "value": 6,
-        "isLocked": true
-      },
-      {
-        "asset": 718614568,
-        "value": 9,
-        "isLocked": true
-      },
-      {
-        "asset": 718614569,
-        "value": 9,
-        "isLocked": true
+    "staking_mainnet": {
+      "proxy_staking_main_app_id": 1140801821,
+      "proxy_staking_vesting_app_id": 1151926724,
+      "proxy_staking_main_app_address": "B3W2SZEAGXJHDUJOQ6ERMGYO2ZELVXDO4ITORDNOM2RKQH7ZDTHHA7YJLM",
+      "staking_params": {
+        "staking_min_algo": 0,
+        "staking_min_token": 25,
+        "staking_duration": 2592000,
+        "staking_min_duration": 2592000,
+        "staking_commission_percentage": 10,
+        "staking_commission_percentage_algo": 0,
+        "staking_fee_token": 0,
+        "staking_fee_algo": 0,
+        "staking_incentives_percentage": 2,
+        "staking_incentives_percentage_algo": 0,
+        "staking_type": 1,
+        "staking_incentives_duration": 30,
+        "staking_return_percentage": 10,
+        "staking_return_percentage_algo": 0,
+        "staking_proxy_app_id": 1176215646,
+        "staking_name": "Ferrum Network",
+        "staking_description": "Ferrum is ushering in the era of blockchain interoperability 2.0. Powered by the multichain messaging engine known as Quantum Portal, Ferrum Network’s mainnet will bring value, data, and functional interoperability to every chain in the industry. Utilize Ferrum Network to build and deploy solutions on one network and instantly enable multichain functionality without the burden or technical debt that comes with managing a multichain infrastructure.",
+        "staking_url": "https://ferrum.network",
+        "staking_banner": "QmWjvCGPyL9zmA5B84WPqLYF27dL2nFgr1Lw6rMd7CpQPV/images/goranetwork_logo.jpeg",
+        "staking_proxy_app_address": "BNQV4SPCDYLMPWLDLH2HITAB3YVCCLWVK5KG3B44ELYMBESGWAUBAP6JPI",
+        "staking_proxy_app_creator": "3J5K4S5BIHAEN4D4TEMDTBM6CA7CGXGQIJBRMTQYRMKJ3VZFG3VJ65WTUI",
+        "staking_proxy_app_manager": "3J5K4S5BIHAEN4D4TEMDTBM6CA7CGXGQIJBRMTQYRMKJ3VZFG3VJ65WTUI",
+        "staking_proxy_app_participating_address": "OELRJ64AALPISPFFNFUHVSGLKB6RX4XFST35DCW3HBBWLDPUBOL3RBZSLU",
+        "staking_proxy_app_created_at": 1721224697,
+        "staking_proxy_app_updated_at": 1721224697,
+        "staking_proxy_app_is_whitelisted": 0,
+        "staking_proxy_app_is_pending": 0,
+        "staking_incentives_eligibility": 1
       }
-    ]
+    }
   }
 }

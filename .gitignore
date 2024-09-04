@@ -151,3 +151,4 @@ gora_mnemonic7.txt
 /mnemonics/*
 gora_testnet_master_mnemonic.txt
 config_backup.json
+gora_storage.teal
