@@ -17,20 +17,23 @@
 
 This repository is a work in progress and contains Algorand TEAL smart contracts of GoraDAO, plus interactive CLI to test and operate it!
 
-GoraDAO provides dynamic generation of Staking, Proposals and Vesting (optional for future development phase ) contracts via C2C calls and offers unique DAO features:
+GoraDAO provides dynamic generation of Staking, NFT-Staking, Proposals and Vesting (optional for future development phase ) contracts via C2C calls and offers unique DAO features:
 
 - Self-contained, decentralized, and permission-less lifecycle
 - Interactive CLI
+- Web interface provided by GoraNetwork as well
 - 100% Sybil resistant
 - 100% double-vote resistant (as per identity level on Algorand blockchain)
 - Configurable Subscription to DAO and Participation to Proposals
 - Configurable Voting
 - Configurable Algo and BYOT for staking and fees
-- full separation of concerns on staking and fees on both proposals and voting aspects to maintain 100% decentralization and permissionless system
+- Configurable NFT-Staking
+- Full separation of concerns on staking and fees limits for proposals and voting to maintain 100% decentralization and permissionless system.
+- Update and Delete can be disabled on Proposals, Staking and Vesting contracts (After development and community feedback)
 - Configurable Vesting (future phase)
-- Configurable Staking (Direct and delegated staking contract under one DAO)
+- Configurable Staking (Direct and delegated staking V3 contracts under one DAO)
 
-A note on DAO business processes:
+A note on DAO processes:
 
 - GoraDAO Proposal Proposers processes
   - Meet requirements (Minimum subscription fees in Algo and/or DAO Token)
@@ -46,8 +49,13 @@ A note on DAO business processes:
   - Distribute DAO token
 - GoraDAO Staking managers processes:
   - Create Staking
+  - Optionally create Staking Asset (OR enforce Gora token as staking asset)
   - Configure Staking
-  - Distribute DAO token
+  - Activate Staking
+  - Stake (direct staking or NFT staking)
+  - Unstake
+  - Claim
+  - Distribute DAO token (Optional)
 
 A note on threshold parameters structure:
 Each proposal's behavior regarding activation for voting, the conclusion of voting, and such is controlled through some parameters during the proposal configuration ABI call:
@@ -73,7 +81,7 @@ GoraDAO contracts follow these principal designs:
 - All scenarios are created based on ABI calls to GoraDAO contracts
 - There is one Proposal and one Vesting contract(future work) per Proposal to make the GoraDAO as decentralized and permission-less as possible!
 - ABIs 100% compliant with ARC4
-- No Update or Delete for Proposals
+- No Update or Delete for Proposals after Locking
 - No app opt-in or local state usage anywhere
 
 As illustrated in the following diagram GoraDAO on-chain architecture is focused on integration and interoperability with existing working Gora smart contracts!
@@ -86,24 +94,25 @@ graph TB
  
      subgraph Gora
         Gora_Main_Contract[Gora_Main_Contract]
-        Gora_Vesting[Gora_Vesting]
-        Gora_Stake_Delegator[Gora_Stake_Delegator]
+       
 
         subgraph GoraDAO
             GoraDAO_Main((GoraDAO_Main))
             GoraDAO_Proposal((GoraDAO_Proposal))
-            GoraDAO_Vesting((GoraDAO_Vesting))
+            GoraDAO_Vesting[GoraDAO_Vesting]
+            GoraDAO_Stake_Delegator[GoraDAO_Stake_Delegator]
         end
     end
       
-      Gora_Main_Contract((Gora_Main_Contract)) --> Gora_Vesting
-      Gora_Main_Contract((Gora_Main_Contract)) --> Gora_Stake_Delegator
-      Gora_Vesting((Gora_Vesting)) --> Gora_Stake_Delegator
+      GoraDAO_Stake_Delegator((GoraDAO_Stake_Delegator)) --> Gora_Main_Contract
+
 
       GoraDAO_Main((GoraDAO_Main)) --> GoraDAO_Proposal
       GoraDAO_Main((GoraDAO_Main)) --> GoraDAO_Vesting
+      GoraDAO_Main((GoraDAO_Main)) --> GoraDAO_Stake_Delegator
       GoraDAO_Proposal((GoraDAO_Proposal)) --> GoraDAO_Vesting
-      GoraDAO_Vesting((GoraDAO_Vesting)) --> Gora_Stake_Delegator
+      GoraDAO_Stake_Delegator((GoraDAO_Stake_Delegator)) --> GoraDAO_Vesting
+
 
 
 ```
