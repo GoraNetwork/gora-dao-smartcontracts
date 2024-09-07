@@ -160,16 +160,18 @@ graph TB
             Create_Staking[create_staking]
             Configure_Staking[config_staking]
             Update_Staking_Manager_address[update_staking_manager_address]
-            Staking_Participate[staking_participate]
-            Staking_Withdraw_Participation[staking_withdraw_participation]
             Activate_Staking[activate_staking]
-            Force_Close_Staking[close_staking]
+
        
         end
       
 
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Init
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Create
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Create_Asset
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Config
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Update
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Update_Manager_address
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Lock_Update
       GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Subscribe
       GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Unsubscribe
 
@@ -184,12 +186,16 @@ graph TB
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Force_Close_Proposal
 
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Create_Staking
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Update_Staking
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Lock_Staking
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Create_Staking_Asset
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Configure_Staking
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> Staking_Participate
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> Staking_Withdraw_Participation
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Activate_Staking
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Staking_Stake
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> Force_Close_Staking
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Staking_Unstake
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Staking_Claim
+      GoraDAO_Main[GoraDAO_Main_ABI] ---> Staking_Register_NFT
+
  
 
 ```
