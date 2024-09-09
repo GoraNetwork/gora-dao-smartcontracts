@@ -118,32 +118,15 @@ graph TB
 ```
 ### Gora DAO Main Contract: V1
 
-GoraDAO main contract, once deployed to a network, will be responsible for generating Proposal units, consisted of a Proposal and a Vesting Contract(future work) dedicated to that proposal case! This design is to take permission-less and decentralization to the max for GoraDAO!
-GoraNetwork deploys the GoraDAO main contract and owns managerial rights to it and optionally can assign a manager address to delegate the authority to another Algorand account address!
+GoraDAO main contract, once deployed to a network, will be responsible for generating Staking, Proposals and Vesting Contracts(future work).
+GoraNetwork deploys the GoraDAO main contract and owns managerial rights to it and optionally can assign a manager address to delegate the authority to another Algorand account address (probably a multisig for DAO governance).
 
 Proposal contract create and configure ABI calls would create Proposal units (if all criteria is met by the call ARGs) and after that the Proposal creator account would be the manager of that Proposal unit and inherently can assign and delegate this to another account!
 The scope of authority Proposal manager account has is not broad and is only to maintain 100% non-custodial, decentralized and permission-less DAO protocol, nothing more! For example, Proposal manager cannot delete proposal and just can deactivate it and withdraw from it! Delete and update are disabled on Proposals as well as their peer vesting contracts (future work)!
 
-The phases of a proposal lifecycle are:
-
-- Creation
-- Configuration
-- Participation
-- Voting activation
-- Voting
-- Closure
-- Force Closure
 
 
-Important note: Force_Close_Proposal is a multi step process , only designed for extreme emergency cases where something is agreed by almost everyone to go wrong and therefore grants from owner, manager_address and also Gora main contract manager are needed to be effective and close the Proposal and archive it! There are no limitations on creating a new Proposal with identical specifications though!
-
-The activate_proposal is a manual override in case of min_participation is not met! The voting activation handled in GoraDAO:
-- Time based activation in case that min-participation is met!
-- Min participation is met before start time---> activate_proposal can activate (This does not change the voting ending conditions including end_time and all_voted).
-
-Note : Because the vesting(future work) and staking contracts architecture is still an open topic in GoraNetwork, Configure_Vesting method is not detailed in ABI or TEAL code yet!
-
-IDEA: Add configuration to GoraDAO in a way that it should only come from a child proposal to be approved sothat there can be Proposals in the future to tune GoraDAO further more or change the settings on that! E.g. the required Gora amount to create a Proposal!
+Future implementation idea: Add configuration to GoraDAO in a way that it should only come from a child proposal to be approved sothat there can be Proposals in the future to tune GoraDAO further more or change the settings on that! E.g. the required Gora amount to create a Proposal!
 
 ```mermaid
 
@@ -205,11 +188,60 @@ graph TB
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Staking_Claim
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Staking_Register_NFT
 
- 
-
 ```
+### GoraDAO Main Contract Methods
+
+- config_dao: Initializes DAO! Should be sent by owner (Creator) of DAO! Returns the manager address!
+- subscribe_dao: Subscribes an Algorand account into GoraDAO! Returns total number of members!
+- unsubscribe_dao: Unsubscribes an Algorand account from GoraDAO! Returns total number of members!
+- write_source_box: Writes the compiled teal source of proposal to a corresponding box - proposal_approval or proposal_clear.
+- create_proposal: Creates a new Proposal contract! Returns the Proposal contract ID!
+- update_proposal: Updates a Proposal smart contract and returns application ID.
+- config_proposal: Configures a Proposal contract! Returns the Proposal contract ID!
+- proposal_participate: Participates a member to a Proposal! Returns the Proposal contract ID!
+- proposal_withdraw_participate: Withdraws a member participation from a Proposal! Returns the Proposal contract ID!
+- proposal_vote: Optionally Votes to a Proposal! Returns the Proposal contract ID!
+activate_proposal: Activates a Proposal! Returns the Proposal contract ID!
+- close_proposal: Force closes a Proposal contract as last resort. Returns the Proposal contract ID!
+```mermaid
+graph TD
+    GoraDAO_Main[GoraDAO Main Contract]
+    GoraDAO_Main --> config_dao[config_dao]
+    GoraDAO_Main --> subscribe_dao[subscribe_dao]
+    GoraDAO_Main --> unsubscribe_dao[unsubscribe_dao]
+    GoraDAO_Main --> write_source_box[write_source_box]
+    GoraDAO_Main --> create_proposal[create_proposal]
+    GoraDAO_Main --> update_proposal[update_proposal]
+    GoraDAO_Main --> config_proposal[config_proposal]
+    GoraDAO_Main --> proposal_participate[proposal_participate]
+    GoraDAO_Main --> proposal_withdraw_participate[proposal_withdraw_participate]
+    GoraDAO_Main --> proposal_vote[proposal_vote]
+    GoraDAO_Main --> activate_proposal[activate_proposal]
+    GoraDAO_Main --> close_proposal[close_proposal]
+```
+
 ### Gora DAO Proposal Contract: V1
 GoraDAO Proposal contracts are created from an ABI call to main contract and constitute an inner transaction C2C call to create Proposal contract!
+
+The phases of a proposal lifecycle are:
+
+- Creation
+- Configuration
+- Update (Before Lock)
+- Participation
+- Voting activation (Locks)
+- Voting
+- Closure
+- Force Closure
+
+
+Important note: Force_Close_Proposal is a multi step process , only designed for extreme emergency cases where something is agreed by almost everyone to go wrong and therefore grants from owner, manager_address and also Gora main contract manager are needed to be effective and close the Proposal and archive it! There are no limitations on creating a new Proposal with identical specifications though!
+
+The activate_proposal is a manual override in case of min_participation is not met! The voting activation handled in GoraDAO:
+- Time based activation in case that min-participation is met!
+- Min participation is met before start time---> activate_proposal can activate (This does not change the voting ending conditions including end_time and all_voted).
+
+Note : Because the vesting(future work) is still an open topic in GoraNetwork, Configure_Vesting method is not detailed in ABI or developed in TEAL code yet!
 
 Some methods have constraint of being in same transaction group as a call to identical method name with different signature to either GoraDAO main or vesting contracts! These methods are:
 
@@ -253,37 +285,7 @@ graph TB
 
 ```
 
-## GoraDAO Main Contract Methods
-
-- config_dao: Initializes DAO! Should be sent by owner (Creator) of DAO! Returns the manager address!
-- subscribe_dao: Subscribes an Algorand account into GoraDAO! Returns total number of members!
-- unsubscribe_dao: Unsubscribes an Algorand account from GoraDAO! Returns total number of members!
-- write_source_box: Writes the compiled teal source of proposal to a corresponding box - proposal_approval or proposal_clear.
-- create_proposal: Creates a new Proposal contract! Returns the Proposal contract ID!
-- update_proposal: Updates a Proposal smart contract and returns application ID.
-- config_proposal: Configures a Proposal contract! Returns the Proposal contract ID!
-- proposal_participate: Participates a member to a Proposal! Returns the Proposal contract ID!
-- proposal_withdraw_participate: Withdraws a member participation from a Proposal! Returns the Proposal contract ID!
-- proposal_vote: Optionally Votes to a Proposal! Returns the Proposal contract ID!
-activate_proposal: Activates a Proposal! Returns the Proposal contract ID!
-- close_proposal: Force closes a Proposal contract as last resort. Returns the Proposal contract ID!
-```mermaid
-graph TD
-    GoraDAO_Main[GoraDAO Main Contract]
-    GoraDAO_Main --> config_dao[config_dao]
-    GoraDAO_Main --> subscribe_dao[subscribe_dao]
-    GoraDAO_Main --> unsubscribe_dao[unsubscribe_dao]
-    GoraDAO_Main --> write_source_box[write_source_box]
-    GoraDAO_Main --> create_proposal[create_proposal]
-    GoraDAO_Main --> update_proposal[update_proposal]
-    GoraDAO_Main --> config_proposal[config_proposal]
-    GoraDAO_Main --> proposal_participate[proposal_participate]
-    GoraDAO_Main --> proposal_withdraw_participate[proposal_withdraw_participate]
-    GoraDAO_Main --> proposal_vote[proposal_vote]
-    GoraDAO_Main --> activate_proposal[activate_proposal]
-    GoraDAO_Main --> close_proposal[close_proposal]
-```
-## GoraDAO Proposals Contract Methods
+### GoraDAO Proposals Contract Methods
 - create_proposal: Creates a new Proposal contract! Returns the Proposal contract ID!
 - optin_proposal_asset: Signal to optin to proposal asset.
 - update_proposal: Updates an existing Proposal contract! Returns the Proposal contract ID!
@@ -294,6 +296,8 @@ graph TD
 - proposal_participate: Participates with a member account into a Proposal! Returns the participating member's account address!
 - proposal_withdraw_participate: Withdraws participation of a member account from a Proposal! Returns the withdrawing member's account address!
 - proposal_vote: Votes for a Proposal! Returns the voting member's account address concatenated with vote!
+
+
 
 ```mermaid
 
@@ -309,6 +313,102 @@ graph TD
     GoraDAO_Proposals --> proposal_participate_P[proposal_participate]
     GoraDAO_Proposals --> proposal_withdraw_participate_P[proposal_withdraw_participate]
     GoraDAO_Proposals --> proposal_vote_P[proposal_vote]
+
+```
+
+
+
+
+### Gora DAO Staking Contract: V3
+GoraDAO Staking contracts are created from an ABI call to DAO main contract and constitute an inner transaction C2C call to create Staking contract. Config, Activate, Stake, Unstake, Claim, Register NFT are called concurrently with the same method name to GoraDAO main contract and staking V3 contracts!
+
+There are types to staking contracts in GoraDAO:
+- Delegated Staking
+- NFT Staking
+
+The phases of a staking lifecycle are:
+
+- Creation
+- Configuration
+- Update (before Lock)
+- Activate/Lock
+- Stake
+- Unstake
+- Claim
+
+
+
+Note : Because the vesting(future work) is still an open topic in GoraNetwork, Configure_Vesting method is not detailed in ABI or developed in TEAL code yet!
+
+Some methods have constraint of being in same transaction group as a call to identical method name with different signature to either GoraDAO main or vesting contracts(future work)! These methods are:
+
+- Create_Staking
+- Update_Staking
+- Configure_Staking
+- Activate_Staking
+- Staking_Stake
+- Staking_Unstake
+- Staking_Claim
+
+```mermaid
+
+graph TB
+ 
+      subgraph GoraDAO Staking
+            GoraDAO_Staking[GoraDAO_Staking_ABI]
+            Staking_Create[create_staking]
+            Staking_Update[update_staking]
+            Update_Manager_address[update_manager_address]
+            Configure_Staking[config_staking]
+            Activate_Staking[activate_staking]
+            Staking_Stake[staking_stake]
+            Staking_Unstake[staking_unstake]
+            Staking_Claim[staking_claim]
+            Register_NFT[register_nft]
+        end
+      
+
+      GoraDAO_Staking[GoraDAO_Staking_ABI] ---> Staking_Create
+      GoraDAO_Staking[GoraDAO_Staking_ABI] ---> Staking_Update
+      GoraDAO_Staking[GoraDAO_Staking_ABI] ---> Update_Manager_address
+
+      GoraDAO_Staking[GoraDAO_Staking_ABI] ---> Configure_Staking
+      GoraDAO_Staking[GoraDAO_Staking_ABI] ---> Activate_Staking
+      GoraDAO_Staking[GoraDAO_Staking_ABI] ---> Staking_Stake
+      GoraDAO_Staking[GoraDAO_Staking_ABI] ---> Staking_Unstake
+      GoraDAO_Staking[GoraDAO_Staking_ABI] ---> Staking_Claim
+      GoraDAO_Staking[GoraDAO_Staking_ABI] ---> Register_NFT
+ 
+
+```
+
+### GoraDAO Staking Contract Methods
+
+- create_staking: Creates a new Staking contract! Returns the Staking contract ID!
+- update_staking: Updates a new Staking contract (Before it's Locked)! Returns the Staking contract ID!
+- optin_staking_asset: Signal to optin to staking asset.
+- config_staking: Configures a Staking contract! Returns the Staking contract ID!
+- update_manager_address: Updates Staking manager address! Returns new manager address.
+- activate_staking: Activates a Staking contract, open for staking! Returns the Staking contract ID!
+- staking_claim: Claims the staking rewards! Returns the claiming member's account address!
+- staking_stake: Delegates a user account to staking! Returns the staking member's account address!
+- staking_unstake: Undelegates a user account from staking! Returns the withdrawing member's account address!
+- register_nft: Registers an NFT to a Staking contract! Returns the NFT ID!
+
+```mermaid
+
+graph TD
+    GoraDAO_Staking[GoraDAO Staking Contract]
+    GoraDAO_Staking --> create_Staking[create_staking]
+    GoraDAO_Staking --> optin_staking_asset[optin_staking_asset]
+    GoraDAO_Staking --> update_staking[update_staking]
+    GoraDAO_Staking --> config_staking[config_config]
+    GoraDAO_Staking --> update_manager_address[update_manager_address]
+    GoraDAO_Staking --> activate_staking_P[activate_staking]
+    GoraDAO_Staking --> staking_claim[staking_claim]
+    GoraDAO_Staking --> staking_stake[staking_stake]
+    GoraDAO_Staking --> staking_unstake[staking_unstake]
+    GoraDAO_Staking --> register_nft[register_nft]
 
 ```
 
@@ -336,5 +436,4 @@ graph TD
 ![Screenshot 2024-03-02 at 18 46 01](https://github.com/GoraNetwork/gora-dao-smartcontracts/assets/1900448/ecf4c4be-1c92-46d0-8653-8da684942b1f)
 
 
-## GoraDAO Staking
-GoraDAO staking serves two concurrent purposes: Staking contracts under DAO and proxy staking contracts as a wrapper around new functionalities on existing staking smart contracts, helping migration phases for existing DAO contracts operationally easier.
+
