@@ -134,38 +134,36 @@ graph LR
  
       subgraph GoraDAO Main
             GoraDAO_Main[GoraDAO_Main_ABI]
-            DAO_Init[dao_init]
+            DAO_Create[DAO_Create]
+            DAO_Update[DAO_Update]
+            DAO_Config[DAO_Config]
+            DAO_Lock[DAO_Lock]
+            DAO_Create_Asset[DAO_Create_Asset]
             Update_Manager_address[update_manager_address]
             DAO_Subscribe[dao_subscribe]
             DAO_Unsubscribe[dao_unsubscribe]
-            Create_Proposal[create_proposal]
-            Configure_Proposal[config_proposal]
-            Update_Proposal_Manager_address[update_proposal_manager_address]
-            Proposal_Participate[proposal_participate]
-            Proposal_Withdraw_Participation[proposal_withdraw_participation]
-            Activate_Voting[activate_proposal]
-            Proposal_Vote[proposal_vote]
-            Proposal_Vesting_Stats[proposal_vesting_stats]
-            Configure_Vesting[configure_vesting]
-            Force_Close_Proposal[close_proposal]
+            %% Create_Proposal[create_proposal]
+            %% Configure_Proposal[config_proposal]
+            %% Update_Proposal_Manager_address[update_proposal_manager_address]
+            %% Proposal_Participate[proposal_participate]
+            %% Proposal_Withdraw_Participation[proposal_withdraw_participation]
+            %% Activate_Voting[activate_proposal]
+            %% Proposal_Vote[proposal_vote]
+            %% Proposal_Vesting_Stats[proposal_vesting_stats]
+            %% Configure_Vesting[configure_vesting]
+            %% Force_Close_Proposal[close_proposal]
 
-            Create_Staking[create_staking]
-            Configure_Staking[config_staking]
-            Update_Staking_Manager_address[update_staking_manager_address]
-            Activate_Staking[activate_staking]
+            %% Create_Staking[create_staking]
+            %% Update_Staking[Update_Staking]
+            %% Configure_Staking[config_staking]
+            %% Update_Staking_Manager_address[update_staking_manager_address]
+            %% Activate_Staking[activate_staking]
 
        
         end
       
+subgraph GoraDAO Proposal
 
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Create
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Create_Asset
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Config
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Update
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> Update_Manager_address
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Lock_Update
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Subscribe
-      GoraDAO_Main[GoraDAO_Main_ABI] ---> DAO_Unsubscribe
 
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Create_Proposal
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Configure_Proposal
@@ -177,6 +175,14 @@ graph LR
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Configure_Vesting
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Force_Close_Proposal
 
+  
+end
+
+subgraph GoraDAO Staking
+
+
+    
+
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Create_Staking
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Update_Staking
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Lock_Staking
@@ -187,7 +193,7 @@ graph LR
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Staking_Unstake
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Staking_Claim
       GoraDAO_Main[GoraDAO_Main_ABI] ---> Staking_Register_NFT
-
+end
 ```
 ### GoraDAO Main Contract Methods
 
