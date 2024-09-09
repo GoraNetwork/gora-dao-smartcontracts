@@ -210,7 +210,7 @@ end
 activate_proposal: Activates a Proposal! Returns the Proposal contract ID!
 - close_proposal: Force closes a Proposal contract as last resort. Returns the Proposal contract ID!
 ```mermaid
-graph TD
+graph LR
     GoraDAO_Main[GoraDAO Main Contract]
     GoraDAO_Main --> config_dao[config_dao]
     GoraDAO_Main --> subscribe_dao[subscribe_dao]
@@ -307,7 +307,7 @@ graph LR
 
 ```mermaid
 
-graph TD
+graph LR
     GoraDAO_Proposals[GoraDAO Proposals Contract]
     GoraDAO_Proposals --> create_proposal_P[create_proposal]
     GoraDAO_Proposals --> optin_proposal_asset[optin_proposal_asset]
@@ -403,7 +403,7 @@ graph LR
 
 ```mermaid
 
-graph TD
+graph LR
     GoraDAO_Staking[GoraDAO Staking Contract]
     GoraDAO_Staking --> create_Staking[create_staking]
     GoraDAO_Staking --> optin_staking_asset[optin_staking_asset]
