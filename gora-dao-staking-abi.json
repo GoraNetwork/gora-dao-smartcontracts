@@ -35,20 +35,6 @@
                     "description": "Staking description"
                 }
             ],
-            "boxes": [
-                {
-                    "name": "manager_reference",
-                    "description": "Dynamic box ref for Staking manager DAO member"
-                },
-                {
-                    "name": "staking_app",
-                    "description": "Dynamic box ref for staking approval prog source code"
-                },
-                {
-                    "name": "staking_clr",
-                    "description": "Dynamic box ref for staking clear prog source code"
-                }
-            ],
             "returns": {
                 "type": "address"
             }

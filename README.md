@@ -435,15 +435,101 @@ graph LR
 ### GoraDAO Staking Contract Methods
 
 - create_staking: Creates a new Staking contract! Returns the Staking contract ID!
+  - DAO ABI call:
+  ```javascript
+  {
+            "name": "create_staking",
+            "description": "Creates a new Staking contract! Returns the Staking contract ID!",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Proposer to DAO for Staking fees and initiation MBRs!"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_reference",
+                    "description": "DAO Staking token ref"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_reference",
+                    "description": "DAO token ref"
+                },
+                {
+                    "type": "string",
+                    "name": "staking_name",
+                    "description": "DAO Staking title"
+                },
+                {
+                    "type": "string",
+                    "name": "staking_description",
+                    "description": "DAO Staking description"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+  ```
+  - Staking ABI call:
+  ```javascript
+   {
+            "name": "create_staking",
+            "description": "Creates a new Staking contract! Returns the Staking contract ID!",
+            "args": [
+                {
+                    "type": "uint64",
+                    "name": "dao_asset_reference",
+                    "description": "DAO Main asset (DAO) ID"
+                },
+                {
+                    "type": "uint64",
+                    "name": "staking_asset_reference",
+                    "description": "Staking asset ID"
+                },
+                {
+                    "type": "string",
+                    "name": "staking_name",
+                    "description": "Staking title"
+                },
+                {
+                    "type": "string",
+                    "name": "staking_description",
+                    "description": "Staking description"
+                }
+            ],
+            "returns": {
+                "type": "address"
+            }
+        },
+  ```
 - update_staking: Updates a new Staking contract (Before it's Locked)! Returns the Staking contract ID!
+  - DAO ABI Call
+  - Staking ABI Call
 - optin_staking_asset: Signal to optin to staking asset.
+  - DAO ABI Call
+  - Staking ABI Call
 - config_staking: Configures a Staking contract! Returns the Staking contract ID!
+  - DAO ABI Call
+  - Staking ABI Call
 - update_manager_address: Updates Staking manager address! Returns new manager address.
-- activate_staking: Activates a Staking contract, open for staking! Returns the Staking contract ID!
-- staking_claim: Claims the staking rewards! Returns the claiming member's account address!
-- staking_stake: Delegates a user account to staking! Returns the staking member's account address!
-- staking_unstake: Undelegates a user account from staking! Returns the withdrawing member's account address!
+  - DAO ABI Call
+  - Staking ABI Call
 - register_nft: Registers an NFT to a Staking contract! Returns the NFT ID!
+  - Staking ABI Call
+- activate_staking: Activates a Staking contract, open for staking! Returns the Staking contract ID!
+  - DAO ABI Call
+  - Staking ABI Call
+- staking_stake: Delegates a user account to staking! Returns the staking member's account address!
+  - DAO ABI Call
+  - Staking ABI Call
+- staking_claim: Claims the staking rewards! Returns the claiming member's account address!
+  - Staking ABI Call
+- staking_unstake: Undelegates a user account from staking! Returns the withdrawing member's account address!
+  - DAO ABI Call
+  - Staking ABI Call
+
 
 ```mermaid
 

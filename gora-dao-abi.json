@@ -500,20 +500,6 @@
                     "description": "DAO Staking description"
                 }
             ],
-            "boxes": [
-                {
-                    "name": "member_reference",
-                    "description": "Dynamic box ref for Staking manager DAO member"
-                },
-                {
-                    "name": "staking_app",
-                    "description": "Staking approval source box ref"
-                },
-                {
-                    "name": "staking_clr",
-                    "description": "Staking clear source box ref"
-                }
-            ],
             "returns": {
                 "type": "uint64"
             }
