@@ -470,5 +470,21 @@ graph LR
 
 ## GoraDAO NFT-Staking Operations CLI Screen cast 
 
- 
+ ![Screenshot 2024-08-16 at 15 47 41](https://github.com/user-attachments/assets/1abe892b-aa1a-4b0b-bef8-da5d77cacd0f)
+
+![Screenshot 2024-08-16 at 15 47 52](https://github.com/user-attachments/assets/1ef9050c-7da5-4026-af29-fdfc326eb691)
+
+![Screenshot 2024-08-16 at 16 26 10](https://github.com/user-attachments/assets/2184426f-db06-4a43-8a80-d878de0141f5)
+
+![Screenshot 2024-08-16 at 16 29 27](https://github.com/user-attachments/assets/a82d90b5-3a1e-40ab-86c5-9fbc792616c4)
+
+![Screenshot 2024-09-02 at 19 06 28](https://github.com/user-attachments/assets/1e875b9c-31a1-4d5d-aeb7-483a53ae9087)
+
+![Screenshot 2024-09-02 at 16 51 12](https://github.com/user-attachments/assets/81a6c942-11b6-42fa-9b2d-001c96d3f83a)
+
+![Screenshot 2024-09-01 at 19 18 45](https://github.com/user-attachments/assets/56d9f6ec-79b5-4188-98ff-eee866f24a4c)
+![Screenshot 2024-09-02 at 14 56 02](https://github.com/user-attachments/assets/a2194a68-6070-42cb-9cb1-4bda66f9448f)
+
+
+
 
