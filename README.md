@@ -393,13 +393,13 @@ Note : Because the vesting(future work) is still an open topic in GoraNetwork, C
 
 Some methods have constraint of being in same transaction group as a call to identical method name with different signature to either GoraDAO main or vesting contracts(future work)! These methods are:
 
-- Create_Staking
-- Update_Staking
-- Configure_Staking
-- Activate_Staking
-- Staking_Stake
-- Staking_Unstake
-- Staking_Claim
+- Create_Staking (Delegated Staking creation method called to MAIN and STAKING V3 contracts in one atomic group)
+- Update_Staking (Delegated Staking update method called to MAIN and STAKING V3 contracts in one atomic group)
+- Configure_Staking (Delegated Staking config method called to MAIN and STAKING V3 contracts in one atomic group)
+- Activate_Staking (Delegated Staking activation method called to MAIN and STAKING V3 contracts in one atomic group)
+- Staking_Stake (Delegated Staking stake method called to MAIN and STAKING V3 contracts in one atomic group)
+- Staking_Unstake (Delegated Staking unstake method called to MAIN and STAKING V3 contracts in one atomic group)
+- Staking_Claim (Delegated Staking claim rewards method called to only STAKING V3 contract)
 
 ```mermaid
 
