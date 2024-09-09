@@ -399,7 +399,6 @@ Some methods have constraint of being in same transaction group as a call to ide
 - Activate_Staking (Delegated Staking activation method called to MAIN and STAKING V3 contracts in one atomic group)
 - Staking_Stake (Delegated Staking stake method called to MAIN and STAKING V3 contracts in one atomic group)
 - Staking_Unstake (Delegated Staking unstake method called to MAIN and STAKING V3 contracts in one atomic group)
-- Staking_Claim (Delegated Staking claim rewards method called to only STAKING V3 contract)
 
 ```mermaid
 
