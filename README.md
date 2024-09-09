@@ -130,7 +130,7 @@ Future implementation idea: Add configuration to GoraDAO in a way that it should
 
 ```mermaid
 
-graph TB
+graph LR
  
       subgraph GoraDAO Main
             GoraDAO_Main[GoraDAO_Main_ABI]
@@ -254,7 +254,7 @@ Some methods have constraint of being in same transaction group as a call to ide
 
 ```mermaid
 
-graph TB
+graph LR
  
       subgraph GoraDAO Proposal
             GoraDAO_Proposal[GoraDAO_Proposal_ABI]
@@ -352,7 +352,7 @@ Some methods have constraint of being in same transaction group as a call to ide
 
 ```mermaid
 
-graph TB
+graph LR
  
       subgraph GoraDAO Staking
             GoraDAO_Staking[GoraDAO_Staking_ABI]
