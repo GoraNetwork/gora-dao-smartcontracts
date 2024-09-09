@@ -506,29 +506,318 @@ graph LR
   ```
 - update_staking: Updates a new Staking contract (Before it's Locked)! Returns the Staking contract ID!
   - DAO ABI Call
+  ```javascript
+   {
+            "name": "update_staking",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Staking to DAO for Proposal fees and initiation MBRs!"
+                },
+                {
+                    "type": "application",
+                    "name": "staking_app_ref",
+                    "description": "Staking application  to be referenced"
+                },
+                {
+                    "type": "uint64",
+                    "name": "staking_app_id",
+                    "description": "Staking application  ID to be updated"
+                },
+                {
+                    "type": "address",
+                    "name": "member_reference",
+                    "description": "DAO member account reference (Staking manager)"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_reference",
+                    "description": "DAO Staking token ID"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            },
+            "desc": "Updates a Staking smart contract and returns application ID"
+        }
+
+  ```
   - Staking ABI Call
-- optin_staking_asset: Signal to optin to staking asset.
-  - DAO ABI Call
-  - Staking ABI Call
+  ```javascript
+   {
+            "name": "update_staking",
+            "description": "Updates an existing Staking contract! Returns the Staking contract ID!",
+            "args": [],
+            "returns": {
+                "type": "address"
+            }
+        },
+
+  ```
 - config_staking: Configures a Staking contract! Returns the Staking contract ID!
   - DAO ABI Call
+  ```javascript
+    {
+            "name": "config_staking",
+            "description": "Configures a Staking contract! Returns the Staking contract ID!",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Staking to DAO for fees and Staking MBRs!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "dao_asset_transfer_transaction",
+                    "description": "Asset transfer transaction to deposit DAO token (E.g. Gora)!"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+  
+
+  ```
   - Staking ABI Call
-- update_manager_address: Updates Staking manager address! Returns new manager address.
-  - DAO ABI Call
-  - Staking ABI Call
+  ```javascript
+  {
+            "name": "config_staking",
+            "description": "Configures a Staking contract! Returns the Staking contract ID!",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Staking manager to DAO for fees and Staking configuration MBRs!"
+                },
+                {
+                    "type": "(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64)",
+                    "name": "config_params",
+                    "description": "min_algo, min_token, duration, min_duration, commission_token, commission_algo, fee_token, fee_algo, incentives_token,incentives_algo,type, incentives_duration, return_token, return_algo,incentives_eligibility"
+                },
+                {
+                    "type": "string",
+                    "name": "name",
+                    "description": "DAO Staking name"
+                },
+                {
+                    "type": "string",
+                    "name": "description",
+                    "description": "DAO Staking description"
+                },
+                {
+                    "type": "string",
+                    "name": "url",
+                    "description": "DAO Staking URL"
+                },
+                {
+                    "type": "string",
+                    "name": "banner",
+                    "description": "DAO Staking banner image URL"
+                },
+                {
+                    "type": "uint64",
+                    "name": "v2_main_app_id",
+                    "description": "V2 main app ID"
+                },
+                {
+                    "type": "uint64",
+                    "name": "v2_vesting_app_id",
+                    "description": "V2 vesting app ID"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+
+  ```
+
 - register_nft: Registers an NFT to a Staking contract! Returns the NFT ID!
   - Staking ABI Call
+  ```javascript
+  {
+            "name": "register_nft",
+            "description": "Register staking NFT!",
+            "args": [
+                {
+                    "type": "uint64",
+                    "name": "staking_nft",
+                    "description": "The staking NFT asset"
+                },
+                {
+                    "type": "uint64",
+                    "name": "staking_nft_value",
+                    "description": "The Staking token value of the staking NFT "
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "manager_reference",
+                    "description": "Dynamic box ref per member account address"
+                },
+                {
+                    "name": "staking_account",
+                    "description": "Dynamic box per staking account (as key) and staking amount (as value)"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+
+  ```
 - activate_staking: Activates a Staking contract, open for staking! Returns the Staking contract ID!
   - DAO ABI Call
+  ```javascript
+  {
+            "name": "activate_staking",
+            "description": "Activates staking contract!",
+            "args": [],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+
+  ```
   - Staking ABI Call
+  ```javascript
+    {
+            "name": "activate_staking",
+            "description": "Activates a Staking! Returns the Staking contract ID!",
+            "args": [],
+            "returns": {
+                "type": "uint64"
+            }
+        }
+
+  ```
 - staking_stake: Delegates a user account to staking! Returns the staking member's account address!
   - DAO ABI Call
+  ```javascript
+     {
+            "name": "stake",
+            "description": "Stake into staking contract!",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from participants to DAO for fees and participation MBRs!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "asset_transfer_transaction",
+                    "description": "Asset transfer transaction to send DAO Token for fees!"
+                }
+                
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+
+  ```
   - Staking ABI Call
+  ```javascript
+  {
+            "name": "stake",
+            "description": "Stakes in Staking contract! Returns the staking member's account address concatenated with staked amount!",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "stake_transaction",
+                    "description": "Pay transaction to send staked Algos!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "stake_axfer_transaction",
+                    "description": "Axfer from Staking participant for staking token!"
+                },
+                {
+                    "type": "uint64",
+                    "name": "nft asa ID",
+                    "description": "The staking NFT asset ID"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+  
+
+  ```
 - staking_claim: Claims the staking rewards! Returns the claiming member's account address!
   - Staking ABI Call
+  ```javascript
+  {
+            "name": "user_claim",
+            "description": "Claims pending rewards!",
+            "args": [
+                {
+                    "type": "uint64",
+                    "name": "NFT_ASA_ID",
+                    "description": "NFT ASA ID"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        }
+
+  ```
 - staking_unstake: Undelegates a user account from staking! Returns the withdrawing member's account address!
   - DAO ABI Call
+  ```javascript
+    {
+            "name": "unstake",
+            "description": "Un-stakes from Staking contract! Returns the staking member's account address concatenated with un-staked amount!",
+            "args": [
+                {
+                    "type": "uint64",
+                    "name": "amount_algo",
+                    "description": "Amount to be un-staked"
+                },
+                {
+                    "type": "uint64",
+                    "name": "amount_token",
+                    "description": "Token Amount to be un-staked"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+
+  ```
   - Staking ABI Call
+  ```javascript
+    {
+            "name": "unstake",
+            "description": "Un-stakes from Staking contract! Returns the staking member's account address concatenated with un-staked amount!",
+            "args": [
+                {
+                    "type": "uint64",
+                    "name": "amount_algo",
+                    "description": "Amount to be un-staked"
+                },
+                {
+                    "type": "uint64",
+                    "name": "amount_token",
+                    "description": "Token Amount to be un-staked"
+                },
+                {
+                    "type": "uint64",
+                    "name": "NFT_ID",
+                    "description": "NFT ASA ID to unstake"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+
+  ```
 
 
 ```mermaid

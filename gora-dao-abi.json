@@ -533,20 +533,6 @@
                     "description": "DAO Staking token ID"
                 }
             ],
-            "boxes": [
-                {
-                    "name": "member_reference",
-                    "description": "Dynamic box ref for Staking manager DAO member"
-                },
-                {
-                    "name": "staking_app",
-                    "description": "Staking approval source box ref"
-                },
-                {
-                    "name": "staking_clr",
-                    "description": "Staking clear source box ref"
-                }
-            ],
             "returns": {
                 "type": "uint64"
             },
@@ -567,16 +553,6 @@
                     "description": "Asset transfer transaction to deposit DAO token (E.g. Gora)!"
                 }
             ],
-            "boxes": [
-                {
-                    "name": "dao_manager_reference",
-                    "description": "Dynamic box ref per staking manager account address"
-                },
-                {
-                    "name": "staking_reference",
-                    "description": "Dynamic box ref per staking account address"
-                }
-            ],
             "returns": {
                 "type": "uint64"
             }
@@ -586,16 +562,6 @@
             "name": "activate_staking",
             "description": "Activates staking contract!",
             "args": [],
-            "boxes": [
-                {
-                    "name": "member_reference",
-                    "description": "Dynamic box ref per member account address"
-                },
-                {
-                    "name": "staking_reference",
-                    "description": "Dynamic box ref per staking contract account address"
-                }
-            ],
             "returns": {
                 "type": "uint64"
             }
@@ -616,16 +582,6 @@
                 }
                 
             ],
-            "boxes": [
-                {
-                    "name": "member_reference",
-                    "description": "Dynamic box ref per member account address"
-                },
-                {
-                    "name": "staking_reference",
-                    "description": "Dynamic box ref per staking contract account address"
-                }
-            ],
             "returns": {
                 "type": "uint64"
             }
@@ -644,16 +600,6 @@
                     "type": "uint64",
                     "name": "amount_token",
                     "description": "Token Amount to be un-staked"
-                }
-            ],
-            "boxes": [
-                {
-                    "name": "member_reference",
-                    "description": "Dynamic box ref for staking contract manager account address"
-                },
-                {
-                    "name": "staking_reference",
-                    "description": "Dynamic box ref for staking contract account address"
                 }
             ],
             "returns": {
