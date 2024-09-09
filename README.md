@@ -225,6 +225,28 @@ graph LR
     GoraDAO_Main --> activate_proposal[activate_proposal]
     GoraDAO_Main --> close_proposal[close_proposal]
 ```
+
+## GoraDAO CLI
+GoraDAO CLI is a powerful conversational CLI that provides easy implementation, deployment, and management of GoraDAO as an independent DAO. This feature is both useful for domestic development and product lifecycle for GoraNetworks implementation of GoraDAO and also for after open sourcing GoraDAO to be used by anyone to implement a DAO, leading to more adoption of technology.
+### CLI First Look
+![Screenshot 2024-08-15 at 18 11 04](https://github.com/user-attachments/assets/ae40e572-b51b-45fa-bc6b-4dc3542c5d74)
+
+### Dispense your accounts
+Upon first run , neccessary Algorand account menmonics are created and writen under local copy ofn repository on user file system to be used in future with CLI. Feel free to change any of those before dispensing to it.
+Created accounts include:
+- Menmonic0: GoraDAO Admin user
+- Menmonic1: GoraDAO proposals admin
+- Menmonic2: GoraDAO user1
+- Menmonic3: GoraDAO user2
+- Menmonic4: GoraDAO user3
+- Menmonic5: GoraDAO user4
+- Menmonic6: GoraDAO user5
+- Menmonic7: GoraDAO Staking Admin
+  
+And then admin user dispenses into GoraDAO Menmonics:
+
+![Screenshot 2024-08-15 at 18 09 53](https://github.com/user-attachments/assets/0368d5f8-e16d-478b-b17f-d8d48e07db40)
+
 ## GoraDAO MAIN Operations CLI Screen cast 
 ![Screenshot 2024-03-03 at 18 48 02](https://github.com/GoraNetwork/gora-dao-smartcontracts/assets/1900448/092eed58-efb8-43c9-8a39-f7948dbed0fb)
 
@@ -448,3 +470,4 @@ graph LR
 ## GoraDAO NFT-Staking Operations CLI Screen cast 
 
  
+
