@@ -245,7 +245,8 @@ Created accounts include:
   
 And then admin user dispenses into GoraDAO Menmonics:
 
-![Screenshot 2024-08-15 at 18 09 53](https://github.com/user-attachments/assets/0368d5f8-e16d-478b-b17f-d8d48e07db40)
+![Screenshot 2024-09-09 at 12 28 49](https://github.com/user-attachments/assets/6bff058e-ed22-4a1e-906f-c03629c2ff2d)
+
 
 ## GoraDAO MAIN Operations CLI Screen cast 
 ![Screenshot 2024-03-03 at 18 48 02](https://github.com/GoraNetwork/gora-dao-smartcontracts/assets/1900448/092eed58-efb8-43c9-8a39-f7948dbed0fb)
