@@ -213,6 +213,25 @@
             "returns": {
                 "type": "uint64"
             }
+        },
+        {
+            "name": "update_nft_owner",
+            "description": "Force updates owner of an staked NFT based on NFT possession! ",
+            "args": [
+                {
+                    "type": "uint64",
+                    "name": "nft_id",
+                    "description": "NFT ID"
+                },
+                {
+                    "type": "account",
+                    "name": "prev_owner",
+                    "description": "New owner address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
         }
     ]
 }

@@ -608,17 +608,18 @@
         },
         
         {
-            "name": "withdraw",
-            "description": "Un-stakes from Staking contract! Returns the staking member's account address concatenated with un-staked amount!",
-            "args": [],
-            "boxes": [
+            "name": "update_nft_owner",
+            "description": "Force updates owner of an staked NFT based on NFT possession! ",
+            "args": [
                 {
-                    "name": "member_reference",
-                    "description": "Dynamic box ref for staking contract manager account address"
+                    "type": "uint64",
+                    "name": "nft_id",
+                    "description": "NFT ID"
                 },
                 {
-                    "name": "staking_reference",
-                    "description": "Dynamic box ref for staking contract account address"
+                    "type": "account",
+                    "name": "prev_owner",
+                    "description": "New owner address"
                 }
             ],
             "returns": {
