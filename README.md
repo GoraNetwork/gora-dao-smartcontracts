@@ -861,6 +861,26 @@ graph LR
 ![Screenshot 2024-09-09 at 13 08 39](https://github.com/user-attachments/assets/f7318993-a2f2-45cb-9856-5640deae9614)
 
 
+## Migration Staking V2 to V3
 
+### Current status
+- Staking V2 contracts are deployed and working and are immutable.
+- Staking contracts V2 have some implementations half done like: vesting_on_behalf and also sadly the `unregister_participation_account` method of MAIN contract is not implemented in V2 staking contracts.
+- The participation accounts are bind to registering app account address being staking V2 smart contract accounts.
+- Gora main contract is using local states for trackings and this limitation is still cumbersome for staking as it is the case with V2 and its failures and errors.
+  
+All of points above taken into consideration, there is no soft migration way possible because of the method not being implemented.
+
+### Migration Plan
+
+Sadly it appears that we are definitely in need of a hard migration plan for V2 to V3 staking contracts. The plan is as follows:
+
+ #### Migrating main contract from V2 to V3
+ Main contract should be rewritten from ground up using boxes and other new features and opcodes of new AVM and TEAL versions.
+
+#### Migrating of validators from V2 to V3
+ Then all Validators need to unstake from V2 and restake into V3 staking contracts. This needs all users who staked into those , unstake their Gora tokens.
+
+ Since step 2 seems to be a bit cumbersome, we can also lock Goras inside main contract V2 forever and calculate and inject Goras into new V3 which does not repeat shortcomings of V2 and does not need this dirty patch solutions for next migration.
 
 

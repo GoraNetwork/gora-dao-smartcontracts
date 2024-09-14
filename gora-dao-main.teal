@@ -213,14 +213,11 @@ branch_method_router:
 	==
 	bnz method_staking_unstake
 
-    method "withdraw()uint64"
+    method "update_nft_owner(uint64,account)uint64"
 	txn ApplicationArgs 0
 	==
-	bnz method_withdraw_unstaked
-    // method "manual_process_aggregation()uint64"
-	// txn ApplicationArgs 0
-	// ==
-	// bnz method_manual_process_aggregation
+	bnz method_update_nft_owner
+
 
 	b branch_error
 
@@ -372,10 +369,10 @@ method_subscribe_dao:
     >=
     assert
 	
-    load 0
-    txna Assets 0
-    asset_holding_get AssetBalance
-    assert
+    load 0 // TXN Sender
+    txna Assets 0 // NFT asset id
+    asset_holding_get AssetBalance // Get NFT balance
+    assert // 0 Balance fails the transaction
     byte "min_subscription_stake"
     app_global_get
     >=
@@ -2068,7 +2065,13 @@ method_staking_unstake:
 	b branch_log_return
 
 
-method_withdraw_unstaked:
+method_update_nft_owner:
+    // Checks this TXN in Transaction Group to be second TXN
+	global GroupIndex
+	int 1
+	==
+	assert
+
     gtxn 1 ApplicationID
     byte "dao_app_id"
     app_global_get_ex
@@ -2076,24 +2079,19 @@ method_withdraw_unstaked:
     global CurrentApplicationID
     ==
     assert
+
+    // makes sure the called method on other txn is the correct one
+	gtxna 1 ApplicationArgs 0
+	method "update_nft_owner(uint64,account)uint64"
+	==
+	assert
+
     byte 0x151f7c75
 	global CurrentApplicationID
 	itob
 	concat
 	b branch_log_return
-// method_manual_process_aggregation:
-//     gtxn 1 ApplicationID
-//     byte "dao_app_id"
-//     app_global_get_ex
-//     pop
-//     global CurrentApplicationID
-//     ==
-//     assert
-//     byte 0x151f7c75
-// 	global CurrentApplicationID
-// 	itob
-// 	concat
-// 	b branch_log_return
+
 
 
 /////////////////////////////////END Branches////////////////////////////////////
