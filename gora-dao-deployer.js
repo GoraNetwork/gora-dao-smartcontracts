@@ -3888,8 +3888,6 @@ const GoraDaoDeployer = class {
         this.logger.info(`GoraDAO Staking Assets array written to config file!`);
     }
 
-
-
     async userClaimProxyStakingContract(userIndex, nftId) {
         this.logger.info(`Claims rewards from proxy staking contract ${Number(this.goraDaoStakingApplicationId)} which proxies ${Number(this.stakingParams.staking_proxy_app_id)}`);
         let params = await this.algodClient.getTransactionParams().do();// Get suggested Algorand TXN parameters
@@ -3919,11 +3917,7 @@ const GoraDaoDeployer = class {
             ],
         }
 
-
-
-
         const claimStaking = [nftId];// NFT ASA ID for claiming its rewards without unstaking
-    
         const atcStakingClaim = new this.algosdk.AtomicTransactionComposer();
 
 
@@ -3952,7 +3946,7 @@ const GoraDaoDeployer = class {
         this.config['gora_dao']['staking_is_staked'] = true;
         await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Staking status to config file!`);
-        this.logger.info(`Local Stats for V3 App address on V2 contract!`);
+   
 
     }
 }

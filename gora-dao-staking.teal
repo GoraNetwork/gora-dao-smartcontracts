@@ -1162,6 +1162,7 @@ method_update_nft_owner:
 	box_get
 	assert
 	store 23 //NFT Box
+
 	load 23 //NFT Box
 	int 0 // byte index
 	extract_uint64 
