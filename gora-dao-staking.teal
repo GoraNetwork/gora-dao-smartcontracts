@@ -74,11 +74,6 @@ branch_method_router:
 	==
 	bnz method_staking_unstake
 
-	method "withdraw()uint64"
-	txn ApplicationArgs 0
-	==
-	bnz method_withdraw_unstaked
-
 	
 
 	method "register_nft(uint64,uint64)uint64"
@@ -1053,7 +1048,11 @@ branch_user_claim_finalize:
 	load 45
 	itxn_field AssetAmount
 	itxn_submit
-	b branch_withdraw_finalize
+
+	byte 0x151f7c75
+	txn ApplicationArgs 1
+	concat
+	b branch_log_return
 	
 
 
@@ -1117,8 +1116,14 @@ branch_nft_box:
 
 method_update_nft_owner:
 	// Checks this TXN in Transaction Group to be second TXN
-	global GroupIndex
+	txn GroupIndex
 	int 1
+	==
+	assert
+
+	// makes sure the called method on other txn is the correct one
+	gtxna 0 ApplicationArgs 0
+	method "update_nft_owner(uint64,account)uint64"
 	==
 	assert
 

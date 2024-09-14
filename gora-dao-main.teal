@@ -2067,8 +2067,8 @@ method_staking_unstake:
 
 method_update_nft_owner:
     // Checks this TXN in Transaction Group to be second TXN
-	global GroupIndex
-	int 1
+	txn GroupIndex
+	int 0
 	==
 	assert
 
