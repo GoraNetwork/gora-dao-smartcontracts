@@ -226,7 +226,7 @@
                 {
                     "type": "account",
                     "name": "prev_owner",
-                    "description": "Prev owner address"
+                    "description": "Prev owner account"
                 }
             ],
             "returns": {
