@@ -775,7 +775,7 @@ async function stakingOperations() {
             break;
         case 'Register Staking NFTs':
             try {
-                let nftArray = props.config['deployer']['nft_staking_test_assets'];
+                let nftArray  = config['gora_dao'].network === 'mainnet'? config['gora_dao']['deployer']['nft_staking_mainnet_assets']:  config['gora_dao']['deployer']['nft_staking_testnet_assets']
                 for (let index = 0; index < nftArray.length; index++) {
                     const nft = nftArray[index];
                     await goraDaoDeployer.registerStakingNFT(nft.asset, nft.value);

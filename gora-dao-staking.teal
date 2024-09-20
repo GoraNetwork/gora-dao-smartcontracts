@@ -682,6 +682,14 @@ branch_unstake_without_rewards:
 	box_put
 	b branch_staking_unstake_finalize
 
+branch_remove_nft_update_owner_box:
+	pop
+	txn Sender
+	txn ApplicationArgs 3
+	concat
+	box_del
+	b branch_remove_nft_update_owner_box_continue
+
 method_staking_unstake:
 	txn Sender
 	txn ApplicationArgs 3
@@ -705,7 +713,13 @@ method_staking_unstake:
 	app_global_get
 	bz branch_error_activation
 
+	txn Sender
+	txn ApplicationArgs 3
+	concat
+	box_get
+	bnz branch_remove_nft_update_owner_box
 
+branch_remove_nft_update_owner_box_continue:
 	// NFT Box
 	txn ApplicationArgs 3
 	box_get
@@ -1149,6 +1163,19 @@ method_update_nft_owner:
 
 	txn ApplicationArgs 1 
 	store 2 //NFT ID bytes
+
+	load 1
+	load 2
+	concat
+	box_get
+	bnz branch_error
+
+	load 1
+	load 2
+	concat
+	global LatestTimestamp
+	itob
+	box_put
 
 	load 1 // New owner
 	load 2 //NFT ID bytes

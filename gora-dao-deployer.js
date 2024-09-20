@@ -1086,7 +1086,7 @@ const GoraDaoDeployer = class {
         let addrFrom = this.goraDaoAdminAccount.addr;
         let addrToProposer = this.goraDaoProposalAdminAccount.addr;
         let addrToStaking = this.goraDaoStakingAdminAccount.addr;
-        let appAddrTo = this.config.gora_dao.network === "testnet"?config.gora_dao.asc_testnet_main_address: config.gora_dao.asc_main_address;
+        let appAddrTo = this.config.gora_dao.network === "testnet" ? config.gora_dao.asc_testnet_main_address : config.gora_dao.asc_main_address;
         let amount = 25;
         let params = await this.algodClient.getTransactionParams().do();
         const txnOptinProposer = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
@@ -1639,9 +1639,10 @@ const GoraDaoDeployer = class {
         const confirmedSignedSendToWalletTxn = await this.algosdk.waitForConfirmation(this.algodClient, signedSendToWalletTxnResponse.txId, 5);
         this.logger.info(`Transaction ${signedSendToWalletTxnResponse.txId} confirmed in round ${confirmedSignedSendToWalletTxn['confirmed-round']}.`);
         this.logger.info('GoraDAO Asset has been sent to The GoraDAO App successfully')
-        for (let index = 0; index < this.config['deployer']['nft_staking_test_assets'].length; index++) {
-            if (this.config['deployer']['nft_staking_test_assets'][index].asset == nftId) {
-                this.config['deployer']['nft_staking_test_assets'][index].sentTo = walletAddress;
+        let nfts = this.config['gora_dao'].network === 'mainnet' ? this.config['gora_dao']['deployer']['nft_staking_mainnet_assets'] : this.config['gora_dao']['deployer']['nft_staking_testnet_assets']
+        for (let index = 0; index < nfts.length; index++) {
+            if (nfts[index].asset == nftId) {
+                nfts[index].sentTo = walletAddress;
             }
         }
         await this.saveConfigToFile(this.config)
@@ -3615,9 +3616,10 @@ const GoraDaoDeployer = class {
 
             }
             this.config['gora_dao']['staking_is_staked'] = true;
-            for (let index = 0; index < this.config['deployer']['nft_staking_test_assets'].length; index++) {
-                if (this.config['deployer']['nft_staking_test_assets'][index].asset == nftId) {
-                    this.config['deployer']['nft_staking_test_assets'][index].isLocked = true;
+            let nfts = this.config['gora_dao'].network === 'mainnet' ? this.config['gora_dao']['deployer']['nft_staking_mainnet_assets'] : this.config['gora_dao']['deployer']['nft_staking_testnet_assets']
+            for (let index = 0; index < nfts.length; index++) {
+                if (nfts[index].asset == nftId) {
+                    nfts[index].isLocked = true;
                 }
             }
             await this.saveConfigToFile(this.config)
@@ -3810,10 +3812,10 @@ const GoraDaoDeployer = class {
 
 
             this.config['gora_dao']['staking_is_unstaked'] = true;
-
-            for (let index = 0; index < this.config['deployer']['nft_staking_test_assets'].length; index++) {
-                if (this.config['deployer']['nft_staking_test_assets'][index].asset == nftId) {
-                    this.config['deployer']['nft_staking_test_assets'][index].isLocked = false;
+            let nfts = this.config['gora_dao'].network === 'mainnet' ? this.config['gora_dao']['deployer']['nft_staking_mainnet_assets'] : this.config['gora_dao']['deployer']['nft_staking_testnet_assets']
+            for (let index = 0; index < nfts.length; index++) {
+                if (nfts[index].asset == nftId) {
+                    nfts[index].isLocked = false;
                 }
             }
 
@@ -3846,11 +3848,11 @@ const GoraDaoDeployer = class {
         let params = await this.algodClient.getTransactionParams().do();
         for (let index = 0; index < assetQuantity; index++) {
             this.logger.info('------------------------------')
-            this.logger.info(`Creating GoraDAO Testing NFT staking Asset #${index}...`);
+            this.logger.info(`Creating GoraDAO Testing NFT staking Asset #${(index + 1) * 100000}...`);
             // Create NFT asset transaction with suggested parameters
             const atxn = this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
                 assetMetadataHash: new Uint8Array(32),
-                assetName: `GoraBots#${index}`,
+                assetName: `GoraBots#${(index + 1) * 100000}`,
                 assetURL: 'https://gora.io',
                 clawback: this.goraDaoUserAccount2.addr,
                 freeze: this.goraDaoUserAccount2.addr,
@@ -3862,7 +3864,7 @@ const GoraDaoDeployer = class {
                 reserve: this.goraDaoUserAccount2.addr,
                 suggestedParams: { ...params, fee: 1000, flatFee: true, },
                 total: 1,
-                unitName: `GBOT${index}`,
+                unitName: `GBOT${(index + 1) * 100000}`,
 
 
             })
@@ -3882,8 +3884,13 @@ const GoraDaoDeployer = class {
             })
             this.logger.info(`GoraDAO Staking TEST created Asset ID: ${assetId} with Gora native Token value: ${value} created!`);
         }
+        if (this.config['gora_dao'].network === 'mainnet') {
+            this.config['deployer']['nft_staking_mainnet_assets'] = assetArray;
+        } else {
+            this.config['deployer']['nft_staking_testnet_assets'] = assetArray;
+        }
 
-        this.config['deployer']['nft_staking_test_assets'] = assetArray;
+
         await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Staking Assets array written to config file!`);
     }
@@ -3946,7 +3953,7 @@ const GoraDaoDeployer = class {
         this.config['gora_dao']['staking_is_staked'] = true;
         await this.saveConfigToFile(this.config)
         this.logger.info(`GoraDAO Staking status to config file!`);
-   
+
 
     }
 }

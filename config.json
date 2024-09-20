@@ -1,7 +1,7 @@
 {
   "gora_dao": {
     "host": "",
-    "network": "mainnet",
+    "network": "testnet",
     "asc_main_id": 2275537538,
     "asc_main_address": "OPLMHQZCNKPZEGO6MMVL235SA7L7KNQBGVZK6NVPPNC6RQ6QGLCCWD57ZQ",
     "gora_testnet_token_id": 227418519,
@@ -4553,12 +4553,20 @@
         "isLocked": false
       }
     ],
-    "nft_staking_test_assets": [
+    "nft_staking_mainnet_assets": [
+      {
+        "asset": 2298003280,
+        "value": 5,
+        "isLocked": false
+      },
       {
         "asset": 2277520010,
         "value": 9,
         "isLocked": true
       }
+    ],
+    "nft_staking_testnet_assets": [
+      
     ]
   }
 }
