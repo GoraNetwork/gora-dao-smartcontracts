@@ -884,3 +884,545 @@ Sadly it appears that we are definitely in need of a hard migration plan for V2 
  Since step 2 seems to be a bit cumbersome, we can also lock Goras inside main contract V2 forever and calculate and inject Goras into new V3 which does not repeat shortcomings of V2 and does not need this dirty patch solutions for next migration.
 
 
+--------------------------------------------------------------------------------------------
+
+# Gora V2 Overview
+
+## Gora V2 Main Smart Contract
+
+This PyTeal-based smart contract serves as the core component of an oracle system on the Algorand blockchain. It manages request processing, voting on request outcomes, stake management, and reward distribution for participants. The contract implements several critical functionalities:
+
+1. **Request Management**: Handles requests for data (oracle queries) from users. Each request is processed, stored in a request box, and updated as the oracle network works on providing results.
+
+2. **Staking**: Participants can stake assets to support the oracle’s operations. The contract enforces a minimum stake and provides mechanisms for adding or withdrawing stakes. The staked amount is tracked both locally for each user and globally across the entire application.
+
+3. **Voting and Reward Distribution**: The contract allows users to vote on requests. It manages the vote tally and ensures that rewards are distributed based on contributions, such as voting or processing requests.
+
+4. **Refund Mechanism**: Users can request refunds if certain conditions are met (e.g., request timeouts, request cancellations).
+
+5. **Update Protocol Settings**: An admin can update key parameters like fees, thresholds, and other configurable settings.
+
+6. **Voting Contracts**: The contract deploys new voting applications to handle specific oracle requests. These voting contracts handle the collection of votes and tally the results.
+
+7. **Security Measures**: Several assertions and checks are embedded to ensure correct behavior, prevent manipulation, and guarantee that only authorized actions are executed (e.g., staking, voting, withdrawing funds).
+
+### Key Functions
+
+1. **Request Handling**: Initiates and updates the state of a request, including validation, stake updates, and interaction with the oracle voting process.
+  
+2. **Stake Management**: Users can stake and unstake tokens, which affects their involvement and influence in the oracle's operations.
+
+3. **Voting and Refunds**: Users can vote on the correctness of request outcomes. Based on the results, rewards or refunds are distributed.
+
+4. **Oracle Reward Distribution**: Rewards are paid based on the votes and the contribution of each participant, ensuring fair distribution based on the oracle's efforts.
+
+---
+
+### Sequence Diagrams
+
+#### 1. **Request Creation**
+
+```plaintext
+User           Smart Contract
+   |                 |
+   |-- Request --->  |   
+   |                 | -- Store Request in Box --> Request Stored
+   |                 | -- Initialize Stake Array --> Stake Initialized
+   |-- Approve  ---> | -- Return Success
+```
+
+#### 2. **Stake/Unstake**
+
+```plaintext
+User              Smart Contract
+   |                   |
+   |-- Stake (Xfer) -->| -- Validate Stake Amount --> Validation Passed
+   |                   | -- Update Stake Array --> Stake Updated
+   |-- Approve  -----> | -- Return Success
+   |                   |
+```
+
+#### 3. **Voting on a Request**
+
+```plaintext
+Voter           Smart Contract
+   |                 |
+   |-- Vote  ------> | -- Tally Vote --> Vote Tally Updated
+   |                 | -- Update Request --> Request Updated
+   |-- Approve  ---> | -- Return Success
+```
+
+#### 4. **Refund Request**
+
+```plaintext
+User              Smart Contract
+   |                   |
+   |-- Request Refund -->| -- Check Request Status --> Valid Refund
+   |                   | -- Process Refund --> Refund Processed
+   |-- Approve  -----> | -- Return Success
+   |                   |
+```
+
+#### 5. **Reward Claim**
+
+```plaintext
+User              Smart Contract
+   |                   |
+   |-- Claim Rewards -->| -- Calculate Rewards --> Rewards Calculated
+   |                   | -- Distribute Rewards --> Rewards Distributed
+   |-- Approve  -----> | -- Return Success
+   |                   |
+```
+
+These sequence diagrams illustrate the high-level flows for creating requests, staking, voting, refunds, and reward distribution in the Gora main contract.
+
+
+## Gora V2 Voting Smart Contract
+
+This contract is deployed by the oracle's main contract and serves as the mechanism to collect votes, process them, and determine the results for specific requests in the oracle system. Key functionalities include managing voter registration, validating votes, updating request statuses based on the voting process, and finalizing requests.
+
+### Key Features
+
+1. **Voting Process**: Voters cast their votes on a particular request, with the contract handling vote verification, vote tallying, and the execution of the request based on the results.
+
+2. **Voter Registration and Deregistration**: Users can register to vote, and the contract ensures they meet the necessary requirements, including proper staking. Similarly, deregistration removes voters and their associated voting history.
+
+3. **Validation of Votes**: Votes are verified using a Verifiable Random Function (VRF) and proof to ensure fairness and integrity in the voting process. It also checks if the vote count meets or exceeds a pre-defined threshold.
+
+4. **Request Processing**: Once the required number of votes is met, the contract processes the request by interacting with the main oracle contract, executing the corresponding action, and updating the request status.
+
+5. **Handling Proposals and Vote Data**: The contract uses "boxes" to store and manage vote data, request hashes, and proposal entries. These boxes are used to retrieve and update voting-related information for a particular request.
+
+6. **Reward Claim Validation**: It ensures that users claiming rewards for their votes are doing so in accordance with the contract's rules. The contract checks previous vote information and processes reward distribution.
+
+7. **Security and Timelocks**: It enforces timelocks and restrictions on certain operations, ensuring that only valid actions are allowed within the specified voting period.
+
+---
+
+### Sequence Diagrams
+
+#### 1. **Voter Registration**
+
+```plaintext
+User                Voting Contract
+   |                     |
+   |-- Register Voter --> |  
+   |                     | -- Validate User & Stake --> Stake Validated
+   |                     | -- Create Proposal Box --> Box Created
+   |-- Approve  --------> | -- Return Success
+```
+
+#### 2. **Casting a Vote**
+
+```plaintext
+Voter                 Voting Contract
+   |                       |
+   |-- Cast Vote -------->  | -- Verify Vote --> Vote Verified
+   |                       | -- Update Vote Count --> Vote Count Updated
+   |-- Approve ---------->  | -- Return Success
+```
+
+#### 3. **Processing a Request after Voting**
+
+```plaintext
+Voting Contract          Oracle Main Contract
+   |                         |
+   |-- Request Processing --> |  
+   |                         | -- Execute Request --> Request Executed
+   |                         | -- Update Request Status --> Status Updated
+   |-- Approve ------------>  | -- Return Success
+```
+
+#### 4. **Voter Deregistration**
+
+```plaintext
+User                Voting Contract
+   |                     |
+   |-- Deregister Voter -->| -- Validate Vote History --> History Validated
+   |                     | -- Delete Proposal Box --> Box Deleted
+   |-- Approve  --------> | -- Return Success
+```
+
+#### 5. **Vote Validation and Reward Distribution**
+
+```plaintext
+Voter                Voting Contract
+   |                     |
+   |-- Claim Rewards ---->| -- Validate Vote & Rewards --> Validation Passed
+   |                     | -- Distribute Rewards --> Rewards Distributed
+   |-- Approve  --------> | -- Return Success
+```
+
+---
+
+### Key Functions in the Voting Contract
+
+1. **`vote`**: This function processes incoming votes, validates them using the VRF mechanism, updates the vote count, and checks if the vote count meets the required threshold to trigger the request's completion.
+
+2. **`register_voter`**: Registers a voter by validating their eligibility, ensuring they meet the staking requirements, and creating storage for their vote history.
+
+3. **`deregister_voter`**: Removes a voter from the system, ensuring they are no longer eligible to vote and clearing their associated history.
+
+4. **`update_request_status`**: Updates the status of a request in the oracle's main contract, depending on the voting outcomes.
+
+5. **`delete_box`**: Deletes the box storing vote data once it is no longer needed, ensuring efficient storage management.
+
+---
+
+These sequence diagrams and the summary provide a clear understanding of the smart contract's core voting mechanisms, from registering voters and casting votes to finalizing requests and handling rewards.
+
+
+## Gora V2 Staking Delegator Smart Contract
+
+The **Staking Delegator Contract** is responsible for managing the staking and unstaking of assets in the context of the oracle's main contract. It handles user staking operations, reward distribution, and the management of vesting amounts (for users staking on behalf of others). The contract tracks user contributions, distributes rewards, and ensures compliance with the rules regarding staking, unstaking, and rewards.
+
+### Key Features
+
+1. **Staking and Unstaking**: Users can stake GORA tokens, either for themselves or on behalf of others, and unstake them later. The contract tracks these stakes and manages associated rewards.
+  
+2. **Vesting Support**: Allows for staking on behalf of other users, where tokens are "vested" and locked until specific conditions are met.
+
+3. **Aggregation and Rewards Calculation**: Tracks users' contributions in each aggregation round and calculates the rewards accordingly. Rewards are distributed in both GORA tokens and ALGOs.
+
+4. **Pending Deposits and Withdrawals**: Manages pending amounts for deposits and withdrawals until the next aggregation round, ensuring that deposits are only officially recognized after an aggregation round is completed.
+
+5. **Reward Claiming**: Users can claim their rewards, which are calculated based on their staked amount and time. The contract tracks total rewards and allows users to withdraw these once conditions are met.
+
+6. **Manager Configurations**: The contract allows for a manager who can change settings like reward shares, which determines how much of the rewards go to the manager.
+
+---
+
+### Sequence Diagrams
+
+#### 1. **Staking Tokens**
+
+```plaintext
+User                Staking Contract
+   |                     |
+   |-- Stake Tokens ----> |  
+   |                     | -- Validate Stake --> Stake Validated
+   |                     | -- Update Pending Deposit --> Deposit Updated
+   |-- Approve  --------> | -- Return Success
+```
+
+#### 2. **Unstaking Tokens**
+
+```plaintext
+User                Staking Contract
+   |                     |
+   |-- Unstake Tokens --->|  
+   |                     | -- Validate Unstake --> Unstake Validated
+   |                     | -- Update Pending Withdrawal --> Withdrawal Updated
+   |-- Approve  --------> | -- Return Success
+```
+
+#### 3. **Claiming Rewards**
+
+```plaintext
+User                 Staking Contract
+   |                      |
+   |-- Claim Rewards ----> |  
+   |                      | -- Calculate Rewards --> Rewards Calculated
+   |                      | -- Distribute Rewards --> Rewards Distributed
+   |-- Approve  -------->  | -- Return Success
+```
+
+#### 4. **Vesting on Behalf of Another User**
+
+```plaintext
+Vesting User          Staking Contract
+   |                      |
+   |-- Stake for Other --->|  
+   |                      | -- Validate Stake & Vesting Info --> Stake Validated
+   |                      | -- Update Vesting Info --> Vesting Updated
+   |-- Approve  -------->  | -- Return Success
+```
+
+#### 5. **Processing Aggregation**
+
+```plaintext
+Staking Contract          Oracle Main Contract
+     |                          |
+     |-- Process Aggregation -->|  
+     |                          | -- Fetch Rewards --> Rewards Fetched
+     |                          | -- Update Stake/Rewards --> Stake/Rewards Updated
+     |-- Approve  ------------>  | -- Return Success
+```
+
+---
+
+### Key Functions in the Staking Delegator Contract
+
+1. **`stake`**: Handles the staking of GORA tokens. It updates pending deposits, tracks stake timing, and manages the local aggregation tracker for each user.
+
+2. **`unstake`**: Allows users to withdraw a portion of their staked tokens. It updates pending withdrawals and ensures that the withdrawal amount is valid based on the user's total stake.
+
+3. **`handle_pending`**: Processes any pending deposits or withdrawals from previous rounds, applying them to the user’s total stake.
+
+4. **`claim_rewards`**: Allows users to claim their accumulated rewards, both in ALGOs and GORA tokens. It calculates the rewards based on their contribution to the staking pool.
+
+5. **`process_aggregation`**: Finalizes the staking and unstaking amounts at the end of each aggregation round. It communicates with the main contract to perform token transfers and updates the global stake.
+
+6. **`register_participation_key`**: Registers a new participation key for the contract, which is typically managed by the contract’s manager.
+
+7. **`update_stake_time`**: Updates the stake time for a user, calculating how long their tokens have been staked and how much they are entitled to in rewards.
+
+8. **`withdraw_non_stake`**: Allows users to withdraw tokens that are not part of their official stake, including rewards and unstaked amounts.
+
+---
+
+### Conclusion
+
+The **Staking Delegator Contract** is an integral part of the oracle's ecosystem, allowing users to stake tokens, track their rewards, and manage their participation in the system. It ensures secure and fair handling of staking operations and rewards distribution, with flexibility for vesting and managing assets on behalf of others. The contract efficiently handles the staking lifecycle, from deposits and withdrawals to reward distribution, providing an automated and fair system for participants.
+
+
+
+## Gora V2 **use case diagram** 
+#### Illustrates the relationship between the **Main Contract**, **Voting Contract**, and **Staking Delegator Contract**. 
+### **Actors:**
+
+1. **User**
+   - This represents any participant in the system who interacts with the contracts, such as staking tokens, voting, or initiating oracle requests.
+   
+2. **Manager**
+   - The entity responsible for managing configurations of the staking delegator and main contract, including reward shares, vesting keys, and managing governance settings.
+   
+3. **Oracle System**
+   - Represents the core logic for managing the requests, aggregation of results, and interaction with the voting system.
+
+---
+
+### Gora V2 **Use Case Diagram Components:**
+
+#### **1. Main Contract**
+- **Initiate Oracle Requests**: The main contract allows users to submit oracle requests by providing a key, amount, and other required references.
+  
+- **Deploy Voting Contract**: The main contract has the ability to deploy a new instance of the voting contract. This contract will handle voting for each oracle request.
+
+- **Update Request Status**: The main contract updates the status of an oracle request based on the votes tallied in the voting contract.
+
+- **Distribute Rewards**: The main contract interacts with the staking delegator to distribute rewards to users who staked tokens and participated in the oracle/voting system.
+
+---
+
+#### **2. Voting Contract**
+- **Receive Votes from Users**: Users submit votes regarding the correctness of oracle responses.
+
+- **Vote Tally**: The voting contract tallies the votes, determining whether a request was successful or not.
+
+- **Update Request on Main Contract**: Once a vote is completed, the voting contract sends the final decision to the main contract.
+
+---
+
+#### **3. Staking Delegator Contract**
+- **Stake Tokens**: Users can stake tokens in the staking delegator contract to earn rewards and participate in the oracle system.
+  
+- **Manage Vesting**: The staking delegator allows for vesting operations, where users can stake tokens on behalf of another participant and handle special vesting cases.
+  
+- **Distribute Staking Rewards**: The staking delegator contract interacts with the main contract to distribute GORA and ALGO rewards to users based on their contributions.
+
+- **Withdraw Tokens**: Users can unstake their tokens or withdraw rewards.
+
+---
+
+### **Relationships Between the Contracts:**
+
+1. **Main Contract ↔ Voting Contract**
+   - The **Main Contract** deploys a **Voting Contract** for each oracle request.
+   - The **Voting Contract** reports back to the **Main Contract** after votes are tallied to update the request status.
+
+2. **Main Contract ↔ Staking Delegator Contract**
+   - The **Main Contract** manages the interaction with the **Staking Delegator Contract** to distribute rewards to participants based on their staking contributions.
+   - The **Staking Delegator Contract** allows users to stake tokens, which affects their participation in oracle requests and their ability to vote through the **Main Contract**.
+
+3. **Staking Delegator Contract ↔ Users**
+   - Users can stake tokens in the **Staking Delegator Contract** to participate in the system and earn rewards.
+   - They can also withdraw tokens or claim rewards, which is managed by the **Staking Delegator Contract**.
+
+---
+
+## Gora V2 system **Use Case Diagram** :
+
+```
+                 +-------------------+
+                 |   Main Contract    |
+                 +-------------------+
+                 | - Deploy Voting    |
+                 |   Contract         |
+                 | - Manage Requests  |
+                 | - Distribute       |
+                 |   Rewards          |
+                 +-------------------+
+                         ^|
+                         ||
+         +----------------|----------------+
+         |                                 |
++-------------------+              +---------------------+
+|  Voting Contract  |              | Staking Delegator    |
++-------------------+              |     Contract         |
+| - Receive Votes   |              +---------------------+
+| - Tally Results   |              | - Stake Tokens      |
+| - Update Main     |              | - Vesting Operations|
+|   Contract Status |              | - Distribute Rewards|
++-------------------+              | - Withdraw Tokens   |
+                                    +---------------------+
+
+Actors:
+- User: Interacts with Voting Contract and Staking Delegator Contract.
+- Manager: Manages configuration in Staking Delegator Contract and Main Contract.
+```
+
+### **Use Case Flow:**
+
+1. **User Stakes Tokens**: The user stakes tokens in the **Staking Delegator Contract**.
+2. **Oracle Request**: The user submits a request to the **Main Contract**.
+3. **Voting Contract Deployment**: The **Main Contract** deploys a new **Voting Contract** for each request.
+4. **Voting Process**: Users vote on the outcome in the **Voting Contract**.
+5. **Tally and Status Update**: The **Voting Contract** tallies votes and updates the **Main Contract** with the results.
+6. **Reward Distribution**: Based on participation, rewards are distributed through the **Staking Delegator Contract** by the **Main Contract**. 
+
+This setup ensures a decentralized, fair, and transparent oracle system where users can participate by staking, voting, and earning rewards.
+
+
+## Gora V2 **sequence diagram** 
+
+#### Interactions between the **Main Contract**, **Voting Contract**, and **Staking Delegator Contract**, illustrating the different functionalities they provide in the system.
+
+### **Key Entities:**
+
+- **User**: The participant interacting with the system, performing actions like submitting an oracle request, staking, voting, and claiming rewards.
+- **Main Contract**: The core contract managing the oracle requests, rewards distribution, and interaction with the voting and staking contracts.
+- **Voting Contract**: Deployed by the Main Contract to handle voting for each oracle request.
+- **Staking Delegator Contract**: Manages the staking of tokens, distribution of rewards, and vesting mechanisms.
+
+### **Functionalities:**
+1. **Stake Tokens**
+2. **Submit Oracle Request**
+3. **Voting Process**
+4. **Distribute Rewards**
+
+---
+
+### **1. Stake Tokens**
+
+#### Sequence:
+1. **User** → **Staking Delegator Contract**: `Stake GORA Tokens`.
+   - The user sends a transaction to stake tokens. The staking contract updates the user's stake record.
+
+2. **Staking Delegator Contract** → **Main Contract**: `Opt-In to Main Contract (if necessary)`.
+   - The staking contract opts into the main contract (if not done previously) to establish a connection with the main system.
+
+3. **Staking Delegator Contract**: `Update Local Stake Time`.
+   - The staking contract updates the user's stake time to keep track of their contribution to the system.
+
+4. **Staking Delegator Contract**: `Update Aggregation Tracker`.
+   - The staking contract updates the aggregation tracker to record the pending deposit for staking.
+
+---
+
+### **2. Submit Oracle Request**
+
+#### Sequence:
+1. **User** → **Main Contract**: `Submit Oracle Request`.
+   - The user submits a request to the main contract for data or an action to be verified by an oracle.
+
+2. **Main Contract** → **Voting Contract**: `Deploy Voting Contract`.
+   - The main contract deploys a new voting contract specifically for this oracle request.
+
+3. **Main Contract**: `Store Oracle Request in Box`.
+   - The main contract stores the request information in a box for tracking the request status and associated data.
+
+---
+
+### **3. Voting Process**
+
+#### Sequence:
+1. **User** → **Voting Contract**: `Vote on Oracle Request`.
+   - The user votes on the oracle request using the voting contract. This vote is tied to their staked amount from the staking delegator contract.
+
+2. **Voting Contract** → **Main Contract**: `Update Oracle Request Status`.
+   - The voting contract sends the result of the vote to the main contract, which updates the request's status.
+
+3. **Voting Contract** → **Staking Delegator Contract**: `Check User's Stake`.
+   - The voting contract interacts with the staking contract to verify the user’s staked amount and validate their participation in voting.
+
+4. **Voting Contract**: `Tally Votes`.
+   - The voting contract tallies the votes to determine the result of the oracle request.
+
+---
+
+### **4. Distribute Rewards**
+
+#### Sequence:
+1. **Main Contract** → **Staking Delegator Contract**: `Request Rewards Distribution`.
+   - The main contract sends a request to the staking delegator contract to distribute rewards to users based on their participation.
+
+2. **Staking Delegator Contract**: `Calculate User Rewards`.
+   - The staking delegator calculates the user's rewards based on their stake, contribution, and voting activity.
+
+3. **Staking Delegator Contract** → **Main Contract**: `Withdraw ALGO and GORA Tokens`.
+   - The staking delegator contract interacts with the main contract to withdraw the required ALGO and GORA tokens for distribution.
+
+4. **Staking Delegator Contract** → **User**: `Distribute Rewards`.
+   - The staking delegator contract sends the rewards (ALGO and GORA) to the user.
+
+---
+
+### **Full Sequence Diagram in Text Form**
+
+```
+User            Staking Delegator Contract          Main Contract               Voting Contract
+ |------------------------>|                           |                           |
+ |    Stake GORA Tokens     |                           |                           |
+ |<------------------------|                           |                           |
+ |                          |-------------------------->|                           |
+ |                          |   Opt-in to Main Contract  |                           |
+ |                          |<--------------------------|                           |
+ |                          |                           |                           |
+ |                          |   Update Local Stake Time  |                           |
+ |                          |<--------------------------|                           |
+ |                          |   Update Aggregation Tracker |                        |
+ |                          |<--------------------------|                           |
+ 
+ -------------------------------------SUBMIT ORACLE REQUEST-------------------------------------------
+ |---------------------->|                                      |                                    |
+ |  Submit Oracle Request |                                      |                                    |
+ |<----------------------|                                      |                                    |
+ |                       |-------------------------------------->|                                    |
+ |                       |       Deploy Voting Contract          |                                    |
+ |                       |<--------------------------------------|                                    |
+ |                       |       Store Oracle Request in Box      |                                    |
+ |                       |                                        |                                    |
+ 
+ --------------------------------------------VOTING PROCESS-------------------------------------------
+ |--------------------------------------------------------------->|                                    |
+ |                       Vote on Oracle Request                   |                                    |
+ |<---------------------------------------------------------------|                                    |
+ |                       |---------------------------------------->|                                    |
+ |                       |       Update Oracle Request Status      |                                    |
+ |                       |<----------------------------------------|                                    |
+ |                       |---------------------------------------->|                                    |
+ |                       |       Check User's Stake                |                                    |
+ |                       |<----------------------------------------|                                    |
+ |                       |       Tally Votes                       |                                    |
+ |                       |<----------------------------------------|                                    |
+ 
+ ----------------------------------------REWARD DISTRIBUTION-------------------------------------------
+ |                          |------------------------------------->|                                    |
+ |                          |  Request Rewards Distribution        |                                    |
+ |                          |<-------------------------------------|                                    |
+ |                          |                                      |                                    |
+ |                          |------------------------------------->|                                    |
+ |                          |      Calculate User Rewards           |                                    |
+ |                          |<-------------------------------------|                                    |
+ |                          |      Withdraw ALGO and GORA Tokens     |                                    |
+ |<-------------------------|------------------------------------->|                                    |
+ |   Distribute Rewards      |                                      |                                    |
+ |<-------------------------|                                      |                                    |
+```
+
+### **Summary:**
+- **Stake Tokens**: Users interact with the **Staking Delegator Contract** to stake tokens, which makes them eligible for voting and earning rewards.
+- **Submit Oracle Request**: Users submit requests to the **Main Contract**, which deploys a new **Voting Contract** to handle the voting process.
+- **Voting Process**: Users vote on oracle requests through the **Voting Contract**, which reports back to the **Main Contract**.
+- **Distribute Rewards**: The **Main Contract** interacts with the **Staking Delegator Contract** to calculate and distribute rewards to users based on their participation and stake.
