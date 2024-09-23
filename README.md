@@ -976,6 +976,43 @@ User              Smart Contract
 
 These sequence diagrams illustrate the high-level flows for creating requests, staking, voting, refunds, and reward distribution in the Gora main contract.
 
+### Key Methods in the Main Contract:
+#### Initialization and Protocol Settings:
+
+- init_selector: Initializes the contract, setting up necessary configurations like the protocol settings.
+- update_protocol_settings_selector: Allows updating protocol-level settings, ensuring flexibility and adaptability.
+
+#### Participation Key Management:
+- register_key_selector: Registers a participation key for validating transactions within the network.
+- unregister_key_selector: Unregisters the participation key when it's no longer needed or needs to be rotated.
+
+#### Request Management:
+
+- request_selector: Submits a new service request to the network. This could be for computation or verification.
+- refund_request_selector: Allows for refunding the request if certain conditions are met or the request is no longer needed.
+- update_request_status_selector: Updates the status of an existing request in the system (e.g., from "pending" to "completed").
+
+#### Staking and Rewards Management:
+
+- stake_selector: Allows users to stake their assets (e.g., GORA tokens) into the contract.
+- unstake_selector: Unstakes the previously staked tokens.
+- claim_rewards_selector: Allows users to claim their accumulated rewards from the contract.
+- claim_rewards_from_vote_selector: Specialized method for claiming rewards tied to voting activities.
+
+#### Deposits and Withdrawals:
+
+- deposit_token_selector: Deposits tokens into the contract, e.g., to fulfill a request or stake.
+- deposit_algo_selector: Deposits Algos into the contract, which may be required for certain services or to stake.
+- withdraw_token_selector: Withdraws tokens from the contract.
+- withdraw_algo_selector: Withdraws Algos from the contract.
+
+#### Voting Contract Deployment:
+
+- deploy_voting_contract_selector: Deploys a new instance of a voting contract, which may be used for governance or other decision-making processes.
+
+#### Heartbeat Functionality:
+
+- heartbeat_selector: Ensures the contract remains active and responsive by providing regular updates to its state (useful for long-running contracts or protocols requiring time-based actions).
 
 ## Gora V2 Voting Smart Contract
 
