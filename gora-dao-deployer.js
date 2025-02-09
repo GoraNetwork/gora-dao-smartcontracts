@@ -285,7 +285,6 @@ const GoraDaoDeployer = class {
         const regex = /[^\x00-\x7F]/g;
         return str.match(regex) !== null;
     }
-
     // This is the method to get transaction logs from indexer endpoints
     async printTransactionLogsFromIndexer(txID, confirmedRound) {
         try {
@@ -2083,7 +2082,51 @@ const GoraDaoDeployer = class {
         this.logger.info("All 5 GoraDAO members have withdrawn participation from the proposal!");
     }
     //TODO: Implement this method
-    async activateProposalContract() { }
+    async activateProposalContract() { 
+        let addr = this.goraDaoProposalAdminAccount.addr;
+        let params = await this.algodClient.getTransactionParams().do();
+        const atc = new this.algosdk.AtomicTransactionComposer()
+        const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoProposalAdminAccount)
+
+        const contractJson = JSON.parse(this.daoContract.toString())
+        const contract = new this.algosdk.ABIContract(contractJson)
+
+        let memberPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
+
+        const commonParams = {
+            appID: Number(this.goraDaoMainApplicationId),
+            sender: addr,
+            suggestedParams: params,
+            signer: signer,
+            boxes: [
+
+                { appIndex: Number(this.goraDaoMainApplicationId), name: memberPublicKey.publicKey },
+
+            ],
+        }
+        let method = this.getMethodByName("activate_proposal", contract);
+        atc.addMethodCall({
+            method: method,
+            methodArgs: [],
+            ...commonParams
+        });
+
+        this.logger.info('------------------------------');
+        this.logger.info("GoraDAO Proposal Contract ABI Exec method = %s", method);
+        const result = await atc.execute(this.algodClient, 10);
+        for (let idx in result.methodResults) {
+            let res = this.algosdk.decodeUint64(result.methodResults[idx].rawReturnValue, "mixed");
+            this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", res);
+            let addr = this.algosdk.getApplicationAddress(Number(res));
+            this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", addr);
+
+            let txid = result.methodResults[idx].txID;
+            let confirmedRound = result.confirmedRound;
+
+            await this.printTransactionLogsFromIndexer(txid, confirmedRound);
+        }
+
+    }
     // This method is used to vote on a proposal
     async voteProposalContract(userIndex, vote) {
         let addr = this[`goraDaoUserAccount${userIndex}`].addr;

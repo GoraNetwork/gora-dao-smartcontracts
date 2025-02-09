@@ -38,8 +38,7 @@ props.vestingContract = fs.readFileSync(path.join(__dirname, 'gora-dao-vesting-a
 const goraDaoDeployer = new GoraDaoDeployer(props)
 //Running GoraDao Deployer with config on node process
 
-
-async function goraDAOOperations() {
+async function goraDaoOperations() {
     let choices = []
     if (!(config['gora_dao']['dao_asa_id'] > 0)) {
         choices.push('Create GoraDAO Asset')
@@ -274,7 +273,7 @@ async function goraDAOOperations() {
 
     // Loop back to GoraDAO operations menu unless going back to main menu
     if (answers.goraDAOOperation !== 'Back to Main Menu') {
-        await goraDAOOperations();
+        await goraDaoOperations();
     }
 }
 async function proposalsOperations() {
@@ -596,7 +595,6 @@ async function proposalsOperations() {
         await proposalsOperations();
     }
 }
-
 async function mainMenu() {
     await goraDaoDeployer.runDeployer(true)
     console.log(` 
@@ -722,7 +720,7 @@ async function mainMenu() {
             }
             break;
         case 'GoraDAO Operations':
-            await goraDAOOperations();
+            await goraDaoOperations();
             break;
         case 'Proposals Operations':
             await proposalsOperations();
@@ -762,7 +760,6 @@ async function mainMenu() {
     // Loop back to main menu unless exited
     await mainMenu();
 }
-
 // Initialize and run the main menu
 mainMenu().catch(err => {
     console.error('An error occurred:', err);
