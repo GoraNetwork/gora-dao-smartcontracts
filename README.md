@@ -101,6 +101,19 @@ graph TB
 
 
 ```
+### Gora DAO Menmonics used in CLI
+Use a copy of the .env.example file and rename it to .env and fill in the mnemonics for DAO manager, DAO proposal manager, and DAO users. The .env file should look like this:
+
+```
+GORADAO_MNEMONIC_0="your mnemonic for DAO manager here"
+GORADAO_MNEMONIC_1="your mnemonic for DAO proposal manager here"
+GORADAO_MNEMONIC_2="your mnemonic for DAO user 1 here"
+GORADAO_MNEMONIC_3="your mnemonic for DAO user 2 here"
+GORADAO_MNEMONIC_4="your mnemonic for DAO user 3 here"
+GORADAO_MNEMONIC_5="your mnemonic for DAO user 4 here"
+GORADAO_MNEMONIC_6="your mnemonic for DAO user 5 here"
+
+```
 ### Gora DAO Main Contract: V1
 
 GoraDAO main contract, once deployed to a network, will be responsible for generating Proposal units, consisted of a Proposal and a Vesting Contract(future work) dedicated to that proposal case! This design is to take permission-less and decentralization to the max for GoraDAO!
