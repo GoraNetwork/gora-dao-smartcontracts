@@ -148,3 +148,6 @@ gora_mnemonic5.txt
 gora_mnemonic6.txt
 /mnemonics
 /mnemonics/*
+gora_mnemonic7.txt
+gora_testnet_master_mnemonic.txt
+gora_storage.teal
