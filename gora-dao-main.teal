@@ -26,20 +26,24 @@ int DeleteApplication
 bnz branch_delete
 
 // Checking onCompletion type for close out application call
-txn OnCompletion
-int CloseOut
-==
-bnz branch_error
+// txn OnCompletion
+// int CloseOut
+// ==
+// bnz branch_error
 
 // Checking onCompletion type for optin application call
+// txn OnCompletion
+// int OptIn
+// ==
+// bnz branch_error
+
 txn OnCompletion
-int OptIn
+int NoOp
 ==
-bnz branch_error
+assert
 
 // Checks the number of application args , if 0 then no method it is
 txn NumAppArgs
-
 int 0
 ==
 bz branch_method_router
@@ -52,7 +56,20 @@ check_owner_auth:
 	==
 	assert
 	retsub
-
+branch_optin_gora_asset:
+	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int axfer
+	itxn_field TypeEnum
+	global CurrentApplicationAddress
+	itxn_field AssetReceiver
+	int 0
+	itxn_field AssetAmount
+	load 2
+	itxn_field XferAsset
+	itxn_submit
+	retsub
 branch_create:
 	
 	byte "manager_address"
@@ -79,20 +96,28 @@ branch_create:
 	int 0
 	app_global_put
 
+    byte "total_stakings_count"
+	int 0
+	app_global_put
+
+	byte "total_stakings_amount"
+	int 0
+	app_global_put
+
+ 
+
 	int 1
 	return
 
 branch_delete:
 
 	callsub check_owner_auth
-
 	int 1
 	return
 
 branch_update:
 
 	callsub check_owner_auth
-
 	global CurrentApplicationID
 	store 1
 
@@ -108,10 +133,25 @@ branch_method_router:
 	==
 	bnz method_config_dao
 
-	method "write_source_box(byte[],byte[])string"
+    method "subscribe_dao(pay,asset,account,address)uint64"
 	txn ApplicationArgs 0
 	==
-	bnz method_write_source_box
+	bnz method_subscribe_dao
+
+    method "unsubscribe_dao(asset,account,address)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_unsubscribe_dao
+
+	method "write_proposal_source_box(byte[],byte[])string"
+	txn ApplicationArgs 0
+	==
+	bnz method_write_proposal_source_box
+
+    method "write_staking_source_box(byte[],byte[])string"
+	txn ApplicationArgs 0
+	==
+	bnz method_write_staking_source_box
 
 	method "create_proposal(pay,account,asset,asset,uint64,string,string)uint64"
 	txn ApplicationArgs 0
@@ -128,16 +168,6 @@ branch_method_router:
 	==
 	bnz method_proposal_config
 
-    method "subscribe_dao(pay,asset,account,address)uint64"
-	txn ApplicationArgs 0
-	==
-	bnz method_subscribe_dao
-
-    method "unsubscribe_dao(asset,account,address)uint64"
-	txn ApplicationArgs 0
-	==
-	bnz method_unsubscribe_dao
-
     method "proposal_participate()uint64"
 	txn ApplicationArgs 0
 	==
@@ -152,6 +182,42 @@ branch_method_router:
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_vote
+
+    method "create_staking(pay,uint64,uint64,string,string)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_create
+
+	method "update_staking(pay,application,uint64,address,uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_update
+
+	method "config_staking(pay,axfer)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_config
+
+    method "activate_staking()uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_activate_staking
+
+    method "stake(pay,axfer)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_stake
+
+    method "unstake(uint64,uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_unstake
+
+    method "update_nft_owner(uint64,account)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_update_nft_owner
+
 
 	b branch_error
 
@@ -244,22 +310,11 @@ method_config_dao:
     app_global_put
 
 
-	itxn_begin
-	global CurrentApplicationAddress
-	itxn_field Sender
-	int axfer
-	itxn_field TypeEnum
-	global CurrentApplicationAddress
-	itxn_field AssetReceiver
-	int 0
-	itxn_field AssetAmount
-	txna Assets 0
-	itxn_field XferAsset
-	itxn_submit
+    callsub branch_optin_gora_asset
 	
 
 	byte 0x151f7c75
-	txna Assets 0
+	load 2
 	itob
 	concat
 	b branch_log_return
@@ -314,10 +369,10 @@ method_subscribe_dao:
     >=
     assert
 	
-    load 0
-    txna Assets 0
-    asset_holding_get AssetBalance
-    assert
+    load 0 // TXN Sender
+    txna Assets 0 // NFT asset id
+    asset_holding_get AssetBalance // Get NFT balance
+    assert // 0 Balance fails the transaction
     byte "min_subscription_stake"
     app_global_get
     >=
@@ -361,7 +416,7 @@ method_unsubscribe_dao:
 	concat
 	b branch_log_return
 
-method_write_source_box:
+method_write_proposal_source_box:
 
 	callsub sub_check_owner_auth
 
@@ -371,7 +426,31 @@ method_write_source_box:
 	byte "proposal_clr"
 	store 2
 
+
 	load 1
+	box_get
+	bz branch_write_box_app
+
+	load 1
+	box_del
+	pop
+	load 2
+	box_del
+	pop
+
+    b branch_write_box_app
+
+method_write_staking_source_box:
+
+	callsub sub_check_owner_auth
+
+	byte "staking_app"
+	store 1
+
+	byte "staking_clr"
+	store 2
+
+    load 1
 	box_get
 	bz branch_write_box_app
 
@@ -395,6 +474,7 @@ branch_write_box_app:
 	concat
 	b branch_log_return
 
+/////////////////////////////////PROPOSALS Branches////////////////////////////////////
 // Handles ABI method call for contract to contract creation of a Proposal contract
 method_proposal_create:
 
@@ -479,13 +559,17 @@ method_proposal_create:
     asset_holding_get AssetBalance
     assert
     pop
+    txn NumAssets
+    int 1
+    >
+    bz branch_proposal_create_final
     // Check Proposal manager Proposal asset optin
     txna Accounts 0
     txna Assets 1
     asset_holding_get AssetBalance
     assert
     pop
-
+branch_proposal_create_final:
     // Inner transaction to create the Proposal smart contract
     itxn_begin
     // itxn Type to "appl"
@@ -506,7 +590,7 @@ method_proposal_create:
     itxn_field LocalNumByteSlice
     txn Sender
     itxn_field Note
-    method "create_proposal(application,uint64,uint64,address,address,string,string)address"
+    method "create_proposal(uint64,uint64,string,string)address"
     itxn_field ApplicationArgs
     byte "proposal_app"
     box_get
@@ -883,12 +967,18 @@ method_proposal_config:
     asset_holding_get AssetBalance
     assert
     pop
+    txn NumAssets
+    int 1
+    >
+    bz branch_finalize_config_proposal
     // Check Proposal manager Proposal asset optin
     txna Accounts 0
     txna Assets 1
     asset_holding_get AssetBalance
     assert
     pop
+
+branch_finalize_config_proposal:
 
     itxn_begin
 	global CurrentApplicationAddress
@@ -908,7 +998,7 @@ method_proposal_config:
     // contains 32 byte proposal address followed by 32 bytes proposal manager address
     txna Accounts 0
     box_get
-    bnz branch_delete_proposal_box
+    bnz branch_delete_box
     load 2
     itob
     load 1
@@ -938,7 +1028,7 @@ branch_delete_member_box:
 	concat
 	b branch_log_return
 
-branch_delete_proposal_box:
+branch_delete_box:
     txna Accounts 0
     box_del
     pop
@@ -1058,7 +1148,7 @@ method_proposal_withdraw_participate:
     store 1
 
     gtxn 1 ApplicationID
-    byte "proposal_min_participation_stake"
+    byte "proposal_min_participation_token"
     app_global_get_ex
     assert
     store 2
@@ -1090,31 +1180,36 @@ method_proposal_withdraw_participate:
 	itxn_submit
 	//itxn TxID
     //log
+    txn NumAssets
+    int 1
+    >
+    bz branch_proposal_withdraw_participate_final
 
     itxn_begin
 	global CurrentApplicationAddress
 	itxn_field Sender
 	int axfer
 	itxn_field TypeEnum
-    txna Assets 0
-    itxn_field XferAsset
+  
 	load 0
 	itxn_field AssetReceiver
 	load 2
     load 4
     +
 	itxn_field AssetAmount
+    txna Assets 1
+    itxn_field XferAsset
 	itxn_submit
 	//itxn TxID
     //log
-
+branch_proposal_withdraw_participate_final:
     byte 0x151f7c75
 	global CurrentApplicationID
 	itob
 	concat
 	b branch_log_return
 
-
+// Handles ABI method call for contract to contract vote of a Proposal contract
 method_proposal_vote:
     txna Accounts 0
     store 0
@@ -1242,22 +1337,771 @@ method_proposal_vote:
     assert
     pop
     
-	
     byte 0x151f7c75
 	global CurrentApplicationID
 	itob
 	concat
 	b branch_log_return
 
-branch_error:
+/////////////////////////////////STAKING Branches////////////////////////////////////
+// This method is used to create a new staking contract
+method_staking_create:
 
+  	// Checking Transaction group
+    global GroupSize
+    int 2
+    ==
+    assert
+    // Checking the pay txn at index 0 of gtxn
+    gtxn 0 RekeyTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 CloseRemainderTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 AssetCloseTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 TypeEnum
+    int pay
+    ==
+    assert
+    gtxn 0 Fee
+    global MinTxnFee
+    >=
+    assert
+    gtxn 0 Amount
+    global MinTxnFee
+    >=
+    assert
+    // Checking if the receiver of pay txn is the same as the current application address
+    txn GroupIndex
+    int 1
+    -
+    dup
+    gtxn 0 Receiver
+    global CurrentApplicationAddress
+    ==
+    assert
+
+    gtxn 0 Amount
+    byte "fee_algo"
+    app_global_get
+    //dup
+    //itob
+    //log
+    >=
+    assert
+
+    // Process Transaction args
+
+
+    // DAO asset id
+    txn ApplicationArgs 1
+    btoi
+    store 1
+
+     // Staking asset id
+    txn ApplicationArgs 2
+    btoi
+    store 2
+
+    // Staking title
+    txn ApplicationArgs 3
+    store 3
+
+    // Staking description
+    txn ApplicationArgs 4
+    store 4
+
+
+    // Checks on Staking create
+    // Check Staking manager Dao subscription (using a manager account box ref existing)
+    txna Accounts 0
+    box_get
+    assert
+    pop
+    // Check Staking manager Dao asset optin
+    txna Accounts 0
+    txna Assets 0
+    asset_holding_get AssetBalance
+    assert
+    pop
+    // Check Staking manager Staking asset optin
+    txn NumAssets
+    int 1
+    >
+    bz branch_staking_create_final
+
+    txna Accounts 0
+    txna Assets 1
+    asset_holding_get AssetBalance
+    assert
+    pop
+
+branch_staking_create_final:
+
+    // Inner transaction to create the Staking smart contract
+    itxn_begin
+    // itxn Type to "appl"
+    int appl
+    itxn_field TypeEnum
+    // itxn OnCompletion
+    int NoOp
+    itxn_field OnCompletion
+
+    // itxn 
+    int 20
+    itxn_field GlobalNumByteSlice
+    int 30
+    itxn_field GlobalNumUint
+    int 0
+    itxn_field LocalNumUint
+    int 0
+    itxn_field LocalNumByteSlice
+    int 1
+    itxn_field ExtraProgramPages
+    txn Sender
+    itxn_field Note
+    method "create_staking(uint64,uint64,string,string)address"
+    itxn_field ApplicationArgs
+    txn ApplicationArgs 1
+    itxn_field ApplicationArgs
+    txn ApplicationArgs 2
+    itxn_field ApplicationArgs
+    txn ApplicationArgs 3
+    itxn_field ApplicationArgs
+    txn ApplicationArgs 4
+    itxn_field ApplicationArgs
+    txn Accounts 1
+    itxn_field Accounts
+    txn Accounts 2
+    itxn_field Accounts
+    txna Applications 1
+    itxn_field Applications
+    byte "staking_app"
+    box_get
+    bz branch_error
+    dup
+    len
+    int 2
+    swap
+    substring3
+    itxn_field ApprovalProgram
+    
+    byte "staking_clr"
+    box_get
+    bz branch_error
+    dup
+    len
+    int 2
+    swap
+    substring3
+    itxn_field ClearStateProgram
+    itxn_submit
+    //itxn TxID
+    //log
+	itxn LastLog
+	extract 4 0
+    store 10
+    load 10
+    //dup
+    //log
+    global ZeroAddress
+    !=
+    load 10 
+    len
+    int 32
+    ==
+    &&
+    assert
+
+    itxn CreatedApplicationID
+    store 9
+    byte "total_stakings_count"
+    dup
+    app_global_get
+    int 1
+    +
+    app_global_put
+
+ 	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int pay
+	itxn_field TypeEnum
+	load 10
+	itxn_field Receiver
+	int 400000
+	itxn_field Amount
+	itxn_submit
+	itxn LastLog
+	//extract 4 0
+    //store 11
+    //load 11
+    log
+	
+	byte 0x151f7c75
+	load 9
+	itob
+	concat
+	b branch_log_return
+
+// Handles ABI method call for contract to contract update of a Staking contract
+method_staking_update:
+
+	// Checking Transaction group
+    global GroupSize
+    int 2
+    ==
+    assert
+    // Checking the pay txn at index 0 of gtxn
+    gtxn 0 RekeyTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 CloseRemainderTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 AssetCloseTo
+    global ZeroAddress
+    ==
+    assert
+    gtxn 0 TypeEnum
+    int pay
+    ==
+    assert
+    gtxn 0 Fee
+    global MinTxnFee
+    >=
+    assert
+    gtxn 0 Amount
+    global MinTxnFee
+    >=
+    assert
+    // Checking if the receiver of pay txn is the same as the current application address
+    txn GroupIndex
+    int 1
+    -
+    dup
+    gtxns Receiver
+    global CurrentApplicationAddress
+    ==
+    assert
+
+    gtxns Amount
+    global MinTxnFee
+    int 2
+    *
+    >=
+    assert
+	
+    // Process Transaction args
+	// Staking app id
+    txn ApplicationArgs 2
+	btoi
+    store 0
+    // Staking manager address
+    txn ApplicationArgs 3
+    store 1
+    // Staking asset id
+    txn ApplicationArgs 4
+    btoi
+    store 2
+
+
+    // Inner transaction to create the Staking smart contract
+    itxn_begin
+    // itxn Type to "appl"
+    int appl
+    itxn_field TypeEnum
+    // itxn OnCompletion
+    int UpdateApplication
+    itxn_field OnCompletion
+	// itxn ApplicationID
+    load 0
+    itxn_field ApplicationID
+    // itxn 
+    txn Sender
+    itxn_field Note
+    method "update_staking()address"
+    itxn_field ApplicationArgs
+    byte "staking_app"
+    box_get
+    bz branch_error
+    dup
+    len
+    int 2
+    swap
+    substring3
+    itxn_field ApprovalProgram
+    
+    byte "staking_clr"
+    box_get
+    bz branch_error
+    dup
+    len
+    int 2
+    swap
+    substring3
+    itxn_field ClearStateProgram
+    global CurrentApplicationID
+    itob
+    itxn_field ApplicationArgs
+    byte "dao_asset_id"
+    app_global_get
+	itob
+    itxn_field ApplicationArgs
+	// Staking asset id
+    // load 2
+    // itxn_field ApplicationArgs
+	// Staking manager address
+    // load 1
+    // itxn_field ApplicationArgs
+    // byte "manager_address"
+	// app_global_get
+    // itxn_field ApplicationArgs
+	// Staking title
+    // load 3
+    // itxn_field ApplicationArgs
+	// // Staking description
+    // load 4
+    // itxn_field ApplicationArgs
+    
+    
+    itxn_submit
+    //itxn TxID
+    //log
+    //itxn LastLog
+	//extract 4 0
+    //log
+
+
+	byte 0x151f7c75
+	load 0
+	itob
+	concat
+	b branch_log_return
+
+// Handles ABI method call for contract to contract config of a Staking contract
+method_staking_config:
+	// Checking Transaction group
+    global GroupSize
+    int 5
+    ==
+    assert
+    // Checking the pay txn at index 0 of gtxn
+    gtxn 0 RekeyTo
+    global ZeroAddress
+    ==
+    gtxn 2 RekeyTo
+    global ZeroAddress
+    ==
+    &&
+    assert
+
+    gtxn 0 CloseRemainderTo
+    global ZeroAddress
+    ==
+    assert
+
+    gtxn 2 CloseRemainderTo
+    global ZeroAddress
+    ==
+
+    assert
+
+  
+    gtxn 3 AssetCloseTo
+    global ZeroAddress
+    ==
+    assert
+
+    gtxn 0 TypeEnum
+    int pay
+    ==
+    gtxn 2 TypeEnum
+    int pay
+    ==
+    &&
+    assert
+
+    gtxn 0 Fee
+    global MinTxnFee
+    >=
+    gtxn 2 Fee
+    global MinTxnFee
+    >=
+    &&
+    assert
+
+ 
+
+    // Checking if the receiver of pay txn is the same as the current application address
+  
+    gtxn 2 Receiver
+    global CurrentApplicationAddress
+    ==
+    assert
+
+    gtxn 3 AssetReceiver
+    global CurrentApplicationAddress
+    ==
+    assert
+
+    gtxn 0 Amount
+    int 3000
+    >=
+    assert
+
+    gtxn 2 Amount
+    byte "fee_algo"
+    app_global_get
+    >=
+    assert
+	
+    gtxn 3 AssetAmount
+    byte "fee_token"
+    app_global_get
+    >=
+    assert
+
+    txna Accounts 0
+    store 1
+    load 1
+    //log
+    // Staking app id
+    txna Applications 1
+	//btoi
+    store 2
+    load 2
+    //itob
+    //log
+
+    // Staking app address
+    txna Applications 1
+    store 3
+    //load 3
+    //log
+
+    // Staking asset id
+    // txna Assets 1
+    //btoi
+    // store 4
+    //load 4
+    //itob
+    //log
+
+    // Checks on Staking config 
+    // Check Staking manager Dao subscription (using a manger account box ref existing)
+    txna Accounts 0
+    box_get
+    assert
+    pop
+    // Check Staking manager Dao asset optin
+    txna Accounts 0
+    txna Assets 0
+    asset_holding_get AssetBalance
+    assert
+    pop
+    // Check Staking manager Staking asset optin
+    txn NumAssets
+    int 1
+    >
+    bz branch_finalize_config_staking
+    txna Accounts 0
+    txna Assets 1
+    asset_holding_get AssetBalance
+    assert
+    pop
+
+branch_finalize_config_staking:
+    itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int axfer
+	itxn_field TypeEnum
+	global CurrentApplicationAddress
+	itxn_field AssetReceiver
+	int 0
+	itxn_field AssetAmount
+	txna Assets 0
+	itxn_field XferAsset
+	itxn_submit
+	itxn TxID
+    log
+    // Creating Staking box, adding staking id to dao_stakings_list box! Staking box with staking id as key
+    // contains 32 byte staking address followed by 32 bytes staking manager address
+    txna Accounts 0
+    box_get
+    bnz branch_delete_box
+    load 2
+    itob
+    load 1
+    load 3
+    itob
+    concat
+    box_put
+
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+// Handles ABI method call for activation of a Staking contract
+method_activate_staking:
+    gtxn 0 ApplicationID
+    byte "manager_address"
+    app_global_get_ex
+    assert
+    store 0
+    
+    load 0
+    txn Sender
+    ==
+    assert
+
+    load 0
+    gtxn 1 Sender
+    ==
+    assert
+
+    byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+// Handles ABI method call for staking of an asset
+method_staking_stake:
+    txna Accounts 1 // Staking admin account
+    store 0
+    // Checking manager account box ref
+    load 0
+    box_get
+    assert
+    pop
+
+    // Checking Transaction group
+    global GroupSize
+    int 6
+    ==
+    assert
+    
+    gtxn 5 ApplicationID
+    byte "dao_app_id"
+    app_global_get_ex
+    pop
+    global CurrentApplicationID
+    ==
+    assert
+
+    gtxn 0 TypeEnum
+    int pay
+    ==
+    gtxn 1 TypeEnum
+    int axfer
+    ==
+    &&
+    assert
+   
+    gtxn 3 TypeEnum
+    int pay
+    ==
+    gtxn 4 TypeEnum
+    int axfer
+    ==
+    &&
+    assert
+
+    gtxn 0 Receiver
+    global CurrentApplicationAddress
+    ==
+    gtxn 1 AssetReceiver
+    global CurrentApplicationAddress
+    ==
+    &&
+    gtxn 3 Receiver
+    txn Accounts 2
+    ==
+    gtxn 4 AssetReceiver
+    txn Accounts 2
+    ==
+    &&
+    &&
+    assert
+
+    gtxn 1 XferAsset
+    gtxn 4 XferAsset
+    ==
+    assert
+    
+    gtxn 5 ApplicationID
+    byte "asset_id"
+    app_global_get_ex
+    assert
+    gtxn 1 XferAsset
+    ==
+    assert
+
+    gtxn 0 Amount
+    gtxn 5 ApplicationID
+    byte "fee_algo"
+    app_global_get_ex
+    pop
+    ==
+    assert
+
+    gtxn 3 Amount
+    gtxn 5 ApplicationID
+    byte "min_algo"
+    app_global_get_ex
+    pop
+    >=
+    assert
+
+    gtxn 1 AssetAmount
+    gtxn 5 ApplicationID
+    byte "fee_token"
+    app_global_get_ex
+    pop
+    ==
+    assert
+
+    gtxn 4 AssetAmount
+    gtxn 5 ApplicationID
+    byte "min_token"
+    app_global_get_ex
+    pop
+    >=
+    assert
+
+    // Checking the asset ref to be DAO asset
+    byte "dao_asset_id"
+    app_global_get
+    txna Assets 0
+    ==
+    assert
+
+    txn Sender
+	gtxna 5 ApplicationArgs 1
+	btoi
+	asset_holding_get AssetBalance
+	int 1
+	>=
+	assert
+
+    // Checking the pay and axfer txns
+	gtxn 0 RekeyTo
+    global ZeroAddress
+    ==
+    gtxn 1 RekeyTo
+    global ZeroAddress
+    ==
+	&&
+	gtxn 3 RekeyTo
+    global ZeroAddress
+    ==
+    gtxn 4 RekeyTo
+    global ZeroAddress
+    ==
+	&&
+	&&
+	assert
+
+    gtxn 0 CloseRemainderTo 
+	global ZeroAddress
+	==
+	gtxn 1 CloseRemainderTo
+	global ZeroAddress
+	==
+	&&
+    gtxn 3 CloseRemainderTo 
+	global ZeroAddress
+	==
+	gtxn 4 CloseRemainderTo
+	global ZeroAddress
+	==
+	&&
+    &&
+	assert
+
+	gtxn 0 Fee
+    global MinTxnFee
+    >=
+    gtxn 1 Fee
+    global MinTxnFee
+    >=
+	&&
+	assert
+
+    byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+method_staking_unstake:
+    gtxn 1 ApplicationID
+    byte "dao_app_id"
+    app_global_get_ex
+    pop
+    global CurrentApplicationID
+    ==
+    assert
+
+    
+
+
+    byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+
+method_update_nft_owner:
+    // Checks this TXN in Transaction Group to be second TXN
+	txn GroupIndex
+	int 0
+	==
+	assert
+
+    gtxn 1 ApplicationID
+    byte "dao_app_id"
+    app_global_get_ex
+    pop
+    global CurrentApplicationID
+    ==
+    assert
+
+    // makes sure the called method on other txn is the correct one
+	gtxna 1 ApplicationArgs 0
+	method "update_nft_owner(uint64,account)uint64"
+	==
+	assert
+
+    byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+
+
+/////////////////////////////////END Branches////////////////////////////////////
+// Error destination branch
+branch_error:
 	err
 
 // Handles logging the last element on the stack then put a 1 on the top and return (log and approve)
 branch_log_return:
-
 	log
-
 	int 1
 	return
 
