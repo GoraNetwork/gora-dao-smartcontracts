@@ -62,16 +62,19 @@ async function goraDAOOperations() {
     if (config['gora_dao']['dao_dao_deployed'] === true) {
         choices.push('Configure Deployed GoraDAO')
     }
-    if (config['gora_dao']['dao_asa_distributed'] === false) {
+    if (config['gora_dao']['dao_dao_deployed'] === true && config['gora_dao']['dao_asa_distributed'] === false) {
         choices.push('Distribute GoraDAO Asset')
-    } else if (config['gora_dao']['dao_asa_distributed'] === true) {
+    } else if (config['gora_dao']['dao_dao_deployed'] === true && config['gora_dao']['dao_asa_distributed'] === true) {
         choices.push('Re-Distribute GoraDAO Asset')
 
     }
-    choices.push('Re-Distribute GoraDAO Asset(APP Only)')
-    if (config['gora_dao']['subscribed_to_dao'] === true) {
+    if(config['gora_dao']['dao_dao_deployed'] === true){
+        choices.push('Re-Distribute GoraDAO Asset(APP Only)')
+    }
+
+    if (config['gora_dao']['dao_dao_deployed'] === true && config['gora_dao']['subscribed_to_dao'] === true) {
         choices.push('Unsubscribe from GoraDAO')
-    } else {
+    } else if(config['gora_dao']['dao_dao_deployed'] === true) {
         choices.push('Subscribe to GoraDAO')
     }
 
