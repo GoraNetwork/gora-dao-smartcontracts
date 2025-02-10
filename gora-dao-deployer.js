@@ -1129,12 +1129,11 @@ const GoraDaoDeployer = class {
     }
     // Create GoraDAO Asset
     async createDaoAsset() {
-
         let params = await this.algodClient.getTransactionParams().do();
         const atxn = this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
             assetMetadataHash: new Uint8Array(32),
             assetName: 'GoraDAO TEST ASSET',
-            assetURL: 'https://gora.io',
+            assetURL: 'https://dao.gora.io',
             clawback: this.goraDaoAdminAccount.addr,
             decimals: 0,
             defaultFrozen: false,
@@ -1154,7 +1153,6 @@ const GoraDaoDeployer = class {
         let signedTxn = await atxn.signTxn(this.goraDaoAdminAccount.sk);
         await this.algodClient.sendRawTransaction(signedTxn).do();
         await this.algosdk.waitForConfirmation(this.algodClient, txnId, 10)
-
         let transactionResponse = await this.algodClient.pendingTransactionInformation(txnId).do();
         let assetId = transactionResponse['asset-index'];
         this.logger.info(`GoraDAO created TEST Asset ID: ${assetId}`);
@@ -1172,7 +1170,7 @@ const GoraDaoDeployer = class {
         const atxn = this.algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
             assetMetadataHash: new Uint8Array(32),
             assetName: 'GoraDAO Proposal TEST ASSET',
-            assetURL: 'https://gora.io',
+            assetURL: 'https://dao.gora.io',
             clawback: this.goraDaoProposalAdminAccount.addr,
             decimals: 0,
             defaultFrozen: false,
@@ -1186,9 +1184,6 @@ const GoraDaoDeployer = class {
             unitName: 'GDPT',
 
         })
-
-
-
         this.logger.info('------------------------------')
         this.logger.info("GoraDAO Proposal Asset Creation...");
         let txnId = atxn.txID().toString();
@@ -1466,10 +1461,8 @@ const GoraDaoDeployer = class {
         let params = await this.algodClient.getTransactionParams().do();
         const atc = new this.algosdk.AtomicTransactionComposer()
         const signer = this.algosdk.makeBasicAccountTransactionSigner(this.goraDaoProposalAdminAccount)
-
         const contractJson = JSON.parse(this.daoContract.toString())
         const contract = new this.algosdk.ABIContract(contractJson)
-
         let memberPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
 
         const commonParams = {
