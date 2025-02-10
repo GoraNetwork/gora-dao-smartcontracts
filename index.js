@@ -6,7 +6,6 @@ const inquirer = require('inquirer');
 const config = require('./config.json');
 // Logger module
 const logger = require('./logger');
-require('dotenv').config();
 // Gora deployer Class module
 const GoraDaoDeployer = require('./gora-dao-deployer');
 let props = {}
@@ -26,6 +25,10 @@ props.daoClearProgData = fs.readFileSync(path.join(__dirname, 'gora-dao-clear.te
 props.proposalApprovalProgData = fs.readFileSync(path.join(__dirname, 'gora-dao-proposal.teal'));
 props.proposalClearProgData = fs.readFileSync(path.join(__dirname, 'gora-dao-clear.teal'));
 
+// GoraDao Staking Contract sources
+props.stakingApprovalProgData = fs.readFileSync(path.join(__dirname, 'gora-dao-staking.teal'));
+props.stakingClearProgData = fs.readFileSync(path.join(__dirname, 'gora-dao-clear.teal'));
+
 // GoraDao Vesting Contract sources
 props.vestingApprovalProgData = fs.readFileSync(path.join(__dirname, 'gora-dao-vesting.teal'));
 props.vestingClearProgData = fs.readFileSync(path.join(__dirname, 'gora-dao-clear.teal'));
@@ -33,17 +36,20 @@ props.vestingClearProgData = fs.readFileSync(path.join(__dirname, 'gora-dao-clea
 // GoraDao contract ABIs (Dao main, Proposal and vesting)
 props.daoContract = fs.readFileSync(path.join(__dirname, 'gora-dao-abi.json'));
 props.proposalContract = fs.readFileSync(path.join(__dirname, 'gora-dao-proposal-abi.json'));
+props.goraDaoStakingContractAbi = fs.readFileSync(path.join(__dirname, 'gora-dao-staking-abi.json'));
 props.vestingContract = fs.readFileSync(path.join(__dirname, 'gora-dao-vesting-abi.json'));
 
 // GoraDao Deployer instantiating
 const goraDaoDeployer = new GoraDaoDeployer(props)
 //Running GoraDao Deployer with config on node process
 
-async function goraDaoOperations() {
+
+async function goraDAOOperations() {
     let choices = []
-    if (!(config['gora_dao']['dao_asa_id'] > 0)) {
-        choices.push('Create GoraDAO Asset')
+    if (!(Number(config['gora_dao']['dao_asa_id']) > 0)) {
+        choices.push('Create GoraDAO Staking Asset')
     }
+    choices.push('Create GoraDAO Asset');
     if (config['gora_dao']['dao_dao_deployed'] === true) {
         choices.push('Update GoraDAO Contract')
     } else {
@@ -52,15 +58,19 @@ async function goraDaoOperations() {
     if (config['gora_dao']['dao_dao_deployed'] === true) {
         choices.push('Configure Deployed GoraDAO')
     }
+    if (config['gora_dao']['dao_asa_distributed'] === false) {
+        choices.push('Distribute GoraDAO Asset')
+    } else if (config['gora_dao']['dao_asa_distributed'] === true) {
+        choices.push('Re-Distribute GoraDAO Asset')
 
+    }
+    choices.push('Re-Distribute GoraDAO Asset(APP Only)')
     if (config['gora_dao']['subscribed_to_dao'] === true) {
         choices.push('Unsubscribe from GoraDAO')
     } else {
         choices.push('Subscribe to GoraDAO')
     }
-    if (config['gora_dao']['dao_asa_distributed'] === false) {
-        choices.push('Distribute GoraDAO Asset')
-    }
+
 
 
     choices.push('Help')
@@ -81,6 +91,7 @@ async function goraDaoOperations() {
             try {
                 await goraDaoDeployer.deployMainContract();
                 await goraDaoDeployer.writeProposalContractSourceBox();
+                await goraDaoDeployer.writeStakingContractSourceBox();
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -104,7 +115,8 @@ async function goraDaoOperations() {
         case 'Update GoraDAO Contract':
             try {
                 await goraDaoDeployer.updateMainContract();
-                await goraDaoDeployer.writeProposalContractSourceBox();
+                //await goraDaoDeployer.writeProposalContractSourceBox();
+                await goraDaoDeployer.writeStakingContractSourceBox();
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -147,7 +159,49 @@ async function goraDaoOperations() {
             break;
         case 'Distribute GoraDAO Asset':
             try {
-                await goraDaoDeployer.sendGoraDaoAssetTransaction();
+                await goraDaoDeployer.sendGoraDaoAssetTransaction(false);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Re-Distribute GoraDAO Asset(APP Only)':
+            try {
+                await goraDaoDeployer.sendGoraDaoAssetTransaction(true);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Re-Distribute GoraDAO Asset':
+            try {
+                await goraDaoDeployer.sendGoraDaoAssetTransaction(false);
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -168,7 +222,10 @@ async function goraDaoOperations() {
             break;
         case 'Subscribe to GoraDAO':
             try {
-                await goraDaoDeployer.subscribeDaoContract();
+                // Subscribing Gora Proposal account to DAO
+                //await goraDaoDeployer.subscribeDaoContract('proposal');
+                // Subscribing Gora Staking account to DAO
+                await goraDaoDeployer.subscribeDaoContract('staking');
                 await inquirer.prompt([
                     {
                         type: 'input',
@@ -268,36 +325,41 @@ async function goraDaoOperations() {
             ]);
             break;
         case 'Back to Main Menu':
-            await mainMenu();
+            await mainMenu(true);
             break;
     }
 
     // Loop back to GoraDAO operations menu unless going back to main menu
     if (answers.goraDAOOperation !== 'Back to Main Menu') {
-        await goraDaoOperations();
+        await goraDAOOperations();
     }
 }
 async function proposalsOperations() {
     let choices = [];
+
     if (!(Number(config['gora_dao']['proposal_asa_id']) > 0)) {
-        choices.push('Create GoraDAO Proposals Asset')
-    }else if(Number(config['gora_dao']['proposal_asa_id']) > 0 && config['gora_dao']['dao_proposal_deployed'] === true){
-        choices.push('Distribute Proposal Asset')
+        choices.push('Create GoraDAO Proposals Asset',)
     }
-    if (Number(config['gora_dao']['proposal_asa_id']) > 0 && config['gora_dao']['dao_proposal_deployed'] === false) {
+    if (config['gora_dao']['dao_proposal_deployed'] === false) {
         choices.push('Deploy New Proposal')
-    } else if(Number(config['gora_dao']['proposal_asa_id']) > 0 ) {
+    } else {
         choices.push('Update Deployed Proposal')
     }
     if (config['gora_dao']['dao_proposal_deployed'] === true) {
         choices.push('Configure Proposal')
     }
-    if (config['gora_dao']['dao_proposal_deployed'] === true && config['gora_dao']['participated_to_proposal'] === true) {
-        choices.push('Withdraw Participation')
-    } else if(config['gora_dao']['dao_proposal_deployed'] === true) {
+    if (config['gora_dao']['dao_proposal_deployed'] === true && config['gora_dao']['proposal_asa_distributed'] === false) {
+        choices.push('Distribute Proposal Asset')
+    } else if (config['gora_dao']['dao_proposal_deployed'] === true && config['gora_dao']['proposal_asa_distributed'] === true) {
+        choices.push('Re-Distribute Proposal Asset')
+    }
+
+    if (config['gora_dao']['participated_to_proposal'] === true && config['gora_dao']['proposal_is_activated'] === false) {
+        choices.push('Withdraw Proposal Participation')
+    } else if (config['gora_dao']['proposal_is_activated'] === false) {
         choices.push('Participate into Proposal')
     }
-    if (config['gora_dao']['dao_proposal_deployed'] === true && config['gora_dao']['participated_to_proposal'] === true) {
+    if (config['gora_dao']['participated_to_proposal'] === true && config['gora_dao']['proposal_is_activated'] === true) {
         choices.push('Vote on Proposal')
     }
 
@@ -419,6 +481,27 @@ async function proposalsOperations() {
                 ]);
             }
             break;
+        case 'Re-Distribute Proposal Asset':
+            try {
+                await goraDaoDeployer.sendProposalAssetTransaction();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
         case 'Participate into Proposal':
             try {
                 await goraDaoDeployer.participateProposalContractAll();
@@ -441,7 +524,7 @@ async function proposalsOperations() {
                 ]);
             }
             break;
-        case 'Withdraw Participation':
+        case 'Withdraw Proposal Participation':
             try {
                 await goraDaoDeployer.participationWithdrawProposalContractAll();
                 await inquirer.prompt([
@@ -540,10 +623,12 @@ async function proposalsOperations() {
                 ]);
             }
             break;
+        case 'Back to Main Menu':
+            await mainMenu(true);
+            break;
         case 'Help':
             logger.info('GoraDAO Help | Proposals Operations Menu');
             logger.info('------------------------------------');
-            //logger.info('Test flow: Create Proposal Asset ---> Distribute Proposal Asset to 5 test users ---> Deploy/Update new Proposal contract ---> Configure Proposal ---> Participate/Withdraw participation to/from Proposal ---> Vote on Proposal');
             logger.info(`
             +-----------------------+       +-----------------------------------+       +-----------------------------------+
             |                       |       |                                   |       |                                   |
@@ -577,7 +662,7 @@ async function proposalsOperations() {
             logger.info('Update Deployed Proposal: Update the deployed Proposal contract');
             logger.info('Configure Proposal: Configure the Proposal contract');
             logger.info('Participate into Proposal: Participate into the Proposal');
-            logger.info('Withdraw Participation: Withdraw participation from the Proposal');
+            logger.info('Withdraw Proposal Participation: Withdraw participation from the Proposal');
             logger.info('Vote on Proposal: Vote on the Proposal');
 
             await inquirer.prompt([
@@ -588,20 +673,619 @@ async function proposalsOperations() {
                 },
             ]);
             break;
-        case 'Back to Main Menu':
-            delete require.cache[require.resolve('./config.json')];
-            const config = require('./config.json');
-            await mainMenu();
-            break;
+
     }
 
     // Loop back to proposals operations menu unless going back to main menu
-    if (answers.proposalOperation !== 'Back to Main Menu') {
+    if (answers.proposalOperation && answers.proposalOperation !== 'Back to Main Menu') {
         await proposalsOperations();
     }
+    // Loop back to staking operations menu unless going back to main menu
+    if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu') {
+        await stakingOperations();
+    }
 }
-async function mainMenu() {
-    await goraDaoDeployer.runDeployer(true)
+async function stakingOperations() {
+    let choices = [];
+    if (!(Number(config['gora_dao']['staking_asa_id']) > 0)) {
+        choices.push('Create GoraDAO Staking Asset')
+    }
+
+    if (config['gora_dao']['dao_staking_deployed'] === false) {
+        choices.push('Deploy New Staking')
+    } else {
+        choices.push('Update Deployed Staking')
+    }
+    if (config['gora_dao']['dao_staking_deployed'] === true) {
+        choices.push('Configure Staking')
+    }
+    if (config['gora_dao']['staking_is_activated'] === false && config['gora_dao']['dao_staking_deployed'] === true) {
+        choices.push('Activate Staking')
+    } else if (config['gora_dao']['staking_is_activated'] === true) {
+        choices.push('Stake into staking contract')
+        if (config['gora_dao']['staking_is_staked'] === true) {
+            choices.push('UnStake from staking contract')
+
+        }
+        //choices.push('Withdraw stake from staking contract')
+        choices.push('User claim from staking contract')
+        choices.push('Demo Dynamic Rewards Claim evert 5 seconds')
+        // if (config['gora_dao']['staking_is_unstaked'] === true) {
+        //     choices.push('Withdraw stake from staking contract')
+        // }
+
+
+    }
+    choices.push('Register Staking NFTs')
+    if (config['gora_dao']['dao_staking_deployed'] === true && config['gora_dao']['staking_asa_distributed'] === false) {
+        choices.push('Distribute Staking Asset')
+        choices.push('Distribute Staking Asset(App only)')
+    } else if (config['gora_dao']['dao_staking_deployed'] === true && config['gora_dao']['staking_asa_distributed'] === true) {
+        choices.push('Re-Distribute Staking Asset')
+        choices.push('Re-Distribute Staking Asset(App only)')
+    }
+    // if (config['gora_dao']['proxy_staking_is_opted_in'] === false) {
+    //     choices.push('Opt-in to Proxy Staking')
+    // } else if (config['gora_dao']['proxy_staking_is_opted_in'] === true) {
+    //     choices.push('Check Opt-in to Proxy Staking')
+    // }
+
+    if (config['gora_dao']['enforce_gora_token'] === true) {
+        choices.push('Create NFT Staking TEST Assets')
+    }
+
+
+
+
+    choices.push('Send NFT to Wallet Address')
+    choices.push('Print Staking User Box')
+    choices.push('Help')
+    choices.push('Back to Main Menu')
+
+    const answers = await inquirer.prompt([
+        {
+            type: 'list',
+            name: 'stakingOperation',
+            message: 'Select a staking operation:',
+            choices: choices,
+        },
+    ]);
+
+    switch (answers.stakingOperation) {
+        case 'Create GoraDAO Staking Asset':
+            try {
+                await goraDaoDeployer.createDaoStakingAsset();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Register Staking NFTs':
+            try {
+                let nftArray  = config['gora_dao'].network === 'mainnet'? config['gora_dao']['deployer']['nft_staking_mainnet_assets']:  config['gora_dao']['deployer']['nft_staking_testnet_assets']
+                for (let index = 0; index < nftArray.length; index++) {
+                    const nft = nftArray[index];
+                    await goraDaoDeployer.registerStakingNFT(nft.asset, nft.value);
+
+                }
+
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Create NFT Staking TEST Assets':
+            try {
+                let { qty } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'qty',
+                        message: 'How many testing NFT staking assets you need to create?',
+                    },
+                ]);
+                await goraDaoDeployer.iterativeMintingTestNfts(Number(qty));
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Deploy New Staking':
+            try {
+                await goraDaoDeployer.createStakingContract();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Update Deployed Staking':
+            try {
+                await goraDaoDeployer.updateStakingContract();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Configure Staking':
+            try {
+                await goraDaoDeployer.configureStakingContract();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Distribute Staking Asset':
+            try {
+                await goraDaoDeployer.sendStakingAssetTransaction(false, 2);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Distribute Staking Asset(App only)':
+            try {
+                await goraDaoDeployer.sendStakingAssetTransaction(true, 2);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Re-Distribute Staking Asset(App only)':
+            try {
+                await goraDaoDeployer.sendStakingAssetTransaction(true, 2);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Re-Distribute Staking Asset':
+            try {
+                await goraDaoDeployer.sendStakingAssetTransaction(false, 2);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Print Staking User Box':
+            try {
+                // await goraDaoDeployer.printStakingUserBox();
+
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Stake into staking contract':
+            try {
+                // let { amount } = await inquirer.prompt([
+                //     {
+                //         type: 'input',
+                //         name: 'amount',
+                //         message: 'What amount you want to stake?',
+                //     },
+                // ]);
+                let { nftId } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'nftId',
+                        message: 'What is the NFT ID to stake?',
+                    },
+                ]);
+                let amount = 0
+                let finalAmount = Number(amount) * 1000000000 // e.g. to stake 5 Gora the amount will be 5000000000
+                //await goraDaoDeployer.stakeStakingContract(Number(amount));
+                let nftArray = nftId.split(',');
+                await goraDaoDeployer.stakeProxyStakingContract(2, Number(finalAmount), nftArray);
+                //await goraDaoDeployer.printStakingUserBox();
+
+
+                //await goraDaoDeployer.stakeDirectProxyStakingContract(Number(amount));
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'UnStake from staking contract':
+            try {
+                // let { amount } = await inquirer.prompt([
+                //     {
+                //         type: 'input',
+                //         name: 'amount',
+                //         message: 'What amount you want to unstake?',
+                //     },
+                // ]);
+                let { nftId } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'nftId',
+                        message: 'What is the NFT ID to unstake?',
+                    },
+                ]);
+                let amount = 0
+                let finalAmount = Number(amount) * 1000000000 // e.g. to stake 5 Gora the amount will be 5000000000
+                //await goraDaoDeployer.stakeStakingContract(Number(amount));
+                let nftArray = nftId.split(',');
+                await goraDaoDeployer.unstakeProxyStakingContract(2, Number(finalAmount), nftArray);
+                //await goraDaoDeployer.printStakingUserBox();
+
+
+                await delay(5000)
+
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'User claim from staking contract':
+            try {
+                let { nftId } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'nftId',
+                        message: 'What is the NFT ID to stake?',
+                    },
+                ]);
+                // await goraDaoDeployer.manualAggregationProxyStakingContract(2);
+
+                await goraDaoDeployer.userClaimProxyStakingContract(2, Number(nftId));
+                //await goraDaoDeployer.printStakingUserBox();
+                //await goraDaoDeployer.printStakingNFTBox(nftId);
+
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Demo Dynamic Rewards Claim evert 5 seconds':
+            try {
+                let { nftId } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'nftId',
+                        message: 'What is the NFT ID to claim rewards for?',
+                    },
+                ]);
+                let counter = 0;
+                // await goraDaoDeployer.manualAggregationProxyStakingContract(2);
+                while (counter < 100) {
+                    await goraDaoDeployer.userClaimProxyStakingContract(2, Number(nftId));
+                    console.log('Claimed rewards for NFT ID: ', nftId);
+                    console.log('Waiting 5 seconds before next claim...');
+                    await delay(5000)
+                    counter++;
+                }
+
+                //await goraDaoDeployer.printStakingUserBox();
+                //await goraDaoDeployer.printStakingNFTBox(nftId);
+
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Send NFT to Wallet Address':
+            try {
+
+                let { walletAddress } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'walletAddress',
+                        message: 'What is wallet address to send NFT to?',
+                    },
+                ]);
+                let { nftId } = await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'nftId',
+                        message: 'What is the NFT ID to be sent?',
+                    },
+                ]);
+
+                await goraDaoDeployer.sendStakingNFTtoWalletAddress(walletAddress, Number(nftId));
+
+
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+
+        case 'Activate Staking':
+            try {
+                await goraDaoDeployer.activateStakingContract();
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            } catch (error) {
+                console.error('An error occurred:', error);
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+            }
+            break;
+        case 'Back to Main Menu':
+            await mainMenu(true);
+            break;
+        case 'Help':
+            logger.info('GoraDAO Help | Proposals Operations Menu');
+            logger.info('------------------------------------');
+            logger.info(`
+            +-----------------------+       +-----------------------------------+       +-----------------------------------+
+            |                       |       |                                   |       |                                   |
+            |  Create Proposal      +------->  Distribute Proposal Asset        +------->  Deploy/Update new Proposal       |
+            |  Asset                |       |  to 5 test users                  |       |  contract                         |
+            |                       |       |                                   |       |                                   |
+            +-----------------------+       +-----------------------------------+       +-----------------------------------+
+                                                                                            |
+                                                                                            |
+                                                                                            v
+                                                                          +------------------------+       +---------------------------+
+                                                                          |                        |       |                           |
+                                                                          |  Configure Proposal    +------->  Participate/Withdraw     |
+                                                                          |                        |       |  participation to/from    |
+                                                                          +------------------------+       |  Proposal                 |
+                                                                                                           |                           |
+                                                                                                           +---------------------------+
+                                                                                                                       |
+                                                                                                                       |
+                                                                                                                       v
+                                                                                                           +---------------------------+
+                                                                                                           |                           |
+                                                                                                           |  Vote on Proposal         |
+                                                                                                           |                           |
+                                                                                                           +---------------------------+
+
+            `);
+            logger.info('Create GoraDAO Proposals Asset: Create the GoraDAO proposal asset');
+            logger.info('Distribute Proposal Asset: Distribute the Proposal asset! System will automatically opts generated 5 test user accounts into proposal asset and tops them with Algos enough to pay for configured requirements for both participation and voting ');
+            logger.info('Deploy New Proposal: Deploy the new Proposal contract');
+            logger.info('Update Deployed Proposal: Update the deployed Proposal contract');
+            logger.info('Configure Proposal: Configure the Proposal contract');
+            logger.info('Participate into Proposal: Participate into the Proposal');
+            logger.info('Withdraw Staking Participation: Withdraw participation from the Proposal');
+            logger.info('Vote on Proposal: Vote on the Proposal');
+
+            await inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'continue',
+                    message: 'Press Enter to go back to menu...',
+                },
+            ]);
+            break;
+
+    }
+
+    // Loop back to proposals operations menu unless going back to main menu
+    if (answers.proposalOperation && answers.proposalOperation !== 'Back to Main Menu') {
+        await proposalsOperations();
+    }
+    // Loop back to Stakings operations menu unless going back to main menu
+    if (answers.stakingOperation && answers.stakingOperation !== 'Back to Main Menu') {
+        await stakingOperations();
+    }
+}
+async function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+async function mainMenu(isInteractive) {
+    // Run deployer for account preparation and loading Mnemonics
+    await goraDaoDeployer.runDeployer(isInteractive)
     console.log(` 
     .d8888b.                           8888888b.        d8888  .d88888b.  
     d88P  Y88b                          888  "Y88b      d88888 d88P" "Y88b 
@@ -613,128 +1297,150 @@ async function mainMenu() {
      "Y8888P88  "Y88P"  888    "Y888888 8888888P" d88P     888  "Y88888P"  
                                                                            
                                                                            
-                                                                           `)
+                                                                           `);
+    if (isInteractive) {
+        // Main menu options
+        const answers = await inquirer.prompt([
+            {
+                type: 'list',
+                name: 'action',
+                message: 'Select the operation to perform:',
+                choices: config['gora_dao']['dao_dao_deployed'] === true ? [
+                    'Tester Accounts Dispense',
+                    'Tester Accounts Stats',
+                    'Reset Configurations file',
+                    'GoraDAO Operations',
+                    'Proposals Operations',
+                    'Staking Operations',
+                    'Tester Accounts Recreate (optional! be careful!)',
+                    'Help',
+                    'Exit'
+                ] : [
+                    'Tester Accounts Dispense',
+                    'Tester Accounts Stats',
+                    'Reset Configurations file',
+                    'GoraDAO Operations',
+                    'Tester Accounts Recreate (optional! be careful!)',
+                    'Help',
+                    'Exit'
+                ],
+            },
+        ]);
+        // Main menu operations
+        switch (answers.action) {
+            case 'Tester Accounts Recreate (optional! be careful!)':
+                // Assuming testAccountStats is a method in GoraDaoDeployer
 
-    const answers = await inquirer.prompt([
-        {
-            type: 'list',
-            name: 'action',
-            message: 'Select the operation you would like to perform:',
-            choices: Number(config['gora_dao']['proposal_asa_id']) > 0 ? [
-
-                'Tester Accounts Dispense',
-                'Tester Accounts Stats',
-                'GoraDAO Operations',
-                'Proposals Operations',
-                'Tester Accounts Recreate',
-                'Help',
-                'Exit'
-            ] : [
-
-                'Tester Accounts Dispense',
-                'Tester Accounts Stats',
-
-
-
-                'GoraDAO Operations',
-                'Proposals Operations',
-                'Tester Accounts Recreate',
-                'Help',
-                'Exit'
-            ],
-        },
-    ]);
-
-    switch (answers.action) {
-        case 'Tester Accounts Recreate':
-            // Assuming testAccountStats is a method in GoraDaoDeployer
-
-            try {
-                let { recreate } = await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'recreate',
-                        message: 'Are you sure you want to re-create the tester accounts? (y/n)',
-                    },
-                ]);
-                if (recreate === 'y') {
-                    await goraDaoDeployer.sendAllAlgosAndDeleteMnemonics();
-                    await goraDaoDeployer.deployerReport();
-                } else {
-                    logger.info('Tester accounts recreation cancelled')
+                try {
+                    let { recreate } = await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'recreate',
+                            message: 'Are you sure you want to re-create the tester accounts? (y/n)',
+                        },
+                    ]);
+                    if (recreate === 'y') {
+                        await goraDaoDeployer.sendAllAlgosAndDeleteMnemonics();
+                        await goraDaoDeployer.deployerReport();
+                    } else {
+                        logger.info('Tester accounts recreation cancelled')
+                    }
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
                 }
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            } catch (error) {
-                console.error('An error occurred:', error);
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            }
-            break;
-        case 'Tester Accounts Stats':
-            try {
-                await goraDaoDeployer.deployerReport();
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            } catch (error) {
-                console.error('An error occurred:', error);
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            }
-            break;
-        case 'Tester Accounts Dispense':
-            // Assuming testAccountDispense is a method in GoraDaoDeployer
-            try {
-                await goraDaoDeployer.testAccountDispense();
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            } catch (error) {
-                console.error('An error occurred:', error);
-                await inquirer.prompt([
-                    {
-                        type: 'input',
-                        name: 'continue',
-                        message: 'Press Enter to go back to menu...',
-                    },
-                ]);
-            }
-            break;
-        case 'GoraDAO Operations':
-            await goraDaoOperations();
-            break;
-        case 'Proposals Operations':
-            await proposalsOperations();
-            break;
-        case 'Help':
-            logger.info('GoraDAO Help | Main Operations Menu');
-            logger.info('------------------------------------');
-            //logger.info('Test flow: Dispense ino Tester accounts---> Go to GoraDAO Operations to continue!');
-            logger.info(`
+                break;
+            case 'Tester Accounts Stats':
+                try {
+                    await goraDaoDeployer.deployerReport();
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                }
+                break;
+            case 'Tester Accounts Dispense':
+                // Assuming testAccountDispense is a method in GoraDaoDeployer
+                try {
+                    await goraDaoDeployer.testAccountDispense();
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                }
+                break;
+            case 'Reset Configurations file':
+                try {
+                    await goraDaoDeployer.resetConfigFile();
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                }
+                break;
+            case 'GoraDAO Operations':
+                await goraDAOOperations();
+                break;
+            case 'Proposals Operations':
+                await proposalsOperations();
+                break;
+            case 'Staking Operations':
+                await stakingOperations();
+                break;
+            case 'Help':
+                logger.info('GoraDAO Help | Main Operations Menu');
+                logger.info('------------------------------------');
+                //logger.info('Test flow: Dispense ino Tester accounts---> Go to GoraDAO Operations to continue!');
+                logger.info(`
             +-------------------------------------------+       +--------------------------------+
             |                                           |       |                                |
             |  Dispense ino Tester accounts             |------>|  Go to GoraDAO Operations      |
@@ -742,31 +1448,32 @@ async function mainMenu() {
             +-------------------------------------------+       +--------------------------------+
             
             `);
-            logger.info('Tester Accounts Dispense: Dispense algos to tester accounts');
-            logger.info('Tester Accounts Stats: Show tester accounts stats');
+                logger.info('Tester Accounts Dispense: Dispense algos to tester accounts');
+                logger.info('Tester Accounts Stats: Show tester accounts stats');
 
-            logger.info('GoraDAO Operations: Perform GoraDAO operations');
-            logger.info('Proposals Operations: Perform Proposals operations');
-            logger.info('Tester Accounts Recreate: Recreate tester accounts');
-            await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'continue',
-                    message: 'Press Enter to go back to menu...',
-                },
-            ]);
-            break;
+                logger.info('GoraDAO Operations: Perform GoraDAO operations');
+                logger.info('Proposals Operations: Perform Proposals operations');
+                logger.info('Tester Accounts Recreate (optional! be careful!): Recreate tester accounts');
+                await inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'continue',
+                        message: 'Press Enter to go back to menu...',
+                    },
+                ]);
+                break;
 
-        case 'Exit':
-            console.log('Exiting...');
-            process.exit(0);
+            case 'Exit':
+                console.log('Exiting...');
+                process.exit(0);
+        }
+        // Loop back to main menu unless exited
+        await mainMenu(isInteractive);
     }
-
-    // Loop back to main menu unless exited
-    await mainMenu();
 }
+
 // Initialize and run the main menu
-mainMenu().catch(err => {
+mainMenu(config.deployer['is_interactive']).catch(err => {
     console.error('An error occurred:', err);
     process.exit(1);
 });
