@@ -19,7 +19,7 @@
     "asc_testnet_staking_address": "45YOV2QJRGAIUAYC54JQGQQCSRA4V65ZJ5RDG4MEJHHGOBWLYXXWNZVOWU",
     "dao_asa_id": 1138500612,
     "dao_testnet_asa_id": 227418519,
-    "proposal_asa_id": 0,
+    "proposal_asa_id": 733676769,
     "proposal_testnet_asa_id": 0,
     "staking_asa_id": 1138500612,
     "staking_testnet_asa_id": 227418519,
@@ -4565,8 +4565,6 @@
         "isLocked": true
       }
     ],
-    "nft_staking_testnet_assets": [
-      
-    ]
+    "nft_staking_testnet_assets": []
   }
 }

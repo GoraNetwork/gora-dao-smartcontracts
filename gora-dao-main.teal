@@ -1345,9 +1345,8 @@ method_proposal_vote:
 
 /////////////////////////////////STAKING Branches////////////////////////////////////
 // This method is used to create a new staking contract
-method_staking_create:
-
-  	// Checking Transaction group
+sub_check_txn_group:
+    // Checking Transaction group
     global GroupSize
     int 2
     ==
@@ -1377,6 +1376,11 @@ method_staking_create:
     global MinTxnFee
     >=
     assert
+
+    retsub
+method_staking_create:
+
+  	callsub sub_check_txn_group
     // Checking if the receiver of pay txn is the same as the current application address
     txn GroupIndex
     int 1
@@ -1552,37 +1556,8 @@ branch_staking_create_final:
 
 // Handles ABI method call for contract to contract update of a Staking contract
 method_staking_update:
-
-	// Checking Transaction group
-    global GroupSize
-    int 2
-    ==
-    assert
-    // Checking the pay txn at index 0 of gtxn
-    gtxn 0 RekeyTo
-    global ZeroAddress
-    ==
-    assert
-    gtxn 0 CloseRemainderTo
-    global ZeroAddress
-    ==
-    assert
-    gtxn 0 AssetCloseTo
-    global ZeroAddress
-    ==
-    assert
-    gtxn 0 TypeEnum
-    int pay
-    ==
-    assert
-    gtxn 0 Fee
-    global MinTxnFee
-    >=
-    assert
-    gtxn 0 Amount
-    global MinTxnFee
-    >=
-    assert
+    callsub sub_check_txn_group
+	
     // Checking if the receiver of pay txn is the same as the current application address
     txn GroupIndex
     int 1

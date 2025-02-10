@@ -280,22 +280,24 @@ async function goraDaoOperations() {
 async function proposalsOperations() {
     let choices = [];
     if (!(Number(config['gora_dao']['proposal_asa_id']) > 0)) {
-        choices.push('Create GoraDAO Proposals Asset',)
+        choices.push('Create GoraDAO Proposals Asset')
+    }else if(Number(config['gora_dao']['proposal_asa_id']) > 0 && config['gora_dao']['dao_proposal_deployed'] === true){
+        choices.push('Distribute Proposal Asset')
     }
-    if (config['gora_dao']['dao_proposal_deployed'] === false) {
+    if (Number(config['gora_dao']['proposal_asa_id']) > 0 && config['gora_dao']['dao_proposal_deployed'] === false) {
         choices.push('Deploy New Proposal')
-    } else {
+    } else if(Number(config['gora_dao']['proposal_asa_id']) > 0 ) {
         choices.push('Update Deployed Proposal')
     }
     if (config['gora_dao']['dao_proposal_deployed'] === true) {
         choices.push('Configure Proposal')
     }
-    if (config['gora_dao']['participated_to_proposal'] === true) {
+    if (config['gora_dao']['dao_proposal_deployed'] === true && config['gora_dao']['participated_to_proposal'] === true) {
         choices.push('Withdraw Participation')
-    } else {
+    } else if(config['gora_dao']['dao_proposal_deployed'] === true) {
         choices.push('Participate into Proposal')
     }
-    if (config['gora_dao']['participated_to_proposal'] === true) {
+    if (config['gora_dao']['dao_proposal_deployed'] === true && config['gora_dao']['participated_to_proposal'] === true) {
         choices.push('Vote on Proposal')
     }
 
@@ -587,6 +589,8 @@ async function proposalsOperations() {
             ]);
             break;
         case 'Back to Main Menu':
+            delete require.cache[require.resolve('./config.json')];
+            const config = require('./config.json');
             await mainMenu();
             break;
     }

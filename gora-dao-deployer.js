@@ -1280,9 +1280,9 @@ const GoraDaoDeployer = class {
         const compiledResult = await this.algodClient.compile(this.daoApprovalProgData).do();
 
         const compiledClearResult = await this.algodClient.compile(this.daoClearProgData).do();
-        this.logger.info("GoraNetwork Main Contract Hash = %s", compiledResult.hash);
-        this.logger.info("GoraNetwork Main Contract Result = %s", compiledResult.result)
-        this.logger.info("GoraNetwork Clear Hash = %s", compiledClearResult.hash);
+        //this.logger.info("GoraNetwork Main Contract Hash = %s", compiledResult.hash);
+        //this.logger.info("GoraNetwork Main Contract Result = %s", compiledResult.result)
+        //this.logger.info("GoraNetwork Clear Hash = %s", compiledClearResult.hash);
         const compiledResultUint8 = new Uint8Array(Buffer.from(compiledResult.result, "base64"));
 
         this.logger.info('Compiled Result Uint8Array: ', compiledResultUint8)
