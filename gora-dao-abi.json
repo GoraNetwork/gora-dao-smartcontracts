@@ -1,6 +1,6 @@
 {
     "name": "gora-dao",
-    "desc": "GoraDAO main smart contract",
+    "desc": "DAO main smart contract",
     "networks": {
         "MainNet": {
             "appID": 0
@@ -17,17 +17,17 @@
                 {
                     "type": "pay",
                     "name": "payment_transaction",
-                    "description": "Payment from manager to GoraDAO for fees and initiation MBRs!"
+                    "description": "Payment from manager to DAO for fees and initiation MBRs!"
                 },
                 {
                     "type": "uint64",
                     "name": "asset_id",
-                    "description": "GoraDAO Main asset (Gora) ID"
+                    "description": "DAO Main token (E.g. Gora) ID"
                 },
                 {
                     "type": "uint64",
                     "name": "proposal_fee_stake",
-                    "description": "Fee for creating a new proposal paid in Gora Dao Asset"
+                    "description": "Fee for creating a new proposal paid in DAO Asset"
                 },
                 {
                     "type": "uint64",
@@ -42,7 +42,7 @@
                 {
                     "type": "uint64",
                     "name": "min_subscription_stake",
-                    "description": "Minimum holdings of Gora Dao Asset for subscription"
+                    "description": "Minimum holdings of Dao Asset for subscription"
                 }
             ],
             "boxes": [
@@ -57,27 +57,27 @@
         },
         {
             "name": "subscribe_dao",
-            "description": "Subscribes an Algorand account into GoraDAO! Returns total number of members!",
+            "description": "Subscribes an Algorand account into DAO! Returns total number of members!",
             "args": [
                 {
                     "type": "pay",
                     "name": "payment_transaction",
-                    "description": "Payment from subscriber to GoraDAO for fees and initiation MBRs!"
+                    "description": "Payment from subscriber to DAO for fees and initiation MBRs!"
                 },
                 {
                     "type": "asset",
                     "name": "asset_reference",
-                    "description": "GoraDAO Main asset (Gora) Ref"
+                    "description": "DAO Main token (E.g. Gora) Ref"
                 },
                 {
                     "type": "account",
                     "name": "member_reference",
-                    "description": "GoraDAO subscribing member account reference"
+                    "description": "DAO subscribing member account reference"
                 },
                 {
                     "type": "address",
                     "name": "member_address",
-                    "description": "GoraDAO subscribing member account address"
+                    "description": "DAO subscribing member account address"
                 }
             ],
             "boxes": [
@@ -92,22 +92,22 @@
         },
         {
             "name": "unsubscribe_dao",
-            "description": "Unsubscribes an Algorand account from GoraDAO! Returns total number of members! Member's participation will be withdrawn!",
+            "description": "Unsubscribes an Algorand account from DAO! Returns total number of members! Member's participation will be withdrawn!",
             "args": [
                 {
                     "type": "asset",
                     "name": "asset_reference",
-                    "description": "GoraDAO Main asset (Gora) Ref"
+                    "description": "DAO Main token (E.g. Gora) Ref"
                 },
                 {
                     "type": "account",
                     "name": "member_reference",
-                    "description": "GoraDAO member account reference"
+                    "description": "DAO member account reference"
                 },
                 {
                     "type": "address",
                     "name": "member_address",
-                    "description": "GoraDAO member account address"
+                    "description": "DAO member account address"
                 }
             ],
             "boxes": [
@@ -121,7 +121,7 @@
             }
         },
         {
-            "name": "write_source_box",
+            "name": "write_proposal_source_box",
             "args": [
                 {
                     "type": "byte[]",
@@ -148,49 +148,76 @@
             "desc": "Writes the compiled teal source of proposal to a corresponding box proposal_approval or proposal_clear"
         },
         {
+            "name": "write_staking_source_box",
+            "args": [
+                {
+                    "type": "byte[]",
+                    "name": "staking_approval_source"
+                },
+                {
+                    "type": "byte[]",
+                    "name": "staking_clear_source"
+                }
+            ],
+            "boxes": [
+                {
+                    "name": "staking_app",
+                    "description": "Dynamic box ref"
+                },
+                {
+                    "name": "staking_clr",
+                    "description": "Dynamic box ref"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            },
+            "desc": "Writes the compiled teal source of staking to a corresponding box staking_approval or staking_clear"
+        },
+        {
             "name": "create_proposal",
             "description": "Creates a new Proposal contract! Returns the Proposal contract ID!",
             "args": [
                 {
                     "type": "pay",
                     "name": "payment_transaction",
-                    "description": "Payment from Proposer to GoraDAO for Proposal fees and initiation MBRs!"
+                    "description": "Payment from Proposer to DAO for Proposal fees and initiation MBRs!"
                 },
                 {
                     "type": "account",
                     "name": "member_reference",
-                    "description": "GoraDAO member account reference (Proposal manager)"
+                    "description": "DAO member account reference (Proposal manager)"
                 },
                 {
                     "type": "asset",
                     "name": "asset_reference",
-                    "description": "GoraDAO Proposal asset ref"
+                    "description": "DAO Proposal token ref"
                 },
                 {
                     "type": "asset",
                     "name": "asset_reference",
-                    "description": "GoraDAO dao asset ref"
+                    "description": "DAO dao token ref"
                 },
                 {
                     "type": "uint64",
                     "name": "asset_id",
-                    "description": "GoraDAO Proposal asset ID"
+                    "description": "DAO Proposal token ID"
                 },
                 {
                     "type": "string",
                     "name": "proposal_title",
-                    "description": "GoraDAO Proposal title"
+                    "description": "DAO Proposal title"
                 },
                 {
                     "type": "string",
                     "name": "proposal_description",
-                    "description": "GoraDAO Proposal description"
+                    "description": "DAO Proposal description"
                 }
             ],
             "boxes": [
                 {
                     "name": "member_reference",
-                    "description": "Dynamic box ref for Proposal manager GoraDAO member"
+                    "description": "Dynamic box ref for Proposal manager DAO member"
                 },
                 {
                     "name": "proposal_app",
@@ -211,7 +238,7 @@
                 {
                     "type": "pay",
                     "name": "payment_transaction",
-                    "description": "Payment from Proposer to GoraDAO for Proposal fees and initiation MBRs!"
+                    "description": "Payment from Proposer to DAO for Proposal fees and initiation MBRs!"
                 },
                 {
                     "type": "application",
@@ -226,28 +253,28 @@
                 {
                     "type": "address",
                     "name": "member_reference",
-                    "description": "GoraDAO member account reference (Proposal manager)"
+                    "description": "DAO member account reference (Proposal manager)"
                 },
                 {
                     "type": "uint64",
                     "name": "asset_reference",
-                    "description": "GoraDAO Proposal asset ID"
+                    "description": "DAO Proposal token ID"
                 },
                 {
                     "type": "string",
                     "name": "proposal_title",
-                    "description": "GoraDAO Proposal title"
+                    "description": "DAO Proposal title"
                 },
                 {
                     "type": "string",
                     "name": "proposal_description",
-                    "description": "GoraDAO Proposal description"
+                    "description": "DAO Proposal description"
                 }
             ],
             "boxes": [
                 {
                     "name": "member_reference",
-                    "description": "Dynamic box ref for Proposal manager GoraDAO member"
+                    "description": "Dynamic box ref for Proposal manager DAO member"
                 },
                 {
                     "name": "proposal_app",
@@ -270,17 +297,17 @@
                 {
                     "type": "pay",
                     "name": "payment_transaction",
-                    "description": "Payment from Proposer to GoraDAO for fees and Proposal MBRs!"
+                    "description": "Payment from Proposer to DAO for fees and Proposal MBRs!"
                 },
                 {
                     "type": "axfer",
                     "name": "dao_asset_transfer_transaction",
-                    "description": "Asset transfer transaction to deposit DAO asset (Gora)!"
+                    "description": "Asset transfer transaction to deposit DAO token (E.g. Gora)!"
                 }
             ],
             "boxes": [
                 {
-                    "name": "manager_reference",
+                    "name": "dao_manager_reference",
                     "description": "Dynamic box ref per proposal manager account address"
                 },
                 {
@@ -337,12 +364,12 @@
                 {
                     "type": "pay",
                     "name": "payment_transaction",
-                    "description": "Payment from participants to GoraDAO for fees and participation MBRs!"
+                    "description": "Payment from participants to DAO for fees and participation MBRs!"
                 },
                 {
                     "type": "axfer",
                     "name": "asset_transfer_transaction",
-                    "description": "Asset transfer transaction to deposit Gora!"
+                    "description": "Asset transfer transaction to deposit DAO Token!"
                 },
                 {
                     "type": "uint64",
@@ -371,17 +398,17 @@
                 {
                     "type": "pay",
                     "name": "payment_transaction",
-                    "description": "Payment from manager to GoraDAO for fees!"
+                    "description": "Payment from manager to DAO for fees!"
                 },
                 {
                     "type": "uint64",
                     "name": "asset_reference",
-                    "description": "GoraDAO Main asset (Gora) ID"
+                    "description": "DAO Main token (E.g. Gora) ID"
                 },
                 {
                     "type": "account",
                     "name": "member_reference",
-                    "description": "GoraDAO member account reference"
+                    "description": "DAO member account reference"
                 }
             ],
             "boxes": [
@@ -400,32 +427,32 @@
         },
         {
             "name": "close_proposal",
-            "description": "Force closes a Proposal contract as last resort after Proposal Creator, manager_address and GoraDAO manager_address send this ABI call and last one clears and closes Proposal and re-funds everyone! Returns the Proposal contract ID!",
+            "description": "Force closes a Proposal contract as last resort after Proposal Creator, manager_address and DAO manager_address send this ABI call and last one clears and closes Proposal and re-funds everyone! Returns the Proposal contract ID!",
             "args": [
                 {
                     "type": "pay",
                     "name": "payment_transaction",
-                    "description": "Payment from manager to GoraDAO for fees!"
+                    "description": "Payment from manager to DAO for fees!"
                 },
                 {
                     "type": "uint64",
                     "name": "asset_reference",
-                    "description": "GoraDAO Main asset (Gora) ID"
+                    "description": "DAO Main token (E.g. Gora) ID"
                 },
                 {
                     "type": "account",
                     "name": "member_reference",
-                    "description": "GoraDAO member account reference"
+                    "description": "DAO member account reference"
                 },
                 {
                     "type": "account",
                     "name": "owner_reference",
-                    "description": "GoraDAO member account reference"
+                    "description": "DAO member account reference"
                 },
                 {
                     "type": "account",
-                    "name": "manager_reference",
-                    "description": "GoraDAO manager account reference"
+                    "name": "dao_manager_reference",
+                    "description": "DAO manager account reference"
                 }
             ],
             "boxes": [
@@ -436,6 +463,163 @@
                 {
                     "name": "proposal_reference",
                     "description": "Dynamic box ref per proposal account address"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        
+        {
+            "name": "create_staking",
+            "description": "Creates a new Staking contract! Returns the Staking contract ID!",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Proposer to DAO for Staking fees and initiation MBRs!"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_reference",
+                    "description": "DAO Staking token ref"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_reference",
+                    "description": "DAO token ref"
+                },
+                {
+                    "type": "string",
+                    "name": "staking_name",
+                    "description": "DAO Staking title"
+                },
+                {
+                    "type": "string",
+                    "name": "staking_description",
+                    "description": "DAO Staking description"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "update_staking",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Staking to DAO for Proposal fees and initiation MBRs!"
+                },
+                {
+                    "type": "application",
+                    "name": "staking_app_ref",
+                    "description": "Staking application  to be referenced"
+                },
+                {
+                    "type": "uint64",
+                    "name": "staking_app_id",
+                    "description": "Staking application  ID to be updated"
+                },
+                {
+                    "type": "address",
+                    "name": "member_reference",
+                    "description": "DAO member account reference (Staking manager)"
+                },
+                {
+                    "type": "uint64",
+                    "name": "asset_reference",
+                    "description": "DAO Staking token ID"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            },
+            "desc": "Updates a Staking smart contract and returns application ID"
+        },
+        {
+            "name": "config_staking",
+            "description": "Configures a Staking contract! Returns the Staking contract ID!",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from Staking to DAO for fees and Staking MBRs!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "dao_asset_transfer_transaction",
+                    "description": "Asset transfer transaction to deposit DAO token (E.g. Gora)!"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        
+        {
+            "name": "activate_staking",
+            "description": "Activates staking contract!",
+            "args": [],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        {
+            "name": "stake",
+            "description": "Stake into staking contract!",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "payment_transaction",
+                    "description": "Payment from participants to DAO for fees and participation MBRs!"
+                },
+                {
+                    "type": "axfer",
+                    "name": "asset_transfer_transaction",
+                    "description": "Asset transfer transaction to send DAO Token for fees!"
+                }
+                
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        
+        {
+            "name": "unstake",
+            "description": "Un-stakes from Staking contract! Returns the staking member's account address concatenated with un-staked amount!",
+            "args": [
+                {
+                    "type": "uint64",
+                    "name": "amount_algo",
+                    "description": "Amount to be un-staked"
+                },
+                {
+                    "type": "uint64",
+                    "name": "amount_token",
+                    "description": "Token Amount to be un-staked"
+                }
+            ],
+            "returns": {
+                "type": "uint64"
+            }
+        },
+        
+        {
+            "name": "update_nft_owner",
+            "description": "Force updates owner of an staked NFT based on NFT possession! ",
+            "args": [
+                {
+                    "type": "uint64",
+                    "name": "nft_id",
+                    "description": "NFT ID"
+                },
+                {
+                    "type": "account",
+                    "name": "prev_owner",
+                    "description": "Prev owner account"
                 }
             ],
             "returns": {
