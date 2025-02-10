@@ -220,8 +220,8 @@ const GoraDaoDeployer = class {
 
             // Use fs.promises.writeFile to save the JSON string to config.json
             await fs.writeFile('config.json', configJson, 'utf8');
-            delete require.cache[require.resolve('./config.json')];
-            const config = require('./config.json');
+            // delete require.cache[require.resolve('./config.json')];
+            // const config = require('./config.json');
 
             console.log('Configuration saved to config.json successfully.');
         } catch (error) {
@@ -276,15 +276,15 @@ const GoraDaoDeployer = class {
         this.logger.info('--------------------------GoraDAO Staking Creator Account DISPENSE-------------------------------------')
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoStakingAdminAccount.addr);
 
-        this.logger.info('--------------------------GoraDAO Staking User 1 Account DISPENSE-------------------------------------')
+        this.logger.info('--------------------------GoraDAO Proposal/Staking User 1 Account DISPENSE-------------------------------------')
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount1.addr);
-        this.logger.info('--------------------------GoraDAO Staking User 2 Account DISPENSE-------------------------------------')
+        this.logger.info('--------------------------GoraDAO Proposal/Staking User 2 Account DISPENSE-------------------------------------')
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount2.addr);
-        this.logger.info('--------------------------GoraDAO Staking User 3 Account DISPENSE-------------------------------------')
+        this.logger.info('--------------------------GoraDAO Proposal/Staking User 3 Account DISPENSE-------------------------------------')
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount3.addr);
-        this.logger.info('--------------------------GoraDAO Staking User 4 Account DISPENSE-------------------------------------')
+        this.logger.info('--------------------------GoraDAO Proposal/Staking User 4 Account DISPENSE-------------------------------------')
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount4.addr);
-        this.logger.info('--------------------------GoraDAO Staking User 5 Account DISPENSE-------------------------------------')
+        this.logger.info('--------------------------GoraDAO Proposal/Staking User 5 Account DISPENSE-------------------------------------')
         this.logger.info(this.config.gora_dao['algo_dispenser'] + this.goraDaoUserAccount5.addr);
     }
     // This function backs up the config json file and resets it
@@ -1743,7 +1743,6 @@ const GoraDaoDeployer = class {
             this.logger.info(`GoraDAO created TEST Asset ID: ${assetId}`);
 
         } else if (this.isGoraTokenEnforced && !!this.goraToken) {
-            assetId = this.goraToken;
             assetId = this.goraToken;
             let params = await this.algodClient.getTransactionParams().do();
             const txnOptinAdminAccount = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
