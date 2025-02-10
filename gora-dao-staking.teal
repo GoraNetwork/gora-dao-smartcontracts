@@ -1,0 +1,1382 @@
+// Gora DAO Staking Smart Contract
+// Version 1
+// Website: https://www.gora.io/
+// Creators: @emg110.algo
+// Github: https://github.com/GoraNetwork/gora-dao-smartcontracts
+/////////////////////////////////////////////////////////////////
+
+#pragma version 8
+
+//Check TXN first
+callsub sub_check_txn
+
+txn OnCompletion
+int NoOp
+==
+txn OnCompletion
+int UpdateApplication
+==
+||
+assert
+
+// Checks the number of application args , if 0 then no method it is
+txn NumAppArgs
+int 0
+==
+bz branch_method_router
+b branch_error
+
+///////////////////////////////////////////
+branch_method_router:
+
+	method "create_staking(uint64,uint64,string,string)address"
+	txn ApplicationArgs 0
+	==
+	txn ApplicationID
+	int 0
+	==
+	&&
+	bnz method_create_staking
+
+	method "update_staking()address"
+	txn ApplicationArgs 0
+	==
+	bnz method_update_staking
+
+	method "config_staking(pay,(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64),string,string,string,string,uint64,uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_config_staking
+
+	method "update_manager_address(pay,byte[],byte[])string"
+	txn ApplicationArgs 0
+	==
+	bnz method_update_manager_address
+
+	method "activate_staking()uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_activate_staking
+
+
+	// method "optin_staking(uint64)uint64"
+	// txn ApplicationArgs 0
+	// ==
+	// bnz method_optin_staking
+
+	method "stake(pay,axfer,uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_stake
+
+    method "unstake(uint64,uint64,uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_staking_unstake
+
+	
+
+	method "register_nft(uint64,uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_register_nft
+
+	method "update_nft_owner(uint64,account)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_update_nft_owner
+
+	method "user_claim(uint64)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_user_claim
+
+
+
+	
+	b branch_error
+
+///////////////////////////////////////////
+// Subroutine to handle transaction checks
+sub_check_txn:
+
+	// Checks RekeyTo address transaction field to be empty (ZeroAddress)
+	txn RekeyTo
+	global ZeroAddress
+	==
+	assert
+
+	// Checks CloseRemainderTo address transaction field to be empty (ZeroAddress)
+	txn CloseRemainderTo
+	global ZeroAddress
+	==
+	assert
+
+	// Checks AssetCloseTo address transaction field to be empty (ZeroAddress)
+	txn AssetCloseTo
+	global ZeroAddress
+	==
+	assert
+
+	// Check transaction type to be application call
+	txn TypeEnum
+	int appl
+	==
+	bz branch_error
+
+	// Checking transaction fee
+	txn Fee
+	global MinTxnFee
+	>=
+	assert
+	retsub
+
+// Checks owner address authentication
+sub_check_owner_auth:
+
+	txn Sender
+	global CreatorAddress
+	==
+	assert
+	retsub
+
+// Checks manager address authentication
+sub_check_manager_auth:
+	txn Sender
+	byte "manager_address"
+	app_global_get
+	==
+	assert
+	retsub
+	
+
+// Handles creation of Staking contract
+method_create_staking:
+	callsub sub_check_owner_auth
+	global CurrentApplicationID
+	store 0
+
+	txna Applications 1
+	store 1
+	byte "dao_app_id"
+	load 1
+	app_global_put
+
+
+	// txna ApplicationArgs 1
+	// btoi
+	// store 2
+	// byte "dao_asset_id"
+	// load 2
+	// app_global_put
+
+	txn ApplicationArgs 2
+	btoi
+	store 3
+	byte "asset_id"
+	load 3
+	app_global_put
+
+	txna Accounts 1
+	store 4
+	byte "manager_address"
+	load 4
+	app_global_put
+
+	// txna Accounts 2
+	// store 5
+	// byte "dao_manager_address"
+	// load 5
+	// app_global_put
+
+	// txn ApplicationArgs 3
+	// store 6
+	// byte "name"
+	// load 6
+	// app_global_put
+
+	// txn ApplicationArgs 4
+	// store 7
+	// byte "description"
+	// load 7
+	// app_global_put
+
+	byte "stakings_count"
+	int 0
+	app_global_put
+
+	byte "is_activated"
+	int 0
+	app_global_put
+
+	byte "staked_amount_algo"
+	int 0
+	app_global_put
+
+	byte "staked_amount_token"
+	int 0
+	app_global_put
+
+	byte "staked_nft_count"
+	int 0
+	app_global_put
+
+	byte "staked_nft_value"
+	int 0
+	app_global_put
+
+	byte 0x151f7c75
+	global CurrentApplicationAddress
+	concat
+	b branch_log_return
+
+// Handles updating of Staking contract
+method_update_staking:
+	callsub sub_check_owner_auth
+	byte 0x151f7c75
+	global CurrentApplicationAddress
+	concat
+	b branch_log_return
+
+// Handles updating of a staking contract manager address
+method_update_manager_address:
+	callsub sub_check_manager_auth
+
+	txn ApplicationArgs 1
+	byte "manager_address"
+	app_global_put
+
+	byte 0x151f7c75
+	byte "Staking manager address is now updated!"
+	concat
+	b branch_log_return
+
+// Handles activation of Staking
+method_activate_staking:
+	callsub sub_check_manager_auth
+	byte "is_activated"
+	int 1
+	app_global_put
+
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+// Handles configuration of Staking
+method_config_staking:
+	callsub sub_check_manager_auth
+
+	byte "manager_address"
+	txn Sender
+	app_global_put
+	
+	gtxn 0 TypeEnum
+	int pay
+	==
+	bz branch_error
+
+	gtxn 0 Amount
+	int 500000
+	>=
+	assert
+
+	gtxn 0 Receiver
+	global CurrentApplicationAddress
+	==
+	assert
+
+	txn ApplicationArgs 1 
+	store 0
+
+	load 0
+	int 0
+	extract_uint64 //staking_min_algo
+	store 1
+	byte "min_algo"
+	load 1
+	app_global_put
+
+
+	load 0
+	int 8
+	extract_uint64 //staking_min_token
+	store 2
+	byte "min_token"
+	load 2
+	app_global_put
+
+
+	load 0
+	int 16
+	extract_uint64 //staking_duration
+	store 3
+	byte "duration"
+	load 3
+	app_global_put
+
+
+	load 0
+	int 24
+	extract_uint64 //staking_min_duration
+	store 4
+	byte "min_duration"
+	load 4
+	app_global_put
+
+
+	// load 0
+	// int 32
+	// extract_uint64 //staking_commission_percentage
+	// store 5
+	// byte "commission_token"
+	// load 5
+	// app_global_put
+
+
+	// load 0
+	// int 40
+	// extract_uint64 //staking_commission_percentage_algo
+	// store 6
+	// byte "commission_algo"
+	// load 6
+	// app_global_put
+
+
+	load 0
+	int 48
+	extract_uint64 //staking_fee_token
+	store 7
+	byte "fee_token"
+	load 7
+	app_global_put
+
+
+	load 0
+	int 56
+	extract_uint64 //staking_fee_algo
+	store 8
+	byte "fee_algo"
+	load 8
+	app_global_put
+
+
+	// load 0
+	// int 64
+	// extract_uint64 //staking_incentives_percentage
+	// store 9
+	// byte "incentives_token"
+	// load 9
+	// app_global_put
+
+
+	// load 0
+	// int 72
+	// extract_uint64 //staking_incentives_percentage_algo
+	// store 26
+	// byte "incentives_algo"
+	// load 26
+	// app_global_put
+
+
+	load 0
+	int 80
+	extract_uint64 //staking_type
+	store 10
+	byte "type"
+	load 10
+	app_global_put
+
+
+	// load 0
+	// int 88
+	// extract_uint64 //staking_incentives_duration
+	// store 11
+	// byte "incentives_duration"
+	// load 11
+	// app_global_put
+
+
+	load 0
+	int 96
+	extract_uint64 //staking_return_percentage
+	store 12
+	byte "return_token"
+	load 12
+	app_global_put
+
+
+	// load 0
+	// int 104
+	// extract_uint64 //staking_return_percentage_algo
+	// store 13
+	// byte "return_algo"
+	// load 13
+	// app_global_put
+
+
+	// load 0
+	// int 112
+	// extract_uint64 //staking_incentives_eligibility
+	// store 27
+	// byte "incentives_eligibility"
+	// load 27
+	// app_global_put
+
+
+	// txn ApplicationArgs 2 //staking_name
+	// store 14
+	// byte "name"
+	// load 14
+	// app_global_put
+
+
+	// txn ApplicationArgs 3 //staking_description
+	// store 15
+	// byte "description"
+	// load 15
+	// app_global_put
+
+
+	// txn ApplicationArgs 4 //staking_url
+	// store 16
+	// byte "url"
+	// load 16
+	// app_global_put
+	// //log
+
+	// txn ApplicationArgs 5 //staking_banner
+	// store 17
+	// byte "banner"
+	// load 17
+	// app_global_put
+	//log
+
+	
+
+	txn ApplicationArgs 6 //v2_main_app_id
+	btoi
+	byte "v2_main_app_id"
+	swap
+	app_global_put
+
+	txn ApplicationArgs 7 //v2_vesting_app_id
+	btoi
+	byte "v2_vesting_app_id"
+	swap
+	app_global_put
+
+	itxn_begin
+	global CurrentApplicationAddress
+	itxn_field Sender
+	int axfer
+	itxn_field TypeEnum
+	global CurrentApplicationAddress
+	itxn_field AssetReceiver
+	int 0
+	itxn_field AssetAmount
+	txna Assets 0
+	itxn_field XferAsset
+	itxn_submit
+	//itxn TxID
+
+
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+method_staking_stake:
+	txna Accounts 0 // DAO main account
+	store 0 
+	txn Sender // Staking user account
+	store 1
+	load 1
+	txna Applications 1
+	itob
+	concat
+	store 21
+
+	// NFT Box read
+	txn ApplicationArgs 1
+	box_get
+	assert
+	store 23
+	load 23
+	int 0
+	extract_uint64
+	store 24 // NFT Staking value
+	
+	
+	load 23
+	int 8
+	extract_uint64
+	store 25 // NFT Staking isLocked
+	load 25
+	int 0
+	==
+	assert 
+
+	
+
+	// Checking the staking activation
+	byte "is_activated"
+	app_global_get
+	bz branch_error_activation
+
+	// Checking the asset ref to be Staking asset ID
+    byte "asset_id"
+    app_global_get
+	dup
+    gtxn 1 XferAsset
+    ==
+    assert
+	gtxn 4 XferAsset
+	==
+	assert
+
+	// Checking staking minimum participation algos
+	gtxn 3 Amount // The staked amount algo
+	store 5 
+	
+
+	// The delegator+V2AppID box write
+    gtxn 4 AssetAmount // The staked amount token
+	load 24
+	int 1000000000
+	*
+	+
+	store 6 
+
+	txn ApplicationArgs 1
+	load 24
+	itob
+	int 1
+	itob
+	concat
+	txna Applications 1
+	itob
+	concat
+	global LatestTimestamp
+	itob
+	concat
+	box_put
+
+	int 0
+	dup
+	store 11
+	store 12
+
+	int 0
+	dup
+	store 13
+	store 14
+
+
+    // Checking staked algo amount box 
+	load 21
+	box_get
+	bz branch_stake_continue
+	store 10
+	load 10
+	int 0
+	extract_uint64
+	store 11
+
+	load 10
+	int 8
+	extract_uint64
+	store 12
+
+
+	load 10
+	int 16
+	extract_uint64
+	store 13
+
+
+	load 10
+	int 24
+	extract_uint64
+	store 14
+	
+
+	load 21
+	box_del
+	assert
+
+
+branch_stake_continue:
+	// Staking finalization and account boxes staking values update
+	load 21
+	load 11
+	load 5
+	+
+	itob
+	load 12
+	load 6
+	+
+	itob
+	concat
+	load 13
+	itob
+	load 14
+	itob
+	concat
+	concat
+	box_put
+
+	// Stats update
+	byte "stakings_count"
+	dup
+	app_global_get
+	int 1
+	+
+	app_global_put
+
+	byte "staked_amount_algo"
+	app_global_get
+	load 5
+	+ // The total staked amount algo
+	byte "staked_amount_algo"
+	swap
+	app_global_put
+
+	byte "staked_amount_token"
+	app_global_get
+	load 6
+	+// The total staked amount token
+	byte "staked_amount_token"
+	swap
+	app_global_put
+
+
+branch_staking_stake_finalize:
+	// Log and return
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+
+branch_unstake_without_rewards:
+	load 21	
+	load 11
+	load 5
+	-
+	itob
+	load 12
+	load 6
+	-
+	itob
+	concat	
+	load 13
+	itob
+	load 14
+	itob
+	concat 
+	concat
+	box_put
+	b branch_staking_unstake_finalize
+
+branch_remove_nft_update_owner_box:
+	pop
+	txn Sender
+	txn ApplicationArgs 3
+	concat
+	box_del
+	b branch_remove_nft_update_owner_box_continue
+
+method_staking_unstake:
+	txn Sender
+	txn ApplicationArgs 3
+	btoi // The NFT ID uint64
+	asset_holding_get AssetBalance
+	int 1
+	>=
+	assert
+	txna Accounts 0 // DAO main account
+	store 0 
+	txn Sender // Staking user account
+	store 1 
+	load 1
+	txna Applications 1
+	itob
+	concat
+	store 21 // The Delegator+V2AppID box key
+
+	// Checking the staking activation
+	byte "is_activated"
+	app_global_get
+	bz branch_error_activation
+
+	txn Sender
+	txn ApplicationArgs 3
+	concat
+	box_get
+	bnz branch_remove_nft_update_owner_box
+
+branch_remove_nft_update_owner_box_continue:
+	// NFT Box
+	txn ApplicationArgs 3
+	box_get
+	assert
+	store 23
+	load 23
+	int 0
+	extract_uint64 // NFT_Value
+	store 24
+
+	load 23
+	int 8
+	extract_uint64 // NFT_IsLocked
+	int 1
+	==
+	assert
+
+	global LatestTimestamp
+	load 23
+	int 24
+	extract_uint64 // NFT_Timestamp
+	store 30
+	load 30
+	-
+	byte "min_duration"
+	app_global_get
+	>
+	assert
+
+
+	
+	
+	txn ApplicationArgs 3
+	load 24 // NFT_Value
+	itob
+	int 0 // NFT_IsLocked
+	itob
+	concat
+	int 0 // Validator_AppID
+	itob
+	int 0 // Timestamp
+	itob
+	concat
+	concat
+	box_put
+
+
+
+	txn ApplicationArgs 1 // The unstaked amount algo
+	btoi
+	store 5 
+	
+
+
+    txn ApplicationArgs 2 // The token amount to unstake
+	btoi
+	load 24
+	int 1000000000
+	*
+	+
+	store 6 
+
+
+    // Checking staked algo amount box 
+	load 21
+	box_get
+	assert
+
+	store 10 
+	load 10
+	int 0
+	extract_uint64
+	store 11 // Staked amounts algos from account box
+	
+	load 10
+	int 8
+	extract_uint64
+	store 12 // Staked amounts tokens from account box
+
+
+	load 10
+	int 16
+	extract_uint64
+	store 13 //pending_rewards algo from account box
+
+
+	load 10
+	int 24
+	extract_uint64
+	store 14 //pending_rewards token from account box
+	
+
+	load 21
+	box_del
+	assert
+
+	global LatestTimestamp
+	load 30
+	-
+	store 33
+	load 33
+	byte "duration"
+	app_global_get
+	>=
+	bz branch_unstake_without_rewards
+
+	
+branch_unstake_with_rewards:
+	//Calc rewards
+	byte "return_token"
+	app_global_get
+	load 6
+	*
+	int 100
+	/
+	int 31536000
+	/
+	load 33
+	*
+	store 39
+
+	load 21
+
+	load 11
+	load 5
+	-
+	itob
+	load 12
+	load 6
+	-
+	itob
+	concat	
+	load 13
+	load 5
+	+
+	itob
+	load 39
+	load 14
+	+
+	itob
+	concat 
+	concat
+	box_put
+
+	// load 39
+	// store 45
+
+	// b branch_user_claim_finalize
+
+
+branch_staking_unstake_finalize:
+	// Log and return
+	byte 0x151f7c75
+	global CurrentApplicationID
+	itob
+	concat
+	b branch_log_return
+
+
+branch_user_claim_nft:
+	global CurrentApplicationID
+	gtxn 1 ApplicationID
+	==
+	assert
+	gtxna 1 ApplicationArgs 0
+	method "withdraw()uint64"
+	==
+	gtxna 1 ApplicationArgs 0
+	method "unstake(uint64,uint64,uint64)uint64"
+	==
+	||
+	assert
+
+	load 42
+	int 0
+	==
+	assert
+	
+	b branch_user_claim_finalize
+method_user_claim:
+	txn Sender // Staking user account
+	store 1 
+	load 1
+	txna Applications 1
+	itob
+	concat
+	store 21 // The Delegator+V2AppID box key
+
+	 // The Delegator+V2AppID box read 
+	load 21
+	box_get
+	assert
+
+	//The Delegator+V2AppID
+	store 10 // The Delegator+V2AppID box content
+	load 10
+	int 0 // Byte index
+	extract_uint64
+	store 11 // Staked amounts algos from account box
+
+	load 10 // The Delegator+V2AppID box
+	int 8 // Byte index
+	extract_uint64
+	store 12 // Staked amounts tokens from account box
+	
+	load 10 // The Delegator+V2AppID box
+	int 16 // Byte index
+	extract_uint64
+	store 13 //pending_rewards algo from account box
+	
+
+	load 10 // The Delegator+V2AppID box
+	int 24 // Byte index
+	extract_uint64
+	store 14 //pending_rewards token from account box
+	
+	
+
+
+	// NFT_Box read
+	txn ApplicationArgs 1
+	box_get
+	assert
+	store 40
+	load 40 // NFT_Box content
+	int 0
+	extract_uint64
+	store 41 // NFT Staking value
+	load 40
+	int 8
+	extract_uint64
+	store 42 // NFT Staking isLocked
+	load 40
+	int 16
+	extract_uint64
+	store 43 // NFT Validator AppID
+	load 40
+	int 24
+	extract_uint64
+	store 44 // NFT Timestamp
+
+	// The Delegator+V2AppID box 
+	load 21
+
+	load 11 //Staked algo amount
+	itob
+	load 12 //Staked token amount
+	itob
+	concat
+	load 13 //pending_rewards algo
+	itob
+	int 0 //pending_rewards token
+	itob
+	concat
+	concat
+	box_put
+
+	load 14
+	store 45
+
+	
+	txn GroupIndex
+	int 2
+	==
+	bnz branch_user_claim_nft
+
+	txn Sender
+	txn ApplicationArgs 1
+	btoi
+	asset_holding_get AssetBalance
+	int 1
+	==
+	assert
+
+	global LatestTimestamp
+	load 44
+	-
+	store 33
+	
+	load 33
+	byte "duration"
+	app_global_get
+	>=
+	load 44
+	int 1000
+	>
+	&&
+	assert
+
+	load 42
+	int 1
+	==
+	assert
+
+	load 41
+	int 1000000000
+	*
+	byte "return_token"
+	app_global_get
+	*
+	int 100
+	/
+	int 31536000
+	/
+	load 33
+	*
+	store 39
+
+	// NFT_Box
+	txn ApplicationArgs 1
+	load 41
+	itob
+	load 42
+	itob
+	concat
+	load 43
+	itob
+	global LatestTimestamp
+	itob
+	concat
+	concat
+	box_put
+
+	load 14
+	load 39
+	+
+	store 45
+
+	
+
+
+branch_user_claim_finalize:	
+	itxn_begin
+	txn Sender
+	itxn_field AssetReceiver
+	int axfer
+	itxn_field TypeEnum
+	txna Assets 0
+	itxn_field XferAsset
+	load 45
+	itxn_field AssetAmount
+	itxn_submit
+
+	byte 0x151f7c75
+	txn ApplicationArgs 1
+	concat
+	b branch_log_return
+	
+
+
+
+method_register_nft:
+	callsub sub_check_manager_auth
+	byte "staked_nft_count"
+	dup
+	app_global_get
+	int 1
+	+
+	app_global_put
+
+	byte "staked_nft_value"
+	dup
+	app_global_get
+	txn ApplicationArgs 2
+	btoi
+	+
+	app_global_put
+
+	txn ApplicationArgs 1
+	store 0
+
+	txn ApplicationArgs 2
+	int 0
+	itob
+	concat
+	int 0
+	itob
+	concat
+	int 0
+	itob
+	concat
+	store 1
+
+	load 0
+	box_get
+	bnz branch_nft_box
+	load 0
+	load 1
+	box_put
+
+
+
+	
+
+branch_nft_box:
+	load 0
+	box_del
+	assert
+	load 0
+	load 1
+	box_put
+	
+
+	byte 0x151f7c75
+	txn ApplicationArgs 1
+	concat
+	b branch_log_return
+
+method_update_nft_owner:
+	// Checks this TXN in Transaction Group to be second TXN
+	txn GroupIndex
+	int 1
+	==
+	assert
+
+	// makes sure the called method on other txn is the correct one
+	gtxna 0 ApplicationArgs 0
+	method "update_nft_owner(uint64,account)uint64"
+	==
+	assert
+
+	// Checks the TXN to main DAO contract
+	gtxn 0 ApplicationID // The called application ID from group TXN index 0 (first TXN)
+	byte "dao_app_id" // The DAO app ID key
+	app_global_get
+	==
+	assert
+
+	// makes sure the first txn is a call to method of interest
+	gtxna 0 ApplicationArgs 0
+	method "update_nft_owner(uint64,account)uint64"
+	==
+	assert
+
+
+	gtxna 0 Accounts 1 // Reading the previous owner account from TXN from main GoraDAO contract.
+	store 0 // Previous Owner
+
+	txn Sender
+	store 1 // New owner
+
+	txn ApplicationArgs 1 
+	store 2 //NFT ID bytes
+
+	load 1
+	load 2
+	concat
+	box_get
+	bnz branch_error
+
+	load 1
+	load 2
+	concat
+	global LatestTimestamp
+	itob
+	box_put
+
+	load 1 // New owner
+	load 2 //NFT ID bytes
+	btoi // The NFT ID uint64
+	asset_holding_get AssetBalance
+	int 1
+	>=
+	assert
+
+	load 2 //NFT ID bytes
+	box_get
+	assert
+	store 23 //NFT Box
+
+	load 23 //NFT Box
+	int 0 // byte index
+	extract_uint64 
+	store 24 // NFT_Value
+
+
+	load 23 //NFT Box
+	int 16 // byte index
+	extract_uint64 
+	store 31 // Validator_AppID
+
+	
+
+	load 23 //NFT Box
+	int 24 // byte index
+	extract_uint64 
+	store 30 // NFT_Timestamp
+	
+	// Writing NFT box	
+	load 2 //NFT ID bytes
+
+	load 24 // NFT_Value
+	itob
+	int 1 // NFT_IsLocked
+	itob
+	concat
+	load 31 // Validator_AppID
+	itob
+	load 30 // Timestamp
+	itob
+	concat
+	concat
+	box_put //NFT_Box write
+
+
+	load 0 // Staking previous owner account
+	load 31 // Validator_AppID
+	itob
+	concat
+	store 21 // The Delegator+V2AppID box key
+
+	load 1 // Staking new owner account
+	load 31 // Validator_AppID
+	itob
+	concat
+	store 22 // The Delegator+V2AppID box key
+
+	// Reading the previous owner account box
+	load 21 // The Delegator+V2AppID box key
+	box_get
+	assert
+	store 10 // The Delegator+V2AppID box content
+
+	load 10 // The Delegator+V2AppID box content
+	int 0 // Byte index
+	extract_uint64
+	store 11 // Staked amounts algos from account box
+	
+	load 10 // The Delegator+V2AppID box content
+	int 8 // Byte index
+	extract_uint64
+	store 12 // Staked amounts tokens from account box
+
+
+	load 10 // The Delegator+V2AppID box content
+	int 16 // Byte index
+	extract_uint64
+	store 13 //pending_rewards algo from account box
+
+
+	load 10 // The Delegator+V2AppID box content
+	int 24 // Byte index
+	extract_uint64
+	store 14 //pending_rewards token from account box
+	
+	// Deleting the previous owner account box
+	load 21 // The Delegator+V2AppID box key
+	box_del
+	assert
+
+	// Putting the previous owner account box with new values (NFT value deduction from total staked amount of previous owner)
+	load 21 // The Delegator+V2AppID box key
+	
+	load 11 // Staked algo amount
+	itob
+	load 12 // Staked token amount prev owner
+	load 24 // NFT Value
+	int 1000000000
+	*
+	-
+	itob
+	concat	
+	load 13 //pending_rewards algo from account box
+	itob
+	load 14 //pending_rewards token from account box
+	itob
+	concat 
+	concat
+	box_put // The Delegator+V2AppID box write
+
+	//////////////New owner
+
+	load 22 // New owner Delegator+V2AppID box key
+	box_get
+	bz create_new_owner_box
+	store 40 // new owner account box
+
+	load 40 // new owner account box
+	int 0 // Byte index
+	extract_uint64
+	store 41 // Staked amounts algos from account box
+	
+	load 40 // new owner account box
+	int 8 // Byte index
+	extract_uint64
+	store 42 // Staked amounts tokens from account box
+
+
+	load 40 // new owner account box
+	int 16 // Byte index
+	extract_uint64
+	store 43 //pending_rewards algo from account box
+
+
+	load 40 // new owner account box
+	int 24 // Byte index
+	extract_uint64
+	store 44 //pending_rewards token from account box
+	
+
+	load 22 // New owner Delegator+V2AppID box key
+	box_del
+	assert
+
+	load 22
+	
+	load 41 // Staked algo amount
+	itob
+	load 42 // Staked token amount new owner
+	load 24 // NFT Value
+	int 1000000000
+	*
+	+
+	itob
+	concat	
+	load 43 //pending_rewards algo from account box
+	itob
+	load 44 //pending_rewards token from account box
+	itob
+	concat 
+	concat
+	box_put
+	b finalize_update_nft_owner
+
+create_new_owner_box:
+	load 22 // New owner Delegator+V2AppID box key
+	
+	int 0 // Staked algo amount
+	itob
+	load 24 // NFT Value as total staked token amount
+	int 1000000000
+	*
+	itob
+	concat	
+	load 43 //pending_rewards algo from account box
+	itob
+	load 44 //pending_rewards token from account box
+	itob
+	concat 
+	concat
+	box_put
+
+finalize_update_nft_owner:
+	byte 0x151f7c75
+	txn ApplicationArgs 1
+	concat
+	b branch_log_return
+
+
+// Handles logging the last element on the stack then put a 1 on the top and return (log and approve)
+branch_log_return:
+	log
+	int 1
+	return
+
+branch_error:
+	err
+branch_error_activation:
+	err
+
