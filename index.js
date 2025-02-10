@@ -6,6 +6,7 @@ const inquirer = require('inquirer');
 const config = require('./config.json');
 // Logger module
 const logger = require('./logger');
+require('dotenv').config();
 // Gora deployer Class module
 const GoraDaoDeployer = require('./gora-dao-deployer');
 let props = {}

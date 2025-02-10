@@ -3,6 +3,8 @@ const sha512_256 = require('js-sha512').sha512_256;
 const base32 = require('hi-base32');
 const fs = require('fs').promises;
 const path = require('path');
+require('dotenv').config();
+
 // GoraDAO deployer Class
 const GoraDaoDeployer = class {
     // Class constructor
@@ -15,12 +17,12 @@ const GoraDaoDeployer = class {
         this.algosdk = props.algosdk
 
         // Menmonic for admin account
-        this.mnemonic0 = props.mnemonic0
+        this.GORADAO_MNEMONIC_0 = props.GORADAO_MNEMONIC_0
 
         // Menmonic for proposer  account
-        this.mnemonic1 = props.mnemonic1
+        this.GORADAO_MNEMONIC_1 = props.GORADAO_MNEMONIC_1
         // Menmonic for participant  account
-        this.mnemonic2 = props.mnemonic2
+        this.GORADAO_MNEMONIC_2 = props.GORADAO_MNEMONIC_2
 
 
         // Remote or local mode for deployer , defaults to remote
@@ -98,19 +100,23 @@ const GoraDaoDeployer = class {
     // Loads existing mnemonics or creates new ones
     async loadOrCreateMnemonics() {
         // Define mnemonic keys and filenames
-        const mnemonicKeys = ['mnemonic0', 'mnemonic1', 'mnemonic2', 'mnemonic3', 'mnemonic4', 'mnemonic5', 'mnemonic6'];
-        const filenames = mnemonicKeys.map((key, index) => `gora_${key}.txt`);
+        const mnemonicKeys = ['GORADAO_MNEMONIC_0', 'GORADAO_MNEMONIC_1', 'GORADAO_MNEMONIC_2', 'GORADAO_MNEMONIC_3', 'GORADAO_MNEMONIC_4', 'GORADAO_MNEMONIC_5', 'GORADAO_MNEMONIC_6'];
+        //const filenames = mnemonicKeys.map((key, index) => `gora_${key}.txt`);
 
         for (let i = 0; i < mnemonicKeys.length; i++) {
             try {
                 // Attempt to read the mnemonic from file
-                this[mnemonicKeys[i]] = await fs.readFile(filenames[i], 'utf8');
-                this.logger.info(`${filenames[i]} loaded successfully.`);
+                //this[mnemonicKeys[i]] = await fs.readFile(filenames[i], 'utf8');
+                this[mnemonicKeys[i]] = process.env[mnemonicKeys[i]];
+                // this.logger.info(`${filenames[i]} loaded successfully.`);
+                this.logger.info(`${mnemonicKeys[i]} loaded successfully.`);
             } catch (error) {
                 // If file does not exist, generate a new mnemonic and save it
                 const { addr, sk } = this.algosdk.generateAccount();
                 let mnemonic = this.algosdk.secretKeyToMnemonic(sk);
-                await fs.writeFile(filenames[i], mnemonic, 'utf8');
+                //await fs.writeFile(filenames[i], mnemonic, 'utf8');
+             
+                process.env[mnemonicKeys[i]] = mnemonic;
                 this[mnemonicKeys[i]] = mnemonic;
                 this.logger.info(`${filenames[i]} created and saved.`);
             }
@@ -673,24 +679,24 @@ const GoraDaoDeployer = class {
     async deployerAccount() {
         try {
             await this.loadOrCreateMnemonics()
-            const goraDaoAdminAccount = await this.importAccounts('mnemonic0');
+            const goraDaoAdminAccount = await this.importAccounts('GORADAO_MNEMONIC_0');
             this.goraDaoAdminAccount = goraDaoAdminAccount.acc
 
-            const goraDaoProposalAdminAccount = await this.importAccounts('mnemonic1');
+            const goraDaoProposalAdminAccount = await this.importAccounts('GORADAO_MNEMONIC_1');
             this.goraDaoProposalAdminAccount = goraDaoProposalAdminAccount.acc
-            const goraDaoUserAccount1 = await this.importAccounts('mnemonic2');
+            const goraDaoUserAccount1 = await this.importAccounts('GORADAO_MNEMONIC_2');
             this.goraDaoUserAccount1 = goraDaoUserAccount1.acc
 
-            const goraDaoUserAccount2 = await this.importAccounts('mnemonic3');
+            const goraDaoUserAccount2 = await this.importAccounts('GORADAO_MNEMONIC_3');
             this.goraDaoUserAccount2 = goraDaoUserAccount2.acc
 
-            const goraDaoUserAccount3 = await this.importAccounts('mnemonic4');
+            const goraDaoUserAccount3 = await this.importAccounts('GORADAO_MNEMONIC_4');
             this.goraDaoUserAccount3 = goraDaoUserAccount3.acc
 
-            const goraDaoUserAccount4 = await this.importAccounts('mnemonic5');
+            const goraDaoUserAccount4 = await this.importAccounts('GORADAO_MNEMONIC_5');
             this.goraDaoUserAccount4 = goraDaoUserAccount4.acc
 
-            const goraDaoUserAccount5 = await this.importAccounts('mnemonic6');
+            const goraDaoUserAccount5 = await this.importAccounts('GORADAO_MNEMONIC_6');
             this.goraDaoUserAccount5 = goraDaoUserAccount5.acc
 
         }

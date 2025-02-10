@@ -36,7 +36,8 @@
     "hi-base32": "^0.5.1",
     "msgpack-long-lite":"^0.1.1",
     "algo-msgpack-with-bigint":"^2.1.1",
-    "inquirer":"8.2.6"
+    "inquirer":"8.2.6",
+    "dotenv":"^16.4.7"
     
   }
 }
