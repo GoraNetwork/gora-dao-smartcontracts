@@ -220,6 +220,8 @@ const GoraDaoDeployer = class {
 
             // Use fs.promises.writeFile to save the JSON string to config.json
             await fs.writeFile('config.json', configJson, 'utf8');
+            delete require.cache[require.resolve('./config.json')];
+            const config = require('./config.json');
 
             console.log('Configuration saved to config.json successfully.');
         } catch (error) {

@@ -49,10 +49,10 @@ async function goraDAOOperations() {
     if (!(Number(config['gora_dao']['dao_asa_id']) > 0)) {
         choices.push('Create GoraDAO Staking Asset')
     }
-    choices.push('Create GoraDAO Asset');
-    // if (config['gora_dao']['dao_dao_deployed'] === true) {
-    //     choices.push('Create GoraDAO Asset');
-    // }
+    //choices.push('Create GoraDAO Asset');
+    if (config['gora_dao']['dao_dao_deployed'] === true) {
+        choices.push('Create GoraDAO Asset');
+    }
    
     if (config['gora_dao']['dao_dao_deployed'] === true) {
         choices.push('Update GoraDAO Contract')
