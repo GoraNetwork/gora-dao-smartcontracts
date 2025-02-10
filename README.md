@@ -112,6 +112,7 @@ GORADAO_MNEMONIC_3="your mnemonic for DAO user 2 here"
 GORADAO_MNEMONIC_4="your mnemonic for DAO user 3 here"
 GORADAO_MNEMONIC_5="your mnemonic for DAO user 4 here"
 GORADAO_MNEMONIC_6="your mnemonic for DAO user 5 here"
+GORADAO_MNEMONIC_6="your mnemonic for DAO staking manager here"
 
 ```
 ### Gora DAO Main Contract: V1
