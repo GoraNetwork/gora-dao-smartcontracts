@@ -15,16 +15,6 @@ const GoraDaoDeployer = class {
         this.logger = props.logger
         // AlgoSDK instance
         this.algosdk = props.algosdk
-
-        // Menmonic for admin account
-        this.GORADAO_MNEMONIC_0 = props.GORADAO_MNEMONIC_0
-
-        // Menmonic for proposer  account
-        this.GORADAO_MNEMONIC_1 = props.GORADAO_MNEMONIC_1
-        // Menmonic for participant  account
-        this.GORADAO_MNEMONIC_2 = props.GORADAO_MNEMONIC_2
-
-
         // Remote or local mode for deployer , defaults to remote
         this.mode = props.config.deployer.mode
 
@@ -76,8 +66,6 @@ const GoraDaoDeployer = class {
         this.vestingContract = props.vestingContract
         this.vestingApprovalProgData = props.vestingApprovalProgData
         this.vestingClearProgData = props.vestingClearProgData
-
-
         // Global Variables attached to class instance object
 
         this.goraDaoAdminAccount = null
@@ -102,7 +90,6 @@ const GoraDaoDeployer = class {
         // Define mnemonic keys and filenames
         const mnemonicKeys = ['GORADAO_MNEMONIC_0', 'GORADAO_MNEMONIC_1', 'GORADAO_MNEMONIC_2', 'GORADAO_MNEMONIC_3', 'GORADAO_MNEMONIC_4', 'GORADAO_MNEMONIC_5', 'GORADAO_MNEMONIC_6'];
         //const filenames = mnemonicKeys.map((key, index) => `gora_${key}.txt`);
-
         for (let i = 0; i < mnemonicKeys.length; i++) {
             try {
                 // Attempt to read the mnemonic from file
@@ -115,7 +102,6 @@ const GoraDaoDeployer = class {
                 const { addr, sk } = this.algosdk.generateAccount();
                 let mnemonic = this.algosdk.secretKeyToMnemonic(sk);
                 //await fs.writeFile(filenames[i], mnemonic, 'utf8');
-             
                 process.env[mnemonicKeys[i]] = mnemonic;
                 this[mnemonicKeys[i]] = mnemonic;
                 this.logger.info(`${filenames[i]} created and saved.`);
@@ -2088,7 +2074,7 @@ const GoraDaoDeployer = class {
         this.logger.info("All 5 GoraDAO members have withdrawn participation from the proposal!");
     }
     //TODO: Implement this method
-    async activateProposalContract() { 
+    async activateProposalContract() {
         let addr = this.goraDaoProposalAdminAccount.addr;
         let params = await this.algodClient.getTransactionParams().do();
         const atc = new this.algosdk.AtomicTransactionComposer()
