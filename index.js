@@ -354,9 +354,9 @@ async function proposalsOperations() {
         choices.push('Re-Distribute Proposal Asset')
     }
 
-    if (config['gora_dao']['participated_to_proposal'] === true && config['gora_dao']['proposal_is_activated'] === false) {
+    if (config['gora_dao']['dao_proposal_deployed'] === true && config['gora_dao']['participated_to_proposal'] === true && config['gora_dao']['proposal_is_activated'] === false) {
         choices.push('Withdraw Proposal Participation')
-    } else if (config['gora_dao']['proposal_is_activated'] === false) {
+    } else if (config['gora_dao']['dao_proposal_deployed'] === true && config['gora_dao']['proposal_is_activated'] === false) {
         choices.push('Participate into Proposal')
     }
     if (config['gora_dao']['participated_to_proposal'] === true && config['gora_dao']['proposal_is_activated'] === true) {
