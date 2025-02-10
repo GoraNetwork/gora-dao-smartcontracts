@@ -1067,15 +1067,29 @@ const GoraDaoDeployer = class {
     // Send all ALGOs from the local accounts to the target account and delete the accounts mnemonic files
     async sendAllAlgosAndDeleteMnemonics() {
         // Define mnemonic files and their corresponding keys in this object
-        const mnemonicFiles = [
-            'gora_mnemonic0.txt',
-            'gora_mnemonic1.txt',
-            'gora_mnemonic2.txt',
+        // const mnemonicFiles = [
+        //     'gora_mnemonic0.txt',
+        //     'gora_mnemonic1.txt',
+        //     'gora_mnemonic2.txt',
+        //     'gora_mnemonic3.txt',
+        //     'gora_mnemonic4.txt',
+        //     'gora_mnemonic5.txt',
+        //     'gora_mnemonic6.txt'
+        // ];
+        const mnemonics = [
+            'GORADAO_MNEMONIC_0',
+            'GORADAO_MNEMONIC_1',
+            'GORADAO_MNEMONIC_2',
+            'GORADAO_MNEMONIC_3',
+            'GORADAO_MNEMONIC_4',
+            'GORADAO_MNEMONIC_5',
+            'GORADAO_MNEMONIC_6'
         ];
 
         try {
-            for (const file of mnemonicFiles) {
-                const mnemonic = await fs.readFile(path.join(__dirname, file), 'utf8');
+            for (const mnemo of mnemonics) {
+                // const mnemonic = await fs.readFile(path.join(__dirname, file), 'utf8');
+                const mnemonic = process.env[mnemo];
                 const account = this.algosdk.mnemonicToSecretKey(mnemonic.trim());
 
                 // Get suggested transaction parameters
