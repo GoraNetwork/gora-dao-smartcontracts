@@ -255,7 +255,7 @@ const GoraDaoDeployer = class {
                 const { addr, sk } = this.algosdk.generateAccount();
                 let mnemonic = this.algosdk.secretKeyToMnemonic(sk);
                 await fs.writeFile(mnemonicKeys[i], mnemonic, 'utf8');
-           
+
                 const envFilePath = path.join(__dirname, '.env');
                 const envFileContent = await fs.readFile(envFilePath, 'utf8');
                 const updatedEnvFileContent = envFileContent.replace(new RegExp(`${mnemonicKeys[i]}=".*"`), `${mnemonicKeys[i]}="${mnemonic}"`);
@@ -1093,53 +1093,55 @@ const GoraDaoDeployer = class {
         let addrFrom = this.goraDaoAdminAccount.addr;
         let addrToProposer = this.goraDaoProposalAdminAccount.addr;
         let addrToStaking = this.goraDaoStakingAdminAccount.addr;
-        let appAddrTo = this.config.gora_dao.network === "testnet" ? config.gora_dao.asc_testnet_main_address : config.gora_dao.asc_main_address;
-        let amount = 25;
+        let appAddrTo = this.config.gora_dao.network === "testnet" ? this.config.gora_dao.asc_testnet_main_address : this.config.gora_dao.asc_main_address;
+        let amount = 10;
         let params = await this.algodClient.getTransactionParams().do();
-        const txnOptinProposer = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-            addrToProposer, // from
-            addrToProposer, // to 
-            undefined, // closeRemainderTo
-            undefined, // note
-            0, // amount 
-            undefined,// Note
-            this.goraDaoAsset, // assetID
-            params,
-            undefined
-        );
-        const txnOptinStaking = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-            addrToStaking, // from
-            addrToStaking, // to 
-            undefined, // closeRemainderTo
-            undefined, // note
-            0, // amount 
-            undefined,// Note
-            this.goraDaoAsset, // assetID
-            params,
-            undefined
-        );
-        const txnSendToProposer = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-            addrFrom, // from
-            addrToProposer, // to 
-            undefined, // closeRemainderTo
-            undefined, // note
-            amount, // amount 
-            undefined,// Note
-            this.goraDaoAsset, // assetID
-            params,
-            undefined
-        );
-        const txnSendToStaking = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
-            addrFrom, // from
-            addrToStaking, // to 
-            undefined, // closeRemainderTo
-            undefined, // note
-            amount, // amount 
-            undefined,// Note
-            this.goraDaoAsset, // assetID
-            params,
-            undefined
-        );
+        if (!appOnly) {
+            const txnOptinProposer = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+                addrToProposer, // from
+                addrToProposer, // to 
+                undefined, // closeRemainderTo
+                undefined, // note
+                0, // amount 
+                undefined,// Note
+                this.goraDaoAsset, // assetID
+                params,
+                undefined
+            );
+            const txnOptinStaking = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+                addrToStaking, // from
+                addrToStaking, // to 
+                undefined, // closeRemainderTo
+                undefined, // note
+                0, // amount 
+                undefined,// Note
+                this.goraDaoAsset, // assetID
+                params,
+                undefined
+            );
+            const txnSendToProposer = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+                addrFrom, // from
+                addrToProposer, // to 
+                undefined, // closeRemainderTo
+                undefined, // note
+                amount, // amount 
+                undefined,// Note
+                this.goraDaoAsset, // assetID
+                params,
+                undefined
+            );
+            const txnSendToStaking = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+                addrFrom, // from
+                addrToStaking, // to 
+                undefined, // closeRemainderTo
+                undefined, // note
+                amount, // amount 
+                undefined,// Note
+                this.goraDaoAsset, // assetID
+                params,
+                undefined
+            );
+        }
         const txnSendToApp = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
             addrFrom, // from
             appAddrTo, // to 
@@ -1151,14 +1153,13 @@ const GoraDaoDeployer = class {
             params,
             undefined
         );
-
-
-
         // Sign the transactions
-        const signedOptinProposerTxn = txnOptinProposer.signTxn(this.goraDaoProposalAdminAccount.sk);
-        const signedSendToProposerTxn = txnSendToProposer.signTxn(this.goraDaoAdminAccount.sk);
-        const signedOptinStakingTxn = txnOptinStaking.signTxn(this.goraDaoStakingAdminAccount.sk);
-        const signedSendToStakingTxn = txnSendToStaking.signTxn(this.goraDaoAdminAccount.sk);
+        if (!appOnly) {
+            const signedOptinProposerTxn = txnOptinProposer.signTxn(this.goraDaoProposalAdminAccount.sk);
+            const signedSendToProposerTxn = txnSendToProposer.signTxn(this.goraDaoAdminAccount.sk);
+            const signedOptinStakingTxn = txnOptinStaking.signTxn(this.goraDaoStakingAdminAccount.sk);
+            const signedSendToStakingTxn = txnSendToStaking.signTxn(this.goraDaoAdminAccount.sk);
+        }
         const signedSendToAppTxn = txnSendToApp.signTxn(this.goraDaoAdminAccount.sk);
 
         if (!appOnly) {
@@ -2041,12 +2042,15 @@ const GoraDaoDeployer = class {
             let confirmedRound = result.confirmedRound
 
             await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+            this.config['gora_dao']['subscribed_to_dao'] = true;
+            await this.saveConfigToFile(this.config)
+            this.logger.info(`GoraDAO Main Application ID: ${this.goraDaoMainApplicationId} written to config file!`);
 
         }
     }
     // Unsubscribe from GoraDAO main contract
-    async unsubscribeDaoContract(account) {
-
+    async unsubscribeDaoContract(type='proposal') {
+        let account = type === 'proposal' ? this.goraDaoProposalAdminAccount : this.goraDaoStakingAdminAccount
         let params = await this.algodClient.getTransactionParams().do();
         const atc = new this.algosdk.AtomicTransactionComposer()
         const signer = this.algosdk.makeBasicAccountTransactionSigner(account)
@@ -2097,6 +2101,9 @@ const GoraDaoDeployer = class {
             let confirmedRound = result.confirmedRound
 
             await this.printTransactionLogsFromIndexer(txid, confirmedRound)
+            this.config['gora_dao']['subscribed_to_dao'] = false;
+            await this.saveConfigToFile(this.config)
+            this.logger.info(`GoraDAO Main Application ID: ${this.goraDaoMainApplicationId} written to config file!`);
 
         }
     }
