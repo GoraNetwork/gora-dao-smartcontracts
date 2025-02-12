@@ -53,7 +53,7 @@ const GoraDaoDeployer = class {
         this.goraDaoAsset = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.dao_testnet_asa_id : props.config.gora_dao.dao_asa_id
 
 
-        this.proposalApplicationId = props.config.gora_dao.network === 'testnet' ? props.config.asc_testnet_proposal_id : props.config.gora_dao.asc_proposal_id // GoraDAO Proposal application ID
+        this.proposalApplicationId = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_proposal_id : props.config.gora_dao.asc_proposal_id // GoraDAO Proposal application ID
         this.proposalApplicationAddress = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.asc_testnet_proposal_address : props.config.gora_dao.asc_proposal_address // GoraDAO Proposal application Address
         this.proposalAsset = props.config.gora_dao.network === 'testnet' ? props.config.gora_dao.proposal_testnet_asa_id : props.config.gora_dao.proposal_asa_id // GoraDAO Proposal Asset ID
 
@@ -2403,8 +2403,15 @@ const GoraDaoDeployer = class {
             this.logger.info("GoraDAO Proposal Contract ABI Exec method result = %s", addr);
             this.logger.info("GoraDAO Proposal Contract topped up by 0.3 Algo!");
 
-            this.config['gora_dao']['asc_proposal_id'] = Number(res);
-            this.config['gora_dao']['asc_proposal_address'] = addr;
+            if(this.config['gora_dao']['network'] == 'testnet'){
+                this.config['gora_dao']['asc_testnet_proposal_id'] = Number(res);
+                this.config['gora_dao']['asc_testnet_proposal_address'] = addr;
+
+            }else{
+                this.config['gora_dao']['asc_proposal_id'] = Number(res);
+                this.config['gora_dao']['asc_proposal_address'] = addr;
+            }
+       
             this.config['gora_dao']['dao_proposal_deployed'] = true;
             this.proposalApplicationId = Number(res)
             this.proposalApplicationAddress = addr
@@ -2650,7 +2657,7 @@ const GoraDaoDeployer = class {
         let methodDaoProposalParticipate = this.getMethodByName("proposal_participate", goraDaoMainContractAbi)
         let proposerPublicKey = this.algosdk.decodeAddress(this.goraDaoProposalAdminAccount.addr)
         let memberPublicKey = this.algosdk.decodeAddress(addr)
-        const commonParamsProposalSetup = {
+        const commonParamsProposalParticipate = {
             appID: proposalApplication,
             appForeignAssets: [Number(this.goraDaoAsset), Number(this.proposalAsset)],
             appAccounts: [this.goraDaoAdminAccount.addr],
