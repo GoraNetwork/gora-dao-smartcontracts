@@ -1228,12 +1228,12 @@ const GoraDaoDeployer = class {
         let amount = 5;
         let params = await this.algodClient.getTransactionParams().do();
 
-let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUser1, txnOptinUser2, txnOptinUser3, txnOptinUser4, txnOptinUser5, txnSendToUser1, txnSendToUser2, txnSendToUser3, txnSendToUser4, txnSendToUser5;
+        let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUser1, txnOptinUser2, txnOptinUser3, txnOptinUser4, txnOptinUser5, txnSendToUser1, txnSendToUser2, txnSendToUser3, txnSendToUser4, txnSendToUser5;
 
 
 
         if (!appOnly) {
-             txnPayUser1 = this.algosdk.makePaymentTxnWithSuggestedParams(
+            txnPayUser1 = this.algosdk.makePaymentTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo1, // to 
                 500000, // amount 
@@ -1242,7 +1242,7 @@ let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUse
                 params,
                 undefined,// rekey-to
             );
-             txnPayUser2 = this.algosdk.makePaymentTxnWithSuggestedParams(
+            txnPayUser2 = this.algosdk.makePaymentTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo2, // to 
                 500000, // amount 
@@ -1251,7 +1251,7 @@ let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUse
                 params,
                 undefined,// rekey-to
             );
-             txnPayUser3 = this.algosdk.makePaymentTxnWithSuggestedParams(
+            txnPayUser3 = this.algosdk.makePaymentTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo3, // to 
                 500000, // amount 
@@ -1260,7 +1260,7 @@ let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUse
                 params,
                 undefined,// rekey-to
             );
-             txnPayUser4 = this.algosdk.makePaymentTxnWithSuggestedParams(
+            txnPayUser4 = this.algosdk.makePaymentTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo4, // to 
                 500000, // amount 
@@ -1269,7 +1269,7 @@ let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUse
                 params,
                 undefined,// rekey-to
             );
-             txnPayUser5 = this.algosdk.makePaymentTxnWithSuggestedParams(
+            txnPayUser5 = this.algosdk.makePaymentTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo5, // to 
                 500000, // amount 
@@ -1279,7 +1279,7 @@ let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUse
                 undefined,// rekey-to
             );
             // Optin transaction to user account
-             txnOptinUser1 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            txnOptinUser1 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrTo1, // from
                 addrTo1, // to 
                 undefined, // closeRemainderTo
@@ -1290,7 +1290,7 @@ let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUse
                 params,
                 undefined
             );
-             txnOptinUser2 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            txnOptinUser2 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrTo2, // from
                 addrTo2, // to 
                 undefined, // closeRemainderTo
@@ -1301,7 +1301,7 @@ let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUse
                 params,
                 undefined
             );
-             txnOptinUser3 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            txnOptinUser3 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrTo3, // from
                 addrTo3, // to 
                 undefined, // closeRemainderTo
@@ -1312,7 +1312,7 @@ let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUse
                 params,
                 undefined
             );
-             txnOptinUser4 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            txnOptinUser4 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrTo4, // from
                 addrTo4, // to 
                 undefined, // closeRemainderTo
@@ -1323,7 +1323,7 @@ let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUse
                 params,
                 undefined
             );
-             txnOptinUser5 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            txnOptinUser5 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrTo5, // from
                 addrTo5, // to 
                 undefined, // closeRemainderTo
@@ -1335,7 +1335,7 @@ let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUse
                 undefined
             );
             // Axfer transactions to 
-             txnSendToUser1 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            txnSendToUser1 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo1, // to 
                 undefined, // closeRemainderTo
@@ -1346,7 +1346,7 @@ let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUse
                 params,
                 undefined
             );
-             txnSendToUser2 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            txnSendToUser2 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo2, // to 
                 undefined, // closeRemainderTo
@@ -1357,7 +1357,7 @@ let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUse
                 params,
                 undefined
             );
-             txnSendToUser3 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            txnSendToUser3 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo3, // to 
                 undefined, // closeRemainderTo
@@ -1368,7 +1368,7 @@ let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUse
                 params,
                 undefined
             );
-             txnSendToUser4 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            txnSendToUser4 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo4, // to 
                 undefined, // closeRemainderTo
@@ -1379,7 +1379,7 @@ let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUse
                 params,
                 undefined
             );
-             txnSendToUser5 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+            txnSendToUser5 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo5, // to 
                 undefined, // closeRemainderTo
@@ -1403,24 +1403,24 @@ let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUse
             params,
             undefined
         );
-let signedPayUserTxn1, signedPayUserTxn2, signedPayUserTxn3, signedPayUserTxn4, signedPayUserTxn5, signedOptinUserTxn1, signedOptinUserTxn2, signedOptinUserTxn3, signedOptinUserTxn4, signedOptinUserTxn5, signedSendToUserTxn1, signedSendToUserTxn2, signedSendToUserTxn3, signedSendToUserTxn4, signedSendToUserTxn5;
+        let signedPayUserTxn1, signedPayUserTxn2, signedPayUserTxn3, signedPayUserTxn4, signedPayUserTxn5, signedOptinUserTxn1, signedOptinUserTxn2, signedOptinUserTxn3, signedOptinUserTxn4, signedOptinUserTxn5, signedSendToUserTxn1, signedSendToUserTxn2, signedSendToUserTxn3, signedSendToUserTxn4, signedSendToUserTxn5;
         // Sign the transaction
         if (!appOnly) {
-             signedPayUserTxn1 = txnPayUser1.signTxn(this.goraDaoProposalAdminAccount.sk);
-             signedPayUserTxn2 = txnPayUser2.signTxn(this.goraDaoProposalAdminAccount.sk);
-             signedPayUserTxn3 = txnPayUser3.signTxn(this.goraDaoProposalAdminAccount.sk);
-             signedPayUserTxn4 = txnPayUser4.signTxn(this.goraDaoProposalAdminAccount.sk);
-             signedPayUserTxn5 = txnPayUser5.signTxn(this.goraDaoProposalAdminAccount.sk);
-             signedOptinUserTxn1 = txnOptinUser1.signTxn(this.goraDaoUserAccount1.sk);
-             signedOptinUserTxn2 = txnOptinUser2.signTxn(this.goraDaoUserAccount2.sk);
-             signedOptinUserTxn3 = txnOptinUser3.signTxn(this.goraDaoUserAccount3.sk);
-             signedOptinUserTxn4 = txnOptinUser4.signTxn(this.goraDaoUserAccount4.sk);
-             signedOptinUserTxn5 = txnOptinUser5.signTxn(this.goraDaoUserAccount5.sk);
-             signedSendToUserTxn1 = txnSendToUser1.signTxn(this.goraDaoProposalAdminAccount.sk);
-             signedSendToUserTxn2 = txnSendToUser2.signTxn(this.goraDaoProposalAdminAccount.sk);
-             signedSendToUserTxn3 = txnSendToUser3.signTxn(this.goraDaoProposalAdminAccount.sk);
-             signedSendToUserTxn4 = txnSendToUser4.signTxn(this.goraDaoProposalAdminAccount.sk);
-             signedSendToUserTxn5 = txnSendToUser5.signTxn(this.goraDaoProposalAdminAccount.sk);
+            signedPayUserTxn1 = txnPayUser1.signTxn(this.goraDaoProposalAdminAccount.sk);
+            signedPayUserTxn2 = txnPayUser2.signTxn(this.goraDaoProposalAdminAccount.sk);
+            signedPayUserTxn3 = txnPayUser3.signTxn(this.goraDaoProposalAdminAccount.sk);
+            signedPayUserTxn4 = txnPayUser4.signTxn(this.goraDaoProposalAdminAccount.sk);
+            signedPayUserTxn5 = txnPayUser5.signTxn(this.goraDaoProposalAdminAccount.sk);
+            signedOptinUserTxn1 = txnOptinUser1.signTxn(this.goraDaoUserAccount1.sk);
+            signedOptinUserTxn2 = txnOptinUser2.signTxn(this.goraDaoUserAccount2.sk);
+            signedOptinUserTxn3 = txnOptinUser3.signTxn(this.goraDaoUserAccount3.sk);
+            signedOptinUserTxn4 = txnOptinUser4.signTxn(this.goraDaoUserAccount4.sk);
+            signedOptinUserTxn5 = txnOptinUser5.signTxn(this.goraDaoUserAccount5.sk);
+            signedSendToUserTxn1 = txnSendToUser1.signTxn(this.goraDaoProposalAdminAccount.sk);
+            signedSendToUserTxn2 = txnSendToUser2.signTxn(this.goraDaoProposalAdminAccount.sk);
+            signedSendToUserTxn3 = txnSendToUser3.signTxn(this.goraDaoProposalAdminAccount.sk);
+            signedSendToUserTxn4 = txnSendToUser4.signTxn(this.goraDaoProposalAdminAccount.sk);
+            signedSendToUserTxn5 = txnSendToUser5.signTxn(this.goraDaoProposalAdminAccount.sk);
         }
         const signedSendToAppTxn = txnSendToApp.signTxn(this.goraDaoProposalAdminAccount.sk);
 
@@ -2929,6 +2929,36 @@ let signedPayUserTxn1, signedPayUserTxn2, signedPayUserTxn3, signedPayUserTxn4, 
                 { appIndex: Number(daoApplication), name: proposerPublicKey.publicKey },
             ],
         }
+        /* 
+        {
+  "boxes": [
+    {
+      "name": "cHJvcG9zYWxfYWxsb2NhdGlvbg=="
+    },
+    {
+      "name": "dm90ZV90aHJlc2hvbGQ="
+    },
+    {
+      "name": "u3WJ1gKJZG8tZnSTbO86ES3zuGqVj36LYU34g5NyuSc="
+    },
+    {
+      "name": "xWV0uMNSmbebdubLiXdsE2gRiBimMR3OzA+rDAAvnMc="
+    },
+    {
+      "name": "2WMI7buFPSZCBcjkPEvYIaMR3tnsxMIm8I2Pc/rh8os="
+    },
+    {
+      "name": "/SpIbCnGxUCw4QM9YDvcIQ5uUcvjorXOIH37CXRI5YY="
+    },
+    {
+      "name": "AaAkM+T5Lv1ELd+lZZ1hoYmDvo87RQDcURfiQ1oODys="
+    },
+    {
+      "name": "cGFydGljaXBhdGlvbl90aHJlc2hvbGQ="
+    }
+  ]
+}
+        */
 
         // const ptxnProposal = new this.algosdk.Transaction({
         //     from: addr,
