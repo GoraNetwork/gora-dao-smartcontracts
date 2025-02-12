@@ -1228,12 +1228,12 @@ const GoraDaoDeployer = class {
         let amount = 5;
         let params = await this.algodClient.getTransactionParams().do();
 
-
+let txnPayUser1, txnPayUser2, txnPayUser3, txnPayUser4, txnPayUser5, txnOptinUser1, txnOptinUser2, txnOptinUser3, txnOptinUser4, txnOptinUser5, txnSendToUser1, txnSendToUser2, txnSendToUser3, txnSendToUser4, txnSendToUser5;
 
 
 
         if (!appOnly) {
-            const txnPayUser1 = this.algosdk.makePaymentTxnWithSuggestedParams(
+             txnPayUser1 = this.algosdk.makePaymentTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo1, // to 
                 500000, // amount 
@@ -1242,7 +1242,7 @@ const GoraDaoDeployer = class {
                 params,
                 undefined,// rekey-to
             );
-            const txnPayUser2 = this.algosdk.makePaymentTxnWithSuggestedParams(
+             txnPayUser2 = this.algosdk.makePaymentTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo2, // to 
                 500000, // amount 
@@ -1251,7 +1251,7 @@ const GoraDaoDeployer = class {
                 params,
                 undefined,// rekey-to
             );
-            const txnPayUser3 = this.algosdk.makePaymentTxnWithSuggestedParams(
+             txnPayUser3 = this.algosdk.makePaymentTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo3, // to 
                 500000, // amount 
@@ -1260,7 +1260,7 @@ const GoraDaoDeployer = class {
                 params,
                 undefined,// rekey-to
             );
-            const txnPayUser4 = this.algosdk.makePaymentTxnWithSuggestedParams(
+             txnPayUser4 = this.algosdk.makePaymentTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo4, // to 
                 500000, // amount 
@@ -1269,7 +1269,7 @@ const GoraDaoDeployer = class {
                 params,
                 undefined,// rekey-to
             );
-            const txnPayUser5 = this.algosdk.makePaymentTxnWithSuggestedParams(
+             txnPayUser5 = this.algosdk.makePaymentTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo5, // to 
                 500000, // amount 
@@ -1279,7 +1279,7 @@ const GoraDaoDeployer = class {
                 undefined,// rekey-to
             );
             // Optin transaction to user account
-            const txnOptinUser1 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+             txnOptinUser1 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrTo1, // from
                 addrTo1, // to 
                 undefined, // closeRemainderTo
@@ -1290,7 +1290,7 @@ const GoraDaoDeployer = class {
                 params,
                 undefined
             );
-            const txnOptinUser2 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+             txnOptinUser2 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrTo2, // from
                 addrTo2, // to 
                 undefined, // closeRemainderTo
@@ -1301,7 +1301,7 @@ const GoraDaoDeployer = class {
                 params,
                 undefined
             );
-            const txnOptinUser3 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+             txnOptinUser3 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrTo3, // from
                 addrTo3, // to 
                 undefined, // closeRemainderTo
@@ -1312,7 +1312,7 @@ const GoraDaoDeployer = class {
                 params,
                 undefined
             );
-            const txnOptinUser4 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+             txnOptinUser4 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrTo4, // from
                 addrTo4, // to 
                 undefined, // closeRemainderTo
@@ -1323,7 +1323,7 @@ const GoraDaoDeployer = class {
                 params,
                 undefined
             );
-            const txnOptinUser5 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+             txnOptinUser5 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrTo5, // from
                 addrTo5, // to 
                 undefined, // closeRemainderTo
@@ -1335,7 +1335,7 @@ const GoraDaoDeployer = class {
                 undefined
             );
             // Axfer transactions to 
-            const txnSendToUser1 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+             txnSendToUser1 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo1, // to 
                 undefined, // closeRemainderTo
@@ -1346,7 +1346,7 @@ const GoraDaoDeployer = class {
                 params,
                 undefined
             );
-            const txnSendToUser2 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+             txnSendToUser2 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo2, // to 
                 undefined, // closeRemainderTo
@@ -1357,7 +1357,7 @@ const GoraDaoDeployer = class {
                 params,
                 undefined
             );
-            const txnSendToUser3 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+             txnSendToUser3 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo3, // to 
                 undefined, // closeRemainderTo
@@ -1368,7 +1368,7 @@ const GoraDaoDeployer = class {
                 params,
                 undefined
             );
-            const txnSendToUser4 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+             txnSendToUser4 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo4, // to 
                 undefined, // closeRemainderTo
@@ -1379,7 +1379,7 @@ const GoraDaoDeployer = class {
                 params,
                 undefined
             );
-            const txnSendToUser5 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
+             txnSendToUser5 = this.algosdk.makeAssetTransferTxnWithSuggestedParams(
                 addrFromProposer, // from
                 addrTo5, // to 
                 undefined, // closeRemainderTo
@@ -1403,24 +1403,24 @@ const GoraDaoDeployer = class {
             params,
             undefined
         );
-
+let signedPayUserTxn1, signedPayUserTxn2, signedPayUserTxn3, signedPayUserTxn4, signedPayUserTxn5, signedOptinUserTxn1, signedOptinUserTxn2, signedOptinUserTxn3, signedOptinUserTxn4, signedOptinUserTxn5, signedSendToUserTxn1, signedSendToUserTxn2, signedSendToUserTxn3, signedSendToUserTxn4, signedSendToUserTxn5;
         // Sign the transaction
         if (!appOnly) {
-            const signedPayUserTxn1 = txnPayUser1.signTxn(this.goraDaoProposalAdminAccount.sk);
-            const signedPayUserTxn2 = txnPayUser2.signTxn(this.goraDaoProposalAdminAccount.sk);
-            const signedPayUserTxn3 = txnPayUser3.signTxn(this.goraDaoProposalAdminAccount.sk);
-            const signedPayUserTxn4 = txnPayUser4.signTxn(this.goraDaoProposalAdminAccount.sk);
-            const signedPayUserTxn5 = txnPayUser5.signTxn(this.goraDaoProposalAdminAccount.sk);
-            const signedOptinUserTxn1 = txnOptinUser1.signTxn(this.goraDaoUserAccount1.sk);
-            const signedOptinUserTxn2 = txnOptinUser2.signTxn(this.goraDaoUserAccount2.sk);
-            const signedOptinUserTxn3 = txnOptinUser3.signTxn(this.goraDaoUserAccount3.sk);
-            const signedOptinUserTxn4 = txnOptinUser4.signTxn(this.goraDaoUserAccount4.sk);
-            const signedOptinUserTxn5 = txnOptinUser5.signTxn(this.goraDaoUserAccount5.sk);
-            const signedSendToUserTxn1 = txnSendToUser1.signTxn(this.goraDaoProposalAdminAccount.sk);
-            const signedSendToUserTxn2 = txnSendToUser2.signTxn(this.goraDaoProposalAdminAccount.sk);
-            const signedSendToUserTxn3 = txnSendToUser3.signTxn(this.goraDaoProposalAdminAccount.sk);
-            const signedSendToUserTxn4 = txnSendToUser4.signTxn(this.goraDaoProposalAdminAccount.sk);
-            const signedSendToUserTxn5 = txnSendToUser5.signTxn(this.goraDaoProposalAdminAccount.sk);
+             signedPayUserTxn1 = txnPayUser1.signTxn(this.goraDaoProposalAdminAccount.sk);
+             signedPayUserTxn2 = txnPayUser2.signTxn(this.goraDaoProposalAdminAccount.sk);
+             signedPayUserTxn3 = txnPayUser3.signTxn(this.goraDaoProposalAdminAccount.sk);
+             signedPayUserTxn4 = txnPayUser4.signTxn(this.goraDaoProposalAdminAccount.sk);
+             signedPayUserTxn5 = txnPayUser5.signTxn(this.goraDaoProposalAdminAccount.sk);
+             signedOptinUserTxn1 = txnOptinUser1.signTxn(this.goraDaoUserAccount1.sk);
+             signedOptinUserTxn2 = txnOptinUser2.signTxn(this.goraDaoUserAccount2.sk);
+             signedOptinUserTxn3 = txnOptinUser3.signTxn(this.goraDaoUserAccount3.sk);
+             signedOptinUserTxn4 = txnOptinUser4.signTxn(this.goraDaoUserAccount4.sk);
+             signedOptinUserTxn5 = txnOptinUser5.signTxn(this.goraDaoUserAccount5.sk);
+             signedSendToUserTxn1 = txnSendToUser1.signTxn(this.goraDaoProposalAdminAccount.sk);
+             signedSendToUserTxn2 = txnSendToUser2.signTxn(this.goraDaoProposalAdminAccount.sk);
+             signedSendToUserTxn3 = txnSendToUser3.signTxn(this.goraDaoProposalAdminAccount.sk);
+             signedSendToUserTxn4 = txnSendToUser4.signTxn(this.goraDaoProposalAdminAccount.sk);
+             signedSendToUserTxn5 = txnSendToUser5.signTxn(this.goraDaoProposalAdminAccount.sk);
         }
         const signedSendToAppTxn = txnSendToApp.signTxn(this.goraDaoProposalAdminAccount.sk);
 
@@ -2593,29 +2593,32 @@ const GoraDaoDeployer = class {
             //2 proposal_min_participation_algo
             10000,
             //3 proposal_min_participation_token
-            25,
+            1,
             //4 proposal_duration
             72,
             //5 proposal_amount
-            550,
+            50,
             //6 proposal_voting_duration
             24,
             //7 proposal_voting_start
             0,
             //8 proposal_participation_fee
-            20,
+            1,
             //9 proposal_participation_fee_algo
             11000,
             //10 proposal_vote_fee
-            3,
+            0,
             //11 proposal_vote_fee_algo
             1000,
             //12 participation_threshold (uint64,uint64,uint64)
-            [5, 70, 100000],
+            // [5, 70, 100000],
+            1, // 1 total participation to activate
             //13 vote_threshold (uint64,uint64,uint64)
-            [4, 60, 50000],
+            // [4, 60, 50000],
+            10,// 10% of total participation
             //14 proposal_allocation (uint64,uint64,uint64)
-            [3, 51, 40000],
+            // [3, 51, 40000],
+            [10, 30, 60],// The allocation of funds to the proposal
             //15 proposal_vote_values uint64
             3,
         ]
@@ -2708,7 +2711,7 @@ const GoraDaoDeployer = class {
         const axferFeeDao = new this.algosdk.Transaction({
             from: addr,
             to: `${this.goraDaoMainApplicationAddress}`,
-            amount: 20,
+            amount: 1,
             assetIndex: Number(this.proposalAsset),
             type: 'axfer',
             ...params
@@ -2723,7 +2726,7 @@ const GoraDaoDeployer = class {
         const axferMinDao = new this.algosdk.Transaction({
             from: addr,
             to: `${this.goraDaoMainApplicationAddress}`,
-            amount: 25,
+            amount: 2,
             assetIndex: Number(this.proposalAsset),
             type: 'axfer',
             ...params

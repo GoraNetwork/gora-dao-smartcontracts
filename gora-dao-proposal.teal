@@ -94,7 +94,8 @@ branch_method_router:
 	==
 	bnz method_update_proposal
 
-	method "config_proposal(pay,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,(uint64,uint64,uint64),(uint64,uint64,uint64),(uint64,uint64,uint64),uint64)uint64"
+	// method "config_proposal(pay,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,(uint64,uint64,uint64),(uint64,uint64,uint64),(uint64,uint64,uint64),uint64)uint64"
+	method "config_proposal(pay,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,(uint64,uint64,uint64),uint64)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_proposal
@@ -477,10 +478,14 @@ method_config_proposal:
 	txn ApplicationArgs 14 // proposal_vote_values
 	store 14
 
+	// byte "participation_threshold"
+	// box_del
 	byte "participation_threshold"
 	load 11
 	box_put
 
+	// byte "vote_threshold"
+	// box_del
 	byte "vote_threshold"
 	load 12
 	box_put
@@ -617,7 +622,7 @@ method_proposal_participate:
     gtxn 2 AssetAmount
     byte "proposal_participation_fee"
 	app_global_get
-    ==
+    >=
     assert
 
 	gtxn 3 Amount
@@ -629,7 +634,7 @@ method_proposal_participate:
     gtxn 4 AssetAmount
     byte "proposal_min_participation_token"
 	app_global_get
-    ==
+    >=
     assert
 
 
@@ -645,6 +650,8 @@ method_proposal_participate:
     ==
     assert
 
+	load 1
+	box_del
 	load 1
 	box_get
 

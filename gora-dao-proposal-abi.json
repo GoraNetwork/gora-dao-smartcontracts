@@ -190,14 +190,14 @@
                     "description": "GoraDAO Proposal voting fee in Algos"
                 },
                 {
-                    "type": "(uint64,uint64,uint64)",
+                    "type": "uint64",
                     "name": "proposal_participation",
-                    "description": "GoraDAO Proposal participation program! "
+                    "description": "GoraDAO Proposal participation to activate! "
                 },
                 {
-                    "type": "(uint64,uint64,uint64)",
+                    "type": "uint64",
                     "name": "proposal_threshold",
-                    "description": "GoraDAO Proposal threshold program! "
+                    "description": "GoraDAO Proposal threshold to conclude vote! "
                 },
                 {
                     "type": "(uint64,uint64,uint64)",
