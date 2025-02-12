@@ -530,9 +530,9 @@ method_proposal_participate:
 	store 1
 
 	// Participation are closed after proposal is activated for voting
-	byte "proposal_is_activated"
-	app_global_get
-	bnz branch_error
+	// byte "proposal_is_activated"
+	// app_global_get
+	// bnz branch_error
 
 	byte "participation_count"
 	app_global_get
@@ -651,8 +651,6 @@ method_proposal_participate:
     assert
 
 	load 1
-	box_del
-	load 1
 	box_get
 
 	bnz branch_error
@@ -693,9 +691,9 @@ method_proposal_withdraw_participate:
     store 0
 
 	// Participation Withdrawals are closed after proposal is activated for voting
-	byte "proposal_is_activated"
-	app_global_get
-	bnz branch_error
+	// byte "proposal_is_activated"
+	// app_global_get
+	// bnz branch_error
 
 	byte "participation_count"
 	app_global_get
