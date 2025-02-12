@@ -357,8 +357,10 @@ async function proposalsOperations() {
     }
     if (config['gora_dao']['dao_proposal_deployed'] === true && config['gora_dao']['proposal_asa_distributed'] === false) {
         choices.push('Distribute Proposal Asset')
+        choices.push('Distribute Proposal Asset (APP Only)')
     } else if (config['gora_dao']['dao_proposal_deployed'] === true && config['gora_dao']['proposal_asa_distributed'] === true) {
         choices.push('Re-Distribute Proposal Asset')
+        choices.push('Re-Distribute Proposal Asset (APP Only)')
     }
 
     if (config['gora_dao']['dao_proposal_deployed'] === true && config['gora_dao']['participated_to_proposal'] === true && config['gora_dao']['proposal_is_activated'] === false) {
@@ -488,6 +490,27 @@ async function proposalsOperations() {
                 ]);
             }
             break;
+            case 'Distribute Proposal Asset (APP Only)':
+                try {
+                    await goraDaoDeployer.sendProposalAssetTransaction(true);
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                }
+                break;
         case 'Re-Distribute Proposal Asset':
             try {
                 await goraDaoDeployer.sendProposalAssetTransaction();
@@ -509,6 +532,27 @@ async function proposalsOperations() {
                 ]);
             }
             break;
+            case 'Re-Distribute Proposal Asset (APP Only)':
+                try {
+                    await goraDaoDeployer.sendProposalAssetTransaction(true);
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                    await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'continue',
+                            message: 'Press Enter to go back to menu...',
+                        },
+                    ]);
+                }
+                break;
         case 'Participate into Proposal':
             try {
                 await goraDaoDeployer.participateProposalContractAll();

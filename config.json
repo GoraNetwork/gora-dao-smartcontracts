@@ -33,7 +33,7 @@
     "staking_asa_distributed": true,
     "dao_proposal_deployed": true,
     "proposal_is_activated": false,
-    "proposal_asa_distributed": false,
+    "proposal_asa_distributed": true,
     "participated_to_proposal": true,
     "proxy_staking_optin_all": false,
     "proxy_staking_is_opted_in": false,
