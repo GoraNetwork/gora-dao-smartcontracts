@@ -2881,7 +2881,7 @@ let signedPayUserTxn1, signedPayUserTxn2, signedPayUserTxn3, signedPayUserTxn4, 
         await this.saveConfigToFile(this.config)
         this.logger.info("All 5 GoraDAO members have withdrawn participation from the proposal!");
     }
-    //TODO: Implement this method
+    //TODO: Implement this method to force activate a proposal
     async activateProposalContract() { }
     // This method is used to vote on a proposal
     async voteProposalContract(userIndex, vote) {
@@ -2940,7 +2940,7 @@ let signedPayUserTxn1, signedPayUserTxn2, signedPayUserTxn3, signedPayUserTxn4, 
         const axferDao = new this.algosdk.Transaction({
             from: addr,
             to: `${this.goraDaoMainApplicationAddress}`,
-            amount: 3,
+            amount: 0,
             assetIndex: Number(this.proposalAsset),
             type: 'axfer',
             ...params
