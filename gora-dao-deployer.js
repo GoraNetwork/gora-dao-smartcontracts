@@ -7,6 +7,7 @@ const { on } = require('events');
 const configBase = require('./config_example.json');
 const crypto = require('crypto');
 const { send } = require('process');
+const msgpack = require('@msgpack/msgpack');
 require('dotenv').config();
 const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
@@ -722,6 +723,73 @@ const GoraDaoDeployer = class {
             .replace(/\//g, '_')  // Replace / with _
             .replace(/=+$/, '');  // Remove trailing =
     }
+    async getSubscriptionStatus(account) {
+        let userAccountAddress = account.addr;
+        if (this.algosdk.isValidAddress(userAccountAddress)) {
+            let appId = this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['asc_testnet_main_id'] : this.config.gora_dao['asc_main_id'];
+            let decodedAccount = this.algosdk.decodeAddress(userAccountAddress);
+            let base64BoxName = Buffer.from(decodedAccount.publicKey).toString('base64');
+            let encodedBase64boxNameRef = encodeURIComponent('b64:' + base64BoxName);
+            const urlApp = `${this.config.gora_dao.network === 'testnet' ? "https://testnet-api.algonode.cloud" : "https://mainnet-api.algonode.cloud"}/v2/applications/${appId}/box?name=${encodedBase64boxNameRef}`;
+            let resApp = await fetch(urlApp, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            let boxData = await resApp.json()
+            if (boxData && boxData.name) {
+                this.logger.info(`Account address ${userAccountAddress} has subscription status: ${boxData.name.toString()}`)
+                return true
+            } else {
+                this.logger.error(`Account address ${userAccountAddress} has no subscription status`)
+                return false
+            }
+        }
+    }
+    async getCreatedProposals() {
+
+        let appId = this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['asc_testnet_main_id'] : this.config.gora_dao['asc_main_id'];
+        let appAddress = this.config.gora_dao.network === 'testnet' ? this.config.gora_dao['asc_testnet_main_address'] : this.config.gora_dao['asc_main_address'];
+
+        //const urlApp = `${this.config.gora_dao.network === 'testnet' ? "https://testnet-api.algonode.cloud" : "https://mainnet-api.algonode.cloud"}/v2/applications/${appId}/`;
+        const urlAppAccount = `${this.config.gora_dao.network === 'testnet' ? "https://testnet-api.algonode.cloud" : "https://mainnet-api.algonode.cloud"}/v2/accounts/${appAddress}/`;
+        let resAppAccount = await fetch(urlAppAccount, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        let appAccountData = await resAppAccount.json()
+        if (appAccountData && appAccountData['total-created-apps']) {
+            this.logger.info(`GoraDAO has ${appAccountData['total-created-apps']} proposals deployed!`)
+            let daoProposals = appAccountData['created-apps'].map((app) => {
+                return {
+                    id: app.id,
+                    address: this.algosdk.getApplicationAddress(app.id),
+                    creator: app.creator,
+                    fields: app['global-state'].map((param) => {
+                        if (param?.value?.type === 1) {
+                            return {
+                                key: Buffer.from(param.key, 'base64').toString(),
+                                value: Buffer.from(param.value.bytes, 'base64').toString()
+                            }
+                        }else if (param?.value?.type === 2) {
+                            return {
+                                key: Buffer.from(param.key, 'base64').toString(),
+                                value: param.value.uint
+                            }
+                        }
+
+                    })
+                }
+            })
+            return daoProposals
+        } else {
+            this.logger.error(`Failed to retrieve proposals from GoraDAO`)
+            return null
+        }
+    }
     async printStakingUserBox() {
         if (this.algosdk.isValidAddress(this.goraDaoStakingAdminAccount.addr)) {
             let delegatorAddress = this.goraDaoUserAccount2.addr;
@@ -1048,13 +1116,15 @@ const GoraDaoDeployer = class {
     // Gets the accounts from Mnemonics
     async deployerAccount() {
         try {
+
             await this.loadOrCreateMnemonics()
             const goraDaoAdminAccount = await this.importAccounts('GORADAO_MNEMONIC_0');
             this.goraDaoAdminAccount = goraDaoAdminAccount.acc
 
+
             const goraDaoProposalAdminAccount = await this.importAccounts('GORADAO_MNEMONIC_1');
             this.goraDaoProposalAdminAccount = goraDaoProposalAdminAccount.acc
-
+            await this.getSubscriptionStatus(this.goraDaoProposalAdminAccount)
             const goraDaoUserAccount1 = await this.importAccounts('GORADAO_MNEMONIC_2');
             this.goraDaoUserAccount1 = goraDaoUserAccount1.acc
 
@@ -1956,7 +2026,7 @@ const GoraDaoDeployer = class {
             //4 min_subscription_algo
             100000,
             //5 min_subscription_stake
-            5,
+            0,
 
         ]
         const atcDaoConfig = new this.algosdk.AtomicTransactionComposer()

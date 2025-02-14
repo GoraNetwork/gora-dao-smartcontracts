@@ -37,7 +37,8 @@
     "msgpack-long-lite":"^0.1.1",
     "algo-msgpack-with-bigint":"^2.1.1",
     "inquirer":"8.2.6",
-    "dotenv":"^16.4.7"
+    "dotenv":"^16.4.7",
+    "@msgpack/msgpack":"^3.0.1"
     
   }
 }

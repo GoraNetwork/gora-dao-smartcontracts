@@ -320,7 +320,8 @@ method_config_dao:
 	b branch_log_return
 
 method_subscribe_dao:
-    txna Accounts 0
+    // txna Accounts 0
+    txn Sender
     store 0
     callsub sub_check_txn_group
     // Checking Transaction group
@@ -384,6 +385,7 @@ method_subscribe_dao:
     byte "min_subscription_algo"
     app_global_get
     >=
+    assert
 
     load 0
     //dup
@@ -399,6 +401,23 @@ method_subscribe_dao:
 	itob
 	concat
 	b branch_log_return
+
+// method_check_subscription:
+//     // txna Accounts 0
+//     txn Sender
+//     store 0
+
+
+//     load 0
+//     box_get
+
+    
+//     byte 0x151f7c75
+// 	global CurrentApplicationID
+// 	itob
+// 	concat
+// 	b branch_log_return
+
 
 method_unsubscribe_dao:
     
@@ -1020,9 +1039,9 @@ branch_delete_member_box:
     load 0
     box_del
     pop
-    load 0
-    byte ""
-    box_put
+    // load 0
+    // byte ""
+    // box_put
     
 
     byte 0x151f7c75
