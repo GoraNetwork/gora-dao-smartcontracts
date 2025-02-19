@@ -2457,7 +2457,6 @@ const GoraDaoDeployer = class {
                 addr,// member account (Proposal manager)
                 Number(this.proposalAsset),// Proposal asset ref
                 Number(this.goraDaoAsset),// DAO asset ref
-                Number(this.proposalAsset),// Proposal asset id
                 "Proposal_Test",//title
                 "This is a test proposal for GoraDAO",//description
                 // 10,//quorum

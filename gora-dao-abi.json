@@ -186,22 +186,17 @@
                 {
                     "type": "account",
                     "name": "member_reference",
-                    "description": "DAO member account reference (Proposal manager)"
+                    "description": "DAO Proposal manager account reference"
                 },
                 {
                     "type": "asset",
-                    "name": "asset_reference",
-                    "description": "DAO Proposal token ref"
-                },
-                {
-                    "type": "asset",
-                    "name": "asset_reference",
+                    "name": "dao_asset_reference",
                     "description": "DAO dao token ref"
                 },
                 {
-                    "type": "uint64",
-                    "name": "asset_id",
-                    "description": "DAO Proposal token ID"
+                    "type": "asset",
+                    "name": "proposal_asset_reference",
+                    "description": "Proposal token ref"
                 },
                 {
                     "type": "string",

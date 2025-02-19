@@ -30,12 +30,12 @@
                     "description": "GoraNetwork Proposal asset ID"
                 },
                 {
-                    "type": "account",
+                    "type": "address",
                     "name": "manager_reference",
                     "description": "GoraDAO member account reference (Proposal manager)"
                 },
                 {
-                    "type": "account",
+                    "type": "address",
                     "name": "dao_manager_reference",
                     "description": "GoraDAO manager account reference"
                 },
