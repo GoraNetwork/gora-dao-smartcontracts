@@ -184,19 +184,9 @@
                     "description": "Payment from Proposer to DAO for Proposal fees and initiation MBRs!"
                 },
                 {
-                    "type": "account",
-                    "name": "member_reference",
-                    "description": "DAO Proposal manager account reference"
-                },
-                {
-                    "type": "asset",
-                    "name": "dao_asset_reference",
-                    "description": "DAO dao token ref"
-                },
-                {
-                    "type": "asset",
-                    "name": "proposal_asset_reference",
-                    "description": "Proposal token ref"
+                    "type": "uint64",
+                    "name": "dao_asset_id",
+                    "description": "Proposal token id"
                 },
                 {
                     "type": "string",

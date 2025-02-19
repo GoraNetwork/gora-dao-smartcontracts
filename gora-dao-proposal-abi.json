@@ -15,29 +15,19 @@
             "description": "Creates a new Proposal contract! Returns the Proposal contract ID!",
             "args": [
                 {
-                    "type": "application",
-                    "name": "main_app_id",
-                    "description": "GoraNetwork Main App (GoraDao) ID"
-                },
-                {
                     "type": "uint64",
-                    "name": "asset_reference",
-                    "description": "GoraNetwork Main asset (Gora) ID"
-                },
-                {
-                    "type": "uint64",
-                    "name": "asset_reference",
+                    "name": "asset_id",
                     "description": "GoraNetwork Proposal asset ID"
                 },
                 {
                     "type": "address",
-                    "name": "manager_reference",
-                    "description": "GoraDAO member account reference (Proposal manager)"
+                    "name": "proposal_manager",
+                    "description": "GoraDAO Proposal manager account address"
                 },
                 {
                     "type": "address",
-                    "name": "dao_manager_reference",
-                    "description": "GoraDAO manager account reference"
+                    "name": "dao_manager",
+                    "description": "GoraDAO manager account address"
                 },
                 {
                     "type": "string",

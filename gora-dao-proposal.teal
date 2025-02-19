@@ -80,7 +80,7 @@ branch_closeout:
 ///////////////////////////////////////////
 branch_method_router:
 
-	method "create_proposal(application,uint64,uint64,address,address,string,string)address"
+	method "create_proposal(uint64,address,address,string,string)address"
 	txn ApplicationArgs 0
 	==
 	txn ApplicationID
@@ -89,7 +89,7 @@ branch_method_router:
 	&&
 	bnz method_create_proposal
 
-	method "update_proposal(application,uint64,uint64,address,address,string,string)address"
+	method "update_proposal(uint64,address,address,string,string)address"
 	txn ApplicationArgs 0
 	==
 	bnz method_update_proposal
@@ -185,47 +185,47 @@ method_create_proposal:
 	global CurrentApplicationID
 	store 0
 
-	txn ApplicationArgs 1
-	btoi
+	txna Applications 1
+	// btoi
 	store 1
 	byte "dao_app_id"
 	load 1
 	app_global_put
 
 
-	txn ApplicationArgs 2
+	txn ApplicationArgs 1
 	btoi
 	store 2
 	byte "dao_asset_id"
 	load 2
 	app_global_put
 
-	txn ApplicationArgs 3
-	btoi
-	store 3
-	byte "proposal_asset_id"
-	load 3
-	app_global_put
+	// txn ApplicationArgs 2
+	// btoi
+	// store 3
+	// byte "proposal_asset_id"
+	// load 3
+	// app_global_put
 
-	txn ApplicationArgs 4
+	txn ApplicationArgs 2
 	store 4
 	byte "proposal_creator_address"
 	load 4
 	app_global_put
 
-	txn ApplicationArgs 5
+	txn ApplicationArgs 3
 	store 5
 	byte "manager_address"
 	load 5
 	app_global_put
 
-	txn ApplicationArgs 6
+	txn ApplicationArgs 4
 	store 6
 	byte "proposal_title"
 	load 6
 	app_global_put
 
-	txn ApplicationArgs 7
+	txn ApplicationArgs 5
 	store 7
 	byte "proposal_description"
 	load 7

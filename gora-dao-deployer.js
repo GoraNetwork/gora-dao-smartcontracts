@@ -2425,6 +2425,8 @@ const GoraDaoDeployer = class {
         const commonParams = {
             appID: Number(this.goraDaoMainApplicationId),
             sender: addr,
+            appAccounts: [addr],
+            appForeignAssets: [Number(this.goraDaoAsset)],
 
             suggestedParams: params,
             signer: signer,
@@ -2454,10 +2456,9 @@ const GoraDaoDeployer = class {
 
             methodArgs: [
                 tws0,//pay
-                addr,// member account (Proposal manager)
-                Number(this.proposalAsset),// Proposal asset ref
-                Number(this.goraDaoAsset),// DAO asset ref
-                "Proposal_Test",//title
+                // Number(this.proposalAsset),// DAO asset ref
+                Number(this.goraDaoAsset),// DAO asset ID
+                "Proposal Test",//title
                 "This is a test proposal for GoraDAO",//description
                 // 10,//quorum
                 // [2, [100, 100, 52], [80, 80, 60]],//threshold
