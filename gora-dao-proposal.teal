@@ -220,12 +220,14 @@ method_create_proposal:
 	app_global_put
 
 	txn ApplicationArgs 4
+	extract 2 0
 	store 6
 	byte "proposal_title"
 	load 6
 	app_global_put
 
 	txn ApplicationArgs 5
+	extract 2 0
 	store 7
 	byte "proposal_description"
 	load 7
@@ -309,12 +311,14 @@ method_update_proposal:
 	app_global_put
 
 	txn ApplicationArgs 4
+	extract 2 0
 	store 6
 	byte "proposal_title"
 	load 6
 	app_global_put
 
 	txn ApplicationArgs 5
+	extract 2 0
 	store 7
 	byte "proposal_description"
 	load 7
@@ -481,10 +485,12 @@ method_config_proposal:
 	txn ApplicationArgs 13 // proposal_vote_values
 	store 13
 
-	txn ApplicationArgs 14 // proposal_vote_values
+	txn ApplicationArgs 14 // proposal_title
+	extract 2 0
 	store 14
 
-	txn ApplicationArgs 15 // proposal_vote_values
+	txn ApplicationArgs 15 // proposal_description
+	extract 2 0
 	store 15
 
 	// byte "participation_threshold"
