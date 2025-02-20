@@ -2520,6 +2520,9 @@ const GoraDaoDeployer = class {
 
         const commonParams = {
             appID: Number(this.goraDaoMainApplicationId),
+            appAccounts: [addr],
+            appForeignAssets: [Number(this.goraDaoAsset)],
+            appForeignApps: [Number(this.proposalApplicationId)],
             sender: addr,
             suggestedParams: params,
             signer: signer,
@@ -2548,7 +2551,7 @@ const GoraDaoDeployer = class {
             method: method,
             methodArgs: [
                 tws0,//pay
-                Number(this.proposalApplicationId),
+                // Number(this.proposalApplicationId),
                 Number(this.proposalApplicationId),
                 addr,// member account (Proposal manager)
                 Number(this.proposalAsset),// Proposal asset
@@ -2626,7 +2629,7 @@ const GoraDaoDeployer = class {
         const axferProposal = new this.algosdk.Transaction({
             from: proposalAdminAddr,
             to: `${this.goraDaoMainApplicationAddress}`,
-            amount: 10,
+            amount: 1,
             assetIndex: Number(this.goraDaoAsset),
             type: 'axfer',
             ...params
@@ -2688,9 +2691,11 @@ const GoraDaoDeployer = class {
             10,// 10% of total participation
             //14 proposal_allocation (uint64,uint64,uint64)
             // [3, 51, 40000],
-            [10, 30, 60],// The allocation of funds to the proposal
+            // [10, 30, 60],// The allocation of funds to the proposal
             //15 proposal_vote_values uint64
             3,
+            'TEST PROPOSAL RECONFIG',
+            'TEST PROPOSAL RECONFIG DESCRIPTION'
         ]
         const atcProposalConfig = new this.algosdk.AtomicTransactionComposer()
 

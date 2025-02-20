@@ -158,10 +158,10 @@ branch_method_router:
 	==
 	bnz method_proposal_create
 
-	// method "update_proposal(pay,uint64,address,uint64,string,string)uint64"
-	// txn ApplicationArgs 0
-	// ==
-	// bnz method_proposal_update
+	method "update_proposal(pay,uint64,address,uint64,string,string)uint64"
+	txn ApplicationArgs 0
+	==
+	bnz method_proposal_update
 
 	method "config_proposal(pay,axfer)uint64"
 	txn ApplicationArgs 0
@@ -585,7 +585,7 @@ method_proposal_create:
     bz branch_proposal_create_final
     // Check Proposal manager Proposal asset optin
     txna Accounts 0
-    txna Assets 1
+    txna Assets 0
     asset_holding_get AssetBalance
     assert
     pop
@@ -738,146 +738,149 @@ branch_proposal_create_final:
 	b branch_log_return
 
 // Handles ABI method call for contract to contract update of a Proposal contract
-// method_proposal_update:
-//     callsub sub_check_txn_group
+method_proposal_update:
+    callsub sub_check_txn_group
 
-// 	// Checking Transaction group
-//     // global GroupSize
-//     // int 2
-//     // ==
-//     // assert
-//     // // Checking the pay txn at index 0 of gtxn
-//     // gtxn 0 RekeyTo
-//     // global ZeroAddress
-//     // ==
-//     // assert
-//     // gtxn 0 CloseRemainderTo
-//     // global ZeroAddress
-//     // ==
-//     // assert
-//     // gtxn 0 AssetCloseTo
-//     // global ZeroAddress
-//     // ==
-//     // assert
-//     // gtxn 0 TypeEnum
-//     // int pay
-//     // ==
-//     // assert
-//     // gtxn 0 Fee
-//     // global MinTxnFee
-//     // >=
-//     // assert
-//     // gtxn 0 Amount
-//     // global MinTxnFee
-//     // >=
-//     // assert
-//     // Checking if the receiver of pay txn is the same as the current application address
-//     txn GroupIndex
-//     int 1
-//     -
-//     dup
-//     gtxns Receiver
-//     global CurrentApplicationAddress
-//     ==
-//     assert
+	// Checking Transaction group
+    // global GroupSize
+    // int 2
+    // ==
+    // assert
+    // // Checking the pay txn at index 0 of gtxn
+    // gtxn 0 RekeyTo
+    // global ZeroAddress
+    // ==
+    // assert
+    // gtxn 0 CloseRemainderTo
+    // global ZeroAddress
+    // ==
+    // assert
+    // gtxn 0 AssetCloseTo
+    // global ZeroAddress
+    // ==
+    // assert
+    // gtxn 0 TypeEnum
+    // int pay
+    // ==
+    // assert
+    // gtxn 0 Fee
+    // global MinTxnFee
+    // >=
+    // assert
+    // gtxn 0 Amount
+    // global MinTxnFee
+    // >=
+    // assert
+    // Checking if the receiver of pay txn is the same as the current application address
+    txn GroupIndex
+    int 1
+    -
+    dup
+    gtxns Receiver
+    global CurrentApplicationAddress
+    ==
+    assert
 
-//     gtxns Amount
-//     global MinTxnFee
-//     int 2
-//     *
-//     >=
-//     assert
+    gtxns Amount
+    global MinTxnFee
+    int 2
+    *
+    >=
+    assert
 	
-//     // Process Transaction args
-// 	// Proposal app id
-//     txn ApplicationArgs 2
-// 	btoi
-//     store 0
-//     // Proposal manager address
-//     txn ApplicationArgs 3
-//     store 1
-//     // Proposal asset id
-//     txn ApplicationArgs 4
-//     store 2
-//     // Proposal title
-//     txn ApplicationArgs 5
-//     store 3
-//     // Proposal description
-//     txn ApplicationArgs 6
-//     store 4
+    // Process Transaction args
+	// Proposal app id
+    txn ApplicationArgs 1
+	btoi
+    store 0
+    // Proposal manager address
+    txn ApplicationArgs 2
+    store 1
+    // Proposal asset id
+    txn ApplicationArgs 3
+    store 2
+    // Proposal title
+    txn ApplicationArgs 4
+    store 3
+    // Proposal description
+    txn ApplicationArgs 5
+    store 4
 
-//     // Inner transaction to create the Proposal smart contract
-//     itxn_begin
-//     // itxn Type to "appl"
-//     int appl
-//     itxn_field TypeEnum
-//     // itxn OnCompletion
-//     int UpdateApplication
-//     itxn_field OnCompletion
-// 	// itxn ApplicationID
-//     load 0
-//     itxn_field ApplicationID
-//     // itxn 
-//     txn Sender
-//     itxn_field Note
-//     method "update_proposal(application,uint64,uint64,address,address,string,string)address"
-//     itxn_field ApplicationArgs
-//     byte "proposal_app"
-//     box_get
-//     bz branch_error
-//     dup
-//     len
-//     int 2
-//     swap
-//     substring3
-//     itxn_field ApprovalProgram
+    // Inner transaction to create the Proposal smart contract
+    itxn_begin
+    // itxn Type to "appl"
+    int appl
+    itxn_field TypeEnum
+    // itxn OnCompletion
+    int UpdateApplication
+    itxn_field OnCompletion
+	// itxn ApplicationID
+    load 0
+    itxn_field ApplicationID
+    // itxn 
+    txn Sender
+    itxn_field Note
+    method "update_proposal(uint64,address,uint64,string,string)address"
+    itxn_field ApplicationArgs
+    byte "proposal_app"
+    box_get
+    bz branch_error
+    dup
+    len
+    int 2
+    swap
+    substring3
+    itxn_field ApprovalProgram
     
-//     byte "proposal_clr"
-//     box_get
-//     bz branch_error
-//     dup
-//     len
-//     int 2
-//     swap
-//     substring3
-//     itxn_field ClearStateProgram
-//     global CurrentApplicationID
-//     itob
-//     itxn_field ApplicationArgs
-//     byte "dao_asset_id"
-//     app_global_get
-// 	itob
-//     itxn_field ApplicationArgs
-// 	// Proposal asset id
-//     load 2
-//     itxn_field ApplicationArgs
-// 	// Proposal manager address
-//     load 1
-//     itxn_field ApplicationArgs
-//     byte "manager_address"
-// 	app_global_get
-//     itxn_field ApplicationArgs
-// 	// Proposal title
-//     load 3
-//     itxn_field ApplicationArgs
-// 	// Proposal description
-//     load 4
-//     itxn_field ApplicationArgs
+    byte "proposal_clr"
+    box_get
+    bz branch_error
+    dup
+    len
+    int 2
+    swap
+    substring3
+    itxn_field ClearStateProgram
+    global CurrentApplicationID
+    itob
+    itxn_field ApplicationArgs
+     // Proposal manager address
+    load 1
+    itxn_field ApplicationArgs
+    // Proposal asset id
+    byte "dao_asset_id"
+    app_global_get
+	itob
+    itxn_field ApplicationArgs
+   
+
+    // load 2
+    // itxn_field ApplicationArgs
+	
+    // byte "manager_address"
+	// app_global_get
+    // itxn_field ApplicationArgs
+	// Proposal title
+    load 3
+    itxn_field ApplicationArgs
+	// Proposal description
+    load 4
+    itxn_field ApplicationArgs
     
     
-//     itxn_submit
-//     //itxn TxID
-//     //log
-//     //itxn LastLog
-// 	//extract 4 0
-//     //log
+    itxn_submit
+    //itxn TxID
+    //log
+    //itxn LastLog
+	//extract 4 0
+    //log
 
 
-// 	byte 0x151f7c75
-// 	load 0
-// 	itob
-// 	concat
-// 	b branch_log_return
+	byte 0x151f7c75
+	load 0
+	itob
+	concat
+	b branch_log_return
 
 method_proposal_config:
 	// Checking Transaction group
@@ -980,7 +983,7 @@ method_proposal_config:
     //log
 
     // Proposal asset id
-    txna Assets 1
+    txna Assets 0
     //btoi
     store 4
     load 4
@@ -1005,7 +1008,7 @@ method_proposal_config:
     bz branch_finalize_config_proposal
     // Check Proposal manager Proposal asset optin
     txna Accounts 0
-    txna Assets 1
+    txna Assets 0
     asset_holding_get AssetBalance
     assert
     pop
@@ -1021,7 +1024,7 @@ branch_finalize_config_proposal:
 	itxn_field AssetReceiver
 	int 0
 	itxn_field AssetAmount
-	txna Assets 1
+	txna Assets 0
 	itxn_field XferAsset
 	itxn_submit
 	itxn TxID
@@ -1229,7 +1232,7 @@ method_proposal_withdraw_participate:
     load 4
     +
 	itxn_field AssetAmount
-    txna Assets 1
+    txna Assets 0
     itxn_field XferAsset
 	itxn_submit
 	//itxn TxID

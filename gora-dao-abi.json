@@ -226,13 +226,8 @@
                     "description": "Payment from Proposer to DAO for Proposal fees and initiation MBRs!"
                 },
                 {
-                    "type": "application",
-                    "name": "proposal_app_ref",
-                    "description": "Proposal application  to be referenced"
-                },
-                {
                     "type": "uint64",
-                    "name": "proposal_app_rid",
+                    "name": "proposal_app_id",
                     "description": "Proposal application  ID to be updated"
                 },
                 {

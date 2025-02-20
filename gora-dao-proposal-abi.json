@@ -190,14 +190,19 @@
                     "description": "GoraDAO Proposal threshold to conclude vote! "
                 },
                 {
-                    "type": "(uint64,uint64,uint64)",
-                    "name": "proposal_allocation",
-                    "description": "GoraDAO Proposal allocation program! "
-                },
-                {
                     "type": "uint64",
                     "name": "proposal_vote_values",
                     "description": "GoraDAO Proposal number of vote subjects! "
+                },
+                {
+                    "type": "string",
+                    "name": "proposal_title",
+                    "description": "DAO Proposal title"
+                },
+                {
+                    "type": "string",
+                    "name": "proposal_description",
+                    "description": "DAO Proposal description"
                 }
              
             ],

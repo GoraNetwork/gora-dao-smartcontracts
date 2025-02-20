@@ -89,13 +89,13 @@ branch_method_router:
 	&&
 	bnz method_create_proposal
 
-	method "update_proposal(uint64,address,address,string,string)address"
+	method "update_proposal(uint64,address,uint64,string,string)address"
 	txn ApplicationArgs 0
 	==
 	bnz method_update_proposal
 
 	// method "config_proposal(pay,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,(uint64,uint64,uint64),(uint64,uint64,uint64),(uint64,uint64,uint64),uint64)uint64"
-	method "config_proposal(pay,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,(uint64,uint64,uint64),uint64)uint64"
+	method "config_proposal(pay,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,string,string)uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_config_proposal
@@ -279,12 +279,12 @@ method_update_proposal:
 	load 1
 	app_global_put
 
-	txn ApplicationArgs 2
-	btoi
-	store 2
-	byte "dao_asset_id"
-	load 2
-	app_global_put
+	// txn ApplicationArgs 2
+	// btoi
+	// store 2
+	// byte "dao_asset_id"
+	// load 2
+	// app_global_put
 
 	txn ApplicationArgs 3
 	btoi
@@ -292,26 +292,29 @@ method_update_proposal:
 	byte "proposal_asset_id"
 	load 3
 	app_global_put
+	byte "dao_asset_id"
+	load 3
+	app_global_put
 
-	txn ApplicationArgs 4
+	txn ApplicationArgs 2
 	store 4
 	byte "proposal_creator_address"
 	load 4
 	app_global_put
 
-	txn ApplicationArgs 5
+	txn ApplicationArgs 2
 	store 5
 	byte "manager_address"
 	load 5
 	app_global_put
 
-	txn ApplicationArgs 6
+	txn ApplicationArgs 4
 	store 6
 	byte "proposal_title"
 	load 6
 	app_global_put
 
-	txn ApplicationArgs 7
+	txn ApplicationArgs 5
 	store 7
 	byte "proposal_description"
 	load 7
@@ -472,11 +475,17 @@ method_config_proposal:
 	txn ApplicationArgs 12 // proposal_threshold
 	store 12
 
-	txn ApplicationArgs 13 // proposal_allocations
+	// txn ApplicationArgs 13 // proposal_allocations
+	// store 13
+
+	txn ApplicationArgs 13 // proposal_vote_values
 	store 13
 
 	txn ApplicationArgs 14 // proposal_vote_values
 	store 14
+
+	txn ApplicationArgs 15 // proposal_vote_values
+	store 15
 
 	// byte "participation_threshold"
 	// box_del
@@ -490,13 +499,21 @@ method_config_proposal:
 	load 12
 	box_put
 
-	byte "proposal_allocation"
-	load 13
-	box_put
+	// byte "proposal_allocation"
+	// load 13
+	// box_put
 
 	byte "proposal_vote_values"
-	load 14
+	load 13
 	btoi
+	app_global_put
+
+	byte "proposal_title"
+	load 14
+	app_global_put
+
+	byte "proposal_description"
+	load 15
 	app_global_put
 
 
@@ -509,7 +526,7 @@ method_config_proposal:
 	itxn_field AssetReceiver
 	int 0
 	itxn_field AssetAmount
-	txna Assets 1
+	txna Assets 0
 	itxn_field XferAsset
 	itxn_submit
 	itxn TxID
@@ -640,7 +657,7 @@ method_proposal_participate:
 
     byte "proposal_asset_id"
     app_global_get
-    txna Assets 1
+    txna Assets 0
     ==
     assert
 
@@ -691,9 +708,9 @@ method_proposal_withdraw_participate:
     store 0
 
 	// Participation Withdrawals are closed after proposal is activated for voting
-	// byte "proposal_is_activated"
-	// app_global_get
-	// bnz branch_error
+	byte "proposal_is_activated"
+	app_global_get
+	bnz branch_error
 
 	byte "participation_count"
 	app_global_get
@@ -825,7 +842,9 @@ branch_log_return:
 	return
 
 branch_error:
+	byte "Error Method"
 	err
 branch_error_activation:
+	byte "Error Activation"
 	err
 
