@@ -32,6 +32,7 @@
     "staking_is_unstaked": true,
     "staking_asa_distributed": true,
     "dao_proposal_deployed": true,
+    "dao_proposal_configured": true,
     "proposal_is_activated": false,
     "proposal_asa_distributed": true,
     "participated_to_proposal": false,
@@ -49,8 +50,7 @@
     "indexer_remote_token": "",
     "indexer_remote_port": "",
     "algo_dispenser": "https://dispenser.testnet.aws.algodev.network/?account=",
-    "verbose": false,
-    "dao_proposal_configured": true
+    "verbose": false
   },
   "owner": "LP6QRRBRDTDSP4HF7CSPWJV4AG4QWE437OYHGW7K5Y7DETKCSK5H3HCA7Q",
   "deployer": {
