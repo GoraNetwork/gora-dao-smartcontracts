@@ -2694,7 +2694,7 @@ const GoraDaoDeployer = class {
         }
         this.config['gora_dao']['dao_proposal_configured'] = true;
         await this.saveConfigToFile(this.config)
-        this.logger.info(`GoraDAO Proposal Application ID: ${Number(res)} written to config file!`);
+        this.logger.info(`GoraDAO Config written to config file!`);
     }
     async activateProposalContract() {
         let proposalAdminAddr = this.goraDaoProposalAdminAccount.addr;
