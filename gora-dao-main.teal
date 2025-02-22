@@ -614,7 +614,7 @@ branch_proposal_create_final:
     // itxn 
     int 15
     itxn_field GlobalNumByteSlice
-    int 20
+    int 25
     itxn_field GlobalNumUint
     int 0
     itxn_field LocalNumUint
