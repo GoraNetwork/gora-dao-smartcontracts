@@ -51,11 +51,13 @@ int OptIn
 bnz branch_error
 
 // Checks the number of application args , if 0 then no method it is
-txn NumAppArgs
-int 0
-==
-bz branch_method_router
-b branch_error
+// txn NumAppArgs
+// int 0
+// ==
+// bz branch_method_router
+// b branch_error
+
+b branch_method_router
 
 ///////////////////////////////////////////
 
@@ -105,7 +107,7 @@ branch_method_router:
 	==
 	bnz method_update_manager_address
 
-	method "activate_proposal(pay,axfer)string"
+	method "activate_proposal(pay,pay,axfer)string"
 	txn ApplicationArgs 0
 	==
 	bnz method_activate_proposal
@@ -380,8 +382,8 @@ method_activate_proposal:
 	app_global_get
 	store 1
 
-	global CreatorAddress
-	store 2
+	
+	
 	
     gtxn 0 RekeyTo
     global ZeroAddress
@@ -394,7 +396,7 @@ method_activate_proposal:
     global ZeroAddress
     ==
 	&&
-    assert
+    bz branch_error_rekeyto
 
     gtxn 0 CloseRemainderTo
     global ZeroAddress
@@ -407,7 +409,7 @@ method_activate_proposal:
     global ZeroAddress
     ==
 	&&
-    assert
+    bz branch_error_closeto
 
     gtxn 0 TypeEnum
     int pay
@@ -420,7 +422,7 @@ method_activate_proposal:
     int axfer
     ==
 	&&
-    assert
+    bz branch_error_typeenum
 
 	
     gtxn 0 Fee
@@ -430,25 +432,26 @@ method_activate_proposal:
     global MinTxnFee
     >=
     &&
-	gtxn 0 Fee
+
+	gtxn 2 Fee
     global MinTxnFee
     >=
 	&&
-    assert
+    bz branch_error_txnfee
 
     
   	gtxn 0 Receiver
 	global CurrentApplicationAddress
     ==
     gtxn 1 Receiver
-	load 2
+	global CreatorAddress
     ==
 	&&
 	gtxn 2 AssetReceiver
-	load 2
+	global CreatorAddress
     ==
 	&&
-    assert
+    bz branch_error_receiver
 
 	// Checking the amount for pay MBR (box MBR,...)
     gtxn 0 Amount
@@ -968,5 +971,20 @@ branch_error_not_active:
 	err
 branch_txn_error:
 	byte "Error TXN Check"
+	err
+branch_error_txnfee:
+	byte "Error TXN Fee"
+	err
+branch_error_rekeyto:
+	byte "Error RekeyTo"
+	err
+branch_error_closeto:
+	byte "Error CloseRemainderTo"
+	err
+branch_error_typeenum:
+	byte "Error TypeEnum"
+	err
+branch_error_receiver:
+	byte "Error Receiver"
 	err
 

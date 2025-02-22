@@ -266,7 +266,7 @@
                 }
             ],
             "returns": {
-                "type": "uint64"
+                "type": "string"
             }
         },
       

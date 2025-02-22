@@ -2722,21 +2722,21 @@ const GoraDaoDeployer = class {
 
         const ptxnProposal = new this.algosdk.Transaction({
             from: proposalAdminAddr,
-            to: this.proposalApplicationAddress,
+            to: this.goraDaoMainApplicationAddress,
             amount: 3000,
             type: 'pay',
             ...params
         })
         const ptxnDao = new this.algosdk.Transaction({
             from: proposalAdminAddr,
-            to: this.goraDaoMainApplicationAddress,
+            to: this.proposalApplicationAddress,
             amount: 500000,
             type: 'pay',
             ...params
         })
         const axferDao = new this.algosdk.Transaction({
             from: proposalAdminAddr,
-            to: `${this.goraDaoMainApplicationAddress}`,
+            to: this.goraDaoMainApplicationAddress,
             amount: 1,
             assetIndex: Number(this.goraDaoAsset),
             type: 'axfer',
@@ -2766,7 +2766,7 @@ const GoraDaoDeployer = class {
             let confirmedRound = proposalActivateResults.confirmedRound
 
 
-            let returnedResults = this.algosdk.decodeUint64(proposalActivateResults.methodResults[idx].rawReturnValue, "mixed")
+            let returnedResults = Buffer.from(proposalActivateResults.methodResults[idx].rawReturnValue, "base64").toString()
             this.logger.info("GoraDAO Proposal Contract ABI Exec result = %s", returnedResults);
             await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
