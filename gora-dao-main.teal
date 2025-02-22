@@ -163,7 +163,7 @@ branch_method_router:
 	==
 	bnz method_proposal_update
 
-	method "config_proposal(pay,axfer)uint64"
+	method "config_proposal()uint64"
 	txn ApplicationArgs 0
 	==
 	bnz method_proposal_config
@@ -280,11 +280,13 @@ method_config_dao:
 	load 2
 	app_global_put
 	
+    byte "proposal_fee_stake"
+    app_global_del
 
     txn ApplicationArgs 2
     btoi
 	store 3
-	byte "proposal_fee_stake"
+	byte "proposal_fee_token"
     load 3
     app_global_put
 
@@ -302,10 +304,13 @@ method_config_dao:
     load 6
     app_global_put
 	
+    byte "min_subscription_stake"
+    app_global_del
+
     txn ApplicationArgs 5
     btoi
 	store 7
-	byte "min_subscription_stake"
+	byte "min_subscription_token"
     load 7
     app_global_put
 
@@ -352,7 +357,7 @@ method_subscribe_dao:
     // assert
 
     gtxn 0 Amount
-    byte "min_subscription_stake"
+    byte "min_subscription_token"
     app_global_get
     >=
     assert
@@ -375,7 +380,7 @@ method_subscribe_dao:
     txna Assets 0 // NFT asset id
     asset_holding_get AssetBalance // Get NFT balance
     assert // 0 Balance fails the transaction
-    byte "min_subscription_stake"
+    byte "min_subscription_token"
     app_global_get
     >=
     assert
@@ -885,84 +890,11 @@ method_proposal_update:
 method_proposal_config:
 	// Checking Transaction group
     global GroupSize
-    int 5
+    // int 5
+    int 3
     ==
     assert
-    // Checking the pay txn at index 0 of gtxn
-    gtxn 0 RekeyTo
-    global ZeroAddress
-    ==
-    gtxn 2 RekeyTo
-    global ZeroAddress
-    ==
-    &&
-    assert
-
-    gtxn 0 CloseRemainderTo
-    global ZeroAddress
-    ==
-    assert
-
-    gtxn 2 CloseRemainderTo
-    global ZeroAddress
-    ==
-
-    assert
-
-  
-    gtxn 3 AssetCloseTo
-    global ZeroAddress
-    ==
-    assert
-
-    gtxn 0 TypeEnum
-    int pay
-    ==
-    gtxn 2 TypeEnum
-    int pay
-    ==
-    &&
-    assert
-
-    gtxn 0 Fee
-    global MinTxnFee
-    >=
-    gtxn 2 Fee
-    global MinTxnFee
-    >=
-    &&
-    assert
-
- 
-
-    // Checking if the receiver of pay txn is the same as the current application address
-  
-    gtxn 2 Receiver
-    global CurrentApplicationAddress
-    ==
-    assert
-
-    gtxn 3 AssetReceiver
-    global CurrentApplicationAddress
-    ==
-    assert
-
-    gtxn 0 Amount
-    int 3000
-    >=
-    assert
-
-    gtxn 2 Amount
-    byte "proposal_fee_algo"
-    app_global_get
-    >=
-    assert
-	
-    gtxn 3 AssetAmount
-    byte "proposal_fee_stake"
-    app_global_get
-    >=
-    assert
+   // Previously here was payment transactions
 
     txna Accounts 0
     store 1

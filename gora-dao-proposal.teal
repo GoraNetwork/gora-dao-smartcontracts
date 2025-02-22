@@ -105,7 +105,7 @@ branch_method_router:
 	==
 	bnz method_update_manager_address
 
-	method "activate_proposal(application,byte[],byte[])string"
+	method "activate_proposal(pay,axfer)string"
 	txn ApplicationArgs 0
 	==
 	bnz method_activate_proposal
@@ -152,7 +152,7 @@ sub_check_txn:
 	txn TypeEnum
 	int appl
 	==
-	bz branch_error
+	bz branch_txn_error
 
 	// Checking transaction fee
 	txn Fee
@@ -163,7 +163,6 @@ sub_check_txn:
 
 // Checks owner address authentication
 sub_check_owner_auth:
-
 	txn Sender
 	global CreatorAddress
 	==
@@ -364,11 +363,112 @@ method_update_manager_address:
 	b branch_log_return
 
 method_activate_proposal:
-	callsub sub_check_manager_auth
-	
-	byte "proposal_activation_allowed"
+	byte "proposal_is_activated"
 	app_global_get
-	bz branch_error_activation
+	bnz branch_error_active
+
+	callsub sub_check_manager_auth
+
+	txn Sender
+	store 0
+
+	byte "dao_app_id"
+	app_global_get
+	store 1
+
+	global CreatorAddress
+	store 2
+	
+    gtxn 0 RekeyTo
+    global ZeroAddress
+    ==
+    gtxn 1 RekeyTo
+    global ZeroAddress
+    ==
+    &&
+	gtxn 2 RekeyTo
+    global ZeroAddress
+    ==
+	&&
+    assert
+
+    gtxn 0 CloseRemainderTo
+    global ZeroAddress
+    ==
+    gtxn 1 CloseRemainderTo
+    global ZeroAddress
+    ==
+	&&
+	gtxn 2 AssetCloseTo
+    global ZeroAddress
+    ==
+	&&
+    assert
+
+    gtxn 0 TypeEnum
+    int pay
+    ==
+    gtxn 1 TypeEnum
+    int pay
+    ==
+    &&
+	gtxn 2 TypeEnum
+    int axfer
+    ==
+	&&
+    assert
+
+	
+    gtxn 0 Fee
+    global MinTxnFee
+    >=
+    gtxn 1 Fee
+    global MinTxnFee
+    >=
+    &&
+	gtxn 0 Fee
+    global MinTxnFee
+    >=
+	&&
+    assert
+
+    
+  	gtxn 0 Receiver
+	global CurrentApplicationAddress
+    ==
+    gtxn 1 Receiver
+	load 2
+    ==
+	&&
+	gtxn 2 AssetReceiver
+	load 2
+    ==
+	&&
+    assert
+
+	// Checking the amount for pay MBR (box MBR,...)
+    gtxn 0 Amount
+    int 3000
+    >=
+    assert
+
+    gtxn 1 Amount
+	load 1
+    byte "proposal_fee_algo"
+    app_global_get_ex
+    >=
+    assert
+	
+    gtxn 2 AssetAmount
+	load 1
+    byte "proposal_fee_token"
+    app_global_get_ex
+    >=
+    assert
+
+	byte "proposal_is_activated"
+	int 1
+	app_global_put
 
 	byte 0x151f7c75
 	byte "Proposal is activated!"
@@ -377,21 +477,28 @@ method_activate_proposal:
 
 // Handles configuration of Proposal
 method_config_proposal:
+	byte "proposal_is_activated"
+	app_global_get
+	bnz branch_error_active
+	callsub sub_check_manager_auth
+	// gtxn 0 TypeEnum
+	// int pay
+	// ==
+	// bz branch_error
 
-	gtxn 0 TypeEnum
-	int pay
-	==
-	bz branch_error
+	// gtxn 0 Amount
+	// int 3000
+	// >=
+	// assert
 
-	gtxn 0 Amount
-	int 3000
-	>=
-	assert
+	// gtxn 0 Receiver
+	// global CurrentApplicationAddress
+	// ==
+	// assert
 
-	gtxn 0 Receiver
-	global CurrentApplicationAddress
-	==
-	assert
+	byte "voting_is_activated"
+	int 0
+	app_global_put
 
 	txn ApplicationArgs 1 //proposal_min_participation_algo
 	store 1
@@ -493,17 +600,15 @@ method_config_proposal:
 	extract 2 0
 	store 15
 
-	// byte "participation_threshold"
-	// box_del
+	
 	byte "participation_threshold"
 	load 11
-	box_put
+	app_global_put
 
-	// byte "vote_threshold"
-	// box_del
+	
 	byte "vote_threshold"
 	load 12
-	box_put
+	app_global_put
 
 	// byte "proposal_allocation"
 	// load 13
@@ -698,7 +803,7 @@ method_proposal_participate:
 	b branch_log_return
 
 branch_activate_and_participate:
-	byte "proposal_is_activated"
+	byte "voting_is_activated"
 	int 1
 	app_global_put
 	byte 0x151f7c75
@@ -749,7 +854,7 @@ method_proposal_vote:
 
 	byte "proposal_is_activated"
 	app_global_get
-	bz branch_error_activation
+	bz branch_error_not_active
 
 	// The vote value
 	txn ApplicationArgs 1
@@ -848,9 +953,15 @@ branch_log_return:
 	return
 
 branch_error:
-	byte "Error Method"
+	byte "Error Method Routing"
 	err
-branch_error_activation:
-	byte "Error Activation"
+branch_error_active:
+	byte "Error Already Activated"
+	err
+branch_error_not_active:
+	byte "Error Not Activated"
+	err
+branch_txn_error:
+	byte "Error TXN Check"
 	err
 

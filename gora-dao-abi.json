@@ -273,18 +273,7 @@
         {
             "name": "config_proposal",
             "description": "Configures a Proposal contract! Returns the Proposal contract ID!",
-            "args": [
-                {
-                    "type": "pay",
-                    "name": "payment_transaction",
-                    "description": "Payment from Proposer to DAO for fees and Proposal MBRs!"
-                },
-                {
-                    "type": "axfer",
-                    "name": "dao_asset_transfer_transaction",
-                    "description": "Asset transfer transaction to deposit DAO token (E.g. Gora)!"
-                }
-            ],
+            "args": [],
             "boxes": [
                 {
                     "name": "dao_manager_reference",
