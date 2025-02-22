@@ -134,6 +134,7 @@ const GoraDaoDeployer = class {
             if (this.config.deployer['create_proposal_contracts']) await this.createProposalContract();
             if (this.config.deployer['update_proposal_contracts']) await this.updateProposalContract();
             if (this.config.deployer['config_proposal_contracts']) await this.configureProposalContract();
+            if (this.config.deployer['activate_proposal_contracts']) await this.activateProposalContract();
 
             if (this.config.deployer['activate_proposal_contracts']) await this.activateProposalContract();
             if (this.config.deployer['participate_proposal_contracts']) await this.participateProposalContract();
@@ -2629,7 +2630,7 @@ const GoraDaoDeployer = class {
 
         //this.goraDaoMainApplicationId,
         const argsProposal = [
-        
+
             //2 proposal_min_participation_algo
             10000,
             //3 proposal_min_participation_token
@@ -2691,6 +2692,9 @@ const GoraDaoDeployer = class {
             await this.printTransactionLogsFromIndexer(txid, confirmedRound)
 
         }
+        this.config['gora_dao']['dao_proposal_configured'] = true;
+        await this.saveConfigToFile(this.config)
+        this.logger.info(`GoraDAO Proposal Application ID: ${Number(res)} written to config file!`);
     }
     async activateProposalContract() {
         let proposalAdminAddr = this.goraDaoProposalAdminAccount.addr;
@@ -2712,10 +2716,10 @@ const GoraDaoDeployer = class {
             suggestedParams: params,
             signer: signer,
             boxes: [
-                 { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
+                { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
             ],
         }
-     
+
         const ptxnProposal = new this.algosdk.Transaction({
             from: proposalAdminAddr,
             to: this.proposalApplicationAddress,
@@ -2995,7 +2999,7 @@ const GoraDaoDeployer = class {
         await this.saveConfigToFile(this.config)
         this.logger.info("All 5 GoraDAO members have withdrawn participation from the proposal!");
     }
-    
+
     // This method is used to vote on a proposal
     async voteProposalContract(userIndex, vote) {
         let addr = this[`goraDaoUserAccount${userIndex}`].addr;
