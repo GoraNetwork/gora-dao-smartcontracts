@@ -212,10 +212,14 @@ method_create_proposal:
 	load 4
 	app_global_put
 
-	txn ApplicationArgs 3
+	txn ApplicationArgs 2
 	store 5
 	byte "manager_address"
 	load 5
+	app_global_put
+
+	byte "dao_manager_address"
+	txn ApplicationArgs 3
 	app_global_put
 
 	txn ApplicationArgs 4
@@ -480,6 +484,7 @@ method_config_proposal:
 	byte "proposal_is_activated"
 	app_global_get
 	bnz branch_error_active
+
 	callsub sub_check_manager_auth
 	// gtxn 0 TypeEnum
 	// int pay
