@@ -891,7 +891,7 @@ method_proposal_config:
 	// Checking Transaction group
     global GroupSize
     // int 5
-    int 3
+    int 2
     ==
     assert
    // Previously here was payment transactions
