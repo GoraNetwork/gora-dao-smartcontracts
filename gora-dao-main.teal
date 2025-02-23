@@ -1304,7 +1304,8 @@ method_proposal_vote:
     //pop
 
     // Check proposer subscription
-    load 1
+    // load 1
+    txn Sender
     box_get
     assert
     pop
