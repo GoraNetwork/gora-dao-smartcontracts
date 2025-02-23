@@ -2722,14 +2722,14 @@ const GoraDaoDeployer = class {
 
         const ptxnProposal = new this.algosdk.Transaction({
             from: proposalAdminAddr,
-            to: this.goraDaoMainApplicationAddress,
+            to: this.proposalApplicationAddress,
             amount: 3000,
             type: 'pay',
             ...params
         })
         const ptxnDao = new this.algosdk.Transaction({
             from: proposalAdminAddr,
-            to: this.proposalApplicationAddress,
+            to: this.goraDaoMainApplicationAddress,
             amount: 500000,
             type: 'pay',
             ...params

@@ -359,8 +359,9 @@ method_update_proposal:
 method_update_manager_address:
 	callsub sub_check_manager_auth
 
-	txn ApplicationArgs 1
 	byte "manager_address"
+	txn ApplicationArgs 1
+	
 	app_global_put
 
 	byte 0x151f7c75
@@ -441,10 +442,10 @@ method_activate_proposal:
 
     
   	gtxn 0 Receiver
-	global CurrentApplicationAddress
+	global CreatorAddress
     ==
     gtxn 1 Receiver
-	global CreatorAddress
+	global CurrentApplicationAddress
     ==
 	&&
 	gtxn 2 AssetReceiver
@@ -588,17 +589,29 @@ method_config_proposal:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 11 // proposal_participation
+	txn ApplicationArgs 11 // proposal_participation_threshold
 	store 11
+	byte "participation_threshold"
+	load 11
+	btoi
+	app_global_put
 
-	txn ApplicationArgs 12 // proposal_threshold
+	txn ApplicationArgs 12 // proposal_vote_threshold
 	store 12
+	byte "vote_threshold"
+	load 12
+	btoi
+	app_global_put
 
 	// txn ApplicationArgs 13 // proposal_allocations
 	// store 13
 
 	txn ApplicationArgs 13 // proposal_vote_values
 	store 13
+	byte "proposal_vote_values"
+	load 13
+	btoi
+	app_global_put
 
 	txn ApplicationArgs 14 // proposal_title
 	extract 2 0
@@ -607,25 +620,6 @@ method_config_proposal:
 	txn ApplicationArgs 15 // proposal_description
 	extract 2 0
 	store 15
-
-	
-	byte "participation_threshold"
-	load 11
-	app_global_put
-
-	
-	byte "vote_threshold"
-	load 12
-	app_global_put
-
-	// byte "proposal_allocation"
-	// load 13
-	// box_put
-
-	byte "proposal_vote_values"
-	load 13
-	btoi
-	app_global_put
 
 	byte "proposal_title"
 	load 14
