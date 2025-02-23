@@ -182,6 +182,7 @@ sub_check_manager_auth:
 
 
 method_create_proposal:
+	callsub sub_check_owner_auth
 
 	global CurrentApplicationID
 	store 0
@@ -270,84 +271,83 @@ method_create_proposal:
 	b branch_log_return
 
 method_update_proposal:
-	//byte "proposal_is_activated"
-	//app_global_get
-	//int 1
-	//!=
-	//assert
+	callsub sub_check_owner_auth
+	byte "proposal_is_activated"
+	app_global_get
+	int 1
+	!=
+	assert
+	byte "voting_is_activated"
+	app_global_get
+	int 1
+	!=
+	assert
 
-	global CurrentApplicationID
-	store 0
+	// global CurrentApplicationID
+	// store 0
 
-	txn ApplicationArgs 1
-	btoi
-	store 1
-	byte "dao_app_id"
-	load 1
-	app_global_put
-
-	// txn ApplicationArgs 2
+	// txn ApplicationArgs 1
 	// btoi
-	// store 2
-	// byte "dao_asset_id"
-	// load 2
+	// store 1
+	// byte "dao_app_id"
+	// load 1
 	// app_global_put
 
-	txn ApplicationArgs 3
-	btoi
-	store 3
-	byte "proposal_asset_id"
-	load 3
-	app_global_put
-	byte "dao_asset_id"
-	load 3
-	app_global_put
+	// txn ApplicationArgs 3
+	// btoi
+	// store 3
+	// byte "proposal_asset_id"
+	// load 3
+	// app_global_put
+	// byte "dao_asset_id"
+	// load 3
+	// app_global_put
 
-	txn ApplicationArgs 2
-	store 4
-	byte "proposal_creator_address"
-	load 4
-	app_global_put
+	// txn ApplicationArgs 2
+	// store 4
+	// byte "proposal_creator_address"
+	// load 4
+	// app_global_put
 
-	txn ApplicationArgs 2
-	store 5
-	byte "manager_address"
-	load 5
-	app_global_put
+	// txn ApplicationArgs 2
+	// store 5
+	// byte "manager_address"
+	// load 5
+	// app_global_put
 
-	txn ApplicationArgs 4
-	extract 2 0
-	store 6
-	byte "proposal_title"
-	load 6
-	app_global_put
+	// txn ApplicationArgs 4
+	// extract 2 0
+	// store 6
+	// byte "proposal_title"
+	// load 6
+	// app_global_put
 
-	txn ApplicationArgs 5
-	extract 2 0
-	store 7
-	byte "proposal_description"
-	load 7
-	app_global_put
+	// txn ApplicationArgs 5
+	// extract 2 0
+	// store 7
+	// byte "proposal_description"
+	// load 7
+	// app_global_put
 
-	byte "participation_count"
-	int 0
-	app_global_put
+	// byte "participation_count"
+	// int 0
+	// app_global_put
 
-	byte "vote_count"
-	int 0
-	app_global_put
+	// byte "vote_count"
+	// int 0
+	// app_global_put
 
-	byte "proposal_yays"
-	int 0
-	app_global_put
+	// byte "proposal_yays"
+	// int 0
+	// app_global_put
 
-	byte "proposal_nays"
-	int 0
-	app_global_put
+	// byte "proposal_nays"
+	// int 0
+	// app_global_put
 
-	byte "proposal_abs"
-	int 0
-	app_global_put
+	// byte "proposal_abs"
+	// int 0
+	// app_global_put
 
 	
 
@@ -397,7 +397,7 @@ method_activate_proposal:
     global ZeroAddress
     ==
 	&&
-    bz branch_error_rekeyto
+    bz branch_txn_error
 
     gtxn 0 CloseRemainderTo
     global ZeroAddress
@@ -410,7 +410,7 @@ method_activate_proposal:
     global ZeroAddress
     ==
 	&&
-    bz branch_error_closeto
+    bz branch_txn_error
 
     gtxn 0 TypeEnum
     int pay
@@ -423,7 +423,7 @@ method_activate_proposal:
     int axfer
     ==
 	&&
-    bz branch_error_typeenum
+    bz branch_txn_error
 
 	
     gtxn 0 Fee
@@ -438,7 +438,7 @@ method_activate_proposal:
     global MinTxnFee
     >=
 	&&
-    bz branch_error_txnfee
+    bz branch_txn_error
 
     
   	gtxn 0 Receiver
@@ -854,9 +854,9 @@ method_proposal_vote:
 	txn Sender
 	store 2
 
-	byte "proposal_is_activated"
+	byte "voting_is_activated"
 	app_global_get
-	bz branch_error_not_active
+	bz branch_error_vote_not_active
 
 	// The vote value
 	txn ApplicationArgs 1
@@ -897,16 +897,16 @@ method_proposal_vote:
 
 	
 
-	// Casting vote to proposal
-	load 2
-	load 1
-	itob
-	box_put
+	
 	
 	load 1
 	switch branch_vote_nay branch_vote_yay branch_vote_abs
 
 branch_vote_nay:
+	// Casting vote to proposal
+	load 2
+	byte "nay"
+	box_put
 	byte "proposal_nays"
 	dup
 	app_global_get
@@ -920,6 +920,9 @@ branch_vote_nay:
 	concat
 	b branch_log_return
 branch_vote_yay:
+	load 2
+	byte "yay"
+	box_put
 	byte "proposal_yays"
 	dup
 	app_global_get
@@ -933,6 +936,9 @@ branch_vote_yay:
 	b branch_log_return
 
 branch_vote_abs:
+	load 2
+	byte "abs"
+	box_put
 	byte "proposal_abs"
 	dup
 	app_global_get
@@ -960,24 +966,27 @@ branch_error:
 branch_error_active:
 	byte "Error Already Activated"
 	err
-branch_error_not_active:
-	byte "Error Not Activated"
+// branch_error_not_active:
+// 	byte "Error Not Activated"
+// 	err
+branch_error_vote_not_active:
+	byte "Error Vote Not Activated"
 	err
 branch_txn_error:
 	byte "Error TXN Check"
 	err
-branch_error_txnfee:
-	byte "Error TXN Fee"
-	err
-branch_error_rekeyto:
-	byte "Error RekeyTo"
-	err
-branch_error_closeto:
-	byte "Error CloseRemainderTo"
-	err
-branch_error_typeenum:
-	byte "Error TypeEnum"
-	err
+// branch_error_txnfee:
+// 	byte "Error TXN Fee"
+// 	err
+// branch_error_rekeyto:
+// 	byte "Error RekeyTo"
+// 	err
+// branch_error_closeto:
+// 	byte "Error CloseRemainderTo"
+// 	err
+// branch_error_typeenum:
+// 	byte "Error TypeEnum"
+// 	err
 branch_error_receiver:
 	byte "Error Receiver"
 	err
