@@ -1076,20 +1076,20 @@ method_proposal_participate:
     assert
 
     // Checking the asset ref to be DAO asset
-    byte "dao_asset_id"
-    app_global_get
-    txna Assets 0
-    ==
-    assert
+    // byte "dao_asset_id"
+    // app_global_get
+    // txna Assets 0
+    // ==
+    // assert
 
-    load 0
+    txn Sender
     box_get
     assert
     pop
 
-    txn Sender
-    byte ""
-    box_put
+    // txn Sender
+    // byte ""
+    // box_put
 
     byte 0x151f7c75
 	global CurrentApplicationID

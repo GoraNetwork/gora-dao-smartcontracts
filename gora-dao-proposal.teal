@@ -659,10 +659,10 @@ method_proposal_participate:
 	txn Sender // User
 	store 1
 
-	// Participation are closed after proposal is activated for voting
-	// byte "proposal_is_activated"
-	// app_global_get
-	// bnz branch_error
+	//Participation are closed after proposal is activated for voting
+	byte "voting_is_activated"
+	app_global_get
+	bnz branch_error_active
 
 	byte "participation_count"
 	app_global_get
@@ -735,12 +735,22 @@ method_proposal_participate:
     app_global_get
     gtxn 2 XferAsset
     ==
+	byte "dao_asset_id"
+    app_global_get
+    gtxn 2 XferAsset
+    ==
+	||
     assert
 
 	byte "proposal_asset_id"
     app_global_get
     gtxn 4 XferAsset
     ==
+	byte "dao_asset_id"
+    app_global_get
+    gtxn 4 XferAsset
+    ==
+	||
     assert
 
     gtxn 1 Amount
@@ -768,33 +778,29 @@ method_proposal_participate:
     assert
 
 
-    byte "proposal_asset_id"
-    app_global_get
-    txna Assets 0
-    ==
-    assert
+    // byte "proposal_asset_id"
+    // app_global_get
+    // txna Assets 0
+    // ==
+    // assert
 
-	byte "dao_asset_id"
-    app_global_get
-    txna Assets 0
-    ==
-    assert
+	// byte "dao_asset_id"
+    // app_global_get
+    // txna Assets 0
+    // ==
+    // assert
 
 	load 1
 	box_get
+	bnz branch_error_participate
 
-	bnz branch_error
 	load 1
     byte ""
     box_put
 
-	byte "participation_threshold"
-	box_get
-	assert
-	int 0
-	extract_uint64
 	load 20
-	swap
+	byte "participation_threshold"
+	app_global_get
 	>=
 	bnz branch_activate_and_participate
 	
@@ -821,9 +827,9 @@ method_proposal_withdraw_participate:
     store 0
 
 	// Participation Withdrawals are closed after proposal is activated for voting
-	byte "proposal_is_activated"
+	byte "voting_is_activated"
 	app_global_get
-	bnz branch_error
+	bnz branch_error_active
 
 	byte "participation_count"
 	app_global_get
@@ -966,9 +972,12 @@ branch_error:
 branch_error_active:
 	byte "Error Already Activated"
 	err
-// branch_error_not_active:
-// 	byte "Error Not Activated"
-// 	err
+branch_error_participate:
+	byte "Error Already Participated"
+	err
+branch_error_not_active:
+	byte "Error Not Activated"
+	err
 branch_error_vote_not_active:
 	byte "Error Vote Not Activated"
 	err

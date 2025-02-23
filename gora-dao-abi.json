@@ -291,9 +291,7 @@
         {
             "name": "proposal_participate",
             "description": "Participates a member to a Proposal! Returns the Proposal contract ID!",
-            "args": [
-                
-            ],
+            "args": [],
             "boxes": [
                 {
                     "name": "member_reference",
