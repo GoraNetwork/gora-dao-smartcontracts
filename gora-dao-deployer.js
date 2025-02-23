@@ -3046,44 +3046,6 @@ const GoraDaoDeployer = class {
                 { appIndex: Number(daoApplication), name: proposerPublicKey.publicKey },
             ],
         }
-        /* 
-        {
-  "boxes": [
-    {
-      "name": "cHJvcG9zYWxfYWxsb2NhdGlvbg=="
-    },
-    {
-      "name": "dm90ZV90aHJlc2hvbGQ="
-    },
-    {
-      "name": "u3WJ1gKJZG8tZnSTbO86ES3zuGqVj36LYU34g5NyuSc="
-    },
-    {
-      "name": "xWV0uMNSmbebdubLiXdsE2gRiBimMR3OzA+rDAAvnMc="
-    },
-    {
-      "name": "2WMI7buFPSZCBcjkPEvYIaMR3tnsxMIm8I2Pc/rh8os="
-    },
-    {
-      "name": "/SpIbCnGxUCw4QM9YDvcIQ5uUcvjorXOIH37CXRI5YY="
-    },
-    {
-      "name": "AaAkM+T5Lv1ELd+lZZ1hoYmDvo87RQDcURfiQ1oODys="
-    },
-    {
-      "name": "cGFydGljaXBhdGlvbl90aHJlc2hvbGQ="
-    }
-  ]
-}
-        */
-
-        // const ptxnProposal = new this.algosdk.Transaction({
-        //     from: addr,
-        //     to: this.proposalApplicationAddress,
-        //     amount: 1000,
-        //     type: 'pay',
-        //     ...params
-        // })
         const axferDao = new this.algosdk.Transaction({
             from: addr,
             to: `${this.goraDaoMainApplicationAddress}`,

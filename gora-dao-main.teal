@@ -1195,8 +1195,13 @@ method_proposal_vote:
     assert
     store 3
 
+    // txna Applications 1
+    // byte "proposal_asset_id"
+    // app_global_get_ex
+    // assert
+    // store 4
     txna Applications 1
-    byte "proposal_asset_id"
+    byte "dao_asset_id"
     app_global_get_ex
     assert
     store 4
