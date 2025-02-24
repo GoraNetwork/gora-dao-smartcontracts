@@ -2020,13 +2020,13 @@ const GoraDaoDeployer = class {
             //1 pay
             tws0,
             Number(this.goraDaoAsset),
-            //2 proposal_fee_stake
-            0,
+            //2 proposal_fee_token
+            1,
             //3 proposal_fee_algo
             10000,
             //4 min_subscription_algo
             100000,
-            //5 min_subscription_stake
+            //5 min_subscription_token
             0,
 
         ]

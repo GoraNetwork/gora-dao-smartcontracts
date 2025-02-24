@@ -442,10 +442,10 @@ method_activate_proposal:
 
     
   	gtxn 0 Receiver
-	global CreatorAddress
+	global CurrentApplicationAddress
     ==
     gtxn 1 Receiver
-	global CurrentApplicationAddress
+	global CreatorAddress
     ==
 	&&
 	gtxn 2 AssetReceiver

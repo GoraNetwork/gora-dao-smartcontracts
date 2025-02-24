@@ -503,41 +503,6 @@ branch_write_box_app:
 // Handles ABI method call for contract to contract creation of a Proposal contract
 method_proposal_create:
     callsub sub_check_txn_group
-  	// Checking Transaction group
-    // global GroupSize
-    // int 2
-    // ==
-    // assert
-    // // Checking the pay txn at index 0 of gtxn
-    // gtxn 0 RekeyTo
-    // global ZeroAddress
-    // ==
-    // assert
-    // gtxn 0 CloseRemainderTo
-    // global ZeroAddress
-    // ==
-    // assert
-    // gtxn 0 AssetCloseTo
-    // global ZeroAddress
-    // ==
-    // assert
-    // gtxn 0 TypeEnum
-    // int pay
-    // ==
-    // assert
-    // gtxn 0 Fee
-    // global MinTxnFee
-    // >=
-    // assert
-    // gtxn 0 Amount
-    // global MinTxnFee
-    // >=
-    // assert
-    // Checking if the receiver of pay txn is the same as the current application address
-    // txn GroupIndex
-    // int 1
-    // -
-    // dup
     gtxn 0 Receiver
     global CurrentApplicationAddress
     ==
@@ -559,8 +524,10 @@ method_proposal_create:
     store 1
 
     // Proposal asset id
-    txn ApplicationArgs 1
-    btoi
+    // txn ApplicationArgs 1
+    // btoi
+    byte "dao_asset_id"
+    app_global_get
     store 2
 
     // Proposal title
@@ -579,28 +546,29 @@ method_proposal_create:
     assert
     pop
     // Check Proposal manager Dao asset optin
-    txna Accounts 0
-    txna Assets 0
-    asset_holding_get AssetBalance
-    assert
-    pop
-    txn NumAssets
-    int 1
-    >
-    bz branch_proposal_create_final
-    // Check Proposal manager Proposal asset optin
-    txna Accounts 0
-    txna Assets 0
-    asset_holding_get AssetBalance
-    assert
-    pop
 
-    byte "dao_asset_id"
-    app_global_get
+    txn Sender
     load 2
-    // itob
-    ==
+    asset_holding_get AssetBalance
     assert
+    pop
+    // txn NumAssets
+    // int 1
+    // >
+    // bz branch_proposal_create_final
+    // // Check Proposal manager Proposal asset optin
+    // load 0
+    // txna Assets 0
+    // asset_holding_get AssetBalance
+    // assert
+    // pop
+
+    // byte "dao_asset_id"
+    // app_global_get
+    // load 2
+    // // itob
+    // ==
+    // assert
 branch_proposal_create_final:
     // Inner transaction to create the Proposal smart contract
     itxn_begin

@@ -26,7 +26,7 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "proposal_fee_stake",
+                    "name": "proposal_fee_token",
                     "description": "Fee for creating a new proposal paid in DAO Asset"
                 },
                 {
@@ -41,7 +41,7 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "min_subscription_stake",
+                    "name": "min_subscription_token",
                     "description": "Minimum holdings of Dao Asset for subscription"
                 }
             ],
