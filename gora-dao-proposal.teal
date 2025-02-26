@@ -277,11 +277,11 @@ method_update_proposal:
 	int 1
 	!=
 	assert
-	byte "voting_is_activated"
-	app_global_get
-	int 1
-	!=
-	assert
+	// byte "voting_is_activated"
+	// app_global_get
+	// int 1
+	// !=
+	// assert
 
 	// global CurrentApplicationID
 	// store 0
@@ -660,9 +660,9 @@ method_proposal_participate:
 	store 1
 
 	//Participation are closed after proposal is activated for voting
-	byte "voting_is_activated"
-	app_global_get
-	bnz branch_error_active
+	// byte "voting_is_activated"
+	// app_global_get
+	// bnz branch_error_active
 
 	byte "participation_count"
 	app_global_get
@@ -827,9 +827,9 @@ method_proposal_withdraw_participate:
     store 0
 
 	// Participation Withdrawals are closed after proposal is activated for voting
-	byte "voting_is_activated"
-	app_global_get
-	bnz branch_error_active
+	// byte "voting_is_activated"
+	// app_global_get
+	// bnz branch_error_active
 
 	byte "participation_count"
 	app_global_get
