@@ -150,8 +150,8 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "proposal_voting_start",
-                    "description": "GoraDAO Proposal voting start in working hours"
+                    "name": "is_governance",
+                    "description": "GoraDAO Proposal type (0: Community, 1: Governance)"
                 },
                 {
                     "type": "uint64",

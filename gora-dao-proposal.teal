@@ -549,9 +549,9 @@ method_config_proposal:
 	app_global_put
 	//log
 
-	txn ApplicationArgs 6 //proposal_voting_start
+	txn ApplicationArgs 6 //proposal_is_governance
 	store 6
-	byte "proposal_voting_start"
+	byte "proposal_is_governance"
 	load 6
 	btoi
 	app_global_put
