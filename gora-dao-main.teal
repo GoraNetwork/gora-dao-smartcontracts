@@ -588,6 +588,8 @@ branch_proposal_create_final:
     itxn_field LocalNumUint
     int 0
     itxn_field LocalNumByteSlice
+    int 1
+    itxn_field ExtraProgramPages
     txn Sender
     itxn_field Note
     // method "create_proposal(uint64,uint64,string,string)address"

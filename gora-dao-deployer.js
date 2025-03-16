@@ -2641,7 +2641,7 @@ const GoraDaoDeployer = class {
             50,
             //6 proposal_voting_duration
             24,
-            //7 proposal_voting_start
+            //
             0,
             //8 proposal_participation_fee
             1,

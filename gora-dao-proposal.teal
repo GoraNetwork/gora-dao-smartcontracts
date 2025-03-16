@@ -91,10 +91,10 @@ branch_method_router:
 	&&
 	bnz method_create_proposal
 
-	method "update_proposal(uint64,address,uint64,string,string)address"
-	txn ApplicationArgs 0
-	==
-	bnz method_update_proposal
+	// method "update_proposal(uint64,address,uint64,string,string)address"
+	// txn ApplicationArgs 0
+	// ==
+	// bnz method_update_proposal
 
 	// method "config_proposal(pay,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,(uint64,uint64,uint64),(uint64,uint64,uint64),(uint64,uint64,uint64),uint64)uint64"
 	method "config_proposal(uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,uint64,string,string)uint64"
@@ -270,18 +270,18 @@ method_create_proposal:
 	concat
 	b branch_log_return
 
-method_update_proposal:
-	callsub sub_check_owner_auth
-	byte "proposal_is_activated"
-	app_global_get
-	int 1
-	!=
-	assert
-	//TODO: Check if it is neccessary to control if the proposal voting is activated
-	byte 0x151f7c75
-	global CurrentApplicationAddress
-	concat
-	b branch_log_return
+// method_update_proposal:
+// 	callsub sub_check_owner_auth
+// 	byte "proposal_is_activated"
+// 	app_global_get
+// 	int 1
+// 	!=
+// 	assert
+// 	//TODO: Check if it is neccessary to control if the proposal voting is activated
+// 	byte 0x151f7c75
+// 	global CurrentApplicationAddress
+// 	concat
+// 	b branch_log_return
 
 method_update_manager_address:
 	callsub sub_check_manager_auth
@@ -310,8 +310,6 @@ method_activate_proposal:
 	app_global_get
 	store 1
 
-	
-	
 	
     gtxn 0 RekeyTo
     global ZeroAddress
@@ -436,6 +434,10 @@ method_config_proposal:
 	int 0
 	app_global_put
 
+	byte "voting_is_concluded"
+	int 0
+	app_global_put
+
 	txn ApplicationArgs 1 //proposal_min_participation_algo
 	store 1
 	byte "proposal_min_participation_algo"
@@ -554,7 +556,15 @@ method_config_proposal:
 
 	byte "proposal_description"
 	load 15
+	substring 0 108
 	app_global_put
+
+	byte "desc"
+	box_del
+	byte "desc"
+	load 15
+	box_put
+
 
 
 	itxn_begin
@@ -637,21 +647,21 @@ method_proposal_participate:
     assert
 
 
-    gtxn 1 Fee
-    global MinTxnFee
-    >=
-    gtxn 2 Fee
-    global MinTxnFee
-    >=
-	gtxn 3 Fee
-    global MinTxnFee
-    >=
-    gtxn 4 Fee
-    global MinTxnFee
-    >=
-	&&
-	&&
-    assert
+    // gtxn 1 Fee
+    // global MinTxnFee
+    // >=
+    // gtxn 2 Fee
+    // global MinTxnFee
+    // >=
+	// gtxn 3 Fee
+    // global MinTxnFee
+    // >=
+    // gtxn 4 Fee
+    // global MinTxnFee
+    // >=
+	// &&
+	// &&
+    // assert
 
     byte "proposal_asset_id"
     app_global_get
@@ -817,21 +827,86 @@ method_proposal_vote:
     //assert
 	//pop
 
-	// Check participation
+	// Check participation  
 	load 2
 	box_get
 	assert
 	byte ""
 	==
 	assert
+
+	// Check time if voting time is over therefore conclude the voting
+	byte "proposal_voting_duration"
+	app_global_get
+	int 3600
+	*
+	store 3
+	byte "voting_start_timestamp"
+	app_global_get
+	store 4
+
+	load 4
+	load 3
+	+
+	store 5
+
+	load 5
+	global LatestTimestamp
+	<
+	bnz branch_conclude_vote
+
+
+
+	// Check time if voting is concluded
+	byte "proposal_voting_threshold"
+	app_global_get
+	store 6
+
+	byte "vote_count"
+	app_global_get
+	store 7
+	byte "participation_count"
+	app_global_get
+	store 8
+
+	load 6
+	load 8
+	*
+	store 9
+
+	load 9
+	int 100
+	%
+	store 10
+
+	load 9
+	load 10
+	-
+	store 11
+
+	load 11
+	int 100
+	/
+	store 12
+
+	load 7
+	load 12
+	>=
+	bnz branch_conclude_vote
+	b branch_finalize_vote
+	
+branch_conclude_vote:
+	byte "voting_is_concluded"
+	int 1
+	app_global_put
+
+branch_finalize_vote:
+	// Reset participation box
 	load 2
 	box_del
 	pop
 
-	
 
-	
-	
 	load 1
 	switch branch_vote_nay branch_vote_yay branch_vote_abs
 
@@ -847,11 +922,8 @@ branch_vote_nay:
 	+
 	app_global_put
 
-	byte 0x151f7c75
-	global CurrentApplicationID
-	itob
-	concat
-	b branch_log_return
+	b branch_return_vote
+	
 branch_vote_yay:
 	load 2
 	byte "yay"
@@ -862,11 +934,8 @@ branch_vote_yay:
 	int 1
 	+
 	app_global_put
-	byte 0x151f7c75
-	global CurrentApplicationID
-	itob
-	concat
-	b branch_log_return
+
+	b branch_return_vote
 
 branch_vote_abs:
 	load 2
@@ -879,6 +948,7 @@ branch_vote_abs:
 	+
 	app_global_put
 
+branch_return_vote:
 	byte 0x151f7c75
 	global CurrentApplicationID
 	itob
