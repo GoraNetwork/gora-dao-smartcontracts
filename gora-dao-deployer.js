@@ -2610,7 +2610,7 @@ const GoraDaoDeployer = class {
                 // { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("participation_threshold")) },
                 // { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("vote_threshold")) },
                 // { appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_allocation")) },
-                //{ appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("proposal_vote_values")) },
+                //{ appIndex: Number(proposalApplication), name: new Uint8Array(Buffer.from("voting_start_timestamp")) },
                 // { appIndex: Number(proposalApplication), name: memberPublicKey.publicKey },
             ],
         }
@@ -2660,7 +2660,7 @@ const GoraDaoDeployer = class {
             //14 proposal_allocation (uint64,uint64,uint64)
             // [3, 51, 40000],
             // [10, 30, 60],// The allocation of funds to the proposal
-            //15 proposal_vote_values uint64
+            //15 voting_start_timestamp uint64
             3,
             'TEST PROPOSAL RECONFIG',
             'TEST PROPOSAL RECONFIG DESCRIPTION'

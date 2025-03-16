@@ -606,9 +606,9 @@ method_config_proposal:
 	// txn ApplicationArgs 13 // proposal_allocations
 	// store 13
 
-	txn ApplicationArgs 13 // proposal_vote_values
+	txn ApplicationArgs 13 // voting_start_timestamp
 	store 13
-	byte "proposal_vote_values"
+	byte "voting_start_timestamp"
 	load 13
 	btoi
 	app_global_put
@@ -814,6 +814,11 @@ branch_activate_and_participate:
 	byte "voting_is_activated"
 	int 1
 	app_global_put
+
+	byte "voting_start_timestamp"
+	global LatestTimestamp
+	app_global_put
+	
 	byte 0x151f7c75
 	global CurrentApplicationID
 	itob
