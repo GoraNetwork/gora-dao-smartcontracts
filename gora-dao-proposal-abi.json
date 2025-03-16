@@ -185,8 +185,8 @@
                 },
                 {
                     "type": "uint64",
-                    "name": "proposal_vote_values",
-                    "description": "GoraDAO Proposal number of vote subjects! "
+                    "name": "voting_start_timestamp",
+                    "description": "GoraDAO Proposal voting start timestamp"
                 },
                 {
                     "type": "string",
