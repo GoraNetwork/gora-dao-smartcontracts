@@ -277,80 +277,7 @@ method_update_proposal:
 	int 1
 	!=
 	assert
-	// byte "voting_is_activated"
-	// app_global_get
-	// int 1
-	// !=
-	// assert
-
-	// global CurrentApplicationID
-	// store 0
-
-	// txn ApplicationArgs 1
-	// btoi
-	// store 1
-	// byte "dao_app_id"
-	// load 1
-	// app_global_put
-
-	// txn ApplicationArgs 3
-	// btoi
-	// store 3
-	// byte "proposal_asset_id"
-	// load 3
-	// app_global_put
-	// byte "dao_asset_id"
-	// load 3
-	// app_global_put
-
-	// txn ApplicationArgs 2
-	// store 4
-	// byte "proposal_creator_address"
-	// load 4
-	// app_global_put
-
-	// txn ApplicationArgs 2
-	// store 5
-	// byte "manager_address"
-	// load 5
-	// app_global_put
-
-	// txn ApplicationArgs 4
-	// extract 2 0
-	// store 6
-	// byte "proposal_title"
-	// load 6
-	// app_global_put
-
-	// txn ApplicationArgs 5
-	// extract 2 0
-	// store 7
-	// byte "proposal_description"
-	// load 7
-	// app_global_put
-
-	// byte "participation_count"
-	// int 0
-	// app_global_put
-
-	// byte "vote_count"
-	// int 0
-	// app_global_put
-
-	// byte "proposal_yays"
-	// int 0
-	// app_global_put
-
-	// byte "proposal_nays"
-	// int 0
-	// app_global_put
-
-	// byte "proposal_abs"
-	// int 0
-	// app_global_put
-
-	
-
+	//TODO: Check if it is neccessary to control if the proposal voting is activated
 	byte 0x151f7c75
 	global CurrentApplicationAddress
 	concat
@@ -659,11 +586,6 @@ method_proposal_participate:
 	txn Sender // User
 	store 1
 
-	//Participation are closed after proposal is activated for voting
-	// byte "voting_is_activated"
-	// app_global_get
-	// bnz branch_error_active
-
 	byte "participation_count"
 	app_global_get
 	int 1
@@ -832,9 +754,9 @@ method_proposal_withdraw_participate:
     store 0
 
 	// Participation Withdrawals are closed after proposal is activated for voting
-	// byte "voting_is_activated"
-	// app_global_get
-	// bnz branch_error_active
+	byte "voting_is_activated"
+	app_global_get
+	bnz branch_error_active
 
 	byte "participation_count"
 	app_global_get
