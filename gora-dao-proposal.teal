@@ -840,31 +840,38 @@ method_proposal_vote:
 	app_global_get
 	int 3600
 	*
-	store 3
+	store 3 // Duration in seconds
 	byte "voting_start_timestamp"
 	app_global_get
-	store 4
+	store 4 // Voting start unix timestamp (seconds)
 
 	load 4
 	load 3
 	+
-	store 5
+	store 5 // Voting end unix timestamp (seconds)
 
-	load 5
 	global LatestTimestamp
-	<
+	load 5
+	>=
 	bnz branch_conclude_vote
 
 
 
 	// Check time if voting is concluded
-	byte "proposal_voting_threshold"
+	byte "vote_threshold"
 	app_global_get
 	store 6
 
 	byte "vote_count"
 	app_global_get
+	int 1
+	+
 	store 7
+
+	byte "vote_count"
+	load 7
+	app_global_put
+
 	byte "participation_count"
 	app_global_get
 	store 8
@@ -872,25 +879,21 @@ method_proposal_vote:
 	load 6
 	load 8
 	*
-	store 9
-
-	load 9
-	int 100
-	%
-	store 10
-
-	load 9
-	load 10
-	-
-	store 11
-
-	load 11
+	int 99
+	+
 	int 100
 	/
-	store 12
+	store 9
 
 	load 7
-	load 12
+	itob
+	log
+	load 9
+	itob
+	log
+
+	load 7
+	load 9
 	>=
 	bnz branch_conclude_vote
 	b branch_finalize_vote
@@ -905,6 +908,7 @@ branch_finalize_vote:
 	load 2
 	box_del
 	pop
+	
 
 
 	load 1

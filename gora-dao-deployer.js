@@ -2027,7 +2027,7 @@ const GoraDaoDeployer = class {
             //4 min_subscription_algo
             100000,
             //5 min_subscription_token
-            0,
+            2,
 
         ]
         const atcDaoConfig = new this.algosdk.AtomicTransactionComposer()
