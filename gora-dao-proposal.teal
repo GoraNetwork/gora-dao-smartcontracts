@@ -264,6 +264,10 @@ method_create_proposal:
 	int 0
 	app_global_put
 
+	byte "proposal_creation_timestamp"
+	global LatestTimestamp
+	app_global_put
+
 
 	byte 0x151f7c75
 	global CurrentApplicationAddress
